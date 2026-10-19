@@ -1,0 +1,16 @@
+flutter_native_splash:
+  android: true
+  ios: true
+  web: true
+  # ios and android below 12
+  color: "#ffffff"
+  image: assets/images/arqamy.png
+  # branding: assets/images/branding.png
+
+  # color_dark: "#ffffff"
+  # image_dark: assets/images/arqamy.png
+
+  android_12:
+    color: "#ffffff"
+    image: assets/images/arqamy.png
+    # branding: assets/images/branding.png
