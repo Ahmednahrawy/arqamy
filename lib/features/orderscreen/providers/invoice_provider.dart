@@ -189,6 +189,22 @@ class InvoiceProvider extends ChangeNotifier {
         .toList();
   }
 
+  static double calculateCustomerBalance(Iterable<Invoice> invoices) {
+    return invoices.fold(0.0, (balance, invoice) {
+      final action = invoice.invoiceAction?.replaceAll('\u0640', '').trim();
+      switch (action) {
+        case 'شراء':
+          return balance + invoice.rest;
+        case 'بيع':
+          return balance - invoice.rest;
+        case 'تخزين':
+          return balance;
+        default:
+          return balance + invoice.rest;
+      }
+    });
+  }
+
   Future<void> deleteInvoice(String invoiceId) async {
     final index = _invoices.indexWhere((invoice) => invoice.id == invoiceId);
     if (index == -1) return;

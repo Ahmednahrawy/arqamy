@@ -90,4 +90,34 @@ void main() {
     await reloadedProvider.loadInvoices();
     expect(reloadedProvider.invoices, isEmpty);
   });
+   test('customer balance subtracts sales from purchases', () {
+    Invoice invoice({
+      required String id,
+      required String action,
+      required double rest,
+    }) {
+      return Invoice(
+        id: id,
+        customerName: 'Customer',
+        products: const [],
+        totalCost: rest,
+        paid: 0,
+        rest: rest,
+        formattedDate: '2026-10-20',
+        formattedTime: '08:00',
+        invoiceAction: action,
+        invoiceSerial: id,
+      );
+    }
+
+    final balance = InvoiceProvider.calculateCustomerBalance([
+      invoice(id: 'buy-1', action: 'شراء', rest: 125),
+      invoice(id: 'buy-2', action: 'شراء', rest: 550),
+      invoice(id: 'sale-1', action: 'بـيع', rest: 375),
+      invoice(id: 'storage-1', action: 'تخزين', rest: 900),
+    ]);
+
+    expect(balance, 300);
+  });
+
 }

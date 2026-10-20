@@ -28,13 +28,12 @@ class _CustomerScreenState extends State<CustomerScreen> {
   }
 
   void _handleCustomerSelection(String? customerName) {
+    final invoices = customerName != null && customerName.isNotEmpty
+        ? context.read<InvoiceProvider>().getInvoicesByCustomer(customerName)
+        : <Invoice>[];
     setState(() {
       _customerName = customerName;
-      if (customerName != null && customerName.isNotEmpty) {
-        _loadCustomerInvoices(customerName);
-      } else {
-        _customerInvoices.clear();
-      }
+      _customerInvoices = invoices;
     });
   }
 
@@ -114,323 +113,111 @@ class _CustomerScreenState extends State<CustomerScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final balance = InvoiceProvider.calculateCustomerBalance(_customerInvoices);
+    final purchaseBalance = _customerInvoices
+        .where((invoice) =>
+            invoice.invoiceAction?.replaceAll('\u0640', '').trim() == 'شراء')
+        .fold<double>(0, (sum, invoice) => sum + invoice.rest);
+    final salesBalance = _customerInvoices
+        .where((invoice) =>
+            invoice.invoiceAction?.replaceAll('\u0640', '').trim() == 'بيع')
+        .fold<double>(0, (sum, invoice) => sum + invoice.rest);
+
     return Directionality(
       textDirection: TextDirection.rtl,
       child: Scaffold(
         appBar: AppBar(
           title: const Text('موردين و عملاء'),
         ),
-        body: Container(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              colors: [
-                Theme.of(context).primaryColor.withValues(alpha: 0.1),
-                Colors.white,
-              ],
-            ),
-          ),
+        body: SafeArea(
           child: Padding(
-            padding: const EdgeInsets.all(10),
+            padding: const EdgeInsets.fromLTRB(16, 12, 16, 8),
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                CustomerNameAutoComplete(
-                    onCustomerSelected: _handleCustomerSelection),
-                if (_customerName != null && _customerName!.isNotEmpty)
-                  Container(
-                    margin: const EdgeInsets.symmetric(vertical: 16),
-                    padding: const EdgeInsets.all(16),
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        colors: [Colors.blue.shade50, Colors.blue.shade100],
-                      ),
-                      borderRadius: BorderRadius.circular(15),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.blue.withValues(alpha: 0.1),
-                          blurRadius: 10,
-                          offset: const Offset(0, 5),
-                        ),
-                      ],
+                Card(
+                  elevation: 0,
+                  color: Colors.white,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(18),
+                    side: BorderSide(color: Colors.blueGrey.shade100),
+                  ),
+                  child: Padding(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                    child: CustomerNameAutoComplete(
+                      onCustomerSelected: _handleCustomerSelection,
                     ),
+                  ),
+                ),
+                if (_customerName != null && _customerName!.isNotEmpty)
+                  _buildCustomerSummary(
+                    customerName: _customerName!,
+                    invoiceCount: _customerInvoices.length,
+                    balance: balance,
+                    purchaseBalance: purchaseBalance,
+                    salesBalance: salesBalance,
+                  ),
+                if (_customerName != null && _customerName!.isNotEmpty)
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(4, 18, 4, 8),
                     child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
-                        Column(
-                          children: [
-                            Icon(Icons.person, color: Colors.blue.shade700),
-                            const SizedBox(height: 4),
-                            Text(
-                              _customerName!,
-                              style: const TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                              ),
+                        const Expanded(
+                          child: Text(
+                            'سجل الفواتير',
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
                             ),
-                          ],
+                          ),
                         ),
-                        Container(
-                          height: 40,
-                          width: 1,
-                          color: Colors.blue.shade300,
-                        ),
-                        Column(
-                          children: [
-                            Icon(Icons.receipt_long,
-                                color: Colors.blue.shade700),
-                            const SizedBox(height: 4),
-                            Text(
-                              '${_customerInvoices.length} فاتورة',
-                              style: const TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ],
-                        ),
-                        Container(
-                          height: 40,
-                          width: 1,
-                          color: Colors.blue.shade300,
-                        ),
-                        Column(
-                          children: [
-                            Icon(Icons.attach_money,
-                                color: Colors.green.shade700),
-                            const SizedBox(height: 4),
-                            Text(
-                              '${_calculateTotalDebt().toStringAsFixed(2)} ج.م',
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                                color: _calculateTotalDebt() > 0
-                                    ? Colors.orange.shade700
-                                    : Colors.green.shade700,
-                              ),
-                            ),
-                          ],
+                        Text(
+                          '${_customerInvoices.length} فاتورة',
+                          style: TextStyle(color: Colors.grey.shade600),
                         ),
                       ],
                     ),
                   ),
-                // Invoices list
                 Expanded(
                   child: _customerInvoices.isEmpty
                       ? Center(
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Icon(
-                                Icons.inbox,
-                                size: 80,
-                                color: Colors.grey[300],
+                              Container(
+                                padding: const EdgeInsets.all(20),
+                                decoration: BoxDecoration(
+                                  color: Colors.blue.shade50,
+                                  shape: BoxShape.circle,
+                                ),
+                                child: Icon(
+                                  Icons.receipt_long_outlined,
+                                  size: 42,
+                                  color: Colors.blue.shade400,
+                                ),
                               ),
-                              const SizedBox(height: 16),
+                              const SizedBox(height: 14),
                               Text(
                                 _customerName == null
                                     ? "اختر عميل لعرض الفواتير"
                                     : "لا توجد فواتير لهذا العميل",
+                                textAlign: TextAlign.center,
                                 style: TextStyle(
                                   fontSize: 16,
-                                  color: Colors.grey[600],
+                                  color: Colors.grey.shade700,
+                                  fontWeight: FontWeight.w600,
                                 ),
                               ),
                             ],
                           ),
                         )
                       : ListView.builder(
+                          padding: const EdgeInsets.only(bottom: 12),
                           itemCount: _customerInvoices.length,
                           itemBuilder: (context, index) {
                             final invoice = _customerInvoices[index];
-                            final isPaid = invoice.rest == 0;
-
-                            return Card(
-                              margin: const EdgeInsets.symmetric(vertical: 6),
-                              elevation: 3,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                              child: InkWell(
-                                onTap: () => _showInvoiceDetails(invoice),
-                                borderRadius: BorderRadius.circular(12),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(12),
-                                  child: Row(
-                                    children: [
-                                      // Invoice icon with status color
-                                      Container(
-                                        padding: const EdgeInsets.all(12),
-                                        decoration: BoxDecoration(
-                                          color: isPaid
-                                              ? Colors.green.withValues(alpha: 0.1)
-                                              : Colors.orange.withValues(alpha: 0.1),
-                                          borderRadius:
-                                              BorderRadius.circular(10),
-                                        ),
-                                        child: Icon(
-                                          Icons.receipt,
-                                          color: isPaid
-                                              ? Colors.green
-                                              : Colors.orange,
-                                          size: 28,
-                                        ),
-                                      ),
-                                      const SizedBox(width: 12),
-
-                                      // Invoice details
-                                      Expanded(
-                                        child: Column(
-                                          children: [
-                                            Wrap(
-                                              children: [
-                                                Text(
-                                                  'فاتورة #${invoice.invoiceSerial}',
-                                                  style: const TextStyle(
-                                                    fontWeight: FontWeight.bold,
-                                                    fontSize: 15,
-                                                  ),
-                                                ),
-                                                Container(
-                                                  padding: const EdgeInsets
-                                                      .symmetric(
-                                                    horizontal: 8,
-                                                    vertical: 4,
-                                                  ),
-                                                  decoration: BoxDecoration(
-                                                    color: _getActionColor(
-                                                        invoice.invoiceAction),
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            12),
-                                                  ),
-                                                  child: Text(
-                                                    invoice.invoiceAction ??
-                                                        'عملية',
-                                                    style: const TextStyle(
-                                                      color: Colors.white,
-                                                      fontSize: 12,
-                                                      fontWeight:
-                                                          FontWeight.w600,
-                                                    ),
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                            const SizedBox(height: 4),
-                                            Text(
-                                              invoice.formattedDate,
-                                              style: TextStyle(
-                                                color: Colors.grey[600],
-                                                fontSize: 13,
-                                              ),
-                                            ),
-                                            const SizedBox(height: 8),
-                                            Wrap(
-                                              children: [
-                                                Text(
-                                                  '${invoice.totalCost.toStringAsFixed(2)} ج.م',
-                                                  style: const TextStyle(
-                                                    fontWeight: FontWeight.bold,
-                                                    fontSize: 16,
-                                                  ),
-                                                ),
-                                                if (!isPaid)
-                                                  Text(
-                                                    'باقي: ${invoice.rest.toStringAsFixed(2)} ج.م',
-                                                    style: TextStyle(
-                                                      color: Colors.orange[700],
-                                                      fontWeight:
-                                                          FontWeight.w600,
-                                                      fontSize: 14,
-                                                    ),
-                                                  )
-                                                else
-                                                  Container(
-                                                    padding: const EdgeInsets
-                                                        .symmetric(
-                                                      horizontal: 8,
-                                                      vertical: 4,
-                                                    ),
-                                                    decoration: BoxDecoration(
-                                                      color: Colors.green,
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              12),
-                                                    ),
-                                                    child: const Text(
-                                                      'مدفوع',
-                                                      style: TextStyle(
-                                                        color: Colors.white,
-                                                        fontSize: 12,
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                      ),
-                                                    ),
-                                                  ),
-                                              ],
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-
-                                      // Action buttons
-                                      const SizedBox(width: 8),
-                                      PopupMenuButton<String>(
-                                        onSelected: (value) {
-                                          switch (value) {
-                                            case 'edit':
-                                              _editInvoice(invoice);
-                                              break;
-                                            case 'delete':
-                                              _deleteInvoice(invoice.id);
-                                              break;
-                                            case 'share':
-                                              _shareInvoice(invoice);
-                                              break;
-                                          }
-                                        },
-                                        itemBuilder: (BuildContext context) => [
-                                          const PopupMenuItem(
-                                            value: 'edit',
-                                            child: Row(
-                                              children: [
-                                                Icon(Icons.edit,
-                                                    color: Colors.orange),
-                                                SizedBox(width: 8),
-                                                Text('تعديل'),
-                                              ],
-                                            ),
-                                          ),
-                                          const PopupMenuItem(
-                                            value: 'share',
-                                            child: Row(
-                                              children: [
-                                                Icon(Icons.share,
-                                                    color: Colors.blue),
-                                                SizedBox(width: 8),
-                                                Text('مشاركة'),
-                                              ],
-                                            ),
-                                          ),
-                                          const PopupMenuItem(
-                                            value: 'delete',
-                                            child: Row(
-                                              children: [
-                                                Icon(Icons.delete,
-                                                    color: Colors.red),
-                                                SizedBox(width: 8),
-                                                Text('حذف'),
-                                              ],
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            );
+                            return _buildInvoiceCard(invoice);
                           },
                         ),
                 ),
@@ -442,15 +229,321 @@ class _CustomerScreenState extends State<CustomerScreen> {
     );
   }
 
-  double _calculateTotalDebt() {
-    return _customerInvoices.fold(0.0, (sum, invoice) => sum + invoice.rest);
+ Widget _buildCustomerSummary({
+    required String customerName,
+    required int invoiceCount,
+    required double balance,
+    required double purchaseBalance,
+    required double salesBalance,
+  }) {
+    final balanceColor = balance > 0
+        ? Colors.deepOrange.shade700
+        : balance < 0
+            ? Colors.blue.shade700
+            : Colors.green.shade700;
+    final balanceLabel = balance > 0
+        ? 'صافي مستحق لك'
+        : balance < 0
+            ? 'صافي مستحق للعميل'
+            : 'الحساب متوازن';
+
+    return Container(
+      margin: const EdgeInsets.only(top: 14),
+      padding: const EdgeInsets.all(18),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: Colors.blueGrey.shade50),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.blueGrey.withValues(alpha: 0.08),
+            blurRadius: 18,
+            offset: const Offset(0, 7),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Row(
+            children: [
+              CircleAvatar(
+                backgroundColor: Colors.blue.shade50,
+                foregroundColor: Colors.blue.shade700,
+                child: const Icon(Icons.person_outline),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Text(
+                  customerName,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(
+                    fontSize: 17,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+              Container(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                decoration: BoxDecoration(
+                  color: Colors.blueGrey.shade50,
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: Text(
+                  '$invoiceCount فاتورة',
+                  style: TextStyle(
+                    color: Colors.blueGrey.shade700,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 18),
+          Text(
+            balanceLabel,
+            style: TextStyle(
+              color: Colors.grey.shade600,
+              fontSize: 13,
+            ),
+          ),
+          const SizedBox(height: 2),
+          Text(
+            '${balance.abs().toStringAsFixed(2)} ج.م',
+            style: TextStyle(
+              color: balanceColor,
+              fontSize: 27,
+              fontWeight: FontWeight.bold,
+              fontFeatures: const [FontFeature.tabularFigures()],
+            ),
+          ),
+          const SizedBox(height: 16),
+          Row(
+            children: [
+              Expanded(
+                child: _buildBalanceBreakdown(
+                  label: 'مشتريات',
+                  amount: purchaseBalance,
+                  color: Colors.blue.shade700,
+                  icon: Icons.south_west,
+                ),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: _buildBalanceBreakdown(
+                  label: 'مبيعات',
+                  amount: salesBalance,
+                  color: Colors.green.shade700,
+                  icon: Icons.north_east,
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+Widget _buildBalanceBreakdown({
+    required String label,
+    required double amount,
+    required Color color,
+    required IconData icon,
+  }) {
+    return Container(
+      padding: const EdgeInsets.all(11),
+      decoration: BoxDecoration(
+        color: color.withValues(alpha: 0.06),
+        borderRadius: BorderRadius.circular(14),
+      ),
+      child: Row(
+        children: [
+          Icon(icon, color: color, size: 18),
+          const SizedBox(width: 8),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  label,
+                  style: TextStyle(color: Colors.grey.shade600, fontSize: 12),
+                ),
+                const SizedBox(height: 2),
+                Text(
+                  '${amount.toStringAsFixed(2)} ج.م',
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    color: color,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 13,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildInvoiceCard(Invoice invoice) {
+    final actionColor = _getActionColor(invoice.invoiceAction);
+    final action = invoice.invoiceAction ?? 'عملية';
+    final isPaid = invoice.rest <= 0;
+
+    return Card(
+      margin: const EdgeInsets.symmetric(vertical: 6),
+      color: Colors.white,
+      elevation: 1,
+      shadowColor: Colors.blueGrey.withValues(alpha: 0.15),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(18),
+        side: BorderSide(color: Colors.blueGrey.shade50),
+      ),
+      clipBehavior: Clip.antiAlias,
+      child: InkWell(
+        onTap: () => _showInvoiceDetails(invoice),
+        child: Padding(
+          padding: const EdgeInsetsDirectional.fromSTEB(14, 14, 8, 14),
+          child: Row(
+            children: [
+              Container(
+                width: 48,
+                height: 48,
+                decoration: BoxDecoration(
+                  color: actionColor.withValues(alpha: 0.1),
+                  borderRadius: BorderRadius.circular(14),
+                ),
+                child: Icon(Icons.receipt_long, color: actionColor),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Wrap(
+                      crossAxisAlignment: WrapCrossAlignment.center,
+                      spacing: 8,
+                      runSpacing: 4,
+                      children: [
+                        Text(
+                          'فاتورة #${invoice.invoiceSerial}',
+                          style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 14,
+                          ),
+                        ),
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 9, vertical: 4),
+                          decoration: BoxDecoration(
+                            color: actionColor.withValues(alpha: 0.1),
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          child: Text(
+                            action,
+                            style: TextStyle(
+                              color: actionColor,
+                              fontSize: 11,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 6),
+                    Text(
+                      '${invoice.formattedDate}  •  ${invoice.formattedTime}',
+                      style: TextStyle(
+                        color: Colors.grey.shade600,
+                        fontSize: 12,
+                      ),
+                    ),
+                    const SizedBox(height: 9),
+                    Wrap(
+                      spacing: 14,
+                      runSpacing: 4,
+                      children: [
+                        Text(
+                          'الإجمالي ${invoice.totalCost.toStringAsFixed(2)} ج.م',
+                          style: const TextStyle(
+                            fontWeight: FontWeight.w600,
+                            fontSize: 12,
+                          ),
+                        ),
+                        Text(
+                          isPaid
+                              ? 'مدفوع'
+                              : 'متبقي ${invoice.rest.toStringAsFixed(2)} ج.م',
+                          style: TextStyle(
+                            color: isPaid
+                                ? Colors.green.shade700
+                                : Colors.deepOrange.shade700,
+                            fontWeight: FontWeight.w700,
+                            fontSize: 12,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+              PopupMenuButton<String>(
+                tooltip: 'خيارات الفاتورة',
+                onSelected: (value) {
+                  switch (value) {
+                    case 'edit':
+                      _editInvoice(invoice);
+                      break;
+                    case 'delete':
+                      _deleteInvoice(invoice.id);
+                      break;
+                    case 'share':
+                      _shareInvoice(invoice);
+                      break;
+                  }
+                },
+                itemBuilder: (context) => [
+                  const PopupMenuItem(
+                    value: 'edit',
+                    child: ListTile(
+                      leading: Icon(Icons.edit_outlined, color: Colors.orange),
+                      title: Text('تعديل'),
+                      contentPadding: EdgeInsets.zero,
+                    ),
+                  ),
+                  const PopupMenuItem(
+                    value: 'share',
+                    child: ListTile(
+                      leading: Icon(Icons.share_outlined, color: Colors.blue),
+                      title: Text('مشاركة'),
+                      contentPadding: EdgeInsets.zero,
+                    ),
+                  ),
+                  const PopupMenuItem(
+                    value: 'delete',
+                    child: ListTile(
+                      leading: Icon(Icons.delete_outline, color: Colors.red),
+                      title: Text('حذف'),
+                      contentPadding: EdgeInsets.zero,
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 
   Color _getActionColor(String? action) {
-    switch (action) {
+    switch (action?.replaceAll('\u0640', '').trim()) {
       case 'شراء':
         return Colors.blue;
-      case 'بـيع':
+      case 'بيع':
         return Colors.green;
       case 'تخزين':
         return Colors.purple;
