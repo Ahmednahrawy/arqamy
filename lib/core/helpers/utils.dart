@@ -31,8 +31,11 @@ Future<Uint8List> generatePDF(
   /// ✅ Load logo (from gallery or fallback to default asset)
   pw.MemoryImage? logoImage;
   try {
-    if (logoPath.isNotEmpty && File(logoPath).existsSync()) {
-      logoImage = pw.MemoryImage(File(logoPath).readAsBytesSync());
+    if (logoPath.isNotEmpty) {
+      final logoFile = File(logoPath);
+      if (await logoFile.exists()) {
+        logoImage = pw.MemoryImage(await logoFile.readAsBytes());
+      }
     }
   } catch (e) {
     print('Error loading logo: $e');
@@ -49,7 +52,7 @@ Future<Uint8List> generatePDF(
   //     "${now.year}${now.month.toString().padLeft(2, '0')}${now.day.toString().padLeft(2, '0')}"
   //     "${now.hour.toString().padLeft(2, '0')}${now.minute.toString().padLeft(2, '0')}${now.second.toString().padLeft(2, '0')}";
 
-  final pageTheme = await _myPageTheme(format);
+  final pageTheme = _myPageTheme(format, ttf);
   final products = provider.products;
   final grouped = provider.groupedProducts;
   final bool hasIdenticalProducts = provider.hasIdenticalProducts;
@@ -185,15 +188,10 @@ Future<Uint8List> generatePDF(
   return doc.save();
 }
 
-Future<pw.PageTheme> _myPageTheme(PdfPageFormat format) async {
-  final arabicFont = await rootBundle.load("assets/fonts/Amiri-Regular.ttf");
-  final ttf = pw.Font.ttf(arabicFont);
-
+pw.PageTheme _myPageTheme(PdfPageFormat format, pw.Font font) {
   return pw.PageTheme(
     pageFormat: PdfPageFormat.a4,
-    theme: pw.ThemeData.withFont(
-      base: ttf,
-    ),
+    theme: pw.ThemeData.withFont(base: font),
     margin: const pw.EdgeInsets.symmetric(
         horizontal: 1 * PdfPageFormat.cm, vertical: 0.5 * PdfPageFormat.cm),
     textDirection: pw.TextDirection.rtl,

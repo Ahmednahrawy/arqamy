@@ -12,8 +12,13 @@ class InvoiceProvider extends ChangeNotifier {
   String? _customerName;
   List<String> _masterProductList = [];
   final List<Invoice> _invoices = []; // قائمة الفواتير المخزنة
+  List<Product>? _productsViewCache;
+  List<Product>? _groupedProductsCache;
+  double? _totalCostCache;
+  bool? _hasPackageProductsCache;
 
-  List<Product> get products => List.unmodifiable(_products);
+  List<Product> get products =>
+      _productsViewCache ??= List<Product>.unmodifiable(_products);
   String? get invoiceAction => _invoiceAction;
   String? get customerName => _customerName;
   List<String> get masterProductList => List.unmodifiable(_masterProductList);
@@ -26,16 +31,23 @@ class InvoiceProvider extends ChangeNotifier {
     // }
   }
 
-  double get totalCost {
-    return _products.fold(0, (sum, product) {
+  double? get totalCost {
+    final cached = _totalCostCache;
+    if (cached != null) {
+      return cached;
+    }
+    var total = 0.0;
+    for (final product in _products) {
       final netWeight =
           product.weight - (product.packageWeight * product.numberPackage);
-      return sum + (netWeight * product.price);
-    });
+      total += netWeight * product.price;
+    }
+    return _totalCostCache = total;
   }
 
   bool get hasPackageProducts {
-    return _products.any((product) => product.numberPackage > 0);
+    return _hasPackageProductsCache ??=
+        _products.any((product) => product.numberPackage > 0);
   }
 
   bool get shouldShowPackageColumns {
@@ -58,11 +70,16 @@ class InvoiceProvider extends ChangeNotifier {
   /// Add product (always keep as separate row)
   void addProduct(Product product) {
     _products.add(product);
+    _invalidateProductSummaries();
     notifyListeners();
   }
 
   /// 👇 Grouped view for totals (used in totals table)
   List<Product> get groupedProducts {
+    final cached = _groupedProductsCache;
+    if (cached != null) {
+      return cached;
+    }
     final Map<String, Product> grouped = {};
 
     for (final p in _products) {
@@ -80,25 +97,35 @@ class InvoiceProvider extends ChangeNotifier {
         grouped[key] = p;
       }
     }
-    return grouped.values.toList();
+    return _groupedProductsCache = List<Product>.unmodifiable(grouped.values);
   }
 
   void updateProduct(int index, Product newProduct) {
     _products[index] = newProduct;
+    _invalidateProductSummaries();
     notifyListeners();
   }
 
   void removeProductAt(int index) {
     _products.removeAt(index);
+    _invalidateProductSummaries();
     notifyListeners();
   }
 
   // Reset invoice (products + action)
   void clearInvoice() {
     _products.clear();
+    _invalidateProductSummaries();
     _invoiceAction = null;
     _customerName = null;
     notifyListeners();
+  }
+
+  void _invalidateProductSummaries() {
+    _productsViewCache = null;
+    _groupedProductsCache = null;
+    _totalCostCache = null;
+    _hasPackageProductsCache = null;
   }
 
   // 🔄 الدوال الجديدة لإدارة الفواتير
@@ -144,13 +171,12 @@ class InvoiceProvider extends ChangeNotifier {
             .contains(customerName.toLowerCase()))
         .toList();
   }
-  
+
   Future<void> deleteInvoice(String invoiceId) async {
     _invoices.removeWhere((invoice) => invoice.id == invoiceId);
     await _saveInvoicesToStorage();
     notifyListeners();
   }
-
 
   // Load products from local storage
   Future<void> loadMasterProducts() async {
