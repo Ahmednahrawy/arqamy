@@ -79,7 +79,7 @@ class _ProductInputFormState extends State<ProductInputForm> {
 
     if (_selectedProduct == null) {
       _showErrorSnackBar('رجاء اختر منتج');
-      debugPrint('Error caught: ##############');
+      debugPrint('Selected Product: $_selectedProduct');
       return;
     }
     if (_formKey.currentState?.validate() ?? false) {
