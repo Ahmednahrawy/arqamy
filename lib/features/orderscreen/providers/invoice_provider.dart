@@ -31,7 +31,7 @@ class InvoiceProvider extends ChangeNotifier {
     // }
   }
 
-  double? get totalCost {
+  double get totalCost {
     final cached = _totalCostCache;
     if (cached != null) {
       return cached;
@@ -131,7 +131,12 @@ class InvoiceProvider extends ChangeNotifier {
   // 🔄 الدوال الجديدة لإدارة الفواتير
   Future<void> saveInvoice(Invoice invoice) async {
     _invoices.add(invoice);
-    await _saveInvoicesToStorage();
+    try {
+      await _saveInvoicesToStorage();
+    } catch (_) {
+      _invoices.remove(invoice);
+      rethrow;
+    }
     notifyListeners();
   }
 
@@ -153,14 +158,13 @@ class InvoiceProvider extends ChangeNotifier {
     }
   }
 
-  Future<void> _saveInvoicesToStorage() async {
-    try {
-      final prefs = await SharedPreferences.getInstance();
-      final String invoicesJson =
-          json.encode(_invoices.map((invoice) => invoice.toJson()).toList());
-      await prefs.setString('saved_invoices', invoicesJson);
-    } catch (e) {
-      debugPrint('Error saving invoices: $e');
+  Future<void> _saveInvicesToStorage() async {
+    final prefs = await SharedPreferences.getInstance();
+    final invoicesJson =
+        json.encode(_invoices.map((invoice) => invoice.toJson()).toList());
+    final saved = await prefs.setString('saved_invoices', invoicesJson);
+    if (!saved) {
+      throw StateError('Failed to save invoices to local storage');
     }
   }
 
@@ -173,8 +177,16 @@ class InvoiceProvider extends ChangeNotifier {
   }
 
   Future<void> deleteInvoice(String invoiceId) async {
-    _invoices.removeWhere((invoice) => invoice.id == invoiceId);
-    await _saveInvoicesToStorage();
+    final index = _invoices.indexWhere((invoice) => invoice.id == invoiceId);
+    if (index == -1) return;
+
+    final invoice = _invoices.removeAt(index);
+    try {
+      await _saveInvoicesToStorage();
+    } catch (_) {
+      _invoices.insert(index, invoice);
+      rethrow;
+    }
     notifyListeners();
   }
 
