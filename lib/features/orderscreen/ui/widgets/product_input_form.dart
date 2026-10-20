@@ -1,7 +1,6 @@
 import 'package:arqamy/features/orderscreen/providers/invoice_provider.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 
 import 'package:arqamy/core/helpers/spacing.dart';
@@ -36,7 +35,6 @@ class _ProductInputFormState extends State<ProductInputForm> {
   final _packageNumberController = TextEditingController(text: "0");
   final _focusNodePackageNumber = FocusNode();
   final _priceController = TextEditingController();
-
   @override
   void initState() {
     super.initState();
@@ -173,6 +171,7 @@ class _ProductInputFormState extends State<ProductInputForm> {
     _packageNumberController.dispose();
     _priceController.dispose();
     _focusNodePackageNumber.dispose();
+
     super.dispose();
   }
 
@@ -188,132 +187,118 @@ class _ProductInputFormState extends State<ProductInputForm> {
           // Action buttons
           _actionSelector(size.width),
           verticalSpace(10),
-          // Product + weight
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              Flexible(
-                flex: 3,
-                child: Consumer<InvoiceProvider>(
-                  builder: (context, provider, _) {
-                    return DropdownSearch<String>(
-                      autoValidateMode: AutovalidateMode.onUserInteraction,
-                      items: (filter, _) => provider.masterProductList,
-                      // .where((item) => item.toLowerCase().contains(filter.toLowerCase()))
-                      // .toList(),
-                      selectedItem: _selectedProduct,
-                      decoratorProps: const DropDownDecoratorProps(
-                        decoration: InputDecoration(
-                          labelText: 'المنتج',
-                          suffixIcon: Icon(Icons.search),
-                          hintText: 'اختر منتج',
-                        ),
-                      ),
-                      popupProps: PopupProps.menu(
-                        fit: FlexFit.tight,
-                        itemBuilder: (context, item, isDisabled, isSelected) {
-                          return Container(
-                            decoration: const BoxDecoration(
-                              border: Border(
-                                bottom: BorderSide(
-                                  color: ColorsManager.lightGray,
-                                  width: 1.0,
-                                ),
-                              ),
-                            ),
-                            child: ListTile(title: Text(item)),
-                          );
-                        },
-                        showSearchBox: true,
-                      ),
-                      onSelected: (value) =>
-                          setState(() => _selectedProduct = value),
-                    );
-                  },
+          Consumer<InvoiceProvider>(
+            builder: (context, provider, _) => DropdownSearch<String>(
+              autoValidateMode: AutovalidateMode.onUserInteraction,
+              items: (filter, _) => provider.masterProductList,
+              selectedItem: _selectedProduct,
+              decoratorProps: const DropDownDecoratorProps(
+                decoration: InputDecoration(
+                  labelText: 'المنتج',
+                  suffixIcon: Icon(Icons.search),
+                  hintText: 'اختر منتج',
                 ),
               ),
-              // Weight
-              Flexible(
-                flex: 4,
+              popupProps: PopupProps.menu(
+                fit: FlexFit.tight,
+                itemBuilder: (context, item, isDisabled, isSelected) {
+                  return Container(
+                    decoration: const BoxDecoration(
+                      border: Border(
+                        bottom: BorderSide(
+                          color: ColorsManager.lightGray,
+                          width: 1.0,
+                        ),
+                      ),
+                    ),
+                    child: ListTile(title: Text(item)),
+                  );
+                },
+                showSearchBox: true,
+              ),
+              onSelected: (value) => setState(() => _selectedProduct = value),
+            ),
+          ),
+          verticalSpace(8),
+          Row(
+            children: [
+              Expanded(
                 child: AppTextFormField(
                   textDirection: TextDirection.ltr,
                   controller: _weightController,
                   labelText: 'الوزن أو العدد',
                   hintText: 'كجم',
-                  suffixIcon: _weightController.text == ''
-                      ? null
-                      : IconButton(
-                          onPressed: () => _weightController.clear(),
-                          icon: const Icon(Icons.clear)),
+                  keyboardType:
+                      const TextInputType.numberWithOptions(decimal: true),
                   validator: (value) {
-                    if (value == null || value.isEmpty)
+                    if (value == null || value.isEmpty) {
                       return 'رجاء أدخل الوزن';
-                    if (double.tryParse(value) == null) return 'ادخل رقم صالح';
+                    }
+                    if (double.tryParse(value) == null) {
+                      return 'ادخل رقم صالح';
+                    }
+                    return null;
+                  },
+                ),
+              ),
+              horizontalSpace(8),
+              Expanded(
+                child: AppTextFormField(
+                  textDirection: TextDirection.ltr,
+                  controller: _priceController,
+                  labelText: 'السعر',
+                  hintText: 'جنيه',
+                  keyboardType:
+                      const TextInputType.numberWithOptions(decimal: true),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'رجاء أدخل السعر';
+                    }
+                    if (double.tryParse(value) == null) {
+                      return 'ادخل رقم صالح';
+                    }
                     return null;
                   },
                 ),
               ),
             ],
           ),
-          verticalSpace(10),
-
-          // package weight, number, price
+          verticalSpace(8),
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.end,
             children: [
-              Flexible(
-                flex: 3,
+              Expanded(
                 child: AppTextFormField(
                   textDirection: TextDirection.ltr,
                   controller: _packageWeightController,
                   labelText: 'وزن العبوة',
                   suffixText: 'كجم',
+                  keyboardType:
+                      const TextInputType.numberWithOptions(decimal: true),
                   validator: (value) {
-                    if (value == null || value.isEmpty)
+                    if (value == null || value.isEmpty) {
                       return 'أدخل وزن العبوة الفارغة';
-                    if (double.tryParse(value) == null) return 'ادخل رقم صالح';
+                    }
+                    if (double.tryParse(value) == null) {
+                      return 'ادخل رقم صالح';
+                    }
                     return null;
                   },
                 ),
               ),
-              horizontalSpace(1.w),
-              Flexible(
-                flex: 3,
+              horizontalSpace(8),
+              Expanded(
                 child: AppTextFormField(
                   textDirection: TextDirection.ltr,
                   controller: _packageNumberController,
                   focusNode: _focusNodePackageNumber,
                   labelText: 'عدد الفارغ',
-                  suffixIcon: _packageNumberController.text == ''
-                      ? null
-                      : IconButton(
-                          onPressed: () => _packageNumberController.clear(),
-                          icon: const Icon(Icons.clear)),
                   validator: (value) {
-                    if (value == null || value.isEmpty)
+                    if (value == null || value.isEmpty) {
                       return 'أدخل عدد العبوات أولا';
-                    if (int.tryParse(value) == null) return 'ادخل رقم صالح';
-                    return null;
-                  },
-                ),
-              ),
-              Flexible(
-                flex: 4,
-                child: AppTextFormField(
-                  textDirection: TextDirection.ltr,
-                  controller: _priceController,
-                  labelText: 'السعر',
-                  hintText: 'جنيه',
-                  suffixIcon: _priceController.text == ''
-                      ? null
-                      : IconButton(
-                          onPressed: () => _priceController.clear(),
-                          icon: const Icon(Icons.clear)),
-                  validator: (value) {
-                    if (value == null || value.isEmpty)
-                      return 'رجاء أدخل السعر';
-                    if (double.tryParse(value) == null) return 'ادخل رقم صالح';
+                    }
+                    if (int.tryParse(value) == null) {
+                      return 'ادخل رقم صالح';
+                    }
                     return null;
                   },
                 ),

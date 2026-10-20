@@ -323,7 +323,9 @@ class _OrderscreenState extends State<Orderscreen>
             onTap: () => FocusScope.of(context).unfocus(),
             child: SingleChildScrollView(
               scrollDirection: Axis.vertical,
-              padding: const EdgeInsets.all(5),
+              // padding: const EdgeInsets.all(5),
+              keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+              padding: const EdgeInsets.fromLTRB(10, 8, 10, 16),
               child: Column(
                 children: [
                   Card(
@@ -391,13 +393,18 @@ class _OrderscreenState extends State<Orderscreen>
                       );
                     },
                   ),
-                  verticalSpace(100),
+                  // verticalSpace(100),
+                  Consumer<InvoiceProvider>(
+                    builder: (context, provider, _) =>
+                        SizedBox(height: provider.products.isEmpty ? 16 : 88),
+                  ),
                 ],
               ),
             ),
           ),
         ),
-        resizeToAvoidBottomInset: false,
+        // resizeToAvoidBottomInset: false,
+        resizeToAvoidBottomInset: true,
       ),
     );
   }
