@@ -29,7 +29,6 @@ class _ProductInputFormState extends State<ProductInputForm> {
   final _formKey = GlobalKey<FormState>();
   final List<String> actions = ['شراء', 'بـيع', 'تخزين'];
 
-  String? _action; // local UI highlight only
   String? _selectedProduct;
 
   final _weightController = TextEditingController();
@@ -66,7 +65,6 @@ class _ProductInputFormState extends State<ProductInputForm> {
     // _action = null;
     setState(() {});
   }
-
 
   void _handleAdd() {
     final provider = context.read<InvoiceProvider>();
@@ -125,61 +123,47 @@ class _ProductInputFormState extends State<ProductInputForm> {
     );
   }
 
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    final provider = Provider.of<InvoiceProvider>(context);
-    // Reset local _action if provider.invoiceAction is cleared
-    if (provider.invoiceAction == null && _action != null) {
-      setState(() {
-        _action = null;
-      });
-    }
-  }
-
   Widget _actionSelector(double width) {
-    final provider = context.watch<InvoiceProvider>();
-
-    if (provider.invoiceAction == null) {
-      return Container(
-        padding: const EdgeInsets.all(4),
-        decoration: BoxDecoration(
-          color: Colors.grey[100],
-          borderRadius: BorderRadius.circular(12),
-        ),
-        child: Row(
-          children: actions.map((action) {
-            return Expanded(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 4),
-                child: AnimatedContainer(
-                  duration: const Duration(milliseconds: 200),
-                  child: AppTextButton(
-                    borderRadius: 9,
-                    onPressed: () {
-                      provider.setInvoiceAction(action);
-                      setState(() => _action = action);
-                    },
-                    buttonWidth: width * 0.28,
-                    buttonHeight: 12,
-                    verticalPadding: 2,
-                    buttonText: action,
-                    backgroundColor: ColorsManager.mainBlue,
-                    textStyle: TextStyles.font16WhiteSemiBold,
+    return Consumer<InvoiceProvider>(
+      builder: (context, provider, _) {
+        if (provider.invoiceAction == null) {
+          return Container(
+            padding: const EdgeInsets.all(4),
+            decoration: BoxDecoration(
+              color: Colors.grey[100],
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Row(
+              children: actions.map((action) {
+                return Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 4),
+                    child: AnimatedContainer(
+                      duration: const Duration(milliseconds: 200),
+                      child: AppTextButton(
+                        borderRadius: 9,
+                        onPressed: () => provider.setInvoiceAction(action),
+                        buttonWidth: width * 0.28,
+                        buttonHeight: 12,
+                        verticalPadding: 2,
+                        buttonText: action,
+                        backgroundColor: ColorsManager.mainBlue,
+                        textStyle: TextStyles.font16WhiteSemiBold,
+                      ),
+                    ),
                   ),
-                ),
-              ),
-            );
-          }).toList(),
-        ),
-      );
-    } else {
-      return Center(
-        child: Chip(
-          label: Text('نوع الفاتورة: ${provider.invoiceAction}'),
-        ),
-      );
-    }
+                );
+              }).toList(),
+            ),
+          );
+        }
+        return Center(
+          child: Chip(
+            label: Text('نوع الفاتورة: ${provider.invoiceAction}'),
+          ),
+        );
+      },
+    );
   }
 
   @override

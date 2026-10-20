@@ -34,7 +34,6 @@ class _OrderscreenState extends State<Orderscreen>
   final _payController = TextEditingController(text: "0");
   final _payKey = GlobalKey<FormState>();
 
-
   late AnimationController _animationController;
   late Animation<double> _fadeAnimation;
 
@@ -325,43 +324,40 @@ class _OrderscreenState extends State<Orderscreen>
             child: SingleChildScrollView(
               scrollDirection: Axis.vertical,
               padding: const EdgeInsets.all(5),
-              child: Consumer<InvoiceProvider>(
-                builder: (context, provider, _) => Column(
-                  children: [
-                    Card(
-                      child: Consumer<InvoiceProvider>(
-                        builder: (context, provider, _) =>
-                            CustomerNameAutoComplete(
-                          key: ValueKey(provider.customerName ??
-                              'empty'), // This forces complete rebuild when customerName changes
-                          initialValue: provider.customerName,
-                          onCustomerSelected: (name) {
-                            print('Customer selected: "$name"');
-                            provider.setCustomerName(name ?? '');
-                          },
-                        ),
+              child: Column(
+                children: [
+                  Card(
+                    child: Consumer<InvoiceProvider>(
+                      builder: (context, provider, _) =>
+                          CustomerNameAutoComplete(
+                        key: ValueKey(provider.customerName ?? 'empty'),
+                        initialValue: provider.customerName,
+                        onCustomerSelected: (name) {
+                          print('Customer selected: "$name"');
+                          provider.setCustomerName(name ?? '');
+                        },
                       ),
                     ),
-                    verticalSpace(5),
-                    // Product input form (extracted)
-                    ProductInputForm(
-                      onAdd: _onAddProduct,
-                    ),
-                    verticalSpace(10),
-                    // Products table
-                    if (provider.products.isNotEmpty) ...[
-                      SizedBox(
-                        width: size.width,
-                        child: Column(
-                          children: [
-                            const MyDataTable(),
-                            const Divider(height: 32),
-                            _buildTotalCostCard(provider.totalCost),
-                          ],
-                        ),
-                      )
-                    ] else ...[
-                      Container(
+                  ),
+                  verticalSpace(5),
+                  ProductInputForm(onAdd: _onAddProduct),
+                  verticalSpace(10),
+                  Consumer<InvoiceProvider>(
+                    builder: (context, provider, _) {
+                      if (provider.products.isNotEmpty) {
+                        return SizedBox(
+                          width: size.width,
+                          child: Column(
+                            children: [
+                              const MyDataTable(),
+                              const Divider(height: 32),
+                              _buildTotalCostCard(provider.totalCost),
+                            ],
+                          ),
+                        );
+                      }
+
+                      return Container(
                         height: 200,
                         decoration: BoxDecoration(
                           color: Colors.white,
@@ -393,22 +389,11 @@ class _OrderscreenState extends State<Orderscreen>
                             ],
                           ),
                         ),
-                      ),
-                    ],
-                    verticalSpace(100)
-                    // Total cost
-                    // Row(
-                    //   // mainAxisAlignment: MainAxisAlignment.end,
-                    //   children: [
-                    //     Padding(
-                    //       padding: const EdgeInsets.all(8.0),
-                    //       child: Text(
-                    //           '${S.of(context).total_cost}: ${provider.totalCost} L.E'),
-                    //     ),
-                    //   ],
-                    // ),
-                  ],
-                ),
+                      );
+                    },
+                  ),
+                  verticalSpace(100),
+                ],
               ),
             ),
           ),

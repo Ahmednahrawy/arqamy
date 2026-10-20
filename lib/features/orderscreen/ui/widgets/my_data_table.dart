@@ -101,8 +101,9 @@ Widget _buildDetailedTable(
     scrollDirection: Axis.horizontal,
     child: DataTable(
       columns: buildDetailedColumns(showPackageColumns),
-      rows: products.map((product) {
-        final index = products.indexOf(product);
+      rows: products.asMap().entries.map((entry) {
+        final index = entry.key;
+        final product = entry.value;
         final netWeight =
             product.weight - (product.packageWeight * product.numberPackage);
         final totalPrice = netWeight * product.price;
