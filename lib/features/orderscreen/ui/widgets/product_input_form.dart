@@ -269,16 +269,14 @@ class _ProductInputFormState extends State<ProductInputForm> {
               Expanded(
                 child: AppTextFormField(
                   textDirection: TextDirection.ltr,
-                  controller: _packageWeightController,
-                  labelText: 'وزن العبوة',
-                  suffixText: 'كجم',
-                  keyboardType:
-                      const TextInputType.numberWithOptions(decimal: true),
+                  controller: _packageNumberController,
+                  focusNode: _focusNodePackageNumber,
+                  labelText: 'عدد الفارغ',
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'أدخل وزن العبوة الفارغة';
+                      return 'أدخل عدد العبوات أولا';
                     }
-                    if (double.tryParse(value) == null) {
+                    if (int.tryParse(value) == null) {
                       return 'ادخل رقم صالح';
                     }
                     return null;
@@ -289,14 +287,16 @@ class _ProductInputFormState extends State<ProductInputForm> {
               Expanded(
                 child: AppTextFormField(
                   textDirection: TextDirection.ltr,
-                  controller: _packageNumberController,
-                  focusNode: _focusNodePackageNumber,
-                  labelText: 'عدد الفارغ',
+                  controller: _packageWeightController,
+                  labelText: 'وزن العبوة',
+                  suffixText: 'كجم',
+                  keyboardType:
+                      const TextInputType.numberWithOptions(decimal: true),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'أدخل عدد العبوات أولا';
+                      return 'أدخل وزن العبوة الفارغة';
                     }
-                    if (int.tryParse(value) == null) {
+                    if (double.tryParse(value) == null) {
                       return 'ادخل رقم صالح';
                     }
                     return null;
