@@ -31,7 +31,7 @@ class InvoiceProvider extends ChangeNotifier {
     // }
   }
 
-  double? get totalCost {
+  double get totalCost {
     final cached = _totalCostCache;
     if (cached != null) {
       return cached;

@@ -36,7 +36,6 @@ class _ProductInputFormState extends State<ProductInputForm> {
   final _packageNumberController = TextEditingController(text: "0");
   final _focusNodePackageNumber = FocusNode();
   final _priceController = TextEditingController();
-  late AnimationController _expandController;
 
   @override
   void initState() {
@@ -58,7 +57,6 @@ class _ProductInputFormState extends State<ProductInputForm> {
     _weightController.clear();
     // _priceController.clear();
     _packageNumberController.text = "0";
-    _expandController.reverse();
 
     // do not reset defaults for package weight/number to avoid annoying UX
     // _selectedProduct = null;
@@ -175,7 +173,6 @@ class _ProductInputFormState extends State<ProductInputForm> {
     _packageNumberController.dispose();
     _priceController.dispose();
     _focusNodePackageNumber.dispose();
-    _expandController.dispose();
 
     super.dispose();
   }
