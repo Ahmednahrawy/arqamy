@@ -173,7 +173,6 @@ class _ProductInputFormState extends State<ProductInputForm> {
     _packageNumberController.dispose();
     _priceController.dispose();
     _focusNodePackageNumber.dispose();
-
     super.dispose();
   }
 
@@ -227,7 +226,7 @@ class _ProductInputFormState extends State<ProductInputForm> {
                         },
                         showSearchBox: true,
                       ),
-                      onSaved: (value) =>
+                      onSelected: (value) =>
                           setState(() => _selectedProduct = value),
                     );
                   },
