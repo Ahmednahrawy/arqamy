@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:arqamy/features/orderscreen/providers/invoice_provider.dart';
 
 class ProductManagementScreen extends StatefulWidget {
-  const ProductManagementScreen({Key? key}) : super(key: key);
+  const ProductManagementScreen({super.key});
 
   @override
   State<ProductManagementScreen> createState() => _ProductManagementScreenState();
