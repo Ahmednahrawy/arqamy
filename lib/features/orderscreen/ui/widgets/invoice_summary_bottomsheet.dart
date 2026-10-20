@@ -13,12 +13,14 @@ import 'package:provider/provider.dart';
 class InvoiceSummaryBottomSheet extends StatefulWidget {
   final TextEditingController payController;
   final GlobalKey<FormState> payFormKey;
+  final VoidCallback onSave;
   final VoidCallback onSend;
 
   const InvoiceSummaryBottomSheet({
     Key? key,
     required this.payController,
     required this.payFormKey,
+    required this.onSave,
     required this.onSend,
   }) : super(key: key);
 
@@ -44,7 +46,8 @@ class _InvoiceSummaryBottomSheetState extends State<InvoiceSummaryBottomSheet> {
       }
     });
   }
-   @override
+
+  @override
   void dispose() {
     // ✅ Step 5: Dispose FocusNode
     _payFocusNode.dispose();
@@ -58,7 +61,8 @@ class _InvoiceSummaryBottomSheetState extends State<InvoiceSummaryBottomSheet> {
     return Directionality(
       textDirection: TextDirection.rtl,
       child: Padding(
-        padding: EdgeInsetsGeometry.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+        padding: EdgeInsetsGeometry.only(
+            bottom: MediaQuery.of(context).viewInsets.bottom),
         child: Consumer<InvoiceProvider>(
           builder: (context, provider, _) {
             final totalCost = provider.totalCost;
@@ -114,13 +118,31 @@ class _InvoiceSummaryBottomSheetState extends State<InvoiceSummaryBottomSheet> {
                     ),
                   ),
                   verticalSpace(10),
-                  AppTextButton(
-                    onPressed: widget.onSend,
-                    buttonText: 'إرسال',
-                    textStyle: TextStyles.font18WhiteMedium,
-                    verticalPadding: 5.sp,
-                    buttonWidth: size.width * 0.5,
-                    backgroundColor: ColorsManager.gray,
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 12),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: AppTextButton(
+                            onPressed: widget.onSave,
+                            buttonText: 'حفظ',
+                            textStyle: TextStyles.font18WhiteMedium,
+                            verticalPadding: 5.sp,
+                            backgroundColor: ColorsManager.gray,
+                          ),
+                        ),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: AppTextButton(
+                            onPressed: widget.onSend,
+                            buttonText: 'مشاركة',
+                            textStyle: TextStyles.font18WhiteMedium,
+                            verticalPadding: 5.sp,
+                            backgroundColor: ColorsManager.mainBlue,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                   verticalSpace(10),
                 ],

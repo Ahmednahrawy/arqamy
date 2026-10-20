@@ -130,11 +130,22 @@ class InvoiceProvider extends ChangeNotifier {
 
   // 🔄 الدوال الجديدة لإدارة الفواتير
   Future<void> saveInvoice(Invoice invoice) async {
-    _invoices.add(invoice);
+    final index = _invoices.indexWhere((saved) => saved.id == invoice.id);
+    final previousInvoice = index == -1 ? null : _invoices[index];
+    if (index == -1) {
+      _invoices.add(invoice);
+    } else {
+      _invoices[index] = invoice;
+    }
+
     try {
       await _saveInvoicesToStorage();
     } catch (_) {
-      _invoices.remove(invoice);
+      if (index == -1) {
+        _invoices.remove(invoice);
+      } else {
+        _invoices[index] = previousInvoice!;
+      }
       rethrow;
     }
     notifyListeners();
@@ -158,7 +169,7 @@ class InvoiceProvider extends ChangeNotifier {
     }
   }
 
-  Future<void> _saveInvicesToStorage() async {
+  Future<void> _saveInvoicesToStorage() async {
     final prefs = await SharedPreferences.getInstance();
     final invoicesJson =
         json.encode(_invoices.map((invoice) => invoice.toJson()).toList());
