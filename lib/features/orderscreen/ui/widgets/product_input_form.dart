@@ -15,10 +15,10 @@ class ProductInputForm extends StatefulWidget {
   final void Function(Product)? onAdd; // optional callback for backward-compat
 
   const ProductInputForm({
-    Key? key,
+    super.key,
     // required this.productList,
     this.onAdd,
-  }) : super(key: key);
+  });
 
   @override
   State<ProductInputForm> createState() => _ProductInputFormState();

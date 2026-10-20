@@ -1,6 +1,8 @@
+import 'package:arqamy/features/orderscreen/data/models/invoice.dart';
 import 'package:arqamy/features/orderscreen/data/models/product_model.dart';
 import 'package:arqamy/features/orderscreen/providers/invoice_provider.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
   test('caches product summaries and invalidates them after changes', () {
@@ -57,5 +59,35 @@ void main() {
     expect(provider.totalCost, 0);
     expect(provider.hasPackageProducts, isFalse);
     expect(provider.groupedProducts, isEmpty);
+  });
+  test('deleting an invoice removes it from persistent storage', () async {
+    SharedPreferences.setMockInitialValues({});
+    final provider = InvoiceProvider();
+    final invoice = Invoice(
+      id: 'invoice-1',
+      customerName: 'Customer',
+      products: [
+        Product(
+          name: 'Rice',
+          weight: 2,
+          packageWeight: 0,
+          numberPackage: 0,
+          price: 10,
+        ),
+      ],
+      totalCost: 20,
+      paid: 0,
+      rest: 20,
+      formattedDate: '2026-10-20',
+      formattedTime: '08:00',
+      invoiceSerial: '1001',
+    );
+
+    await provider.saveInvoice(invoice);
+    await provider.deleteInvoice(invoice.id);
+
+    final reloadedProvider = InvoiceProvider();
+    await reloadedProvider.loadInvoices();
+    expect(reloadedProvider.invoices, isEmpty);
   });
 }

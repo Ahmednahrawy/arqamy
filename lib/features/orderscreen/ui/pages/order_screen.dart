@@ -20,6 +20,7 @@ class Orderscreen extends StatefulWidget {
   const Orderscreen({super.key});
   // This widget is the main screen for issuing invoices.
   //   It allows users to create, manage, and send invoices for products with various actions like buying, selling, or storing. @override
+  @override
   State<Orderscreen> createState() => _OrderscreenState();
 }
 
@@ -33,6 +34,8 @@ class _OrderscreenState extends State<Orderscreen>
   // pay (kept in Orderscreen so sending logic remains here)
   final _payController = TextEditingController(text: "0");
   final _payKey = GlobalKey<FormState>();
+  String? _savedInvoiceId;
+  int _productFormVersion = 0;
 
   late AnimationController _animationController;
   late Animation<double> _fadeAnimation;
@@ -151,6 +154,7 @@ class _OrderscreenState extends State<Orderscreen>
         );
 
         await provider.saveInvoice(invoice);
+        setState(() => _savedInvoiceId = invoice.id);
 
         Navigator.of(context).pop();
         Navigator.of(context).pop();
@@ -164,24 +168,40 @@ class _OrderscreenState extends State<Orderscreen>
   }
 
   // Clear invoice button handler
-  void _clearInvoice() {
+  void _startNewInvoice() {
     final provider = context.read<InvoiceProvider>();
-    if (provider.products.isEmpty && provider.customerName == null) {
-      _showToast('لا توجد فاتورة لمسحها');
+    final hasDraft = provider.products.isNotEmpty ||
+        provider.customerName != null ||
+        provider.invoiceAction != null;
+    void resetDraft() {
+      provider.clearInvoice();
+      _payController.text = '0';
+      setState(() {
+        _savedInvoiceId = null;
+        _productFormVersion++;
+      });
+    }
+
+    if (!hasDraft) {
+      resetDraft();
+      _showToast('فاتورة جديدة جاهزة');
       return;
     }
+
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
         title: const Row(
           children: [
-            Icon(Icons.warning, color: Colors.orange),
+            Icon(Icons.add_circle_outline, color: Colors.blue),
             SizedBox(width: 8),
-            Text("مسح الفاتورة"),
+            Text('فاتورة جديدة'),
           ],
         ),
-        content: const Text("هل أنت متأكد من مسح الفاتورة الحالية؟"),
+        content: const Text(
+          'سيتم مسح بيانات الفاتورة الحالية فقط. لن يتم حذف الفواتير المحفوظة.',
+        ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
@@ -189,16 +209,70 @@ class _OrderscreenState extends State<Orderscreen>
           ),
           ElevatedButton(
             onPressed: () {
-              provider.clearInvoice();
-              _payController.text = "0";
               Navigator.pop(context);
-              _showToast('تم مسح الفاتورة');
+              resetDraft();
+              _showToast('فاتورة جديدة جاهزة');
+            },
+            child: const Text('جديد'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _deleteSavedInvoice() {
+    final invoiceId = _savedInvoiceId;
+    if (invoiceId == null) {
+      _showToast('لا توجد فاتورة محفوظة مفتوحة للحذف', isError: true);
+      return;
+    }
+
+    showDialog(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+        title: const Row(
+          children: [
+            Icon(Icons.warning, color: Colors.orange),
+            SizedBox(width: 8),
+            Text('حذف الفاتورة المحفوظة'),
+          ],
+        ),
+        content: const Text(
+          'هل أنت متأكد من حذف الفاتورة المحفوظة؟ لا يمكن التراجع عن هذا الإجراء.',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(dialogContext),
+            child: const Text("إلغاء"),
+          ),
+          ElevatedButton(
+            onPressed: () async {
+              try {
+                await context.read<InvoiceProvider>().deleteInvoice(invoiceId);
+                if (!dialogContext.mounted) return;
+                Navigator.pop(dialogContext);
+                if (!mounted) return;
+
+                context.read<InvoiceProvider>().clearInvoice();
+                _payController.text = '0';
+                setState(() {
+                  _savedInvoiceId = null;
+                  _productFormVersion++;
+                });
+                _showToast('تم حذف الفاتورة وتهيئة فاتورة جديدة');
+              } catch (error) {
+                if (!dialogContext.mounted) return;
+                Navigator.pop(dialogContext);
+                if (!mounted) return;
+                _showToast('فشل حذف الفاتورة: $error', isError: true);
+              }
             },
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.red,
               foregroundColor: Colors.white,
             ),
-            child: const Text("مسح"),
+            child: const Text('حذف'),
           ),
         ],
       ),
@@ -279,36 +353,36 @@ class _OrderscreenState extends State<Orderscreen>
             "إصدار فاتورة",
           ),
           actions: [
-            // Add clear invoice button to AppBar
-            Consumer<InvoiceProvider>(
-              builder: (context, provider, _) {
-                final hasData = provider.products.isNotEmpty ||
-                    provider.customerName != null;
-                return ElevatedButton.icon(
-                  onPressed: _clearInvoice,
-                  icon: const Icon(Icons.delete_forever, size: 20),
-                  label: const Text('مسح'),
-                  style: ElevatedButton.styleFrom(
-                    foregroundColor: hasData ? Colors.red : Colors.grey,
-                    backgroundColor: Colors.white,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20),
+            Padding(
+              padding: const EdgeInsetsDirectional.only(end: 8),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  OutlinedButton.icon(
+                    onPressed: _startNewInvoice,
+                    icon: const Icon(Icons.add, size: 18),
+                    label: const Text('جديد'),
+                    style: OutlinedButton.styleFrom(
+                      foregroundColor: Colors.white,
+                      side: const BorderSide(color: Colors.white70),
                     ),
                   ),
-                );
-                // Row(
-                //   children: [
-                //     IconButton(
-                //       icon: const Icon(Icons.delete),
-                //       onPressed: _clearInvoice,
-                //     ),
-                //     const Text(
-                //       ' مسح الفاتورة',
-                //       style: TextStyle(fontSize: 12),
-                //     ),
-                //   ],
-                // );
-              },
+                  const SizedBox(width: 8),
+                  ElevatedButton.icon(
+                    onPressed:
+                        _savedInvoiceId == null ? null : _deleteSavedInvoice,
+                    icon: const Icon(Icons.delete_forever, size: 18),
+                    label: const Text('مسح'),
+                    style: ElevatedButton.styleFrom(
+                      foregroundColor:
+                          _savedInvoiceId == null ? Colors.grey : Colors.red,
+                      backgroundColor: Colors.white,
+                      disabledForegroundColor: Colors.grey,
+                      disabledBackgroundColor: Colors.white70,
+                    ),
+                  ),
+                ],
+              ),
             ),
           ],
         ),
@@ -335,14 +409,16 @@ class _OrderscreenState extends State<Orderscreen>
                         key: ValueKey(provider.customerName ?? 'empty'),
                         initialValue: provider.customerName,
                         onCustomerSelected: (name) {
-                          print('Customer selected: "$name"');
                           provider.setCustomerName(name ?? '');
                         },
                       ),
                     ),
                   ),
                   verticalSpace(5),
-                  ProductInputForm(onAdd: _onAddProduct),
+                  ProductInputForm(
+                    key: ValueKey(_productFormVersion),
+                    onAdd: _onAddProduct,
+                  ),
                   verticalSpace(10),
                   Consumer<InvoiceProvider>(
                     builder: (context, provider, _) {

@@ -40,7 +40,7 @@ void main() {
     await tester.pumpAndSettle();
     await tester.tap(find.text('اختر منتج'));
     await tester.pumpAndSettle();
-     await tester.tap(
+    await tester.tap(
       find
           .ancestor(
             of: find.text('تمر سيوي').last,
@@ -50,7 +50,7 @@ void main() {
       warnIfMissed: false,
     );
     await tester.pumpAndSettle();
-      await tester.enterText(
+    await tester.enterText(
       find.byWidgetPredicate(
         (widget) =>
             widget is TextField &&
@@ -69,6 +69,11 @@ void main() {
     await tester.pumpAndSettle();
     expect(invoiceProvider.products, hasLength(1));
     expect(invoiceProvider.products.single.name, 'تمر سيوي');
+    await tester.tap(find.text('جديد'));
     await tester.pumpAndSettle();
+    await tester.tap(find.widgetWithText(ElevatedButton, 'جديد'));
+    await tester.pumpAndSettle();
+
+    expect(invoiceProvider.products, isEmpty);
   });
 }
