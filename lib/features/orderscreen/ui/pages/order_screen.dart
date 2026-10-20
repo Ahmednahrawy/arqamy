@@ -35,6 +35,7 @@ class _OrderscreenState extends State<Orderscreen>
   final _payController = TextEditingController(text: "0");
   final _payKey = GlobalKey<FormState>();
   String? _savedInvoiceId;
+  Invoice? _savedInvoice;
   int _productFormVersion = 0;
 
   late AnimationController _animationController;
@@ -104,68 +105,98 @@ class _OrderscreenState extends State<Orderscreen>
   }
 
   // Generates and shares an invoice as a PDF file
-  Future<void> _sendInvoice() async {
-    final provider = context.read<InvoiceProvider>();
-    final settings = context.read<InvoiceSettingsProvider>();
-    if (_payKey.currentState!.validate()) {
-      if (provider.customerName == null ||
-          provider.customerName!.isEmpty ||
-          provider.customerName!.length < 4) {
-        _showToast(S.of(context).please_choose_customer);
-        return;
-      }
+  bool _validateInvoice(InvoiceProvider provider) {
+    if (!(_payKey.currentState?.validate() ?? false)) return false;
+    if (provider.customerName == null ||
+        provider.customerName!.isEmpty ||
+        provider.customerName!.length < 4) {
+      _showToast(S.of(context).please_choose_customer);
+      return false;
+    }
+    return true;
+  }
+
+  Invoice _buildInvoice(InvoiceProvider provider) {
+    if (_savedInvoice == null) {
       _selectDate(context);
-      // Show loading indicator
-      showDialog(
-        context: context,
-        barrierDismissible: false,
-        builder: (context) => const Center(
-          child: CircularProgressIndicator(),
-        ),
-      );
+    }
 
+    return Invoice(
+      id: _savedInvoice?.id ?? _generateInvoiceId(),
+      customerName: provider.customerName!,
+      products: List.from(provider.products),
+      totalCost: provider.totalCost,
+      paid: _paid,
+      rest: _rest(provider.totalCost),
+      formattedDate: _savedInvoice?.formattedDate ?? formattedDate!,
+      formattedTime: _savedInvoice?.formattedTime ?? formattedTime!,
+      invoiceAction: provider.invoiceAction,
+      invoiceSerial: _savedInvoice?.invoiceSerial ?? _generateInvoiceSerial(),
+    );
+  }
+
+  Future<void> _saveInvoice({required bool share}) async {
+    final provider = context.read<InvoiceProvider>();
+    if (!_validateInvoice(provider)) return;
+
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => const Center(
+        child: CircularProgressIndicator(),
+      ),
+    );
+
+    late final Invoice invoice;
+    try {
+      invoice = _buildInvoice(provider);
+      await provider.saveInvoice(invoice);
+      if (!mounted) return;
+      setState(() {
+        _savedInvoice = invoice;
+        _savedInvoiceId = invoice.id;
+      });
+    } catch (error) {
+      if (!mounted) return;
+      Navigator.of(context).pop();
+      _showToast('فشل حفظ الفاتورة: $error', isError: true);
+      return;
+    }
+
+    if (share) {
       try {
-        final invoiceSerial = _generateInvoiceSerial();
-
         await InvoiceService.generateAndShareInvoice(
           provider: provider,
-          settings: settings,
-          customerName: provider.customerName!,
-          totalCost: provider.totalCost,
-          paid: _paid,
-          rest: _rest(provider.totalCost),
-          formattedDate: formattedDate,
-          formattedTime: formattedTime,
-          invoiceAction: provider.invoiceAction,
-          invoiceSerial: invoiceSerial,
+          settings: context.read<InvoiceSettingsProvider>(),
+          customerName: invoice.customerName,
+          totalCost: invoice.totalCost,
+          paid: invoice.paid,
+          rest: invoice.rest,
+          formattedDate: invoice.formattedDate,
+          formattedTime: invoice.formattedTime,
+          invoiceAction: invoice.invoiceAction,
+          invoiceSerial: invoice.invoiceSerial,
         );
-        // حفظ الفاتورة بعد الإرسال
-        final invoice = Invoice(
-          id: _generateInvoiceId(),
-          customerName: provider.customerName!,
-          products: List.from(provider.products),
-          totalCost: provider.totalCost,
-          paid: _paid,
-          rest: _rest(provider.totalCost),
-          formattedDate: formattedDate!,
-          formattedTime: formattedTime!,
-          invoiceAction: provider.invoiceAction,
-          invoiceSerial: invoiceSerial,
-        );
-
-        await provider.saveInvoice(invoice);
-        setState(() => _savedInvoiceId = invoice.id);
-
+      } catch (error) {
+        if (!mounted) return;
         Navigator.of(context).pop();
-        Navigator.of(context).pop();
-        _showToast(S.of(context).invoice_sent_successfully);
-      } catch (e) {
-        Navigator.of(context).pop();
-        _showToast('فشل إرسال فاتورة: $e');
-        // debugPrint('Invoice error: $e');
+        _showToast('تم حفظ الفاتورة ولكن فشلت المشاركة: $error', isError: true);
+        return;
       }
     }
+    if (!mounted) return;
+    Navigator.of(context).pop();
+    Navigator.of(context).pop();
+    if (share) {
+      _showToast(S.of(context).invoice_sent_successfully);
+    } else {
+      _showToast('تم حفظ الفاتورة بنجاح');
+    }
   }
+
+  Future<void> _sendInvoice() => _saveInvoice(share: true);
+
+  Future<void> _saveInvoiceOnly() => _saveInvoice(share: false);
 
   // Clear invoice button handler
   void _startNewInvoice() {
@@ -178,6 +209,7 @@ class _OrderscreenState extends State<Orderscreen>
       _payController.text = '0';
       setState(() {
         _savedInvoiceId = null;
+        _savedInvoice = null;
         _productFormVersion++;
       });
     }
@@ -258,6 +290,7 @@ class _OrderscreenState extends State<Orderscreen>
                 _payController.text = '0';
                 setState(() {
                   _savedInvoiceId = null;
+                  _savedInvoice = null;
                   _productFormVersion++;
                 });
                 _showToast('تم حذف الفاتورة وتهيئة فاتورة جديدة');
@@ -305,6 +338,7 @@ class _OrderscreenState extends State<Orderscreen>
                       return InvoiceSummaryBottomSheet(
                         payController: _payController,
                         payFormKey: _payKey,
+                        onSave: _saveInvoiceOnly,
                         onSend: _sendInvoice,
                       );
                     },

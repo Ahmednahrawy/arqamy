@@ -8,6 +8,7 @@
 import 'package:arqamy/core/providers/language.dart';
 import 'package:arqamy/core/providers/theme.dart';
 import 'package:arqamy/features/orderscreen/providers/invoice_provider.dart';
+import 'package:arqamy/features/orderscreen/data/models/product_model.dart';  
 import 'package:arqamy/features/orderscreen/ui/pages/order_screen.dart';
 import 'package:arqamy/features/settingscreen/providers/invoice_setting_provider.dart';
 import 'package:flutter/material.dart';
@@ -75,5 +76,48 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(invoiceProvider.products, isEmpty);
+  });
+   testWidgets('saving an invoice from the summary does not share a PDF',
+      (WidgetTester tester) async {
+    SharedPreferences.setMockInitialValues({});
+    final invoiceProvider = InvoiceProvider()
+      ..setCustomerName('Test customer')
+      ..setInvoiceAction('شراء')
+      ..addProduct(
+        Product(
+          name: 'Rice',
+          weight: 5,
+          packageWeight: 0,
+          numberPackage: 0,
+          price: 10,
+        ),
+      );
+    await tester.pumpWidget(
+      MultiProvider(
+        providers: [
+          ChangeNotifierProvider(create: (_) => Language()),
+          ChangeNotifierProvider(create: (_) => ThemeProvider()),
+          ChangeNotifierProvider.value(value: invoiceProvider),
+          ChangeNotifierProvider(create: (_) => InvoiceSettingsProvider()),
+        ],
+        child: MyApp(appRouter: AppRouter()),
+      ),
+    );
+    await tester.pumpAndSettle();
+    await tester.tap(find.byType(FloatingActionButton));
+    await tester.pumpAndSettle();
+    await tester.tap(find.widgetWithText(TextButton, 'حفظ'));
+    await tester.pumpAndSettle();
+    expect(invoiceProvider.invoices, hasLength(1));
+    expect(invoiceProvider.invoices.single.customerName, 'Test customer');
+    expect(
+      (await SharedPreferences.getInstance()).getString('saved_invoices'),
+      isNotNull,
+    );
+    await tester.tap(find.byType(FloatingActionButton));
+    await tester.pumpAndSettle();
+    await tester.tap(find.widgetWithText(TextButton, 'حفظ'));
+    await tester.pumpAndSettle();
+    expect(invoiceProvider.invoices, hasLength(1));
   });
 }

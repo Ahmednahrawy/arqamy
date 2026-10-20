@@ -130,11 +130,24 @@ class InvoiceProvider extends ChangeNotifier {
 
   // 🔄 الدوال الجديدة لإدارة الفواتير
   Future<void> saveInvoice(Invoice invoice) async {
-    _invoices.add(invoice);
+    // _invoices.add(invoice);
+    final index = _invoices.indexWhere((saved) => saved.id == invoice.id);
+    final previousInvoice = index == -1 ? null : _invoices[index];
+    if (index == -1) {
+      _invoices.add(invoice);
+    } else {
+      _invoices[index] = invoice;
+    }
+
     try {
       await _saveInvoicesToStorage();
     } catch (_) {
-      _invoices.remove(invoice);
+      // _invoices.remove(invoice);
+      if (index == -1) {
+        _invoices.remove(invoice);
+      } else {
+        _invoices[index] = previousInvoice!;
+      }
       rethrow;
     }
     notifyListeners();
