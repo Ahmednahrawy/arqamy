@@ -8,7 +8,7 @@
 import 'package:arqamy/core/providers/language.dart';
 import 'package:arqamy/core/providers/theme.dart';
 import 'package:arqamy/features/orderscreen/providers/invoice_provider.dart';
-import 'package:arqamy/features/orderscreen/data/models/product_model.dart';  
+import 'package:arqamy/features/orderscreen/data/models/product_model.dart';
 import 'package:arqamy/features/orderscreen/ui/pages/order_screen.dart';
 import 'package:arqamy/features/settingscreen/providers/invoice_setting_provider.dart';
 import 'package:flutter/material.dart';
@@ -23,6 +23,7 @@ void main() {
       (WidgetTester tester) async {
     SharedPreferences.setMockInitialValues({});
     final invoiceProvider = InvoiceProvider();
+
     await tester.pumpWidget(
       MultiProvider(
         providers: [
@@ -35,6 +36,7 @@ void main() {
       ),
     );
     await tester.pumpAndSettle();
+
     expect(find.byType(Orderscreen), findsOneWidget);
 
     await tester.tap(find.text('شراء'));
@@ -51,6 +53,7 @@ void main() {
       warnIfMissed: false,
     );
     await tester.pumpAndSettle();
+
     await tester.enterText(
       find.byWidgetPredicate(
         (widget) =>
@@ -68,8 +71,10 @@ void main() {
     );
     await tester.tap(find.text('أضف منتج'));
     await tester.pumpAndSettle();
+
     expect(invoiceProvider.products, hasLength(1));
     expect(invoiceProvider.products.single.name, 'تمر سيوي');
+
     await tester.tap(find.text('جديد'));
     await tester.pumpAndSettle();
     await tester.tap(find.widgetWithText(ElevatedButton, 'جديد'));
@@ -77,7 +82,8 @@ void main() {
 
     expect(invoiceProvider.products, isEmpty);
   });
-   testWidgets('saving an invoice from the summary does not share a PDF',
+
+  testWidgets('saving an invoice from the summary does not share a PDF',
       (WidgetTester tester) async {
     SharedPreferences.setMockInitialValues({});
     final invoiceProvider = InvoiceProvider()
@@ -92,6 +98,7 @@ void main() {
           price: 10,
         ),
       );
+
     await tester.pumpWidget(
       MultiProvider(
         providers: [
@@ -104,20 +111,58 @@ void main() {
       ),
     );
     await tester.pumpAndSettle();
+
     await tester.tap(find.byType(FloatingActionButton));
     await tester.pumpAndSettle();
     await tester.tap(find.widgetWithText(TextButton, 'حفظ'));
     await tester.pumpAndSettle();
+
     expect(invoiceProvider.invoices, hasLength(1));
     expect(invoiceProvider.invoices.single.customerName, 'Test customer');
     expect(
       (await SharedPreferences.getInstance()).getString('saved_invoices'),
       isNotNull,
     );
+
     await tester.tap(find.byType(FloatingActionButton));
     await tester.pumpAndSettle();
     await tester.tap(find.widgetWithText(TextButton, 'حفظ'));
     await tester.pumpAndSettle();
+
     expect(invoiceProvider.invoices, hasLength(1));
+  });
+
+  testWidgets('order entry fits tablet screens without clipping',
+      (WidgetTester tester) async {
+    tester.view.devicePixelRatio = 1;
+    tester.view.physicalSize = const Size(1280, 800);
+    addTearDown(tester.view.resetDevicePixelRatio);
+    addTearDown(tester.view.resetPhysicalSize);
+    SharedPreferences.setMockInitialValues({});
+
+    await tester.pumpWidget(
+      MultiProvider(
+        providers: [
+          ChangeNotifierProvider(create: (_) => Language()),
+          ChangeNotifierProvider(create: (_) => ThemeProvider()),
+          ChangeNotifierProvider(create: (_) => InvoiceProvider()),
+          ChangeNotifierProvider(create: (_) => InvoiceSettingsProvider()),
+        ],
+        child: MyApp(appRouter: AppRouter()),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    final addButtonText = tester.getRect(find.text('أضف منتج'));
+    final addButton = find.ancestor(
+      of: find.text('أضف منتج'),
+      matching: find.byType(TextButton),
+    );
+    final addButtonSize = tester.getSize(addButton);
+    expect(addButtonText.left, greaterThanOrEqualTo(0));
+    expect(addButtonText.right, lessThanOrEqualTo(1280));
+    expect(addButtonSize.width, lessThanOrEqualTo(420));
+    expect(addButtonSize.height, 52);
+    expect(tester.takeException(), isNull);
   });
 }

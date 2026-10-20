@@ -1,6 +1,5 @@
 import 'package:arqamy/features/orderscreen/providers/invoice_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:arqamy/config/theme/colors.dart';
 import 'package:arqamy/config/theme/styles.dart';
@@ -120,7 +119,7 @@ class _InvoiceSummaryBottomSheetState extends State<InvoiceSummaryBottomSheet> {
                     ),
                   ),
                   verticalSpace(10),
-                   Padding(
+                  Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 12),
                     child: Row(
                       children: [
@@ -128,18 +127,18 @@ class _InvoiceSummaryBottomSheetState extends State<InvoiceSummaryBottomSheet> {
                           child: AppTextButton(
                             onPressed: widget.onSave,
                             buttonText: 'حفظ',
-                    textStyle: TextStyles.font18WhiteMedium,
-                    verticalPadding: 5.sp,
-                    backgroundColor: ColorsManager.gray,
-                  ),
-                   ),
+                            textStyle: TextStyles.font18WhiteMedium,
+                            verticalPadding: 5,
+                            backgroundColor: ColorsManager.gray,
+                          ),
+                        ),
                         const SizedBox(width: 12),
                         Expanded(
                           child: AppTextButton(
                             onPressed: widget.onSend,
                             buttonText: 'مشاركة',
                             textStyle: TextStyles.font18WhiteMedium,
-                            verticalPadding: 5.sp,
+                            verticalPadding: 5,
                             backgroundColor: ColorsManager.mainBlue,
                           ),
                         ),

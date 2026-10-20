@@ -364,8 +364,6 @@ class _OrderscreenState extends State<Orderscreen>
 
   @override
   Widget build(BuildContext context) {
-    // media query size
-    final size = MediaQuery.sizeOf(context);
     return Directionality(
       textDirection: TextDirection.rtl,
       child: Scaffold(
@@ -431,84 +429,88 @@ class _OrderscreenState extends State<Orderscreen>
             onTap: () => FocusScope.of(context).unfocus(),
             child: SingleChildScrollView(
               scrollDirection: Axis.vertical,
-              // padding: const EdgeInsets.all(5),
               keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
               padding: const EdgeInsets.fromLTRB(10, 8, 10, 16),
-              child: Column(
-                children: [
-                  Card(
-                    child: Consumer<InvoiceProvider>(
-                      builder: (context, provider, _) =>
-                          CustomerNameAutoComplete(
-                        key: ValueKey(provider.customerName ?? 'empty'),
-                        initialValue: provider.customerName,
-                        onCustomerSelected: (name) {
-                          provider.setCustomerName(name ?? '');
+              child: Center(
+                child: ConstrainedBox(
+                  constraints: const BoxConstraints(maxWidth: 1100),
+                  child: Column(
+                    children: [
+                      Card(
+                        child: Consumer<InvoiceProvider>(
+                          builder: (context, provider, _) =>
+                              CustomerNameAutoComplete(
+                            key: ValueKey(provider.customerName ?? 'empty'),
+                            initialValue: provider.customerName,
+                            onCustomerSelected: (name) {
+                              provider.setCustomerName(name ?? '');
+                            },
+                          ),
+                        ),
+                      ),
+                      verticalSpace(5),
+                      ProductInputForm(
+                        key: ValueKey(_productFormVersion),
+                        onAdd: _onAddProduct,
+                      ),
+                      verticalSpace(10),
+                      Consumer<InvoiceProvider>(
+                        builder: (context, provider, _) {
+                          if (provider.products.isNotEmpty) {
+                            return SizedBox(
+                              width: double.infinity,
+                              child: Column(
+                                children: [
+                                  const MyDataTable(),
+                                  const Divider(height: 32),
+                                  _buildTotalCostCard(provider.totalCost),
+                                ],
+                              ),
+                            );
+                          }
+                          return Container(
+                            height: 200,
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(15),
+                              border: Border.all(color: Colors.grey[300]!),
+                            ),
+                            child: Center(
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Icon(Icons.shopping_cart_outlined,
+                                      size: 60, color: Colors.grey[400]),
+                                  const SizedBox(height: 16),
+                                  Text(
+                                    'لا توجد منتجات مضافة',
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      color: Colors.grey[600],
+                                    ),
+                                  ),
+                                  const SizedBox(height: 8),
+                                  Text(
+                                    'ابدأ بإضافة منتجات للفاتورة',
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                      color: Colors.grey[500],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          );
                         },
                       ),
-                    ),
+                      // verticalSpace(100),
+                      Consumer<InvoiceProvider>(
+                        builder: (context, provider, _) => SizedBox(
+                            height: provider.products.isEmpty ? 16 : 88),
+                      ),
+                    ],
                   ),
-                  verticalSpace(5),
-                  ProductInputForm(
-                    key: ValueKey(_productFormVersion),
-                    onAdd: _onAddProduct,
-                  ),
-                  verticalSpace(10),
-                  Consumer<InvoiceProvider>(
-                    builder: (context, provider, _) {
-                      if (provider.products.isNotEmpty) {
-                        return SizedBox(
-                          width: size.width,
-                          child: Column(
-                            children: [
-                              const MyDataTable(),
-                              const Divider(height: 32),
-                              _buildTotalCostCard(provider.totalCost),
-                            ],
-                          ),
-                        );
-                      }
-                      return Container(
-                        height: 200,
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(15),
-                          border: Border.all(color: Colors.grey[300]!),
-                        ),
-                        child: Center(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Icon(Icons.shopping_cart_outlined,
-                                  size: 60, color: Colors.grey[400]),
-                              const SizedBox(height: 16),
-                              Text(
-                                'لا توجد منتجات مضافة',
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  color: Colors.grey[600],
-                                ),
-                              ),
-                              const SizedBox(height: 8),
-                              Text(
-                                'ابدأ بإضافة منتجات للفاتورة',
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  color: Colors.grey[500],
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      );
-                    },
-                  ),
-                  // verticalSpace(100),
-                  Consumer<InvoiceProvider>(
-                    builder: (context, provider, _) =>
-                        SizedBox(height: provider.products.isEmpty ? 16 : 88),
-                  ),
-                ],
+                ),
               ),
             ),
           ),

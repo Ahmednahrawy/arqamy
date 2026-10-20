@@ -121,7 +121,7 @@ class _ProductInputFormState extends State<ProductInputForm> {
     );
   }
 
-  Widget _actionSelector(double width) {
+  Widget _actionSelector() {
     return Consumer<InvoiceProvider>(
       builder: (context, provider, _) {
         if (provider.invoiceAction == null) {
@@ -141,8 +141,7 @@ class _ProductInputFormState extends State<ProductInputForm> {
                       child: AppTextButton(
                         borderRadius: 9,
                         onPressed: () => provider.setInvoiceAction(action),
-                        buttonWidth: width * 0.28,
-                        buttonHeight: 12,
+                        buttonHeight: 48,
                         verticalPadding: 2,
                         buttonText: action,
                         backgroundColor: ColorsManager.mainBlue,
@@ -177,145 +176,154 @@ class _ProductInputFormState extends State<ProductInputForm> {
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.sizeOf(context);
-
-    return Form(
-      key: _formKey,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          // Action buttons
-          _actionSelector(size.width),
-          verticalSpace(10),
-          Consumer<InvoiceProvider>(
-            builder: (context, provider, _) => DropdownSearch<String>(
-              autoValidateMode: AutovalidateMode.onUserInteraction,
-              items: (filter, _) => provider.masterProductList,
-              selectedItem: _selectedProduct,
-              decoratorProps: const DropDownDecoratorProps(
-                decoration: InputDecoration(
-                  labelText: 'المنتج',
-                  suffixIcon: Icon(Icons.search),
-                  hintText: 'اختر منتج',
-                ),
-              ),
-              popupProps: PopupProps.menu(
-                fit: FlexFit.tight,
-                itemBuilder: (context, item, isDisabled, isSelected) {
-                  return Container(
-                    decoration: const BoxDecoration(
-                      border: Border(
-                        bottom: BorderSide(
-                          color: ColorsManager.lightGray,
-                          width: 1.0,
-                        ),
-                      ),
+    return Center(
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(maxWidth: 760),
+        child: Form(
+          key: _formKey,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              _actionSelector(),
+              verticalSpace(10),
+              Consumer<InvoiceProvider>(
+                builder: (context, provider, _) => DropdownSearch<String>(
+                  autoValidateMode: AutovalidateMode.onUserInteraction,
+                  items: (filter, _) => provider.masterProductList,
+                  selectedItem: _selectedProduct,
+                  decoratorProps: const DropDownDecoratorProps(
+                    decoration: InputDecoration(
+                      labelText: 'المنتج',
+                      suffixIcon: Icon(Icons.search),
+                      hintText: 'اختر منتج',
                     ),
-                    child: ListTile(title: Text(item)),
-                  );
-                },
-                showSearchBox: true,
-              ),
-              onSelected: (value) => setState(() => _selectedProduct = value),
-            ),
-          ),
-          verticalSpace(8),
-          Row(
-            children: [
-              Expanded(
-                child: AppTextFormField(
-                  textDirection: TextDirection.ltr,
-                  controller: _weightController,
-                  labelText: 'الوزن أو العدد',
-                  hintText: 'كجم',
-                  keyboardType:
-                      const TextInputType.numberWithOptions(decimal: true),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'رجاء أدخل الوزن';
-                    }
-                    if (double.tryParse(value) == null) {
-                      return 'ادخل رقم صالح';
-                    }
-                    return null;
-                  },
+                  ),
+                  popupProps: PopupProps.menu(
+                    fit: FlexFit.tight,
+                    itemBuilder: (context, item, isDisabled, isSelected) {
+                      return Container(
+                        decoration: const BoxDecoration(
+                          border: Border(
+                            bottom: BorderSide(
+                              color: ColorsManager.lightGray,
+                              width: 1.0,
+                            ),
+                          ),
+                        ),
+                        child: ListTile(title: Text(item)),
+                      );
+                    },
+                    showSearchBox: true,
+                  ),
+                  onSelected: (value) =>
+                      setState(() => _selectedProduct = value),
                 ),
               ),
-              horizontalSpace(8),
-              Expanded(
-                child: AppTextFormField(
-                  textDirection: TextDirection.ltr,
-                  controller: _priceController,
-                  labelText: 'السعر',
-                  hintText: 'جنيه',
-                  keyboardType:
-                      const TextInputType.numberWithOptions(decimal: true),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'رجاء أدخل السعر';
-                    }
-                    if (double.tryParse(value) == null) {
-                      return 'ادخل رقم صالح';
-                    }
-                    return null;
-                  },
+              verticalSpace(8),
+              Row(
+                children: [
+                  Expanded(
+                    child: AppTextFormField(
+                      textDirection: TextDirection.ltr,
+                      controller: _weightController,
+                      labelText: 'الوزن أو العدد',
+                      hintText: 'كجم',
+                      keyboardType:
+                          const TextInputType.numberWithOptions(decimal: true),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'رجاء أدخل الوزن';
+                        }
+                        if (double.tryParse(value) == null) {
+                          return 'ادخل رقم صالح';
+                        }
+                        return null;
+                      },
+                    ),
+                  ),
+                  horizontalSpace(8),
+                  Expanded(
+                    child: AppTextFormField(
+                      textDirection: TextDirection.ltr,
+                      controller: _priceController,
+                      labelText: 'السعر',
+                      hintText: 'جنيه',
+                      keyboardType:
+                          const TextInputType.numberWithOptions(decimal: true),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'رجاء أدخل السعر';
+                        }
+                        if (double.tryParse(value) == null) {
+                          return 'ادخل رقم صالح';
+                        }
+                        return null;
+                      },
+                    ),
+                  ),
+                ],
+              ),
+              verticalSpace(8),
+              Row(
+                children: [
+                  Expanded(
+                    child: AppTextFormField(
+                      textDirection: TextDirection.ltr,
+                      controller: _packageWeightController,
+                      labelText: 'وزن العبوة',
+                      suffixText: 'كجم',
+                      keyboardType:
+                          const TextInputType.numberWithOptions(decimal: true),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'أدخل وزن العبوة الفارغة';
+                        }
+                        if (double.tryParse(value) == null) {
+                          return 'ادخل رقم صالح';
+                        }
+                        return null;
+                      },
+                    ),
+                  ),
+                  horizontalSpace(8),
+                  Expanded(
+                    child: AppTextFormField(
+                      textDirection: TextDirection.ltr,
+                      controller: _packageNumberController,
+                      focusNode: _focusNodePackageNumber,
+                      labelText: 'عدد الفارغ',
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'أدخل عدد العبوات أولا';
+                        }
+                        if (int.tryParse(value) == null) {
+                          return 'ادخل رقم صالح';
+                        }
+                        return null;
+                      },
+                    ),
+                  ),
+                ],
+              ),
+              verticalSpace(10),
+              Center(
+                child: ConstrainedBox(
+                  constraints: const BoxConstraints(maxWidth: 420),
+                  child: SizedBox(
+                    width: double.infinity,
+                    child: AppTextButton(
+                      onPressed: _handleAdd,
+                      buttonText: 'أضف منتج',
+                      textStyle: TextStyles.font16WhiteSemiBold,
+                      backgroundColor: ColorsManager.mainBlue,
+                      buttonHeight: 52,
+                    ),
+                  ),
                 ),
               ),
             ],
           ),
-          verticalSpace(8),
-          Row(
-            children: [
-              Expanded(
-                child: AppTextFormField(
-                  textDirection: TextDirection.ltr,
-                  controller: _packageNumberController,
-                  focusNode: _focusNodePackageNumber,
-                  labelText: 'عدد الفارغ',
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'أدخل عدد العبوات أولا';
-                    }
-                    if (int.tryParse(value) == null) {
-                      return 'ادخل رقم صالح';
-                    }
-                    return null;
-                  },
-                ),
-              ),
-              horizontalSpace(8),
-              Expanded(
-                child: AppTextFormField(
-                  textDirection: TextDirection.ltr,
-                  controller: _packageWeightController,
-                  labelText: 'وزن العبوة',
-                  suffixText: 'كجم',
-                  keyboardType:
-                      const TextInputType.numberWithOptions(decimal: true),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'أدخل وزن العبوة الفارغة';
-                    }
-                    if (double.tryParse(value) == null) {
-                      return 'ادخل رقم صالح';
-                    }
-                    return null;
-                  },
-                ),
-              ),
-            ],
-          ),
-          verticalSpace(10),
-
-          // Add button
-          AppTextButton(
-            onPressed: _handleAdd,
-            buttonText: 'أضف منتج',
-            textStyle: TextStyles.font16WhiteSemiBold,
-            backgroundColor: ColorsManager.mainBlue,
-            buttonWidth: size.width * 0.6,
-          ),
-        ],
+        ),
       ),
     );
   }
