@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class MyDataTable extends StatelessWidget {
-  const MyDataTable({Key? key, this.isInModal = false}) : super(key: key);
+  const MyDataTable({super.key, this.isInModal = false});
 
   final bool isInModal;
 
@@ -51,7 +51,7 @@ class MyDataTable extends StatelessWidget {
 
 Widget _buildDetailedTable(
     List<Product> products, BuildContext context, bool showPackageColumns) {
-  void _confirmDelete(BuildContext context, int index) {
+  void confirmDelete(BuildContext context, int index) {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -112,7 +112,7 @@ Widget _buildDetailedTable(
           DataCell(
             Center(
               child: IconButton(
-                onPressed: () => _confirmDelete(context, index),
+                onPressed: () => confirmDelete(context, index),
                 icon: const Icon(Icons.delete, color: Colors.red),
               ),
             ),
@@ -153,40 +153,82 @@ Widget _buildDetailedTable(
 
 Widget _buildTotalsTable(
     List<Product> products, BuildContext context, bool showPackageColumns) {
-  return DataTable(
-    columns: [
-      _buildDataColumn('المنتج'),
-      // _buildDataColumn('إجمالي الوزن'),
-      // _buildDataColumn('عدد العبوات'),
-      _buildDataColumn('صافي الوزن'),
-      _buildDataColumn('السعر'),
-      _buildDataColumn('الإجمالي'),
-    ],
-    rows: products.map((product) {
-      final netWeight =
-          product.weight - (product.packageWeight * product.numberPackage);
-      final totalPrice = netWeight * product.price;
-      return DataRow(cells: [
-        _buildDataCell((product.name)),
-        // _buildDataCell(('${product.weight.toStringAsFixed(2)} kg')),
-        // _buildDataCell(('${product.numberPackage}')),
-        _buildDataCell(('${netWeight.toStringAsFixed(2)} kg')),
-        _buildDataCell(('${product.price.toStringAsFixed(2)} L.E')),
-        _buildDataCell(('${totalPrice.toStringAsFixed(2)} L.E')),
-      ]);
-    }).toList(),
-    dataRowColor: WidgetStateProperty.all<Color>(
-      const Color.fromARGB(255, 232, 217, 216),
-    ),
-    headingTextStyle: const TextStyle(),
-    border: const TableBorder(
-      bottom: BorderSide(width: 1),
-      top: BorderSide(width: 1),
-      verticalInside: BorderSide(width: 1),
-    ),
-    horizontalMargin: 10,
-    columnSpacing: 5,
-    showCheckboxColumn: false,
+  // return DataTable(
+  //   columns: [
+  //     _buildDataColumn('المنتج'),
+  //     // _buildDataColumn('إجمالي الوزن'),
+  //     // _buildDataColumn('عدد العبوات'),
+  //     _buildDataColumn('صافي الوزن'),
+  //     _buildDataColumn('السعر'),
+  //     _buildDataColumn('الإجمالي'),
+  //   ],
+  //   rows: products.map((product) {
+  //     final netWeight =
+  //         product.weight - (product.packageWeight * product.numberPackage);
+  //     final totalPrice = netWeight * product.price;
+  //     return DataRow(cells: [
+  //       _buildDataCell((product.name)),
+  //       // _buildDataCell(('${product.weight.toStringAsFixed(2)} kg')),
+  //       // _buildDataCell(('${product.numberPackage}')),
+  //       _buildDataCell(('${netWeight.toStringAsFixed(2)} kg')),
+  //       _buildDataCell(('${product.price.toStringAsFixed(2)} L.E')),
+  //       _buildDataCell(('${totalPrice.toStringAsFixed(2)} L.E')),
+  //     ]);
+  //   }).toList(),
+  //   dataRowColor: WidgetStateProperty.all<Color>(
+  //     const Color.fromARGB(255, 232, 217, 216),
+  //   ),
+  //   headingTextStyle: const TextStyle(),
+  //   border: const TableBorder(
+  //     bottom: BorderSide(width: 1),
+  //     top: BorderSide(width: 1),
+  //     verticalInside: BorderSide(width: 1),
+  //   ),
+  //   horizontalMargin: 10,
+  return LayoutBuilder(
+    builder: (context, constraints) {
+      final minWidth = constraints.hasBoundedWidth
+          ? constraints.maxWidth
+          : MediaQuery.sizeOf(context).width;
+      return SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: ConstrainedBox(
+          constraints: BoxConstraints(minWidth: minWidth),
+          child: DataTable(
+            columns: [
+              _buildDataColumn('المنتج'),
+              _buildDataColumn('صافي الوزن'),
+              _buildDataColumn('السعر'),
+              _buildDataColumn('الإجمالي'),
+            ],
+            rows: products.map((product) {
+              final netWeight = product.weight -
+                  (product.packageWeight * product.numberPackage);
+              final totalPrice = netWeight * product.price;
+              return DataRow(cells: [
+                _buildDataCell(product.name),
+                _buildDataCell('${netWeight.toStringAsFixed(2)} kg'),
+                _buildDataCell('${product.price.toStringAsFixed(2)} L.E'),
+                _buildDataCell('${totalPrice.toStringAsFixed(2)} L.E'),
+              ]);
+            }).toList(),
+            dataRowColor: WidgetStateProperty.all<Color>(
+              const Color.fromARGB(255, 232, 217, 216),
+            ),
+            headingTextStyle: const TextStyle(),
+            border: const TableBorder(
+              bottom: BorderSide(width: 1),
+              top: BorderSide(width: 1),
+              verticalInside: BorderSide(width: 1),
+            ),
+            // columnSpacing: 5,
+            horizontalMargin: 8,
+            columnSpacing: 4,
+            showCheckboxColumn: false,
+          ),
+        ),
+      );
+    },
   );
 }
 

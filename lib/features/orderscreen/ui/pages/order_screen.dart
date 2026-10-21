@@ -390,29 +390,46 @@ class _OrderscreenState extends State<Orderscreen>
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  OutlinedButton.icon(
-                    onPressed: _startNewInvoice,
-                    icon: const Icon(Icons.add, size: 18),
-                    label: const Text('جديد'),
-                    style: OutlinedButton.styleFrom(
-                      foregroundColor: Colors.white,
-                      side: const BorderSide(color: Colors.white70),
+                  if (MediaQuery.sizeOf(context).width < 420) ...[
+                    IconButton(
+                      onPressed: _startNewInvoice,
+                      tooltip: 'جديد',
+                      color: Colors.white,
+                      icon: const Icon(Icons.add),
                     ),
-                  ),
-                  const SizedBox(width: 8),
-                  ElevatedButton.icon(
-                    onPressed:
-                        _savedInvoiceId == null ? null : _deleteSavedInvoice,
-                    icon: const Icon(Icons.delete_forever, size: 18),
-                    label: const Text('مسح'),
-                    style: ElevatedButton.styleFrom(
-                      foregroundColor:
-                          _savedInvoiceId == null ? Colors.grey : Colors.red,
-                      backgroundColor: Colors.white,
-                      disabledForegroundColor: Colors.grey,
-                      disabledBackgroundColor: Colors.white70,
+                    IconButton(
+                      onPressed:
+                          _savedInvoiceId == null ? null : _deleteSavedInvoice,
+                      tooltip: 'مسح',
+                      color: Colors.white,
+                      disabledColor: Colors.white70,
+                      icon: const Icon(Icons.delete_forever),
                     ),
-                  ),
+                  ] else ...[
+                    OutlinedButton.icon(
+                      onPressed: _startNewInvoice,
+                      icon: const Icon(Icons.add, size: 18),
+                      label: const Text('جديد'),
+                      style: OutlinedButton.styleFrom(
+                        foregroundColor: Colors.white,
+                        side: const BorderSide(color: Colors.white70),
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    ElevatedButton.icon(
+                      onPressed:
+                          _savedInvoiceId == null ? null : _deleteSavedInvoice,
+                      icon: const Icon(Icons.delete_forever, size: 18),
+                      label: const Text('مسح'),
+                      style: ElevatedButton.styleFrom(
+                        foregroundColor:
+                            _savedInvoiceId == null ? Colors.grey : Colors.red,
+                        backgroundColor: Colors.white,
+                        disabledForegroundColor: Colors.grey,
+                        disabledBackgroundColor: Colors.white70,
+                      ),
+                    ),
+                  ],
                 ],
               ),
             ),
@@ -530,26 +547,40 @@ class _OrderscreenState extends State<Orderscreen>
         ),
         borderRadius: BorderRadius.circular(12),
       ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          const Text(
-            'الإجمالي الكلي',
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          Text(
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          final total = Text(
             '${totalCost.toStringAsFixed(2)} جنيه',
             style: const TextStyle(
               color: Colors.white,
               fontSize: 20,
               fontWeight: FontWeight.bold,
             ),
-          ),
-        ],
+          );
+          const label = Text(
+            'الإجمالي الكلي',
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+            ),
+          );
+
+          if (constraints.maxWidth < 380) {
+            return Column(
+              children: [
+                label,
+                const SizedBox(height: 4),
+                total,
+              ],
+            );
+          }
+
+          return Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [label, total],
+          );
+        },
       ),
     );
   }

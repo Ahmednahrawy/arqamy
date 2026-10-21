@@ -165,4 +165,48 @@ void main() {
     expect(addButtonSize.height, 52);
     expect(tester.takeException(), isNull);
   });
+
+   testWidgets('order entry keeps the table and button text readable on mobile',
+      (WidgetTester tester) async {
+    tester.view.devicePixelRatio = 1;
+    tester.view.physicalSize = const Size(360, 800);
+    addTearDown(tester.view.resetDevicePixelRatio);
+    addTearDown(tester.view.resetPhysicalSize);
+    SharedPreferences.setMockInitialValues({});
+    final invoiceProvider = InvoiceProvider()
+      ..setInvoiceAction('شراء')
+      ..addProduct(
+        Product(
+          name: 'Rice',
+          weight: 5,
+          packageWeight: 0,
+          numberPackage: 0,
+          price: 10,
+        ),
+      );
+    await tester.pumpWidget(
+      MultiProvider(
+        providers: [
+          ChangeNotifierProvider(create: (_) => Language()),
+          ChangeNotifierProvider(create: (_) => ThemeProvider()),
+          ChangeNotifierProvider.value(value: invoiceProvider),
+          ChangeNotifierProvider(create: (_) => InvoiceSettingsProvider()),
+        ],
+        child: MyApp(appRouter: AppRouter()),
+      ),
+    );
+    await tester.pumpAndSettle();
+    final tableSize = tester.getSize(find.byType(DataTable).first);
+    final addButtonText = tester.getRect(find.text('أضف منتج'));
+    final addButton = tester.getRect(
+      find.ancestor(
+        of: find.text('أضف منتج'),
+        matching: find.byType(TextButton),
+      ),
+    );
+    expect(tableSize.width, greaterThanOrEqualTo(320));
+    expect(addButton.contains(addButtonText.topLeft), isTrue);
+    expect(addButton.contains(addButtonText.bottomRight), isTrue);
+    expect(tester.takeException(), isNull);
+  });
 }

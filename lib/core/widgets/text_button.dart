@@ -24,7 +24,7 @@ class AppTextButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return TextButton(
+    final button = TextButton(
       style: ButtonStyle(
         shape: WidgetStatePropertyAll<RoundedRectangleBorder>(
           RoundedRectangleBorder(
@@ -34,14 +34,14 @@ class AppTextButton extends StatelessWidget {
         backgroundColor: WidgetStatePropertyAll(
           backgroundColor ?? ColorsManager.mainBlue,
         ),
-        padding: WidgetStateProperty.all<EdgeInsets>(
+        padding: WidgetStatePropertyAll<EdgeInsets>(
           EdgeInsets.symmetric(
             horizontal: horizontalPadding ?? 12,
             vertical: verticalPadding ?? 14,
           ),
         ),
-        minimumSize: WidgetStatePropertyAll<Size>(
-          Size(double.infinity, buttonHeight ?? 48),
+        minimumSize: const WidgetStatePropertyAll<Size>(
+          Size(0, 0),
         ),
         maximumSize: WidgetStatePropertyAll(
           Size(double.infinity, buttonHeight ?? double.infinity),
@@ -53,5 +53,8 @@ class AppTextButton extends StatelessWidget {
         style: textStyle,
       ),
     );
+    return buttonHeight == null
+        ? button
+        : SizedBox(height: buttonHeight, child: button);
   }
 }

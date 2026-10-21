@@ -74,10 +74,11 @@ class _InvoiceSummaryBottomSheetState extends State<InvoiceSummaryBottomSheet> {
                   verticalSpace(5),
                   SizedBox(
                     width: size.width,
-                    child: const SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: MyDataTable(isInModal: true),
-                    ),
+                    // child: const SingleChildScrollView(
+                    //   scrollDirection: Axis.horizontal,
+                    //   child: MyDataTable(isInModal: true),
+                    // ),
+                    child: const MyDataTable(isInModal: true),
                   ),
                   Column(
                     mainAxisAlignment: MainAxisAlignment.end,
