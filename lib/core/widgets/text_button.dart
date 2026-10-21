@@ -40,17 +40,20 @@ class AppTextButton extends StatelessWidget {
             vertical: verticalPadding ?? 14,
           ),
         ),
-        minimumSize: const WidgetStatePropertyAll<Size>(
-          Size(0, 0),
+        minimumSize: WidgetStatePropertyAll<Size>(
+          Size(0, buttonHeight ?? 0),
         ),
         maximumSize: WidgetStatePropertyAll(
           Size(double.infinity, buttonHeight ?? double.infinity),
         ),
       ),
       onPressed: onPressed,
-      child: Text(
-        buttonText,
-        style: textStyle,
+      child: FittedBox(
+        fit: BoxFit.scaleDown,
+        child: Text(
+          buttonText,
+          style: textStyle,
+        ),
       ),
     );
     return buttonHeight == null

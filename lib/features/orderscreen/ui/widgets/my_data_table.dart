@@ -99,54 +99,57 @@ Widget _buildDetailedTable(
 
   return SingleChildScrollView(
     scrollDirection: Axis.horizontal,
-    child: DataTable(
-      columns: buildDetailedColumns(showPackageColumns),
-      rows: products.asMap().entries.map((entry) {
-        final index = entry.key;
-        final product = entry.value;
-        final netWeight =
-            product.weight - (product.packageWeight * product.numberPackage);
-        final totalPrice = netWeight * product.price;
-        // Build cells conditionally
-        final cells = <DataCell>[
-          DataCell(
-            Center(
-              child: IconButton(
-                onPressed: () => confirmDelete(context, index),
-                icon: const Icon(Icons.delete, color: Colors.red),
+    child: Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 5.0),
+      child: DataTable(
+        columns: buildDetailedColumns(showPackageColumns),
+        rows: products.asMap().entries.map((entry) {
+          final index = entry.key;
+          final product = entry.value;
+          final netWeight =
+              product.weight - (product.packageWeight * product.numberPackage);
+          final totalPrice = netWeight * product.price;
+          // Build cells conditionally
+          final cells = <DataCell>[
+            DataCell(
+              Center(
+                child: IconButton(
+                  onPressed: () => confirmDelete(context, index),
+                  icon: const Icon(Icons.delete, color: Colors.red),
+                ),
               ),
             ),
-          ),
-          _buildDataCell((product.name)),
-          _buildDataCell(('${product.weight.toStringAsFixed(2)} kg')),
-        ];
+            _buildDataCell((product.name)),
+            _buildDataCell(('${product.weight.toStringAsFixed(2)} kg')),
+          ];
 
-        if (showPackageColumns) {
+          if (showPackageColumns) {
+            cells.addAll([
+              _buildDataCell(('${product.numberPackage}')),
+              _buildDataCell(('${netWeight.toStringAsFixed(2)} kg')),
+            ]);
+          }
+
           cells.addAll([
-            _buildDataCell(('${product.numberPackage}')),
-            _buildDataCell(('${netWeight.toStringAsFixed(2)} kg')),
+            _buildDataCell(('${product.price.toStringAsFixed(2)} L.E')),
+            _buildDataCell(('${totalPrice.toStringAsFixed(2)} L.E')),
           ]);
-        }
 
-        cells.addAll([
-          _buildDataCell(('${product.price.toStringAsFixed(2)} L.E')),
-          _buildDataCell(('${totalPrice.toStringAsFixed(2)} L.E')),
-        ]);
-
-        return DataRow(cells: cells);
-      }).toList(),
-      dataRowColor: WidgetStateProperty.all<Color>(
-        const Color.fromARGB(255, 232, 217, 216),
+          return DataRow(cells: cells);
+        }).toList(),
+        dataRowColor: WidgetStateProperty.all<Color>(
+          const Color.fromARGB(255, 232, 217, 216),
+        ),
+        headingTextStyle: const TextStyle(),
+        border: const TableBorder(
+          bottom: BorderSide(width: 1),
+          top: BorderSide(width: 1),
+          verticalInside: BorderSide(width: 1),
+        ),
+        horizontalMargin: 10,
+        columnSpacing: 5,
+        showCheckboxColumn: false,
       ),
-      headingTextStyle: const TextStyle(),
-      border: const TableBorder(
-        bottom: BorderSide(width: 1),
-        top: BorderSide(width: 1),
-        verticalInside: BorderSide(width: 1),
-      ),
-      horizontalMargin: 10,
-      columnSpacing: 5,
-      showCheckboxColumn: false,
     ),
   );
 }
@@ -187,44 +190,49 @@ Widget _buildTotalsTable(
   //   horizontalMargin: 10,
   return LayoutBuilder(
     builder: (context, constraints) {
-      final minWidth = constraints.hasBoundedWidth
+      final availableWidth = constraints.hasBoundedWidth
           ? constraints.maxWidth
           : MediaQuery.sizeOf(context).width;
+      final minWidth =
+          availableWidth > 24 ? availableWidth - 24 : availableWidth;
       return SingleChildScrollView(
         scrollDirection: Axis.horizontal,
         child: ConstrainedBox(
           constraints: BoxConstraints(minWidth: minWidth),
-          child: DataTable(
-            columns: [
-              _buildDataColumn('المنتج'),
-              _buildDataColumn('صافي الوزن'),
-              _buildDataColumn('السعر'),
-              _buildDataColumn('الإجمالي'),
-            ],
-            rows: products.map((product) {
-              final netWeight = product.weight -
-                  (product.packageWeight * product.numberPackage);
-              final totalPrice = netWeight * product.price;
-              return DataRow(cells: [
-                _buildDataCell(product.name),
-                _buildDataCell('${netWeight.toStringAsFixed(2)} kg'),
-                _buildDataCell('${product.price.toStringAsFixed(2)} L.E'),
-                _buildDataCell('${totalPrice.toStringAsFixed(2)} L.E'),
-              ]);
-            }).toList(),
-            dataRowColor: WidgetStateProperty.all<Color>(
-              const Color.fromARGB(255, 232, 217, 216),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+            child: DataTable(
+              columns: [
+                _buildDataColumn('المنتج'),
+                _buildDataColumn('صافي الوزن'),
+                _buildDataColumn('السعر'),
+                _buildDataColumn('الإجمالي'),
+              ],
+              rows: products.map((product) {
+                final netWeight = product.weight -
+                    (product.packageWeight * product.numberPackage);
+                final totalPrice = netWeight * product.price;
+                return DataRow(cells: [
+                  _buildDataCell(product.name),
+                  _buildDataCell('${netWeight.toStringAsFixed(2)} kg'),
+                  _buildDataCell('${product.price.toStringAsFixed(2)} L.E'),
+                  _buildDataCell('${totalPrice.toStringAsFixed(2)} L.E'),
+                ]);
+              }).toList(),
+              dataRowColor: WidgetStateProperty.all<Color>(
+                const Color.fromARGB(255, 232, 217, 216),
+              ),
+              headingTextStyle: const TextStyle(),
+              border: const TableBorder(
+                bottom: BorderSide(width: 1),
+                top: BorderSide(width: 1),
+                verticalInside: BorderSide(width: 1),
+              ),
+              // columnSpacing: 5,
+              horizontalMargin: 8,
+              columnSpacing: 4,
+              showCheckboxColumn: false,
             ),
-            headingTextStyle: const TextStyle(),
-            border: const TableBorder(
-              bottom: BorderSide(width: 1),
-              top: BorderSide(width: 1),
-              verticalInside: BorderSide(width: 1),
-            ),
-            // columnSpacing: 5,
-            horizontalMargin: 8,
-            columnSpacing: 4,
-            showCheckboxColumn: false,
           ),
         ),
       );

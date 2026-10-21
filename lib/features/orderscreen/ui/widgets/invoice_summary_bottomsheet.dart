@@ -60,8 +60,10 @@ class _InvoiceSummaryBottomSheetState extends State<InvoiceSummaryBottomSheet> {
     return Directionality(
       textDirection: TextDirection.rtl,
       child: Padding(
-        padding: EdgeInsetsGeometry.only(
-            bottom: MediaQuery.of(context).viewInsets.bottom),
+        padding: EdgeInsets.only(
+          bottom: MediaQuery.of(context).viewInsets.bottom +
+              MediaQuery.of(context).viewPadding.bottom,
+        ),
         child: Consumer<InvoiceProvider>(
           builder: (context, provider, _) {
             final totalCost = provider.totalCost;
@@ -78,7 +80,10 @@ class _InvoiceSummaryBottomSheetState extends State<InvoiceSummaryBottomSheet> {
                     //   scrollDirection: Axis.horizontal,
                     //   child: MyDataTable(isInModal: true),
                     // ),
-                    child: const MyDataTable(isInModal: true),
+                    child: const Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 8.0),
+                      child: MyDataTable(isInModal: true),
+                    ),
                   ),
                   Column(
                     mainAxisAlignment: MainAxisAlignment.end,

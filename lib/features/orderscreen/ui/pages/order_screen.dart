@@ -324,6 +324,8 @@ class _OrderscreenState extends State<Orderscreen>
               : () {
                   showModalBottomSheet(
                     isScrollControlled: true,
+                    enableDrag: true,
+                    showDragHandle: true,
                     constraints: BoxConstraints(
                       minHeight: MediaQuery.of(context).size.height * 0.75,
                     ),

@@ -132,6 +132,104 @@ void main() {
     expect(invoiceProvider.invoices, hasLength(1));
   });
 
+  testWidgets('invoice summary buttons stay above mobile navigation controls',
+      (WidgetTester tester) async {
+    tester.view.devicePixelRatio = 1;
+    tester.view.physicalSize = const Size(360, 800);
+    tester.view.viewPadding = const FakeViewPadding(bottom: 24);
+    addTearDown(tester.view.resetDevicePixelRatio);
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetViewPadding);
+    SharedPreferences.setMockInitialValues({});
+    final invoiceProvider = InvoiceProvider()..setInvoiceAction('شراء');
+    for (var index = 0; index < 8; index++) {
+      invoiceProvider.addProduct(
+        Product(
+          name: 'Product $index',
+          weight: 5,
+          packageWeight: 0,
+          numberPackage: 0,
+          price: 10,
+        ),
+      );
+    }
+    await tester.pumpWidget(
+      MultiProvider(
+        providers: [
+          ChangeNotifierProvider(create: (_) => Language()),
+          ChangeNotifierProvider(create: (_) => ThemeProvider()),
+          ChangeNotifierProvider.value(value: invoiceProvider),
+          ChangeNotifierProvider(create: (_) => InvoiceSettingsProvider()),
+        ],
+        child: MyApp(appRouter: AppRouter()),
+      ),
+    );
+    await tester.pumpAndSettle();
+    await tester.tap(find.byType(FloatingActionButton));
+    await tester.pumpAndSettle();
+    final summaryScrollView = find
+        .byWidgetPredicate(
+          (widget) =>
+              widget is SingleChildScrollView &&
+              widget.scrollDirection == Axis.vertical,
+        )
+        .last;
+    await tester.drag(summaryScrollView, const Offset(0, -2000));
+    await tester.pumpAndSettle();
+    for (final label in ['حفظ', 'مشاركة']) {
+      final buttonRect = tester.getRect(find.text(label));
+      expect(buttonRect.bottom, lessThanOrEqualTo(776));
+      expect(buttonRect.top, greaterThanOrEqualTo(0));
+    }
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('invoice summary can be dismissed by dragging its handle down',
+      (WidgetTester tester) async {
+    tester.view.devicePixelRatio = 1;
+    tester.view.physicalSize = const Size(360, 800);
+    addTearDown(tester.view.resetDevicePixelRatio);
+    addTearDown(tester.view.resetPhysicalSize);
+    SharedPreferences.setMockInitialValues({});
+    final invoiceProvider = InvoiceProvider()
+      ..setInvoiceAction('شراء')
+      ..addProduct(
+        Product(
+          name: 'Rice',
+          weight: 5,
+          packageWeight: 0,
+          numberPackage: 0,
+          price: 10,
+        ),
+      );
+
+    await tester.pumpWidget(
+      MultiProvider(
+        providers: [
+          ChangeNotifierProvider(create: (_) => Language()),
+          ChangeNotifierProvider(create: (_) => ThemeProvider()),
+          ChangeNotifierProvider.value(value: invoiceProvider),
+          ChangeNotifierProvider(create: (_) => InvoiceSettingsProvider()),
+        ],
+        child: MyApp(appRouter: AppRouter()),
+      ),
+    );
+    await tester.pumpAndSettle();
+    await tester.tap(find.byType(FloatingActionButton));
+    await tester.pumpAndSettle();
+
+    final sheetRect = tester.getRect(find.byType(BottomSheet));
+    await tester.flingFrom(
+      Offset(sheetRect.center.dx, sheetRect.top + 24),
+      const Offset(0, 500),
+      1200,
+    );
+    await tester.pumpAndSettle();
+
+    expect(find.text('حفظ'), findsNothing);
+    expect(tester.takeException(), isNull);
+  });
+  
   testWidgets('order entry fits tablet screens without clipping',
       (WidgetTester tester) async {
     tester.view.devicePixelRatio = 1;
@@ -166,7 +264,7 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
-   testWidgets('order entry keeps the table and button text readable on mobile',
+  testWidgets('order entry keeps the table and button text readable on mobile',
       (WidgetTester tester) async {
     tester.view.devicePixelRatio = 1;
     tester.view.physicalSize = const Size(360, 800);
