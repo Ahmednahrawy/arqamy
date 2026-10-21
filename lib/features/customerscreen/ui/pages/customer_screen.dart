@@ -559,18 +559,25 @@ Widget _buildBalanceBreakdown({
     for (var product in invoice.products) {
       tempProvider.addProduct(product);
     }
-
-    await InvoiceService.generateAndShareInvoice(
-      provider: tempProvider,
-      settings: settings,
-      customerName: invoice.customerName,
-      totalCost: invoice.totalCost,
-      paid: invoice.paid,
-      rest: invoice.rest,
-      formattedDate: invoice.formattedDate,
-      formattedTime: invoice.formattedTime,
-      invoiceAction: invoice.invoiceAction,
-      invoiceSerial: invoice.invoiceSerial,
-    );
+// generateAndShareInvoice
+     try {
+      await InvoiceService.generateAndShareInvoice(
+        provider: tempProvider,
+        settings: settings,
+        customerName: invoice.customerName,
+        totalCost: invoice.totalCost,
+        paid: invoice.paid,
+        rest: invoice.rest,
+        formattedDate: invoice.formattedDate,
+        formattedTime: invoice.formattedTime,
+        invoiceAction: invoice.invoiceAction,
+        invoiceSerial: invoice.invoiceSerial,
+      );
+    } catch (error) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('تعذر مشاركة الفاتورة: $error')),
+      );
+    }
   }
 }
