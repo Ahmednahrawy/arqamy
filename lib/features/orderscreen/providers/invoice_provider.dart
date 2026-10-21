@@ -61,10 +61,9 @@ class InvoiceProvider extends ChangeNotifier {
 
   // Set invoice action only once (locks the invoice)
   void setInvoiceAction(String action) {
-    if (_invoiceAction == null) {
-      _invoiceAction = action;
-      notifyListeners();
-    }
+    if (_invoiceAction == action) return;
+    _invoiceAction = action;
+    notifyListeners();
   }
 
   /// Add product (always keep as separate row)
