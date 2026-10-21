@@ -75,6 +75,15 @@ void main() {
     expect(invoiceProvider.products, hasLength(1));
     expect(invoiceProvider.products.single.name, 'تمر سيوي');
 
+    await tester.tap(find.byTooltip('تغيير نوع الفاتورة'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('بيع'));
+    await tester.pumpAndSettle();
+    expect(invoiceProvider.invoiceAction, 'بيع');
+    expect(invoiceProvider.products, hasLength(1));
+    expect(find.text('فاتورة: بيع'), findsOneWidget);
+    expect(find.byTooltip('تغيير نوع الفاتورة'), findsOneWidget);
+
     await tester.tap(find.text('جديد'));
     await tester.pumpAndSettle();
     await tester.tap(find.widgetWithText(ElevatedButton, 'جديد'));
@@ -229,7 +238,7 @@ void main() {
     expect(find.text('حفظ'), findsNothing);
     expect(tester.takeException(), isNull);
   });
-  
+
   testWidgets('order entry fits tablet screens without clipping',
       (WidgetTester tester) async {
     tester.view.devicePixelRatio = 1;

@@ -26,7 +26,7 @@ class ProductInputForm extends StatefulWidget {
 
 class _ProductInputFormState extends State<ProductInputForm> {
   final _formKey = GlobalKey<FormState>();
-  final List<String> actions = ['شراء', 'بـيع', 'تخزين'];
+  final List<String> actions = ['شراء', 'بيع', 'تخزين'];
 
   String? _selectedProduct;
 
@@ -124,39 +124,85 @@ class _ProductInputFormState extends State<ProductInputForm> {
   Widget _actionSelector() {
     return Consumer<InvoiceProvider>(
       builder: (context, provider, _) {
-        if (provider.invoiceAction == null) {
-          return Container(
-            padding: const EdgeInsets.all(4),
-            decoration: BoxDecoration(
-              color: Colors.grey[100],
-              borderRadius: BorderRadius.circular(12),
-            ),
+        if (provider.invoiceAction != null) {
+          return Center(
             child: Row(
-              children: actions.map((action) {
-                return Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 4),
-                    child: AnimatedContainer(
-                      duration: const Duration(milliseconds: 200),
-                      child: AppTextButton(
-                        borderRadius: 9,
-                        onPressed: () => provider.setInvoiceAction(action),
-                        buttonHeight: 48,
-                        verticalPadding: 2,
-                        buttonText: action,
-                        backgroundColor: ColorsManager.mainBlue,
-                        textStyle: TextStyles.font16WhiteSemiBold,
-                      ),
-                    ),
-                  ),
-                );
-              }).toList(),
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Chip(
+                  label: Text(' فاتورة: ${provider.invoiceAction}'),
+                ),
+                PopupMenuButton<String>(
+                  tooltip: 'تغيير نوع الفاتورة',
+                  icon: const Icon(Icons.edit_outlined, size: 20),
+                  onSelected: provider.setInvoiceAction,
+                  itemBuilder: (context) => actions
+                      .where((action) => action != provider.invoiceAction)
+                      .map(
+                        (action) => PopupMenuItem<String>(
+                          value: action,
+                          child: Text(action),
+                        ),
+                      )
+                      .toList(),
+                ),
+              ],
             ),
           );
         }
-        return Center(
-          child: Chip(
-            label: Text('نوع الفاتورة: ${provider.invoiceAction}'),
+        return Container(
+          padding: const EdgeInsets.all(4),
+          decoration: BoxDecoration(
+            color: Colors.grey[100],
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: Row(
+            children: actions.map((action) {
+              final isSelected = provider.invoiceAction == action;
+              return Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 4),
+                  child: Semantics(
+                    button: true,
+                    selected: isSelected,
+                    child: Material(
+                      color: isSelected
+                          ? ColorsManager.mainBlue
+                          : Colors.transparent,
+                      borderRadius: BorderRadius.circular(9),
+                      child: InkWell(
+                        borderRadius: BorderRadius.circular(9),
+                        onTap: () => provider.setInvoiceAction(action),
+                        child: AnimatedContainer(
+                          duration: const Duration(milliseconds: 200),
+                          height: 48,
+                          alignment: Alignment.center,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(9),
+                            border: Border.all(
+                              color: isSelected
+                                  ? ColorsManager.mainBlue
+                                  : ColorsManager.mainBlue.withValues(
+                                      alpha: 0.35,
+                                    ),
+                            ),
+                          ),
+                          child: Text(
+                            action,
+                            textAlign: TextAlign.center,
+                            style: isSelected
+                                ? TextStyles.font16WhiteSemiBold
+                                : TextStyles.font16WhiteSemiBold.copyWith(
+                                    color: ColorsManager.mainBlue,
+                                  ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              );
+            }).toList(),
           ),
         );
       },
