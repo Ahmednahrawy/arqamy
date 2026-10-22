@@ -234,6 +234,11 @@ class S {
     return Intl.message('Share App', name: 'share_app', desc: '', args: []);
   }
 
+  /// `Update App`
+  String get update_app {
+    return Intl.message('Update App', name: 'update_app', desc: '', args: []);
+  }
+
   /// `Total Cost`
   String get total_cost {
     return Intl.message('Total Cost', name: 'total_cost', desc: '', args: []);

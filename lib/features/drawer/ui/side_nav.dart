@@ -1,4 +1,5 @@
 import 'package:arqamy/generated/l10n.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:arqamy/config/routes/app_router.dart';
 import 'package:arqamy/config/routes/routes.dart';
@@ -6,6 +7,8 @@ import 'package:arqamy/config/theme/colors.dart';
 import 'package:arqamy/core/helpers/spacing.dart';
 import 'package:arqamy/core/widgets/textbuilder.dart';
 import 'package:arqamy/my_app.dart';
+import 'package:in_app_update/in_app_update.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:share_plus/share_plus.dart';
 
 class SideNav extends StatefulWidget {
@@ -16,8 +19,10 @@ class SideNav extends StatefulWidget {
 }
 
 class _SideNavState extends State<SideNav> {
-  late DrawersController drawer;
   static bool isCollapse = false;
+  static const _playStoreUrl =
+      'https://play.google.com/store/apps/details?id=com.nahro.arqamy';
+  bool _hasUpdate = false;
 
   void collapseDrawer() {
     setState(() {
@@ -28,11 +33,54 @@ class _SideNavState extends State<SideNav> {
   @override
   void initState() {
     super.initState();
-    drawer = DrawersController(context);
+    _checkForUpdate();
+  }
+
+  Future<void> _checkForUpdate() async {
+    if (defaultTargetPlatform != TargetPlatform.android) return;
+    try {
+      final status = await InAppUpdate.checkForUpdate();
+      if (!mounted) return;
+      setState(() {
+        _hasUpdate =
+            status.updateAvailability == UpdateAvailability.updateAvailable;
+      });
+    } on Exception catch (error, stackTrace) {
+      FlutterError.reportError(
+        FlutterErrorDetails(
+          exception: error,
+          stack: stackTrace,
+          library: 'side navigation',
+          context: ErrorDescription('while checking for app updates'),
+        ),
+      );
+    }
+  }
+
+  Future<void> _openStoreListing() async {
+    try {
+      final launched = await launchUrl(
+        Uri.parse(_playStoreUrl),
+        mode: LaunchMode.externalApplication,
+      );
+      if (!launched) {
+        throw Exception('Could not open the app store listing.');
+      }
+    } on Exception catch (error, stackTrace) {
+      FlutterError.reportError(
+        FlutterErrorDetails(
+          exception: error,
+          stack: stackTrace,
+          library: 'side navigation',
+          context: ErrorDescription('while opening the app store listing'),
+        ),
+      );
+    }
   }
 
   @override
   Widget build(BuildContext context) {
+    final drawer = DrawersController(context, hasUpdate: _hasUpdate);
     return Drawer(
       width: isCollapse ? 90 : 180,
       child: Material(
@@ -77,13 +125,27 @@ class _SideNavState extends State<SideNav> {
                 itemCount: drawer.sideDrawer.length,
                 itemBuilder: (BuildContext context, int i) {
                   return ListTile(
-                    onTap: () {
+                    onTap: () async {
+                      if (i == 4) {
+                        final size = MediaQuery.sizeOf(context);
+                        final sharePositionOrigin =
+                            Rect.fromLTWH(0, 0, size.width, size.height);
+                        Navigator.pop(context);
+                        shareApp(sharePositionOrigin);
+                        return;
+                      }
                       Navigator.pop(context);
+                      if (i == 5) {
+                        await _openStoreListing();
+                        return;
+                      }
                       _navigateToRoute(context, i);
                     },
                     leading: Icon(
                       drawer.sideDrawer[i].icon,
-                      color: ColorsManager.black,
+                      color: i == 5 && _hasUpdate
+                          ? Colors.orange
+                          : ColorsManager.black,
                     ),
                     title: isCollapse
                         ? null
@@ -129,7 +191,7 @@ class _SideNavState extends State<SideNav> {
 }
 
 void _navigateToRoute(BuildContext context, int index) {
-  String? routeName;
+  var routeName = Routes.orderScreen;
   switch (index) {
     case 0:
       routeName = Routes.orderScreen;
@@ -138,36 +200,29 @@ void _navigateToRoute(BuildContext context, int index) {
       routeName = Routes.customerScreen;
       break;
     // case 2:
-      // routeName = Routes.inventoryScreen;
-      // break;
+    // routeName = Routes.inventoryScreen;
+    // break;
     case 3:
       routeName = Routes.settingsScreen;
       break;
-    case 5:
-      shareApp();
-      break;
-
-    // Handle additional cases if necessary
-    default:
-      routeName = Routes.orderScreen;
   }
-  if (routeName != null) {
-    Navigator.pushNamed(context, routeName);
-  }
+  Navigator.pushNamed(context, routeName);
 }
 
-void shareApp() {
-  SharePlus.instance.share(
+Future<void> shareApp(Rect sharePositionOrigin) async {
+  await SharePlus.instance.share(
     ShareParams(
         text:
-            'Check out my app: https://play.google.com/store/apps/details?id=com.nahro.arqamy'),
+            'Check out my app: https://play.google.com/store/apps/details?id=com.nahro.arqamy',
+        sharePositionOrigin: sharePositionOrigin),
   );
 }
 
 class DrawersController {
   final BuildContext context;
+  final bool hasUpdate;
 
-  DrawersController(this.context);
+ DrawersController(this.context, {this.hasUpdate = false});
 
   List<DrawerModel> get sideDrawer => [
         DrawerModel(S.of(context).home, Icons.home),
@@ -175,6 +230,10 @@ class DrawersController {
         DrawerModel(S.of(context).inventory, Icons.person),
         DrawerModel(S.of(context).settings, Icons.settings),
         DrawerModel(S.of(context).share_app, Icons.share),
+         DrawerModel(
+          S.of(context).update_app,
+          hasUpdate ? Icons.system_update_alt : Icons.system_update,
+        ),
       ];
 }
 

@@ -72,6 +72,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "suppliers": MessageLookupByLibrary.simpleMessage("الموردين"),
     "terms_of_service": MessageLookupByLibrary.simpleMessage("شروط الخدمة"),
     "total_cost": MessageLookupByLibrary.simpleMessage("التكلفة الإجمالية"),
+    "update_app": MessageLookupByLibrary.simpleMessage("تحديث التطبيق"),
     "yes": MessageLookupByLibrary.simpleMessage("نعم"),
   };
 }

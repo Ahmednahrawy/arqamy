@@ -11,11 +11,11 @@ class InvoiceDetailDialog extends StatelessWidget {
   final VoidCallback onDelete;
 
   const InvoiceDetailDialog({
-    Key? key,
+    super.key,
     required this.invoice,
     required this.onEdit,
     required this.onDelete,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -167,23 +167,32 @@ class InvoiceDetailDialog extends StatelessWidget {
                     icon: Icons.share,
                     label: 'مشاركة',
                     onPressed: () async {
+                      final scaffoldMessenger = ScaffoldMessenger.of(context);
                       final tempProvider = InvoiceProvider();
                       for (var product in invoice.products) {
                         tempProvider.addProduct(product);
                       }
-
-                      await InvoiceService.generateAndShareInvoice(
-                        provider: tempProvider,
-                        settings: settings,
-                        customerName: invoice.customerName,
-                        totalCost: invoice.totalCost,
-                        paid: invoice.paid,
-                        rest: invoice.rest,
-                        formattedDate: invoice.formattedDate,
-                        formattedTime: invoice.formattedTime,
-                        invoiceAction: invoice.invoiceAction,
-                        invoiceSerial: invoice.invoiceSerial,
-                      );
+                      try {
+                        await InvoiceService.generateAndShareInvoice(
+                          provider: tempProvider,
+                          settings: settings,
+                          customerName: invoice.customerName,
+                          totalCost: invoice.totalCost,
+                          paid: invoice.paid,
+                          rest: invoice.rest,
+                          formattedDate: invoice.formattedDate,
+                          formattedTime: invoice.formattedTime,
+                          invoiceAction: invoice.invoiceAction,
+                          invoiceSerial: invoice.invoiceSerial,
+                        );
+                      } catch (error) {
+                        if (!scaffoldMessenger.mounted) return;
+                        scaffoldMessenger.showSnackBar(
+                          SnackBar(
+                            content: Text('تعذر مشاركة الفاتورة: $error'),
+                          ),
+                        );
+                      }
                     },
                     color: Colors.blue,
                   ),
@@ -374,7 +383,7 @@ class InvoiceDetailDialog extends StatelessWidget {
                   ],
                 ),
               );
-            }).toList(),
+            }),
           ],
         ),
       ),

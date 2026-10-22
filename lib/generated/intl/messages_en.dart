@@ -74,6 +74,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Terms of Service",
     ),
     "total_cost": MessageLookupByLibrary.simpleMessage("Total Cost"),
+    "update_app": MessageLookupByLibrary.simpleMessage("Update App"),
     "yes": MessageLookupByLibrary.simpleMessage("Yes"),
   };
 }
