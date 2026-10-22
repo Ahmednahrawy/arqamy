@@ -70,6 +70,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "settings": MessageLookupByLibrary.simpleMessage("الإعدادات"),
     "share_app": MessageLookupByLibrary.simpleMessage("شارك التطبيق"),
     "suppliers": MessageLookupByLibrary.simpleMessage("الموردين"),
+    "update_app": MessageLookupByLibrary.simpleMessage("تحديث التطبيق"),
     "terms_of_service": MessageLookupByLibrary.simpleMessage("شروط الخدمة"),
     "total_cost": MessageLookupByLibrary.simpleMessage("التكلفة الإجمالية"),
     "yes": MessageLookupByLibrary.simpleMessage("نعم"),
