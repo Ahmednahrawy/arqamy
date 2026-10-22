@@ -211,6 +211,77 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
+
+ testWidgets('invoice preview shows the current payment amount and actions',
+      (WidgetTester tester) async {
+    tester.view.devicePixelRatio = 1;
+    tester.view.physicalSize = const Size(360, 800);
+    addTearDown(tester.view.resetDevicePixelRatio);
+    addTearDown(tester.view.resetPhysicalSize);
+    SharedPreferences.setMockInitialValues({});
+    final invoiceProvider = InvoiceProvider()
+      ..setInvoiceAction('شراء')
+      ..addProduct(
+        Product(
+          name: 'Rice',
+          weight: 5,
+          packageWeight: 0,
+          numberPackage: 0,
+          price: 10,
+        ),
+      );
+
+    await tester.pumpWidget(
+      MultiProvider(
+        providers: [
+          ChangeNotifierProvider(create: (_) => Language()),
+          ChangeNotifierProvider(create: (_) => ThemeProvider()),
+          ChangeNotifierProvider.value(value: invoiceProvider),
+          ChangeNotifierProvider(create: (_) => InvoiceSettingsProvider()),
+        ],
+        child: MyApp(appRouter: AppRouter()),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    final previewButton = find.byType(FloatingActionButton);
+    expect(tester.getRect(previewButton).center.dx, greaterThan(180));
+    await tester.ensureVisible(
+      find.byWidgetPredicate(
+        (widget) =>
+            widget is TextField && widget.decoration?.labelText == 'تحصيل',
+      ),
+    );
+    await tester.enterText(
+      find.byWidgetPredicate(
+        (widget) =>
+            widget is TextField && widget.decoration?.labelText == 'تحصيل',
+      ),
+      '25',
+    );
+    tester.testTextInput.hide();
+    await tester.pumpAndSettle();
+    await tester.tap(previewButton);
+    await tester.pumpAndSettle();
+
+    expect(find.text('إجمالي المبلغ: 50.00 L.E'), findsOneWidget);
+    expect(find.text('التحصيل : 25.00 L.E'), findsOneWidget);
+    expect(find.text('الباقي: 25.00 L.E'), findsOneWidget);
+
+    final saveButton = find.ancestor(
+      of: find.text('حفظ'),
+      matching: find.byType(TextButton),
+    );
+    final sendButton = find.ancestor(
+      of: find.text('إرسال'),
+      matching: find.byType(TextButton),
+    );
+    expect(tester.getSize(saveButton).width, lessThan(100));
+    expect(find.byTooltip('مشاركة عبر واتساب'), findsOneWidget);
+    expect(tester.getSize(sendButton).width, greaterThan(100));
+    expect(tester.takeException(), isNull);
+  });
+
   testWidgets('invoice summary can be dismissed by dragging its handle down',
       (WidgetTester tester) async {
     tester.view.devicePixelRatio = 1;

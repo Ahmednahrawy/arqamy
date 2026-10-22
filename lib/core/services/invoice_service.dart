@@ -75,6 +75,34 @@ class InvoiceService {
       invoiceAction: invoiceAction,
       invoiceSerial: invoiceSerial,
     );
+    await SharePlus.instance.share(ShareParams(files: [XFile(filePath)]));
+  }
+
+  /// Generates and shares an invoice directly to WhatsApp when available.
+  static Future<void> generateAndShareInvoiceToWhatsApp({
+    required InvoiceProvider provider,
+    required InvoiceSettingsProvider settings,
+    required String customerName,
+    required double totalCost,
+    required double paid,
+    required double rest,
+    required String? formattedDate,
+    required String? formattedTime,
+    required String? invoiceAction,
+    required String invoiceSerial,
+  }) async {
+    final filePath = await generateAndSaveInvoice(
+      provider: provider,
+      settings: settings,
+      customerName: customerName,
+      totalCost: totalCost,
+      paid: paid,
+      rest: rest,
+      formattedDate: formattedDate,
+      formattedTime: formattedTime,
+      invoiceAction: invoiceAction,
+      invoiceSerial: invoiceSerial,
+    );
     if (defaultTargetPlatform == TargetPlatform.android) {
       await _whatsappChannel.invokeMethod<void>(
         'sharePdfToWhatsApp',

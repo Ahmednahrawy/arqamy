@@ -20,6 +20,8 @@ import 'package:arqamy/features/orderscreen/ui/widgets/my_data_table.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 
+enum _InvoiceShareTarget { allApps, whatsapp }
+
 class Orderscreen extends StatefulWidget {
   const Orderscreen({super.key});
   // This widget is the main screen for issuing invoices.
@@ -145,7 +147,7 @@ class _OrderscreenState extends State<Orderscreen>
     );
   }
 
-  Future<void> _saveInvoice({required bool share}) async {
+  Future<void> _saveInvoice({_InvoiceShareTarget? shareTarget}) async {
     final provider = context.read<InvoiceProvider>();
     if (!_validateInvoice(provider)) return;
 
@@ -173,9 +175,12 @@ class _OrderscreenState extends State<Orderscreen>
       return;
     }
 
-    if (share) {
+    if (shareTarget != null) {
       try {
-        await InvoiceService.generateAndShareInvoice(
+        final shareInvoice = shareTarget == _InvoiceShareTarget.whatsapp
+            ? InvoiceService.generateAndShareInvoiceToWhatsApp
+            : InvoiceService.generateAndShareInvoice;
+        await shareInvoice(
           provider: provider,
           settings: context.read<InvoiceSettingsProvider>(),
           customerName: invoice.customerName,
@@ -196,16 +201,19 @@ class _OrderscreenState extends State<Orderscreen>
     }
     if (!mounted) return;
     Navigator.of(context).pop();
-    if (share) {
+    if (shareTarget != null) {
       _showToast(S.of(context).invoice_sent_successfully);
     } else {
       _showToast('تم حفظ الفاتورة بنجاح');
     }
   }
 
-  Future<void> _sendInvoice() => _saveInvoice(share: true);
+  Future<void> _shareInvoice() =>
+      _saveInvoice(shareTarget: _InvoiceShareTarget.allApps);
 
-  Future<void> _saveInvoiceOnly() => _saveInvoice(share: false);
+  Future<void> _sendInvoiceToWhatsApp() =>
+      _saveInvoice(shareTarget: _InvoiceShareTarget.whatsapp);
+  Future<void> _saveInvoiceOnly() => _saveInvoice();
 
   // Clear invoice button handler
   void _startNewInvoice() {
@@ -346,7 +354,9 @@ class _OrderscreenState extends State<Orderscreen>
                     ),
                     context: context,
                     builder: (BuildContext ctx) {
-                      return const InvoiceSummaryBottomSheet();
+                      return const InvoiceSummaryBottomSheet(
+                        //  payController: _payController,
+                      );
                     },
                   );
                 },
@@ -376,7 +386,7 @@ class _OrderscreenState extends State<Orderscreen>
       child: Scaffold(
         backgroundColor: Colors.grey[50],
 
-        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+        floatingActionButtonLocation: FloatingActionButtonLocation.startFloat,
         appBar: AppBar(
           elevation: 0,
           flexibleSpace: Container(
@@ -580,19 +590,33 @@ class _OrderscreenState extends State<Orderscreen>
           verticalSpace(10),
           Row(
             children: [
-              Expanded(
+              SizedBox(
+                width: 72,
                 child: AppTextButton(
                   onPressed: _saveInvoiceOnly,
                   buttonText: 'حفظ',
                   textStyle: TextStyles.font18WhiteMedium,
                   verticalPadding: 5,
+                  buttonHeight: 48,
+                  horizontalPadding: 4,
                   backgroundColor: ColorsManager.gray,
+                ),
+              ),
+              const SizedBox(width: 12),
+               Expanded(
+                child: AppTextButton(
+                  onPressed: _shareInvoice,
+                  buttonText: 'إرسال',
+                  textStyle: TextStyles.font18WhiteMedium,
+                  verticalPadding: 5,
+                  buttonHeight: 48,
+                  backgroundColor: ColorsManager.mainBlue,
                 ),
               ),
               const SizedBox(width: 12),
               IconButton.filled(
                 tooltip: 'مشاركة عبر واتساب',
-                onPressed: _sendInvoice,
+                onPressed: _sendInvoiceToWhatsApp,
                 style: IconButton.styleFrom(
                   backgroundColor: const Color(0xFF25D366),
                   foregroundColor: Colors.white,
