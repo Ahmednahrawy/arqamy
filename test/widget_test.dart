@@ -92,7 +92,7 @@ void main() {
     expect(invoiceProvider.products, isEmpty);
   });
 
-  testWidgets('saving an invoice from the summary does not share a PDF',
+  testWidgets('saving an invoice from the page does not share a PDF',
       (WidgetTester tester) async {
     SharedPreferences.setMockInitialValues({});
     final invoiceProvider = InvoiceProvider()
@@ -121,8 +121,7 @@ void main() {
     );
     await tester.pumpAndSettle();
 
-    await tester.tap(find.byType(FloatingActionButton));
-    await tester.pumpAndSettle();
+    await tester.ensureVisible(find.text('حفظ'));
     await tester.tap(find.widgetWithText(TextButton, 'حفظ'));
     await tester.pumpAndSettle();
 
@@ -132,16 +131,11 @@ void main() {
       (await SharedPreferences.getInstance()).getString('saved_invoices'),
       isNotNull,
     );
-
-    await tester.tap(find.byType(FloatingActionButton));
     await tester.pumpAndSettle();
-    await tester.tap(find.widgetWithText(TextButton, 'حفظ'));
-    await tester.pumpAndSettle();
-
-    expect(invoiceProvider.invoices, hasLength(1));
+    expect(find.byType(CircularProgressIndicator), findsNothing);
   });
 
-  testWidgets('invoice summary buttons stay above mobile navigation controls',
+  testWidgets('payment controls are outside the invoice preview',
       (WidgetTester tester) async {
     tester.view.devicePixelRatio = 1;
     tester.view.physicalSize = const Size(360, 800);
@@ -174,22 +168,46 @@ void main() {
       ),
     );
     await tester.pumpAndSettle();
+    expect(find.text('معاينة '), findsOneWidget);
     await tester.tap(find.byType(FloatingActionButton));
     await tester.pumpAndSettle();
-    final summaryScrollView = find
-        .byWidgetPredicate(
-          (widget) =>
-              widget is SingleChildScrollView &&
-              widget.scrollDirection == Axis.vertical,
-        )
-        .last;
-    await tester.drag(summaryScrollView, const Offset(0, -2000));
+    final preview = find.byType(BottomSheet);
+    expect(
+      find.descendant(of: preview, matching: find.text('تحصيل')),
+      findsNothing,
+    );
+    expect(
+      find.descendant(of: preview, matching: find.text('حفظ')),
+      findsNothing,
+    );
+    expect(
+      find.descendant(of: preview, matching: find.text('مشاركة')),
+      findsNothing,
+    );
+    expect(
+      find.descendant(
+        of: preview,
+        matching: find.byTooltip('مشاركة عبر واتساب'),
+      ),
+      findsNothing,
+    );
+    final sheetRect = tester.getRect(preview);
+    await tester.flingFrom(
+      Offset(sheetRect.center.dx, sheetRect.top + 24),
+      const Offset(0, 500),
+      1200,
+    );
     await tester.pumpAndSettle();
-    for (final label in ['حفظ', 'مشاركة']) {
-      final buttonRect = tester.getRect(find.text(label));
-      expect(buttonRect.bottom, lessThanOrEqualTo(776));
-      expect(buttonRect.top, greaterThanOrEqualTo(0));
-    }
+    await tester.drag(
+      find.byType(SingleChildScrollView).first,
+      const Offset(0, -2000),
+    );
+    await tester.pumpAndSettle();
+    expect(tester.getRect(find.text('حفظ')).bottom, lessThanOrEqualTo(776));
+    expect(
+      tester.getRect(find.byTooltip('مشاركة عبر واتساب')).bottom,
+      lessThanOrEqualTo(776),
+    );
     expect(tester.takeException(), isNull);
   });
 
@@ -235,7 +253,7 @@ void main() {
     );
     await tester.pumpAndSettle();
 
-    expect(find.text('حفظ'), findsNothing);
+    expect(find.byType(BottomSheet), findsNothing);
     expect(tester.takeException(), isNull);
   });
 

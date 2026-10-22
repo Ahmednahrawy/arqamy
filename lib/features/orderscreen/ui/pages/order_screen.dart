@@ -8,12 +8,16 @@ import 'package:arqamy/generated/l10n.dart';
 import 'package:flutter/material.dart';
 
 import 'package:arqamy/config/theme/colors.dart';
+import 'package:arqamy/config/theme/styles.dart';
 import 'package:arqamy/core/helpers/helper_date_price.dart';
 import 'package:arqamy/core/helpers/spacing.dart';
+import 'package:arqamy/core/widgets/text_button.dart';
+import 'package:arqamy/core/widgets/text_form_field.dart';
 import 'package:arqamy/features/orderscreen/data/models/product_model.dart';
 import 'package:arqamy/features/drawer/ui/side_nav.dart';
 import 'package:arqamy/features/orderscreen/ui/widgets/customer_name.dart';
 import 'package:arqamy/features/orderscreen/ui/widgets/my_data_table.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 
 class Orderscreen extends StatefulWidget {
@@ -34,6 +38,7 @@ class _OrderscreenState extends State<Orderscreen>
   // pay (kept in Orderscreen so sending logic remains here)
   final _payController = TextEditingController(text: "0");
   final _payKey = GlobalKey<FormState>();
+  final _payFocusNode = FocusNode();
   String? _savedInvoiceId;
   Invoice? _savedInvoice;
   int _productFormVersion = 0;
@@ -51,6 +56,11 @@ class _OrderscreenState extends State<Orderscreen>
     _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
       CurvedAnimation(parent: _animationController, curve: Curves.easeIn),
     );
+    _payFocusNode.addListener(() {
+      if (_payFocusNode.hasFocus && _payController.text == '0') {
+        _payController.clear();
+      }
+    });
     _animationController.forward();
   }
 
@@ -185,7 +195,6 @@ class _OrderscreenState extends State<Orderscreen>
       }
     }
     if (!mounted) return;
-    Navigator.of(context).pop();
     Navigator.of(context).pop();
     if (share) {
       _showToast(S.of(context).invoice_sent_successfully);
@@ -337,20 +346,15 @@ class _OrderscreenState extends State<Orderscreen>
                     ),
                     context: context,
                     builder: (BuildContext ctx) {
-                      return InvoiceSummaryBottomSheet(
-                        payController: _payController,
-                        payFormKey: _payKey,
-                        onSave: _saveInvoiceOnly,
-                        onSend: _sendInvoice,
-                      );
+                      return const InvoiceSummaryBottomSheet();
                     },
                   );
                 },
           label: const Text(
-            'إرسال ',
+            'معاينة',
             style: TextStyle(fontWeight: FontWeight.bold),
           ),
-          icon: const Icon(Icons.send),
+          icon: const Icon(Icons.preview),
           backgroundColor: Colors.blue[700],
         ),
       ),
@@ -360,6 +364,7 @@ class _OrderscreenState extends State<Orderscreen>
   @override
   void dispose() {
     _animationController.dispose();
+    _payFocusNode.dispose();
     _payController.dispose();
     super.dispose();
   }
@@ -483,6 +488,8 @@ class _OrderscreenState extends State<Orderscreen>
                                   const MyDataTable(),
                                   const Divider(height: 32),
                                   _buildTotalCostCard(provider.totalCost),
+                                  verticalSpace(12),
+                                  _buildPaymentControls(),
                                 ],
                               ),
                             );
@@ -536,6 +543,69 @@ class _OrderscreenState extends State<Orderscreen>
         ),
         // resizeToAvoidBottomInset: false,
         resizeToAvoidBottomInset: true,
+      ),
+    );
+  }
+
+  Widget _buildPaymentControls() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 12),
+      child: Column(
+        children: [
+          Form(
+            key: _payKey,
+            child: AppTextFormField(
+              focusNode: _payFocusNode,
+              textDirection: TextDirection.ltr,
+              controller: _payController,
+              labelText: 'تحصيل',
+              suffixText: 'جنيه',
+              suffixIcon: _payController.text.isEmpty
+                  ? const SizedBox.shrink()
+                  : IconButton(
+                      onPressed: _payController.clear,
+                      icon: const Icon(Icons.clear),
+                    ),
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'رجاء أدخل قيمة التحصيل';
+                }
+                if (double.tryParse(value) == null) {
+                  return 'ادخل رقم صالح';
+                }
+                return null;
+              },
+            ),
+          ),
+          verticalSpace(10),
+          Row(
+            children: [
+              Expanded(
+                child: AppTextButton(
+                  onPressed: _saveInvoiceOnly,
+                  buttonText: 'حفظ',
+                  textStyle: TextStyles.font18WhiteMedium,
+                  verticalPadding: 5,
+                  backgroundColor: ColorsManager.gray,
+                ),
+              ),
+              const SizedBox(width: 12),
+              IconButton.filled(
+                tooltip: 'مشاركة عبر واتساب',
+                onPressed: _sendInvoice,
+                style: IconButton.styleFrom(
+                  backgroundColor: const Color(0xFF25D366),
+                  foregroundColor: Colors.white,
+                  minimumSize: const Size(52, 52),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                ),
+                icon: const FaIcon(FontAwesomeIcons.whatsapp),
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }
