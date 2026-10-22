@@ -354,8 +354,9 @@ class _OrderscreenState extends State<Orderscreen>
                     ),
                     context: context,
                     builder: (BuildContext ctx) {
-                      return const InvoiceSummaryBottomSheet(
-                        //  payController: _payController,
+                      return InvoiceSummaryBottomSheet(
+                        paid: _paid,
+                        rest: _rest(provider.totalCost),
                       );
                     },
                   );
@@ -558,6 +559,7 @@ class _OrderscreenState extends State<Orderscreen>
   }
 
   Widget _buildPaymentControls() {
+    var width = MediaQuery.of(context).size.width;
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 12),
       child: Column(
@@ -590,8 +592,7 @@ class _OrderscreenState extends State<Orderscreen>
           verticalSpace(10),
           Row(
             children: [
-              SizedBox(
-                width: 72,
+              Expanded(
                 child: AppTextButton(
                   onPressed: _saveInvoiceOnly,
                   buttonText: 'حفظ',
@@ -602,8 +603,8 @@ class _OrderscreenState extends State<Orderscreen>
                   backgroundColor: ColorsManager.gray,
                 ),
               ),
-              const SizedBox(width: 12),
-               Expanded(
+              SizedBox(width: width < 400 ? 14 : 22),
+              Expanded(
                 child: AppTextButton(
                   onPressed: _shareInvoice,
                   buttonText: 'إرسال',
@@ -613,7 +614,7 @@ class _OrderscreenState extends State<Orderscreen>
                   backgroundColor: ColorsManager.mainBlue,
                 ),
               ),
-              const SizedBox(width: 12),
+              SizedBox(width: width < 400 ? 14 : 22),
               IconButton.filled(
                 tooltip: 'مشاركة عبر واتساب',
                 onPressed: _sendInvoiceToWhatsApp,

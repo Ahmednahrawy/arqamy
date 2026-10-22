@@ -6,7 +6,13 @@ import 'package:arqamy/features/orderscreen/ui/widgets/my_data_table.dart';
 import 'package:provider/provider.dart';
 
 class InvoiceSummaryBottomSheet extends StatelessWidget {
-  const InvoiceSummaryBottomSheet({super.key});
+  final double paid;
+  final double rest;
+  const InvoiceSummaryBottomSheet({
+    super.key,
+    required this.paid,
+    required this.rest,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -42,6 +48,10 @@ class InvoiceSummaryBottomSheet extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       Text('إجمالي المبلغ: ${totalCost.toStringAsFixed(2)} L.E',
+                          textDirection: TextDirection.rtl),
+                      Text('التحصيل : ${paid.toStringAsFixed(2)} L.E',
+                          textDirection: TextDirection.rtl),
+                      Text('الباقي: ${rest.toStringAsFixed(2)} L.E',
                           textDirection: TextDirection.rtl),
                     ],
                   ),
