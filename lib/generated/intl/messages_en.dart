@@ -70,11 +70,11 @@ class MessageLookup extends MessageLookupByLibrary {
     "settings": MessageLookupByLibrary.simpleMessage("Settings"),
     "share_app": MessageLookupByLibrary.simpleMessage("Share App"),
     "suppliers": MessageLookupByLibrary.simpleMessage("Suppliers"),
-    "update_app": MessageLookupByLibrary.simpleMessage("Update App"),
     "terms_of_service": MessageLookupByLibrary.simpleMessage(
       "Terms of Service",
     ),
     "total_cost": MessageLookupByLibrary.simpleMessage("Total Cost"),
+    "update_app": MessageLookupByLibrary.simpleMessage("Update App"),
     "yes": MessageLookupByLibrary.simpleMessage("Yes"),
   };
 }
