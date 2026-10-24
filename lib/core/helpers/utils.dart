@@ -60,7 +60,7 @@ Future<Uint8List> generatePDF(
 
   String invoiceName = invoiceAction == "شراء"
       ? "فاتورة مشتريات"
-      : invoiceAction == "بـيع"
+      : invoiceAction == "بيع"
           ? "فاتورة بيع"
           : "فاتورة تخزين";
   doc.addPage(
@@ -82,15 +82,15 @@ Future<Uint8List> generatePDF(
           pw.Column(
             crossAxisAlignment: pw.CrossAxisAlignment.start,
             children: [
-              pw.Text('${settings.companyName}',
+              pw.Text(settings.companyName,
                   style: pw.TextStyle(
                       fontSize: 16, fontWeight: pw.FontWeight.bold, font: ttf)),
-              pw.Text('${settings.companyDescription}'),
+              pw.Text(settings.companyDescription),
             ],
           ),
           pw.SizedBox(width: 70),
           pw.BarcodeWidget(
-              data: '${settings.qrData}',
+              data: settings.qrData,
               width: 50,
               height: 50,
               barcode: pw.Barcode.qrCode(),
@@ -163,7 +163,6 @@ Future<Uint8List> generatePDF(
             pw.SizedBox(height: 10),
           ]);
         }
-        ;
         widgets.addAll([
           pw.Row(
             mainAxisAlignment: pw.MainAxisAlignment.start,
