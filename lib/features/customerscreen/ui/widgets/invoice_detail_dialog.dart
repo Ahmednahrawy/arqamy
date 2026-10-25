@@ -303,10 +303,8 @@ class InvoiceDetailDialog extends StatelessWidget {
             ),
             const Divider(height: 20),
             ...invoice.products.map((product) {
-              final netWeight = product.weight -
-                  (product.packageWeight * product.numberPackage);
-              final total = netWeight * product.price;
-
+              final netWeight = product.netWeight;
+              final total = product.totalPrice;
               return Container(
                 margin: const EdgeInsets.only(bottom: 8),
                 padding: const EdgeInsets.all(10),

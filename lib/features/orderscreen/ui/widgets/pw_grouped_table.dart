@@ -37,22 +37,13 @@ class PdfGroupedDataTable extends pw.StatelessWidget {
               _buildCell(product.name),
               _buildCell('${product.weight}'),
               if (shouldShowPackageColumns)
-                _buildCell('${product.packageWeight.toStringAsFixed(2)}'),
+                _buildCell(product.packageWeight.toStringAsFixed(2)),
               if (shouldShowPackageColumns)
                 _buildCell(product.numberPackage.toString()),
               if (shouldShowPackageColumns)
-                _buildCell(
-                  (product.weight -
-                          (product.packageWeight * product.numberPackage))
-                      .toStringAsFixed(2),
-                ),
+                _buildCell(product.netWeight.toStringAsFixed(2)),
               _buildCell(product.price.toStringAsFixed(2)),
-              _buildCell(
-                ((product.weight -
-                            (product.packageWeight * product.numberPackage)) *
-                        product.price)
-                    .toStringAsFixed(2),
-              ),
+              _buildCell(product.totalPrice.toStringAsFixed(2)),
             ],
           ),
       ],

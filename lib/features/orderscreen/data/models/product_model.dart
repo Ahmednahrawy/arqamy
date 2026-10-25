@@ -3,9 +3,11 @@ class Product {
   final String name;
   final double weight;
   final double packageWeight;
-  final double price;
+  final double price; 
   final int numberPackage;
   // final String action;
+  double get netWeight => weight - (packageWeight * numberPackage);
+  double get totalPrice => netWeight * price;
 
   Product({
     required this.name,
@@ -16,6 +18,3 @@ class Product {
     // required this.action,
   });
 }
-
-
-

@@ -38,9 +38,7 @@ class InvoiceProvider extends ChangeNotifier {
     }
     var total = 0.0;
     for (final product in _products) {
-      final netWeight =
-          product.weight - (product.packageWeight * product.numberPackage);
-      total += netWeight * product.price;
+      total += product.totalPrice;
     }
     return _totalCostCache = total;
   }

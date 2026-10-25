@@ -106,9 +106,8 @@ Widget _buildDetailedTable(
         rows: products.asMap().entries.map((entry) {
           final index = entry.key;
           final product = entry.value;
-          final netWeight =
-              product.weight - (product.packageWeight * product.numberPackage);
-          final totalPrice = netWeight * product.price;
+          final netWeight = product.netWeight;
+          final totalPrice = product.totalPrice;
           // Build cells conditionally
           final cells = <DataCell>[
             DataCell(
@@ -156,38 +155,6 @@ Widget _buildDetailedTable(
 
 Widget _buildTotalsTable(
     List<Product> products, BuildContext context, bool showPackageColumns) {
-  // return DataTable(
-  //   columns: [
-  //     _buildDataColumn('المنتج'),
-  //     // _buildDataColumn('إجمالي الوزن'),
-  //     // _buildDataColumn('عدد العبوات'),
-  //     _buildDataColumn('صافي الوزن'),
-  //     _buildDataColumn('السعر'),
-  //     _buildDataColumn('الإجمالي'),
-  //   ],
-  //   rows: products.map((product) {
-  //     final netWeight =
-  //         product.weight - (product.packageWeight * product.numberPackage);
-  //     final totalPrice = netWeight * product.price;
-  //     return DataRow(cells: [
-  //       _buildDataCell((product.name)),
-  //       // _buildDataCell(('${product.weight.toStringAsFixed(2)} kg')),
-  //       // _buildDataCell(('${product.numberPackage}')),
-  //       _buildDataCell(('${netWeight.toStringAsFixed(2)} kg')),
-  //       _buildDataCell(('${product.price.toStringAsFixed(2)} L.E')),
-  //       _buildDataCell(('${totalPrice.toStringAsFixed(2)} L.E')),
-  //     ]);
-  //   }).toList(),
-  //   dataRowColor: WidgetStateProperty.all<Color>(
-  //     const Color.fromARGB(255, 232, 217, 216),
-  //   ),
-  //   headingTextStyle: const TextStyle(),
-  //   border: const TableBorder(
-  //     bottom: BorderSide(width: 1),
-  //     top: BorderSide(width: 1),
-  //     verticalInside: BorderSide(width: 1),
-  //   ),
-  //   horizontalMargin: 10,
   return LayoutBuilder(
     builder: (context, constraints) {
       final availableWidth = constraints.hasBoundedWidth
@@ -209,9 +176,8 @@ Widget _buildTotalsTable(
                 _buildDataColumn('الإجمالي'),
               ],
               rows: products.map((product) {
-                final netWeight = product.weight -
-                    (product.packageWeight * product.numberPackage);
-                final totalPrice = netWeight * product.price;
+                final netWeight = product.netWeight;
+                final totalPrice = product.totalPrice;
                 return DataRow(cells: [
                   _buildDataCell(product.name),
                   _buildDataCell('${netWeight.toStringAsFixed(2)} kg'),

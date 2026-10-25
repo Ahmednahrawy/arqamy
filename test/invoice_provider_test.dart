@@ -15,6 +15,8 @@ void main() {
       price: 5,
     );
 
+    expect(firstProduct.netWeight, 9);
+    expect(firstProduct.totalPrice, 45);
     provider.addProduct(firstProduct);
     final productsView = provider.products;
     final groupedProducts = provider.groupedProducts;
@@ -90,7 +92,7 @@ void main() {
     await reloadedProvider.loadInvoices();
     expect(reloadedProvider.invoices, isEmpty);
   });
-   test('customer balance subtracts sales from purchases', () {
+  test('customer balance subtracts sales from purchases', () {
     Invoice invoice({
       required String id,
       required String action,
@@ -119,5 +121,4 @@ void main() {
 
     expect(balance, 300);
   });
-
 }
