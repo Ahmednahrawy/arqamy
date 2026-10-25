@@ -13,6 +13,7 @@ import 'package:arqamy/core/helpers/helper_date_price.dart';
 import 'package:arqamy/core/helpers/spacing.dart';
 import 'package:arqamy/core/widgets/text_button.dart';
 import 'package:arqamy/core/widgets/text_form_field.dart';
+import 'package:arqamy/core/widgets/app_snack_bar.dart';
 import 'package:arqamy/features/orderscreen/data/models/product_model.dart';
 import 'package:arqamy/features/drawer/ui/side_nav.dart';
 import 'package:arqamy/features/orderscreen/ui/widgets/customer_name.dart';
@@ -78,25 +79,7 @@ class _OrderscreenState extends State<Orderscreen>
 
   // Centralized error/toast handling
   void _showToast(String message, {bool isError = false}) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Row(
-          children: [
-            Icon(
-              isError ? Icons.error_rounded : Icons.check_circle,
-              color: Colors.white,
-            ),
-            const SizedBox(width: 12),
-            Expanded(child: Text(message)),
-          ],
-        ),
-        backgroundColor: isError ? Colors.red : Colors.green,
-        showCloseIcon: true,
-        behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-        width: 340,
-      ),
-    );
+    showAppSnackBar(context, message, isError: isError);
   }
 
 // Called by ProductInputForm
@@ -320,7 +303,7 @@ class _OrderscreenState extends State<Orderscreen>
               }
             },
             style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.red,
+              // backgroundColor: Colors.red,
               foregroundColor: Colors.white,
             ),
             child: const Text('حذف'),

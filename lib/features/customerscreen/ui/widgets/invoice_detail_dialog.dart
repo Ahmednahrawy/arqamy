@@ -3,6 +3,7 @@ import 'package:arqamy/features/orderscreen/data/models/invoice.dart';
 import 'package:arqamy/features/orderscreen/providers/invoice_provider.dart';
 import 'package:arqamy/features/settingscreen/providers/invoice_setting_provider.dart';
 import 'package:arqamy/core/services/invoice_service.dart';
+import 'package:arqamy/core/widgets/app_snack_bar.dart';
 import 'package:provider/provider.dart';
 
 class InvoiceDetailDialog extends StatelessWidget {
@@ -187,10 +188,10 @@ class InvoiceDetailDialog extends StatelessWidget {
                         );
                       } catch (error) {
                         if (!scaffoldMessenger.mounted) return;
-                        scaffoldMessenger.showSnackBar(
-                          SnackBar(
-                            content: Text('تعذر مشاركة الفاتورة: $error'),
-                          ),
+                        showAppSnackBarOn(
+                          scaffoldMessenger,
+                          'تعذر مشاركة الفاتورة: $error',
+                          isError: true,
                         );
                       }
                     },

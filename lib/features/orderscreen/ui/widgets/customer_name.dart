@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:arqamy/config/theme/colors.dart';
+import 'package:arqamy/core/widgets/app_snack_bar.dart';
 import 'package:arqamy/features/orderscreen/ui/widgets/customer_list_constants.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -21,25 +22,11 @@ class _CustomerNameAutoCompleteState extends State<CustomerNameAutoComplete> {
 
   @override
   void initState() {
+    super.initState();
     print('Init with initialValue: ${widget.initialValue}');
     // _controller = TextEditingController(text: widget.initialValue ?? '');
-    _initialize();
-    // _focusNode.addListener(_onFocusChange);
-    super.initState();
-    // _loadSuggestions();
-  }
-
-  Future<void> _initialize() async {
-    _prefs = await SharedPreferences.getInstance();
     _loadSuggestions();
   }
-
-  // void _onFocusChange() {
-  //   // When focus is lost, treat it as a submission
-  //   if (!_focusNode.hasFocus) {
-  //     _handleSubmit(_controller.text);
-  //   }
-  // }
 
   /// Central handler for submitting a value from any source (onSelected, onFieldSubmitted, focus loss)
   void _handleSubmit(String value) {
@@ -55,51 +42,31 @@ class _CustomerNameAutoCompleteState extends State<CustomerNameAutoComplete> {
     }
   }
 
-  // @override
-  // void didUpdateWidget(covariant CustomerNameAutoComplete oldWidget) {
-  //   super.didUpdateWidget(oldWidget);
-  //   if (widget.initialValue != oldWidget.initialValue) {
-  //     setState(() {
-  //       _controller.text = widget.initialValue ?? '';
-  //     });
-  //   }
-  // }
-
-  // @override
-  // void dispose() {
-  //   _controller.dispose();
-  //   super.dispose();
-  // }
-
+ 
   // Load suggestions from SharedPreferences
   Future<void> _loadSuggestions() async {
-    _prefs = await SharedPreferences.getInstance();
-
     try {
+      _prefs = await SharedPreferences.getInstance();
+      if (!mounted) return;
       setState(() {
         _customers = _prefs.getStringList('suggestions') ?? _customers;
       });
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Error loading suggestions: $e ###'),
-        ),
-      );
+      if (!mounted) return;
+      showAppSnackBar(context, 'Error loading suggestions: $e', isError: true);
     }
     print('load done #########################');
   }
 
   // Save suggestions to SharedPreferences
   Future<void> _saveSuggestions() async {
-    _prefs = await SharedPreferences.getInstance();
     try {
+      _prefs = await SharedPreferences.getInstance();
+      if (!mounted) return;
       await _prefs.setStringList('suggestions', _customers);
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Error saving suggestions: $e'),
-        ),
-      );
+      if (!mounted) return;
+      showAppSnackBar(context, 'Error saving suggestions: $e', isError: true);
     }
     print('save done ##############################');
   }
@@ -115,11 +82,7 @@ class _CustomerNameAutoCompleteState extends State<CustomerNameAutoComplete> {
       }
       print('add done ###################################################');
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Error adding suggestions: $e'),
-        ),
-      );
+      showAppSnackBar(context, 'Error adding suggestions: $e', isError: true);
     }
   }
 
@@ -152,7 +115,7 @@ class _CustomerNameAutoCompleteState extends State<CustomerNameAutoComplete> {
         // FocusScope.of(context).unfocus();
       },
       fieldViewBuilder: (context, controller, focusNode, onFieldSubmitted) {
-         focusNode.addListener(() {
+        focusNode.addListener(() {
           if (!focusNode.hasFocus) {
             _handleSubmit(controller.text);
           }
@@ -169,10 +132,10 @@ class _CustomerNameAutoCompleteState extends State<CustomerNameAutoComplete> {
               }
               print('Field submitted #############################');
             } catch (e) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text('Error submitting suggestions: $e'),
-                ),
+              showAppSnackBar(
+                context,
+                'Error submitting suggestions: $e',
+                isError: true,
               );
             }
           },
@@ -243,9 +206,7 @@ class _CustomerNameAutoCompleteState extends State<CustomerNameAutoComplete> {
                 onDismissed: (direction) {
                   // Handle what happens when an item is dismissed
                   _removeSuggestion(option);
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('$option has been dismissed')),
-                  );
+                  showAppSnackBar(context, '$option has been dismissed');
                 },
                 child: ListTile(
                   title: Text(option),

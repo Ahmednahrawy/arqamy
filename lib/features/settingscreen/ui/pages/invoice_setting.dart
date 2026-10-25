@@ -1,11 +1,12 @@
 import 'dart:io';
+import 'package:arqamy/core/widgets/app_snack_bar.dart';
 import 'package:arqamy/features/settingscreen/providers/invoice_setting_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
 class InvoiceSettingsScreen extends StatefulWidget {
-  const InvoiceSettingsScreen({Key? key}) : super(key: key);
+  const InvoiceSettingsScreen({super.key});
 
   @override
   State<InvoiceSettingsScreen> createState() => _InvoiceSettingsScreenState();
@@ -39,18 +40,25 @@ class _InvoiceSettingsScreenState extends State<InvoiceSettingsScreen> {
   Future<void> _saveSettings() async {
     if (_formKey.currentState?.validate() ?? false) {
       final settingsProvider = context.read<InvoiceSettingsProvider>();
+      try {
+        await settingsProvider.updateSettings(
+          managerName: _managerNameController.text,
+          managerPhone: _managerPhoneController.text,
+          companyName: _companyNameController.text,
+          companyDescription: _companyDescController.text,
+          qrData: _qrDataController.text,
+        );
 
-      await settingsProvider.updateSettings(
-        managerName: _managerNameController.text,
-        managerPhone: _managerPhoneController.text,
-        companyName: _companyNameController.text,
-        companyDescription: _companyDescController.text,
-        qrData: _qrDataController.text,
-      );
-
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("تم حفظ إعدادات الفاتورة")),
-      );
+        if (!mounted) return;
+        showAppSnackBar(context, 'تم حفظ إعدادات الفاتورة');
+      } catch (error) {
+        if (!mounted) return;
+        showAppSnackBar(
+          context,
+          'تعذر حفظ إعدادات الفاتورة: $error',
+          isError: true,
+        );
+      }
     }
   }
 
@@ -76,7 +84,7 @@ class _InvoiceSettingsScreenState extends State<InvoiceSettingsScreen> {
     final isFilePath = !settingsProvider.logoPath.startsWith('assets/');
     final hasCustomLogo = isFilePath && settingsProvider.logoPath.isNotEmpty;
     Widget logoWidget;
-    
+
     if (hasCustomLogo) {
       // It's a file path, attempt to load the file
       final file = File(settingsProvider.logoPath);
@@ -181,7 +189,7 @@ class _InvoiceSettingsScreenState extends State<InvoiceSettingsScreen> {
               decoration: const InputDecoration(labelText: "رقم المدير"),
               keyboardType: TextInputType.phone,
               validator: (val) =>
-                  val == null || val.isEmpty ? "ادخل رقم الهاتف" : null,  
+                  val == null || val.isEmpty ? "ادخل رقم الهاتف" : null,
             ),
             const SizedBox(height: 12),
 

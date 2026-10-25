@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'package:arqamy/core/helpers/spacing.dart';
+import 'package:arqamy/core/widgets/app_snack_bar.dart';
 import 'package:arqamy/core/widgets/text_button.dart';
 import 'package:arqamy/core/widgets/text_form_field.dart';
 import 'package:arqamy/config/theme/colors.dart';
@@ -107,14 +108,7 @@ class _ProductInputFormState extends State<ProductInputForm> {
   }
 
   void _showErrorSnackBar(String message) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message),
-        backgroundColor: Colors.red,
-        behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-      ),
-    );
+    showAppSnackBar(context, message, isError: true);
   }
 
   Widget _actionSelector() {

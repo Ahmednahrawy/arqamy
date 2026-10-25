@@ -3,6 +3,7 @@ import 'package:arqamy/features/customerscreen/ui/widgets/edit_invoice_dialog.da
 import 'package:arqamy/features/customerscreen/ui/widgets/invoice_detail_dialog.dart';
 import 'package:arqamy/features/orderscreen/data/models/invoice.dart';
 import 'package:arqamy/features/orderscreen/providers/invoice_provider.dart';
+import 'package:arqamy/core/widgets/app_snack_bar.dart';
 import 'package:arqamy/features/settingscreen/providers/invoice_setting_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:arqamy/features/orderscreen/ui/widgets/customer_name.dart';
@@ -575,8 +576,10 @@ Widget _buildBalanceBreakdown({
       );
     } catch (error) {
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('تعذر مشاركة الفاتورة: $error')),
+      showAppSnackBar(
+        context,
+        'تعذر مشاركة الفاتورة: $error',
+        isError: true,
       );
     }
   }

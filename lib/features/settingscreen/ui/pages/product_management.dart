@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:arqamy/core/widgets/app_snack_bar.dart';
 import 'package:arqamy/features/orderscreen/providers/invoice_provider.dart';
 
 class ProductManagementScreen extends StatefulWidget {
   const ProductManagementScreen({super.key});
 
   @override
-  State<ProductManagementScreen> createState() => _ProductManagementScreenState();
+  State<ProductManagementScreen> createState() =>
+      _ProductManagementScreenState();
 }
 
 class _ProductManagementScreenState extends State<ProductManagementScreen> {
@@ -31,9 +33,10 @@ class _ProductManagementScreenState extends State<ProductManagementScreen> {
 
   void _showAddDialog() {
     _addController.clear();
+    final messenger = ScaffoldMessenger.of(context);
     showDialog(
       context: context,
-      builder: (context) => AlertDialog(
+      builder: (dialogContext) => AlertDialog(
         title: const Text('إضافة منتج جديد'),
         content: TextField(
           controller: _addController,
@@ -51,11 +54,21 @@ class _ProductManagementScreenState extends State<ProductManagementScreen> {
           ElevatedButton(
             onPressed: () async {
               if (_addController.text.trim().isNotEmpty) {
-                await context.read<InvoiceProvider>().addMasterProduct(_addController.text);
-                Navigator.pop(context);
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('تم إضافة المنتج بنجاح')),
-                );
+                try {
+                  await context
+                      .read<InvoiceProvider>()
+                      .addMasterProduct(_addController.text);
+                  if (!mounted || !dialogContext.mounted) return;
+                  Navigator.pop(dialogContext);
+                  showAppSnackBarOn(messenger, 'تم إضافة المنتج بنجاح');
+                } catch (error) {
+                  if (!mounted || !messenger.mounted) return;
+                  showAppSnackBarOn(
+                    messenger,
+                    'تعذر إضافة المنتج: $error',
+                    isError: true,
+                  );
+                }
               }
             },
             child: const Text('إضافة'),
@@ -67,9 +80,10 @@ class _ProductManagementScreenState extends State<ProductManagementScreen> {
 
   void _showEditDialog(int index, String currentName) {
     _editController.text = currentName;
+    final messenger = ScaffoldMessenger.of(context);
     showDialog(
       context: context,
-      builder: (context) => AlertDialog(
+      builder: (dialogContext) => AlertDialog(
         title: const Text('تعديل المنتج'),
         content: TextField(
           controller: _editController,
@@ -87,11 +101,21 @@ class _ProductManagementScreenState extends State<ProductManagementScreen> {
           ElevatedButton(
             onPressed: () async {
               if (_editController.text.trim().isNotEmpty) {
-                await context.read<InvoiceProvider>().editMasterProduct(index, _editController.text);
-                Navigator.pop(context);
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('تم تعديل المنتج بنجاح')),
-                );
+                try {
+                  await context
+                      .read<InvoiceProvider>()
+                      .editMasterProduct(index, _editController.text);
+                  if (!mounted || !dialogContext.mounted) return;
+                  Navigator.pop(dialogContext);
+                  showAppSnackBarOn(messenger, 'تم تعديل المنتج بنجاح');
+                } catch (error) {
+                  if (!mounted || !messenger.mounted) return;
+                  showAppSnackBarOn(
+                    messenger,
+                    'تعذر تعديل المنتج: $error',
+                    isError: true,
+                  );
+                }
               }
             },
             child: const Text('حفظ'),
@@ -102,9 +126,10 @@ class _ProductManagementScreenState extends State<ProductManagementScreen> {
   }
 
   void _showDeleteConfirmation(int index, String productName) {
+    final messenger = ScaffoldMessenger.of(context);
     showDialog(
       context: context,
-      builder: (context) => AlertDialog(
+      builder: (dialogContext) => AlertDialog(
         title: const Text('حذف المنتج'),
         content: Text('هل أنت متأكد من حذف "$productName"؟'),
         actions: [
@@ -114,13 +139,22 @@ class _ProductManagementScreenState extends State<ProductManagementScreen> {
           ),
           ElevatedButton(
             onPressed: () async {
-              await context.read<InvoiceProvider>().deleteMasterProduct(index);
-              Navigator.pop(context);
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('تم حذف المنتج')),
-              );
-            },
-            style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+ try {
+                await context
+                    .read<InvoiceProvider>()
+                    .deleteMasterProduct(index);
+                if (!mounted || !dialogContext.mounted) return;
+                Navigator.pop(dialogContext);
+                showAppSnackBarOn(messenger, 'تم حذف المنتج');
+              } catch (error) {
+                if (!mounted || !messenger.mounted) return;
+                showAppSnackBarOn(
+                  messenger,
+                  'تعذر حذف المنتج: $error',
+                  isError: true,
+                );
+              }
+            },            style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
             child: const Text('حذف', style: TextStyle(color: Colors.white)),
           ),
         ],
@@ -188,7 +222,8 @@ class _ProductManagementScreenState extends State<ProductManagementScreen> {
                         tooltip: 'تعديل',
                       ),
                       IconButton(
-                        onPressed: () => _showDeleteConfirmation(index, product),
+                        onPressed: () =>
+                            _showDeleteConfirmation(index, product),
                         icon: const Icon(Icons.delete, color: Colors.red),
                         tooltip: 'حذف',
                       ),
