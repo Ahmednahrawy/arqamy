@@ -83,7 +83,7 @@ class _OrderscreenState extends State<Orderscreen>
         content: Row(
           children: [
             Icon(
-              isError ? Icons.error : Icons.check_circle,
+              isError ? Icons.error_rounded : Icons.check_circle,
               color: Colors.white,
             ),
             const SizedBox(width: 12),
@@ -91,9 +91,10 @@ class _OrderscreenState extends State<Orderscreen>
           ],
         ),
         backgroundColor: isError ? Colors.red : Colors.green,
+        showCloseIcon: true,
         behavior: SnackBarBehavior.floating,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-        margin: const EdgeInsets.all(16),
+        width: 340,
       ),
     );
   }
@@ -471,6 +472,7 @@ class _OrderscreenState extends State<Orderscreen>
                   constraints: const BoxConstraints(maxWidth: 1100),
                   child: Column(
                     children: [
+                      // Name entering field
                       Card(
                         child: Consumer<InvoiceProvider>(
                           builder: (context, provider, _) =>

@@ -92,16 +92,12 @@ class _ProductInputFormState extends State<ProductInputForm> {
         numberPackage: numberPackage,
         // action: _action!,
       );
-      // If an explicit callback provided (old code), use it.
       if (widget.onAdd != null) {
         widget.onAdd!(product);
       } else {
-        // Otherwise, try to add via provider (if registered).
         try {
-          // final provider = Provider.of<InvoiceProvider>(context, listen: false);
           provider.addProduct(product);
         } catch (e) {
-          // No provider registered — fallback to showing error so developer notices.
           _showErrorSnackBar('Provider not found');
         }
       }
