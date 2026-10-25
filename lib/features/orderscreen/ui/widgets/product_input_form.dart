@@ -34,14 +34,18 @@ class _ProductInputFormState extends State<ProductInputForm> {
   final _weightController = TextEditingController();
   final _packageWeightController = TextEditingController(text: "2");
   final _packageNumberController = TextEditingController(text: "0");
-  final _focusNodePackageNumber = FocusNode();
   final _priceController = TextEditingController();
+  final _weightFocusNode = FocusNode();
+  final _priceFocusNode = FocusNode();
+  final _packageWeightFocusNode = FocusNode();
+  final _packageNumberFocusNode = FocusNode();
+  FocusNode? _firstInvalidFocusNode;
   @override
   void initState() {
     super.initState();
 
-    _focusNodePackageNumber.addListener(() {
-      if (_focusNodePackageNumber.hasFocus &&
+    _packageNumberFocusNode.addListener(() {
+      if (_packageNumberFocusNode.hasFocus &&
           _packageNumberController.text == "0") {
         _packageNumberController.clear();
       }
@@ -79,31 +83,49 @@ class _ProductInputFormState extends State<ProductInputForm> {
 
       return;
     }
-    if (_formKey.currentState?.validate() ?? false) {
-      final weight = double.tryParse(_weightController.text) ?? 0.0;
-      final packageWeight =
-          double.tryParse(_packageWeightController.text) ?? 0.0;
-      final price = double.tryParse(_priceController.text) ?? 0.0;
-      final numberPackage = int.tryParse(_packageNumberController.text) ?? 0;
-      final product = Product(
-        name: _selectedProduct!,
-        weight: weight,
-        packageWeight: packageWeight,
-        price: price,
-        numberPackage: numberPackage,
-        // action: _action!,
-      );
-      if (widget.onAdd != null) {
-        widget.onAdd!(product);
-      } else {
-        try {
-          provider.addProduct(product);
-        } catch (e) {
-          _showErrorSnackBar('Provider not found');
-        }
+    _firstInvalidFocusNode = null;
+    if (!(_formKey.currentState?.validate() ?? false)) {
+      final firstInvalidFocusNode = _firstInvalidFocusNode;
+      if (firstInvalidFocusNode != null) {
+        _focusField(firstInvalidFocusNode);
       }
-      _clearFields();
-      FocusScope.of(context).unfocus();
+      return;
+    }
+
+    final weight = double.tryParse(_weightController.text) ?? 0.0;
+    final packageWeight = double.tryParse(_packageWeightController.text) ?? 0.0;
+    final price = double.tryParse(_priceController.text) ?? 0.0;
+    final numberPackage = int.tryParse(_packageNumberController.text) ?? 0;
+    final product = Product(
+      name: _selectedProduct!,
+      weight: weight,
+      packageWeight: packageWeight,
+      price: price,
+      numberPackage: numberPackage,
+      // action: _action!,
+    );
+    if (widget.onAdd != null) {
+      widget.onAdd!(product);
+    } else {
+      try {
+        provider.addProduct(product);
+      } catch (e) {
+        _showErrorSnackBar('Provider not found');
+      }
+    }
+    _clearFields();
+    FocusScope.of(context).unfocus();
+  }
+
+  void _focusField(FocusNode focusNode) {
+    focusNode.requestFocus();
+    final fieldContext = focusNode.context;
+    if (fieldContext != null) {
+      Scrollable.ensureVisible(
+        fieldContext,
+        alignment: 0.4,
+        duration: const Duration(milliseconds: 200),
+      );
     }
   }
 
@@ -205,8 +227,10 @@ class _ProductInputFormState extends State<ProductInputForm> {
     _packageWeightController.dispose();
     _packageNumberController.dispose();
     _priceController.dispose();
-    _focusNodePackageNumber.dispose();
-
+    _weightFocusNode.dispose();
+    _priceFocusNode.dispose();
+    _packageWeightFocusNode.dispose();
+    _packageNumberFocusNode.dispose();
     super.dispose();
   }
 
@@ -262,15 +286,20 @@ class _ProductInputFormState extends State<ProductInputForm> {
                     child: AppTextFormField(
                       textDirection: TextDirection.ltr,
                       controller: _weightController,
+                      focusNode: _weightFocusNode,
+                      textInputAction: TextInputAction.next,
+                      onEditingComplete: () => _focusField(_priceFocusNode),
                       labelText: 'الوزن أو العدد',
                       hintText: 'كجم',
                       keyboardType:
                           const TextInputType.numberWithOptions(decimal: true),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
+                          _firstInvalidFocusNode ??= _weightFocusNode;
                           return 'رجاء أدخل الوزن';
                         }
                         if (double.tryParse(value) == null) {
+                          _firstInvalidFocusNode ??= _weightFocusNode;
                           return 'ادخل رقم صالح';
                         }
                         return null;
@@ -282,15 +311,21 @@ class _ProductInputFormState extends State<ProductInputForm> {
                     child: AppTextFormField(
                       textDirection: TextDirection.ltr,
                       controller: _priceController,
+                      focusNode: _priceFocusNode,
+                      textInputAction: TextInputAction.next,
+                      onEditingComplete: () =>
+                          _focusField(_packageWeightFocusNode),
                       labelText: 'السعر',
                       hintText: 'جنيه',
                       keyboardType:
                           const TextInputType.numberWithOptions(decimal: true),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
+                          _firstInvalidFocusNode ??= _priceFocusNode;
                           return 'رجاء أدخل السعر';
                         }
                         if (double.tryParse(value) == null) {
+                          _firstInvalidFocusNode ??= _priceFocusNode;
                           return 'ادخل رقم صالح';
                         }
                         return null;
@@ -306,15 +341,21 @@ class _ProductInputFormState extends State<ProductInputForm> {
                     child: AppTextFormField(
                       textDirection: TextDirection.ltr,
                       controller: _packageWeightController,
+                      focusNode: _packageWeightFocusNode,
+                      textInputAction: TextInputAction.next,
+                      onEditingComplete: () =>
+                          _focusField(_packageNumberFocusNode),
                       labelText: 'وزن العبوة',
                       suffixText: 'كجم',
                       keyboardType:
                           const TextInputType.numberWithOptions(decimal: true),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
+                          _firstInvalidFocusNode ??= _packageWeightFocusNode;
                           return 'أدخل وزن العبوة الفارغة';
                         }
                         if (double.tryParse(value) == null) {
+                          _firstInvalidFocusNode ??= _packageWeightFocusNode;
                           return 'ادخل رقم صالح';
                         }
                         return null;
@@ -326,13 +367,17 @@ class _ProductInputFormState extends State<ProductInputForm> {
                     child: AppTextFormField(
                       textDirection: TextDirection.ltr,
                       controller: _packageNumberController,
-                      focusNode: _focusNodePackageNumber,
+                      focusNode: _packageNumberFocusNode,
+                      textInputAction: TextInputAction.done,
+                      onEditingComplete: _handleAdd,
                       labelText: 'عدد الفارغ',
                       validator: (value) {
                         if (value == null || value.isEmpty) {
+                          _firstInvalidFocusNode ??= _packageNumberFocusNode;
                           return 'أدخل عدد العبوات أولا';
                         }
                         if (int.tryParse(value) == null) {
+                          _firstInvalidFocusNode ??= _packageNumberFocusNode;
                           return 'ادخل رقم صالح';
                         }
                         return null;

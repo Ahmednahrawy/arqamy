@@ -19,6 +19,7 @@ class AppTextFormField extends StatelessWidget {
   final String? labelText;
   final String? suffixText;
   final TextInputType? keyboardType;
+  final TextInputAction? textInputAction;
   final FocusNode? focusNode;
   final Function()? onEditingComplete;
   final TextDirection? textDirection;
@@ -39,6 +40,7 @@ class AppTextFormField extends StatelessWidget {
     this.labelText,
     this.suffixText,
     this.keyboardType,
+    this.textInputAction,
     this.focusNode,
     this.onEditingComplete,
     this.textDirection,
@@ -50,6 +52,7 @@ class AppTextFormField extends StatelessWidget {
       textDirection: textDirection,
       controller: controller,
       focusNode: focusNode,
+      textInputAction: textInputAction,
       onEditingComplete: onEditingComplete,
       decoration: InputDecoration(
         isDense: true,

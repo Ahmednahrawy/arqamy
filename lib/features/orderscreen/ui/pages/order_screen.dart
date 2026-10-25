@@ -370,7 +370,6 @@ class _OrderscreenState extends State<Orderscreen>
       textDirection: TextDirection.rtl,
       child: Scaffold(
         backgroundColor: Colors.grey[50],
-
         floatingActionButtonLocation: FloatingActionButtonLocation.startFloat,
         appBar: AppBar(
           elevation: 0,

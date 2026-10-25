@@ -92,6 +92,64 @@ void main() {
     expect(invoiceProvider.products, isEmpty);
   });
 
+  testWidgets('adding an incomplete product focuses and advances input fields',
+      (WidgetTester tester) async {
+    SharedPreferences.setMockInitialValues({});
+    final invoiceProvider = InvoiceProvider();
+    await tester.pumpWidget(
+      MultiProvider(
+        providers: [
+          ChangeNotifierProvider(create: (_) => Language()),
+          ChangeNotifierProvider(create: (_) => ThemeProvider()),
+          ChangeNotifierProvider.value(value: invoiceProvider),
+          ChangeNotifierProvider(create: (_) => InvoiceSettingsProvider()),
+        ],
+        child: MyApp(appRouter: AppRouter()),
+      ),
+    );
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('شراء'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('اختر منتج'));
+    await tester.pumpAndSettle();
+    await tester.tap(
+      find
+          .ancestor(
+            of: find.text('تمر سيوي').last,
+            matching: find.byType(ListTile),
+          )
+          .last,
+      warnIfMissed: false,
+    );
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('أضف منتج'));
+    await tester.pump();
+    Finder fieldWithLabel(String label) => find.byWidgetPredicate(
+          (widget) =>
+              widget is TextField && widget.decoration?.labelText == label,
+        );
+    bool isFocused(String label) =>
+        (tester.widget<TextField>(fieldWithLabel(label)).focusNode?.hasFocus ??
+            false);
+    expect(isFocused('الوزن أو العدد'), isTrue);
+    await tester.enterText(fieldWithLabel('الوزن أو العدد'), '5');
+    await tester.testTextInput.receiveAction(TextInputAction.next);
+    await tester.pump();
+    expect(isFocused('السعر'), isTrue);
+    await tester.enterText(fieldWithLabel('السعر'), '10');
+    await tester.testTextInput.receiveAction(TextInputAction.next);
+    await tester.pump();
+    expect(isFocused('وزن العبوة'), isTrue);
+    await tester.testTextInput.receiveAction(TextInputAction.next);
+    await tester.pump();
+    expect(isFocused('عدد الفارغ'), isTrue);
+    await tester.enterText(fieldWithLabel('عدد الفارغ'), '0');
+    await tester.testTextInput.receiveAction(TextInputAction.done);
+    await tester.pumpAndSettle();
+    expect(invoiceProvider.products, hasLength(1));
+    expect(tester.takeException(), isNull);
+  });
+
   testWidgets('saving an invoice from the page does not share a PDF',
       (WidgetTester tester) async {
     SharedPreferences.setMockInitialValues({});
@@ -211,8 +269,7 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
-
- testWidgets('invoice preview shows the current payment amount and actions',
+  testWidgets('invoice preview shows the current payment amount and actions',
       (WidgetTester tester) async {
     tester.view.devicePixelRatio = 1;
     tester.view.physicalSize = const Size(360, 800);
