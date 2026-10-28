@@ -8,12 +8,18 @@ import 'package:arqamy/features/orderscreen/data/models/product_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class InvoiceProvider extends ChangeNotifier {
-  InvoiceProvider() : _invoiceStorageWriter = null;
+  InvoiceProvider()
+      : _invoiceStorageWriter = null,
+        _invoiceStorageReader = null;
 
   @visibleForTesting
-  InvoiceProvider.withStorageWriter(this._invoiceStorageWriter);
+  InvoiceProvider.withStorageWriter(
+    this._invoiceStorageWriter, {
+    Future<String?> Function()? invoiceStorageReader,
+  }) : _invoiceStorageReader = invoiceStorageReader;
 
   final Future<bool> Function(String invoicesJson)? _invoiceStorageWriter;
+  final Future<String?> Function()? _invoiceStorageReader;
   Future<void> _invoiceMutationQueue = Future<void>.value();
   String? _draftInvoiceId;
   final List<Product> _products = [];
@@ -186,22 +192,27 @@ class InvoiceProvider extends ChangeNotifier {
     }
   }
 
-  Future<void> loadInvoices() async {
-    try {
-      final prefs = await SharedPreferences.getInstance();
-      final String? invoicesJson = prefs.getString('saved_invoices');
+  Future<void> loadInvoices() {
+    return _withInvoiceMutationLock(() async {
+      try {
+        final String? invoicesJson = _invoiceStorageReader != null
+            ? await _invoiceStorageReader()
+            : (await SharedPreferences.getInstance())
+                .getString('saved_invoices');
 
-      if (invoicesJson != null) {
-        final List<dynamic> invoicesList = json.decode(invoicesJson);
-        _invoices.clear();
-        _invoices.addAll(invoicesList
-            .map((invoiceJson) => Invoice.fromJson(invoiceJson))
-            .toList());
+        if (invoicesJson != null) {
+          final List<dynamic> invoicesList = json.decode(invoicesJson);
+          final loadedInvoices = invoicesList
+              .map((invoiceJson) => Invoice.fromJson(invoiceJson))
+              .toList();
+          _replaceInvoices(loadedInvoices);
+        }
+        notifyListeners();
+      } catch (error) {
+        debugPrint('Error loading invoices: $error');
+        rethrow;
       }
-      notifyListeners();
-    } catch (e) {
-      debugPrint('Error loading invoices: $e');
-    }
+    });
   }
 
   Future<void> _saveInvoicesToStorage(List<Invoice> invoices) async {

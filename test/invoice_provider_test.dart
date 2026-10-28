@@ -40,8 +40,13 @@ Invoice _invoice({
 class _ControlledInvoiceStorage {
   bool _blockNextWrite = false;
   bool _failBlockedWrite = false;
+  bool _returnFalseForNextWrite = false;
+  bool _blockNextRead = false;
+  bool _failNextRead = false;
   Completer<void>? _writeStarted;
   Completer<void>? _releaseWrite;
+  Completer<void>? _readStarted;
+  Completer<void>? _releaseRead;
 
   Completer<void> blockNextWrite({bool fail = false}) {
     _blockNextWrite = true;
@@ -51,7 +56,33 @@ class _ControlledInvoiceStorage {
     return _writeStarted!;
   }
 
+  Completer<void> blockNextRead() {
+    _blockNextRead = true;
+    _readStarted = Completer<void>();
+    _releaseRead = Completer<void>();
+    return _readStarted!;
+  }
+
+  void returnFalseForNextWrite() => _returnFalseForNextWrite = true;
+  void failNextRead() => _failNextRead = true;
+
   void releaseWrite() => _releaseWrite!.complete();
+  void releaseRead() => _releaseRead!.complete();
+
+  Future<String?> read() async {
+    final prefs = await SharedPreferences.getInstance();
+    final invoicesJson = prefs.getString('saved_invoices');
+    if (_blockNextRead) {
+      _blockNextRead = false;
+      _readStarted!.complete();
+      await _releaseRead!.future;
+    }
+    if (_failNextRead) {
+      _failNextRead = false;
+      throw StateError('storage unavailable');
+    }
+    return invoicesJson;
+  }
 
   Future<bool> write(String json) async {
     if (_blockNextWrite) {
@@ -61,6 +92,10 @@ class _ControlledInvoiceStorage {
       if (_failBlockedWrite) {
         throw StateError('storage unavailable');
       }
+    }
+    if (_returnFalseForNextWrite) {
+      _returnFalseForNextWrite = false;
+      return false;
     }
 
     return (await SharedPreferences.getInstance())
@@ -243,6 +278,160 @@ void main() {
     expect(
       reloadedProvider.invoices.map((invoice) => invoice.id).toSet(),
       {'invoice-1', 'invoice-2'},
+    );
+  });
+
+  test('load queued behind save reads and publishes the saved invoice',
+      () async {
+    SharedPreferences.setMockInitialValues({});
+    final storage = _ControlledInvoiceStorage();
+    final provider = InvoiceProvider.withStorageWriter(
+      storage.write,
+      invoiceStorageReader: storage.read,
+    );
+    final writeStarted = storage.blockNextWrite();
+    final readStarted = storage.blockNextRead();
+    final savedInvoice = _invoice(id: 'saved', serial: '1');
+
+    final save = provider.saveInvoice(savedInvoice);
+    await writeStarted.future;
+    final load = provider.loadInvoices();
+    storage.releaseWrite();
+    await readStarted.future;
+    expect(provider.invoices.single.id, savedInvoice.id);
+    storage.releaseRead();
+    await Future.wait([save, load]);
+
+    final reloadedProvider = InvoiceProvider();
+    await reloadedProvider.loadInvoices();
+    expect(
+      provider.invoices.map((invoice) => invoice.toJson()).toList(),
+      reloadedProvider.invoices.map((invoice) => invoice.toJson()).toList(),
+    );
+    expect(provider.invoices.single.id, savedInvoice.id);
+  });
+
+  test('load queued behind update does not restore stale invoice data',
+      () async {
+    SharedPreferences.setMockInitialValues({});
+    final storage = _ControlledInvoiceStorage();
+    final provider = InvoiceProvider.withStorageWriter(
+      storage.write,
+      invoiceStorageReader: storage.read,
+    );
+    final original = _invoice(id: 'invoice-1', serial: '1');
+    await provider.saveInvoice(original);
+    final writeStarted = storage.blockNextWrite();
+    final readStarted = storage.blockNextRead();
+    final updated = _invoice(
+      id: original.id,
+      serial: original.invoiceSerial,
+      customerName: 'Updated customer',
+    );
+
+    final update = provider.updateInvoice(updated);
+    await writeStarted.future;
+    final load = provider.loadInvoices();
+    storage.releaseWrite();
+    await readStarted.future;
+    expect(provider.invoices.single.customerName, updated.customerName);
+    storage.releaseRead();
+    await Future.wait([update, load]);
+
+    final reloadedProvider = InvoiceProvider();
+    await reloadedProvider.loadInvoices();
+    expect(
+      provider.invoices.map((invoice) => invoice.toJson()).toList(),
+      reloadedProvider.invoices.map((invoice) => invoice.toJson()).toList(),
+    );
+    expect(provider.invoices.single.customerName, updated.customerName);
+  });
+
+  test('load queued behind delete does not resurrect the invoice', () async {
+    SharedPreferences.setMockInitialValues({});
+    final storage = _ControlledInvoiceStorage();
+    final provider = InvoiceProvider.withStorageWriter(
+      storage.write,
+      invoiceStorageReader: storage.read,
+    );
+    final existing = _invoice(id: 'invoice-1', serial: '1');
+    await provider.saveInvoice(existing);
+    final writeStarted = storage.blockNextWrite();
+    final readStarted = storage.blockNextRead();
+
+    final delete = provider.deleteInvoice(existing.id);
+    await writeStarted.future;
+    final load = provider.loadInvoices();
+    storage.releaseWrite();
+    await readStarted.future;
+    expect(provider.invoices, isEmpty);
+    storage.releaseRead();
+    await Future.wait([delete, load]);
+
+    final reloadedProvider = InvoiceProvider();
+    await reloadedProvider.loadInvoices();
+    expect(provider.invoices, isEmpty);
+    expect(
+      provider.invoices.map((invoice) => invoice.toJson()).toList(),
+      reloadedProvider.invoices.map((invoice) => invoice.toJson()).toList(),
+    );
+  });
+
+  test('failed load does not block a later mutation', () async {
+    SharedPreferences.setMockInitialValues({});
+    final storage = _ControlledInvoiceStorage();
+    final provider = InvoiceProvider.withStorageWriter(
+      storage.write,
+      invoiceStorageReader: storage.read,
+    );
+    final existing = _invoice(id: 'existing', serial: '1');
+    await provider.saveInvoice(existing);
+    storage.failNextRead();
+
+    await expectLater(provider.loadInvoices(), throwsA(isA<StateError>()));
+    expect(provider.invoices, [existing]);
+    await provider.saveInvoice(_invoice(id: 'after-load-failure', serial: '2'));
+
+    final reloadedProvider = InvoiceProvider();
+    await reloadedProvider.loadInvoices();
+    expect(
+      provider.invoices.map((invoice) => invoice.toJson()).toList(),
+      reloadedProvider.invoices.map((invoice) => invoice.toJson()).toList(),
+    );
+    expect(
+      provider.invoices.map((invoice) => invoice.id).toSet(),
+      {'existing', 'after-load-failure'},
+    );
+  });
+
+  test('false write preserves state and does not block later mutations',
+      () async {
+    SharedPreferences.setMockInitialValues({});
+    final storage = _ControlledInvoiceStorage();
+    final provider = InvoiceProvider.withStorageWriter(storage.write);
+    final original = _invoice(id: 'original', serial: '1');
+    await provider.saveInvoice(original);
+    final prefs = await SharedPreferences.getInstance();
+    final originalJson = prefs.getString('saved_invoices');
+    storage.returnFalseForNextWrite();
+
+    await expectLater(
+      provider.saveInvoice(_invoice(id: 'rejected', serial: '2')),
+      throwsA(isA<StateError>()),
+    );
+    expect(provider.invoices, [original]);
+    expect(prefs.getString('saved_invoices'), originalJson);
+
+    await provider.saveInvoice(_invoice(id: 'later', serial: '3'));
+    final reloadedProvider = InvoiceProvider();
+    await reloadedProvider.loadInvoices();
+    expect(
+      provider.invoices.map((invoice) => invoice.toJson()).toList(),
+      reloadedProvider.invoices.map((invoice) => invoice.toJson()).toList(),
+    );
+    expect(
+      provider.invoices.map((invoice) => invoice.id).toSet(),
+      {'original', 'later'},
     );
   });
 
