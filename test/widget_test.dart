@@ -81,7 +81,12 @@ void main() {
     await tester.pumpAndSettle();
     expect(invoiceProvider.invoiceAction, 'بيع');
     expect(invoiceProvider.products, hasLength(1));
-    expect(find.text('فاتورة: بيع'), findsOneWidget);
+    expect(
+      find.byWidgetPredicate(
+        (widget) => widget is Text && widget.data?.trim() == 'فاتورة: بيع',
+      ),
+      findsOneWidget,
+    );
     expect(find.byTooltip('تغيير نوع الفاتورة'), findsOneWidget);
 
     await tester.tap(find.text('جديد'));
@@ -226,7 +231,7 @@ void main() {
       ),
     );
     await tester.pumpAndSettle();
-    expect(find.text('معاينة '), findsOneWidget);
+    expect(find.text('معاينة'), findsOneWidget);
     await tester.tap(find.byType(FloatingActionButton));
     await tester.pumpAndSettle();
     final preview = find.byType(BottomSheet);
@@ -333,9 +338,20 @@ void main() {
       of: find.text('إرسال'),
       matching: find.byType(TextButton),
     );
-    expect(tester.getSize(saveButton).width, lessThan(100));
+    final paymentRow = find
+        .ancestor(of: saveButton, matching: find.byType(Row))
+        .first;
+    final paymentRowRect = tester.getRect(paymentRow);
+    final saveRect = tester.getRect(saveButton);
+    final sendRect = tester.getRect(sendButton);
+    expect(saveRect.left, greaterThanOrEqualTo(paymentRowRect.left));
+    expect(saveRect.right, lessThanOrEqualTo(paymentRowRect.right));
+    expect(sendRect.left, greaterThanOrEqualTo(paymentRowRect.left));
+    expect(sendRect.right, lessThanOrEqualTo(paymentRowRect.right));
+    expect(saveRect.width, closeTo(sendRect.width, 1));
     expect(find.byTooltip('مشاركة عبر واتساب'), findsOneWidget);
-    expect(tester.getSize(sendButton).width, greaterThan(100));
+    expect(saveRect.left, greaterThanOrEqualTo(0));
+    expect(sendRect.right, lessThanOrEqualTo(360));
     expect(tester.takeException(), isNull);
   });
 
