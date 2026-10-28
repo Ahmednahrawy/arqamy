@@ -51,7 +51,6 @@ class InvoiceService {
         fallback: 'customer',
         maxCodeUnits: 60,
       ),
-      _sanitizeFileNamePart(invoiceId, fallback: 'id', maxCodeUnits: 80),
       _sanitizeFileNamePart(
         formattedDate ?? '',
         fallback: 'date',
@@ -62,6 +61,7 @@ class InvoiceService {
         fallback: 'time',
         maxCodeUnits: 20,
       ),
+      _sanitizeFileNamePart(invoiceId, fallback: 'id', maxCodeUnits: 80),
     ].join('-');
     final filePath = p.join(tempDir.path, '$fileName.pdf');
     final file = File(filePath);
