@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:arqamy/core/services/invoice_service.dart';
 import 'package:arqamy/features/customerscreen/ui/widgets/edit_invoice_dialog.dart';
 import 'package:arqamy/features/customerscreen/ui/widgets/invoice_detail_dialog.dart';
@@ -24,8 +26,23 @@ class _CustomerScreenState extends State<CustomerScreen> {
     super.initState();
     // تحميل الفواتير عند بدء التشغيل
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.read<InvoiceProvider>().loadInvoices();
+      unawaited(
+        _loadInvoices(errorMessage: 'تعذر تحميل سجل الفواتير'),
+      );
     });
+  }
+
+  Future<void> _loadInvoices({required String errorMessage}) async {
+    try {
+      await context.read<InvoiceProvider>().loadInvoices();
+    } catch (error) {
+      if (!mounted) return;
+      showAppSnackBar(
+        context,
+        '$errorMessage: $error',
+        isError: true,
+      );
+    }
   }
 
   void _handleCustomerSelection(String? customerName) {
@@ -70,7 +87,10 @@ class _CustomerScreenState extends State<CustomerScreen> {
 
     if (result == true && _customerName != null) {
       // Reload invoices after edit
-      await context.read<InvoiceProvider>().loadInvoices();
+      await _loadInvoices(
+        errorMessage: 'تم حفظ التعديل، لكن تعذر تحديث سجل الفواتير',
+      );
+      if (!mounted) return;
       _loadCustomerInvoices(_customerName!);
     }
   }
