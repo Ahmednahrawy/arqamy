@@ -1,6 +1,11 @@
 import 'package:arqamy/features/orderscreen/data/models/product_model.dart';
+import 'package:uuid/uuid.dart';
 
 class Invoice {
+  static const Uuid _uuid = Uuid();
+
+  static String generateId() => _uuid.v4();
+
   final String id;
   final String customerName;
   final List<Product> products;

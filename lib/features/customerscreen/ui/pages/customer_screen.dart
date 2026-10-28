@@ -566,6 +566,7 @@ Widget _buildBalanceBreakdown({
         provider: tempProvider,
         settings: settings,
         customerName: invoice.customerName,
+        invoiceId: invoice.id,
         totalCost: invoice.totalCost,
         paid: invoice.paid,
         rest: invoice.rest,

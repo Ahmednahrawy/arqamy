@@ -6,6 +6,7 @@ import 'package:arqamy/features/settingscreen/providers/invoice_setting_provider
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:path/path.dart' as p;
 import 'package:pdf/pdf.dart';
 import 'package:share_plus/share_plus.dart';
 
@@ -17,6 +18,7 @@ class InvoiceService {
     required InvoiceProvider provider,
     required InvoiceSettingsProvider settings,
     required String customerName,
+    required String invoiceId,
     required double totalCost,
     required double paid,
     required double rest,
@@ -42,8 +44,26 @@ class InvoiceService {
 
     // Save to temp folder
     final tempDir = await getTemporaryDirectory();
-    final filePath =
-        '${tempDir.path}/$customerName-$formattedDate-$formattedTime.pdf';
+    final fileName = [
+      'invoice',
+      _sanitizeFileNamePart(
+        customerName,
+        fallback: 'customer',
+        maxCodeUnits: 60,
+      ),
+      _sanitizeFileNamePart(invoiceId, fallback: 'id', maxCodeUnits: 80),
+      _sanitizeFileNamePart(
+        formattedDate ?? '',
+        fallback: 'date',
+        maxCodeUnits: 30,
+      ),
+      _sanitizeFileNamePart(
+        formattedTime ?? '',
+        fallback: 'time',
+        maxCodeUnits: 20,
+      ),
+    ].join('-');
+    final filePath = p.join(tempDir.path, '$fileName.pdf');
     final file = File(filePath);
     await file.writeAsBytes(pdfDoc);
 
@@ -55,6 +75,7 @@ class InvoiceService {
     required InvoiceProvider provider,
     required InvoiceSettingsProvider settings,
     required String customerName,
+    required String invoiceId,
     required double totalCost,
     required double paid,
     required double rest,
@@ -67,6 +88,7 @@ class InvoiceService {
       provider: provider,
       settings: settings,
       customerName: customerName,
+      invoiceId: invoiceId,
       totalCost: totalCost,
       paid: paid,
       rest: rest,
@@ -83,6 +105,7 @@ class InvoiceService {
     required InvoiceProvider provider,
     required InvoiceSettingsProvider settings,
     required String customerName,
+    required String invoiceId,
     required double totalCost,
     required double paid,
     required double rest,
@@ -95,6 +118,7 @@ class InvoiceService {
       provider: provider,
       settings: settings,
       customerName: customerName,
+      invoiceId: invoiceId,
       totalCost: totalCost,
       paid: paid,
       rest: rest,
@@ -112,5 +136,28 @@ class InvoiceService {
     }
 
     await SharePlus.instance.share(ShareParams(files: [XFile(filePath)]));
+  }
+
+  static String _sanitizeFileNamePart(
+    String value, {
+    required String fallback,
+    required int maxCodeUnits,
+  }) {
+    final sanitized = value
+        .replaceAll(RegExp(r'[<>:"/\\|?*\x00-\x1F]'), '_')
+        .replaceAll(RegExp(r'^\.+'), '')
+        .replaceAll(RegExp(r'[. ]+$'), '')
+        .trim();
+    if (sanitized.isEmpty) return fallback;
+
+    final runes = <int>[];
+    var codeUnits = 0;
+    for (final rune in sanitized.runes) {
+      final runeCodeUnits = rune > 0xFFFF ? 2 : 1;
+      if (codeUnits + runeCodeUnits > maxCodeUnits) break;
+      runes.add(rune);
+      codeUnits += runeCodeUnits;
+    }
+    return runes.isEmpty ? fallback : String.fromCharCodes(runes);
   }
 }

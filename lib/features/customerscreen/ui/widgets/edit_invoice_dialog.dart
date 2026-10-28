@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:arqamy/core/widgets/app_snack_bar.dart';
 import 'package:arqamy/features/orderscreen/data/models/invoice.dart';
 import 'package:arqamy/features/orderscreen/providers/invoice_provider.dart';
 import 'package:provider/provider.dart';
@@ -63,9 +64,17 @@ class _EditInvoiceDialogState extends State<EditInvoiceDialog> {
       invoiceSerial: widget.invoice.invoiceSerial,
     );
 
-    // Delete old and save updated
-    await provider.deleteInvoice(widget.invoice.id);
-    await provider.saveInvoice(updatedInvoice);
+    try {
+      await provider.updateInvoice(updatedInvoice);
+    } catch (error) {
+      if (!mounted) return;
+      showAppSnackBar(
+        context,
+        'تعذر حفظ تعديلات الفاتورة: $error',
+        isError: true,
+      );
+      return;
+    }
 
     if (mounted) {
       Navigator.pop(context, true); // Return true to indicate changes were made

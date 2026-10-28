@@ -52,6 +52,7 @@ class _OrderscreenState extends State<Orderscreen>
   @override
   void initState() {
     super.initState();
+    context.read<InvoiceProvider>().prepareDraft();
     _animationController = AnimationController(
       duration: const Duration(milliseconds: 500),
       vsync: this,
@@ -88,12 +89,6 @@ class _OrderscreenState extends State<Orderscreen>
     _showToast('تمت إضافة ${product.name} بنجاح');
   }
 
-  String _generateInvoiceId() {
-    final now = DateTime.now();
-    return 'INV_${now.year}${now.month.toString().padLeft(2, '0')}${now.day.toString().padLeft(2, '0')}_'
-        '${now.hour.toString().padLeft(2, '0')}${now.minute.toString().padLeft(2, '0')}${now.second.toString().padLeft(2, '0')}';
-  }
-
   String _generateInvoiceSerial() {
     final now = DateTime.now();
     return "${now.year}${now.month.toString().padLeft(2, '0')}${now.day.toString().padLeft(2, '0')}"
@@ -118,7 +113,7 @@ class _OrderscreenState extends State<Orderscreen>
     }
 
     return Invoice(
-      id: _savedInvoice?.id ?? _generateInvoiceId(),
+      id: _savedInvoice?.id ?? provider.draftInvoiceId,
       customerName: provider.customerName!,
       products: List.from(provider.products),
       totalCost: provider.totalCost,
@@ -168,6 +163,7 @@ class _OrderscreenState extends State<Orderscreen>
           provider: provider,
           settings: context.read<InvoiceSettingsProvider>(),
           customerName: invoice.customerName,
+          invoiceId: invoice.id,
           totalCost: invoice.totalCost,
           paid: invoice.paid,
           rest: invoice.rest,

@@ -7,6 +7,13 @@ import 'package:arqamy/features/orderscreen/data/models/product_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class InvoiceProvider extends ChangeNotifier {
+  InvoiceProvider() : _invoiceStorageWriter = null;
+
+  @visibleForTesting
+  InvoiceProvider.withStorageWriter(this._invoiceStorageWriter);
+
+  final Future<bool> Function(String invoicesJson)? _invoiceStorageWriter;
+  String? _draftInvoiceId;
   final List<Product> _products = [];
   String? _invoiceAction;
   String? _customerName;
@@ -23,6 +30,11 @@ class InvoiceProvider extends ChangeNotifier {
   String? get customerName => _customerName;
   List<String> get masterProductList => List.unmodifiable(_masterProductList);
   List<Invoice> get invoices => List.unmodifiable(_invoices);
+  String get draftInvoiceId => _draftInvoiceId ??= Invoice.generateId();
+
+  void prepareDraft() {
+    _draftInvoiceId ??= Invoice.generateId();
+  }
 
   void setCustomerName(String name) {
     // if(_customerName == null){
@@ -115,6 +127,7 @@ class InvoiceProvider extends ChangeNotifier {
     _invalidateProductSummaries();
     _invoiceAction = null;
     _customerName = null;
+    _draftInvoiceId = Invoice.generateId();
     notifyListeners();
   }
 
@@ -127,26 +140,29 @@ class InvoiceProvider extends ChangeNotifier {
 
   // 🔄 الدوال الجديدة لإدارة الفواتير
   Future<void> saveInvoice(Invoice invoice) async {
-    // _invoices.add(invoice);
-    final index = _invoices.indexWhere((saved) => saved.id == invoice.id);
-    final previousInvoice = index == -1 ? null : _invoices[index];
+    final updatedInvoices = List<Invoice>.of(_invoices);
+    final index = _uniqueInvoiceIndex(invoice.id);
     if (index == -1) {
-      _invoices.add(invoice);
+      updatedInvoices.add(invoice);
     } else {
-      _invoices[index] = invoice;
+      updatedInvoices[index] = invoice;
     }
 
-    try {
-      await _saveInvoicesToStorage();
-    } catch (_) {
-      // _invoices.remove(invoice);
-      if (index == -1) {
-        _invoices.remove(invoice);
-      } else {
-        _invoices[index] = previousInvoice!;
-      }
-      rethrow;
+    await _saveInvoicesToStorage(updatedInvoices);
+    _replaceInvoices(updatedInvoices);
+    notifyListeners();
+  }
+
+  Future<void> updateInvoice(Invoice invoice) async {
+    final updatedInvoices = List<Invoice>.of(_invoices);
+    final index = _uniqueInvoiceIndex(invoice.id);
+    if (index == -1) {
+      throw StateError('Invoice ${invoice.id} was not found');
     }
+    updatedInvoices[index] = invoice;
+
+    await _saveInvoicesToStorage(updatedInvoices);
+    _replaceInvoices(updatedInvoices);
     notifyListeners();
   }
 
@@ -168,14 +184,34 @@ class InvoiceProvider extends ChangeNotifier {
     }
   }
 
-  Future<void> _saveInvoicesToStorage() async {
-    final prefs = await SharedPreferences.getInstance();
+  Future<void> _saveInvoicesToStorage(List<Invoice> invoices) async {
     final invoicesJson =
-        json.encode(_invoices.map((invoice) => invoice.toJson()).toList());
-    final saved = await prefs.setString('saved_invoices', invoicesJson);
+        json.encode(invoices.map((invoice) => invoice.toJson()).toList());
+    final saved = _invoiceStorageWriter != null
+        ? await _invoiceStorageWriter(invoicesJson)
+        : await (await SharedPreferences.getInstance())
+            .setString('saved_invoices', invoicesJson);
     if (!saved) {
       throw StateError('Failed to save invoices to local storage');
     }
+  }
+
+  int _uniqueInvoiceIndex(String invoiceId) {
+    var match = -1;
+    for (var index = 0; index < _invoices.length; index++) {
+      if (_invoices[index].id != invoiceId) continue;
+      if (match != -1) {
+        throw StateError('Multiple invoices have the ID $invoiceId');
+      }
+      match = index;
+    }
+    return match;
+  }
+
+  void _replaceInvoices(List<Invoice> invoices) {
+    _invoices
+      ..clear()
+      ..addAll(invoices);
   }
 
   List<Invoice> getInvoicesByCustomer(String customerName) {
@@ -203,16 +239,12 @@ class InvoiceProvider extends ChangeNotifier {
   }
 
   Future<void> deleteInvoice(String invoiceId) async {
-    final index = _invoices.indexWhere((invoice) => invoice.id == invoiceId);
+    final index = _uniqueInvoiceIndex(invoiceId);
     if (index == -1) return;
 
-    final invoice = _invoices.removeAt(index);
-    try {
-      await _saveInvoicesToStorage();
-    } catch (_) {
-      _invoices.insert(index, invoice);
-      rethrow;
-    }
+    final updatedInvoices = List<Invoice>.of(_invoices)..removeAt(index);
+    await _saveInvoicesToStorage(updatedInvoices);
+    _replaceInvoices(updatedInvoices);
     notifyListeners();
   }
 
