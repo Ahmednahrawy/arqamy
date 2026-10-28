@@ -15,7 +15,7 @@ class TextBuilder extends StatelessWidget {
   final TextDecoration? textDecoration;
   final FontStyle? fontStyle;
   const TextBuilder({
-    Key? key,
+    super.key,
     required this.text,
     this.fontSize,
     this.color,
@@ -28,7 +28,7 @@ class TextBuilder extends StatelessWidget {
     this.wordSpacing,
     this.textDecoration,
     this.fontStyle,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

@@ -7,9 +7,9 @@ class EditInvoiceDialog extends StatefulWidget {
   final Invoice invoice;
 
   const EditInvoiceDialog({
-    Key? key,
+    super.key,
     required this.invoice,
-  }) : super(key: key);
+  });
 
   @override
   State<EditInvoiceDialog> createState() => _EditInvoiceDialogState();
