@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:arqamy/features/customerscreen/ui/widgets/edit_invoice_dialog.dart';
@@ -34,6 +35,37 @@ Invoice _invoice({
     formattedTime: '12:34',
     invoiceSerial: serial,
   );
+}
+
+class _ControlledInvoiceStorage {
+  bool _blockNextWrite = false;
+  bool _failBlockedWrite = false;
+  Completer<void>? _writeStarted;
+  Completer<void>? _releaseWrite;
+
+  Completer<void> blockNextWrite({bool fail = false}) {
+    _blockNextWrite = true;
+    _failBlockedWrite = fail;
+    _writeStarted = Completer<void>();
+    _releaseWrite = Completer<void>();
+    return _writeStarted!;
+  }
+
+  void releaseWrite() => _releaseWrite!.complete();
+
+  Future<bool> write(String json) async {
+    if (_blockNextWrite) {
+      _blockNextWrite = false;
+      _writeStarted!.complete();
+      await _releaseWrite!.future;
+      if (_failBlockedWrite) {
+        throw StateError('storage unavailable');
+      }
+    }
+
+    return (await SharedPreferences.getInstance())
+        .setString('saved_invoices', json);
+  }
 }
 
 void main() {
@@ -189,6 +221,119 @@ void main() {
     expect(provider.invoices, hasLength(1));
     expect(provider.invoices.single.id, draft.id);
     expect(provider.invoices.single.invoiceSerial, draft.invoiceSerial);
+  });
+
+  test('concurrent saves both survive persistence and reload', () async {
+    SharedPreferences.setMockInitialValues({});
+    final storage = _ControlledInvoiceStorage();
+    final provider = InvoiceProvider.withStorageWriter(storage.write);
+    final writeStarted = storage.blockNextWrite();
+
+    final firstSave =
+        provider.saveInvoice(_invoice(id: 'invoice-1', serial: '1'));
+    final secondSave =
+        provider.saveInvoice(_invoice(id: 'invoice-2', serial: '2'));
+    await writeStarted.future;
+    expect(provider.invoices, isEmpty);
+    storage.releaseWrite();
+    await Future.wait([firstSave, secondSave]);
+
+    final reloadedProvider = InvoiceProvider();
+    await reloadedProvider.loadInvoices();
+    expect(
+      reloadedProvider.invoices.map((invoice) => invoice.id).toSet(),
+      {'invoice-1', 'invoice-2'},
+    );
+  });
+
+  test('concurrent updates preserve both changes', () async {
+    SharedPreferences.setMockInitialValues({});
+    final storage = _ControlledInvoiceStorage();
+    final provider = InvoiceProvider.withStorageWriter(storage.write);
+    final first = _invoice(id: 'invoice-1', serial: '1');
+    final second = _invoice(id: 'invoice-2', serial: '2');
+    await provider.saveInvoice(first);
+    await provider.saveInvoice(second);
+    final writeStarted = storage.blockNextWrite();
+
+    final firstUpdate = provider.updateInvoice(
+      _invoice(
+          id: first.id,
+          serial: first.invoiceSerial,
+          customerName: 'First updated'),
+    );
+    final secondUpdate = provider.updateInvoice(
+      _invoice(
+          id: second.id,
+          serial: second.invoiceSerial,
+          customerName: 'Second updated'),
+    );
+    await writeStarted.future;
+    storage.releaseWrite();
+    await Future.wait([firstUpdate, secondUpdate]);
+
+    final reloadedProvider = InvoiceProvider();
+    await reloadedProvider.loadInvoices();
+    expect(
+      reloadedProvider.invoices.map((invoice) => invoice.customerName).toSet(),
+      {'First updated', 'Second updated'},
+    );
+  });
+
+  test('concurrent save and delete preserve both successful changes', () async {
+    SharedPreferences.setMockInitialValues({});
+    final storage = _ControlledInvoiceStorage();
+    final provider = InvoiceProvider.withStorageWriter(storage.write);
+    final existing = _invoice(id: 'existing', serial: '1');
+    final added = _invoice(id: 'added', serial: '2');
+    await provider.saveInvoice(existing);
+    final writeStarted = storage.blockNextWrite();
+
+    final save = provider.saveInvoice(added);
+    final delete = provider.deleteInvoice(existing.id);
+    await writeStarted.future;
+    storage.releaseWrite();
+    await Future.wait([save, delete]);
+
+    final reloadedProvider = InvoiceProvider();
+    await reloadedProvider.loadInvoices();
+    expect(reloadedProvider.invoices.map((invoice) => invoice.id), ['added']);
+  });
+
+  test('failed mutation does not block a later successful mutation', () async {
+    SharedPreferences.setMockInitialValues({});
+    final storage = _ControlledInvoiceStorage();
+    final provider = InvoiceProvider.withStorageWriter(storage.write);
+    final original = _invoice(id: 'original', serial: '1');
+    await provider.saveInvoice(original);
+    final writeStarted = storage.blockNextWrite(fail: true);
+
+    final failedUpdate = provider.updateInvoice(
+      _invoice(
+        id: original.id,
+        serial: original.invoiceSerial,
+        customerName: 'Failed update',
+      ),
+    );
+    final laterSave = provider.saveInvoice(_invoice(id: 'later', serial: '2'));
+    await writeStarted.future;
+    storage.releaseWrite();
+
+    await expectLater(failedUpdate, throwsA(isA<StateError>()));
+    await laterSave;
+
+    final reloadedProvider = InvoiceProvider();
+    await reloadedProvider.loadInvoices();
+    expect(
+      reloadedProvider.invoices.map((invoice) => invoice.id).toSet(),
+      {'original', 'later'},
+    );
+    expect(
+      reloadedProvider.invoices
+          .firstWhere((invoice) => invoice.id == original.id)
+          .customerName,
+      original.customerName,
+    );
   });
 
   test('updating and deleting one invoice preserves the other', () async {

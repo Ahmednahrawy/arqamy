@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:arqamy/core/helpers/product_list_constants.dart';
@@ -13,6 +14,7 @@ class InvoiceProvider extends ChangeNotifier {
   InvoiceProvider.withStorageWriter(this._invoiceStorageWriter);
 
   final Future<bool> Function(String invoicesJson)? _invoiceStorageWriter;
+  Future<void> _invoiceMutationQueue = Future<void>.value();
   String? _draftInvoiceId;
   final List<Product> _products = [];
   String? _invoiceAction;
@@ -139,31 +141,49 @@ class InvoiceProvider extends ChangeNotifier {
   }
 
   // 🔄 الدوال الجديدة لإدارة الفواتير
-  Future<void> saveInvoice(Invoice invoice) async {
-    final updatedInvoices = List<Invoice>.of(_invoices);
-    final index = _uniqueInvoiceIndex(invoice.id);
-    if (index == -1) {
-      updatedInvoices.add(invoice);
-    } else {
-      updatedInvoices[index] = invoice;
-    }
+  Future<void> saveInvoice(Invoice invoice) {
+    return _withInvoiceMutationLock(() async {
+      final updatedInvoices = List<Invoice>.of(_invoices);
+      final index = _uniqueInvoiceIndex(invoice.id);
+      if (index == -1) {
+        updatedInvoices.add(invoice);
+      } else {
+        updatedInvoices[index] = invoice;
+      }
 
-    await _saveInvoicesToStorage(updatedInvoices);
-    _replaceInvoices(updatedInvoices);
-    notifyListeners();
+      await _saveInvoicesToStorage(updatedInvoices);
+      _replaceInvoices(updatedInvoices);
+      notifyListeners();
+    });
   }
 
-  Future<void> updateInvoice(Invoice invoice) async {
-    final updatedInvoices = List<Invoice>.of(_invoices);
-    final index = _uniqueInvoiceIndex(invoice.id);
-    if (index == -1) {
-      throw StateError('Invoice ${invoice.id} was not found');
-    }
-    updatedInvoices[index] = invoice;
+  Future<void> updateInvoice(Invoice invoice) {
+    return _withInvoiceMutationLock(() async {
+      final updatedInvoices = List<Invoice>.of(_invoices);
+      final index = _uniqueInvoiceIndex(invoice.id);
+      if (index == -1) {
+        throw StateError('Invoice ${invoice.id} was not found');
+      }
+      updatedInvoices[index] = invoice;
 
-    await _saveInvoicesToStorage(updatedInvoices);
-    _replaceInvoices(updatedInvoices);
-    notifyListeners();
+      await _saveInvoicesToStorage(updatedInvoices);
+      _replaceInvoices(updatedInvoices);
+      notifyListeners();
+    });
+  }
+
+  Future<T> _withInvoiceMutationLock<T>(
+    Future<T> Function() mutation,
+  ) async {
+    final previousMutation = _invoiceMutationQueue;
+    final release = Completer<void>();
+    _invoiceMutationQueue = release.future;
+    await previousMutation;
+    try {
+      return await mutation();
+    } finally {
+      release.complete();
+    }
   }
 
   Future<void> loadInvoices() async {
@@ -238,14 +258,16 @@ class InvoiceProvider extends ChangeNotifier {
     });
   }
 
-  Future<void> deleteInvoice(String invoiceId) async {
-    final index = _uniqueInvoiceIndex(invoiceId);
-    if (index == -1) return;
+  Future<void> deleteInvoice(String invoiceId) {
+    return _withInvoiceMutationLock(() async {
+      final index = _uniqueInvoiceIndex(invoiceId);
+      if (index == -1) return;
 
-    final updatedInvoices = List<Invoice>.of(_invoices)..removeAt(index);
-    await _saveInvoicesToStorage(updatedInvoices);
-    _replaceInvoices(updatedInvoices);
-    notifyListeners();
+      final updatedInvoices = List<Invoice>.of(_invoices)..removeAt(index);
+      await _saveInvoicesToStorage(updatedInvoices);
+      _replaceInvoices(updatedInvoices);
+      notifyListeners();
+    });
   }
 
   // Load products from local storage
