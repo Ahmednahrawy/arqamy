@@ -10,6 +10,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class _CustomerScreenStorage {
   bool failNextRead = false;
+  bool failNextWrite = false;
 
   Future<String?> read() async {
     if (failNextRead) {
@@ -20,6 +21,10 @@ class _CustomerScreenStorage {
   }
 
   Future<bool> write(String json) async {
+    if (failNextWrite) {
+      failNextWrite = false;
+      throw StateError('storage unavailable');
+    }
     return (await SharedPreferences.getInstance())
         .setString('saved_invoices', json);
   }
@@ -117,5 +122,72 @@ void main() {
       findsOneWidget,
     );
     expect(find.textContaining('storage unavailable'), findsOneWidget);
+  });
+
+  testWidgets('delete persistence failure reports error and keeps invoice',
+      (tester) async {
+    SharedPreferences.setMockInitialValues({});
+    final storage = _CustomerScreenStorage();
+    final provider = InvoiceProvider.withStorageWriter(
+      storage.write,
+      invoiceStorageReader: storage.read,
+    );
+    await provider.saveInvoice(_invoice());
+
+    await tester.pumpWidget(_customerScreen(provider));
+    await tester.pumpAndSettle();
+    await tester.enterText(find.byType(TextFormField), 'Customer');
+    await tester.testTextInput.receiveAction(TextInputAction.done);
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byTooltip('خيارات الفاتورة'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('حذف').last);
+    await tester.pumpAndSettle();
+    expect(find.text('تأكيد الحذف'), findsOneWidget);
+
+    storage.failNextWrite = true;
+    await tester.tap(find.widgetWithText(ElevatedButton, 'حذف'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('تأكيد الحذف'), findsOneWidget);
+    expect(find.text('فاتورة #legacy-serial'), findsOneWidget);
+    expect(provider.invoices.single.id, 'legacy-id');
+    expect(
+      find.textContaining('تعذر حذف الفاتورة'),
+      findsOneWidget,
+    );
+    expect(find.textContaining('storage unavailable'), findsOneWidget);
+  });
+
+  testWidgets('successful delete removes invoice and closes confirmation',
+      (tester) async {
+    SharedPreferences.setMockInitialValues({});
+    final storage = _CustomerScreenStorage();
+    final provider = InvoiceProvider.withStorageWriter(
+      storage.write,
+      invoiceStorageReader: storage.read,
+    );
+    await provider.saveInvoice(_invoice());
+
+    await tester.pumpWidget(_customerScreen(provider));
+    await tester.pumpAndSettle();
+    await tester.enterText(find.byType(TextFormField), 'Customer');
+    await tester.testTextInput.receiveAction(TextInputAction.done);
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byTooltip('خيارات الفاتورة'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('حذف').last);
+    await tester.pumpAndSettle();
+    await tester.tap(find.widgetWithText(ElevatedButton, 'حذف'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('تأكيد الحذف'), findsNothing);
+    expect(find.text('فاتورة #legacy-serial'), findsNothing);
+    expect(provider.invoices, isEmpty);
+    final reloadedProvider = InvoiceProvider();
+    await reloadedProvider.loadInvoices();
+    expect(reloadedProvider.invoices, isEmpty);
   });
 }

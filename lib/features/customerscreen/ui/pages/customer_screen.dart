@@ -96,9 +96,11 @@ class _CustomerScreenState extends State<CustomerScreen> {
   }
 
   void _deleteInvoice(String invoiceId) {
+    final provider = context.read<InvoiceProvider>();
+    final messenger = ScaffoldMessenger.of(context);
     showDialog(
       context: context,
-      builder: (context) => AlertDialog(
+      builder: (dialogContext) => AlertDialog(
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(15),
         ),
@@ -114,16 +116,27 @@ class _CustomerScreenState extends State<CustomerScreen> {
         ),
         actions: [
           TextButton(
-            onPressed: () => Navigator.pop(context),
+            onPressed: () => Navigator.pop(dialogContext),
             child: const Text("إلغاء"),
           ),
           ElevatedButton(
             onPressed: () async {
-              await context.read<InvoiceProvider>().deleteInvoice(invoiceId);
+              try {
+                await provider.deleteInvoice(invoiceId);
+              } catch (error) {
+                showAppSnackBarOn(
+                  messenger,
+                  'تعذر حذف الفاتورة: $error',
+                  isError: true,
+                );
+                return;
+              }
+
+              if (!dialogContext.mounted || !mounted) return;
               if (_customerName != null) {
                 _loadCustomerInvoices(_customerName!);
               }
-              Navigator.pop(context);
+              Navigator.pop(dialogContext);
             },
             child: const Text("حذف", style: TextStyle(color: Colors.red)),
           ),
