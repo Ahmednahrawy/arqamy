@@ -127,6 +127,7 @@ class _ProductManagementScreenState extends State<ProductManagementScreen> {
 
   void _showDeleteConfirmation(int index, String productName) {
     final messenger = ScaffoldMessenger.of(context);
+    final colors = Theme.of(context).colorScheme;
     showDialog(
       context: context,
       builder: (dialogContext) => AlertDialog(
@@ -139,7 +140,7 @@ class _ProductManagementScreenState extends State<ProductManagementScreen> {
           ),
           ElevatedButton(
             onPressed: () async {
- try {
+              try {
                 await context
                     .read<InvoiceProvider>()
                     .deleteMasterProduct(index);
@@ -154,8 +155,12 @@ class _ProductManagementScreenState extends State<ProductManagementScreen> {
                   isError: true,
                 );
               }
-            },            style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
-            child: const Text('حذف', style: TextStyle(color: Colors.white)),
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: colors.error,
+              foregroundColor: colors.onError,
+            ),
+            child: const Text('حذف'),
           ),
         ],
       ),
@@ -164,6 +169,7 @@ class _ProductManagementScreenState extends State<ProductManagementScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final colors = Theme.of(context).colorScheme;
     return Scaffold(
       appBar: AppBar(
         title: const Text('إدارة المنتجات'),
@@ -180,20 +186,26 @@ class _ProductManagementScreenState extends State<ProductManagementScreen> {
           final products = provider.masterProductList;
 
           if (products.isEmpty) {
-            return const Center(
+            return Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(Icons.inventory_2, size: 64, color: Colors.grey),
-                  SizedBox(height: 16),
+                  Icon(
+                    Icons.inventory_2,
+                    size: 64,
+                    color: colors.onSurfaceVariant,
+                  ),
+                  const SizedBox(height: 16),
                   Text(
                     'لا توجد منتجات',
-                    style: TextStyle(fontSize: 18, color: Colors.grey),
+                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                          color: colors.onSurfaceVariant,
+                        ),
                   ),
-                  SizedBox(height: 8),
+                  const SizedBox(height: 8),
                   Text(
                     'اضغط على + لإضافة منتج جديد',
-                    style: TextStyle(color: Colors.grey),
+                    style: TextStyle(color: colors.onSurfaceVariant),
                   ),
                 ],
               ),
@@ -211,20 +223,23 @@ class _ProductManagementScreenState extends State<ProductManagementScreen> {
                 key: ValueKey(product),
                 margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                 child: ListTile(
-                  leading: const Icon(Icons.drag_handle, color: Colors.grey),
+                  leading: Icon(
+                    Icons.drag_handle,
+                    color: colors.onSurfaceVariant,
+                  ),
                   title: Text(product),
                   trailing: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       IconButton(
                         onPressed: () => _showEditDialog(index, product),
-                        icon: const Icon(Icons.edit, color: Colors.blue),
+                        icon: Icon(Icons.edit, color: colors.primary),
                         tooltip: 'تعديل',
                       ),
                       IconButton(
                         onPressed: () =>
                             _showDeleteConfirmation(index, product),
-                        icon: const Icon(Icons.delete, color: Colors.red),
+                        icon: Icon(Icons.delete, color: colors.error),
                         tooltip: 'حذف',
                       ),
                     ],

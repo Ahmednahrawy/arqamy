@@ -99,6 +99,16 @@ class S {
     return Intl.message('Light Mode', name: 'light_mode', desc: '', args: []);
   }
 
+  /// `Appearance`
+  String get appearance {
+    return Intl.message('Appearance', name: 'appearance', desc: '', args: []);
+  }
+
+  /// `System`
+  String get system_mode {
+    return Intl.message('System', name: 'system_mode', desc: '', args: []);
+  }
+
   /// `Select Language`
   String get select_language {
     return Intl.message(

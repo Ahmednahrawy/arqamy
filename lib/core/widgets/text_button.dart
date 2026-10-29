@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:arqamy/config/theme/colors.dart';
 
 class AppTextButton extends StatelessWidget {
   final double? borderRadius;
@@ -24,6 +23,7 @@ class AppTextButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = Theme.of(context).colorScheme;
     final button = TextButton(
       style: ButtonStyle(
         shape: WidgetStatePropertyAll<RoundedRectangleBorder>(
@@ -32,7 +32,7 @@ class AppTextButton extends StatelessWidget {
           ),
         ),
         backgroundColor: WidgetStatePropertyAll(
-          backgroundColor ?? ColorsManager.mainBlue,
+          backgroundColor ?? colors.primary,
         ),
         padding: WidgetStatePropertyAll<EdgeInsets>(
           EdgeInsets.symmetric(

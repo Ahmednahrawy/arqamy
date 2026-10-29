@@ -81,6 +81,8 @@ class _SideNavState extends State<SideNav> {
   @override
   Widget build(BuildContext context) {
     final drawer = DrawersController(context, hasUpdate: _hasUpdate);
+    final colors = Theme.of(context).colorScheme;
+    final semanticColors = AppSemanticColors.of(context);
     return Drawer(
       width: isCollapse ? 90 : 180,
       child: Material(
@@ -98,15 +100,8 @@ class _SideNavState extends State<SideNav> {
                         height: 100.0,
                         width: double.infinity,
                         decoration: BoxDecoration(
-                            boxShadow: const [
-                              BoxShadow(
-                                blurRadius: 5.0,
-                                color: ColorsManager.black,
-                                offset: Offset(1.0, 1.0),
-                              )
-                            ],
                             borderRadius: BorderRadius.circular(10),
-                            color: Colors.white),
+                            color: colors.surface),
                         child: const Center(
                           child: ListTile(
                             leading: CircleAvatar(
@@ -144,15 +139,15 @@ class _SideNavState extends State<SideNav> {
                     leading: Icon(
                       drawer.sideDrawer[i].icon,
                       color: i == 5 && _hasUpdate
-                          ? Colors.orange
-                          : ColorsManager.black,
+                          ? semanticColors.warning
+                          : colors.onSurface,
                     ),
                     title: isCollapse
                         ? null
                         : TextBuilder(
                             text: drawer.sideDrawer[i].title!,
                             fontSize: 18.0,
-                            color: ColorsManager.black,
+                            color: colors.onSurface,
                           ),
                   );
                 },
@@ -165,16 +160,16 @@ class _SideNavState extends State<SideNav> {
                           builder: (_) => MyApp(appRouter: AppRouter())),
                       (route) => false);
                 },
-                leading: const Icon(
+                leading: Icon(
                   Icons.power_settings_new,
-                  color: ColorsManager.black,
+                  color: colors.onSurface,
                 ),
                 title: isCollapse
                     ? null
                     : TextBuilder(
                         text: S.of(context).logout,
                         fontSize: 18.0,
-                        color: ColorsManager.black,
+                        color: colors.onSurface,
                       ),
               ),
               IconButton(
@@ -222,7 +217,7 @@ class DrawersController {
   final BuildContext context;
   final bool hasUpdate;
 
- DrawersController(this.context, {this.hasUpdate = false});
+  DrawersController(this.context, {this.hasUpdate = false});
 
   List<DrawerModel> get sideDrawer => [
         DrawerModel(S.of(context).home, Icons.home),
@@ -230,7 +225,7 @@ class DrawersController {
         DrawerModel(S.of(context).inventory, Icons.person),
         DrawerModel(S.of(context).settings, Icons.settings),
         DrawerModel(S.of(context).share_app, Icons.share),
-         DrawerModel(
+        DrawerModel(
           S.of(context).update_app,
           hasUpdate ? Icons.system_update_alt : Icons.system_update,
         ),

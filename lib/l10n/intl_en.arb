@@ -9,6 +9,8 @@
   "language": "Language",
   "dark_mode": "Dark Mode",
   "light_mode": "Light Mode",
+  "appearance": "Appearance",
+  "system_mode": "System",
   "select_language": "Select Language",
   "arabic": "Arabic",
   "english": "English",

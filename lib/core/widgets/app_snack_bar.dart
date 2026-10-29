@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:arqamy/config/theme/colors.dart';
 
 void showAppSnackBar(
   BuildContext context,
@@ -20,21 +21,32 @@ void showAppSnackBarOn(
 }) {
   if (!messenger.mounted) return;
 
+  final theme = Theme.of(messenger.context);
+  final semanticColors = AppSemanticColors.of(messenger.context);
   messenger.showSnackBar(
     SnackBar(
       content: Row(
         children: [
           Icon(
             isError ? Icons.error : Icons.check_circle,
-            color: Colors.white,
+            color:
+                isError ? theme.colorScheme.onError : semanticColors.onSuccess,
           ),
           const SizedBox(width: 12),
           Expanded(
-            child: Text(message, style: const TextStyle(color: Colors.white)),
+            child: Text(
+              message,
+              style: TextStyle(
+                color: isError
+                    ? theme.colorScheme.onError
+                    : semanticColors.onSuccess,
+              ),
+            ),
           ),
         ],
       ),
-      backgroundColor: isError ? Colors.red : Colors.green,
+      backgroundColor:
+          isError ? theme.colorScheme.error : semanticColors.success,
       showCloseIcon: true,
       behavior: SnackBarBehavior.floating,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),

@@ -221,11 +221,14 @@ class _OrderscreenState extends State<Orderscreen>
       context: context,
       builder: (context) => AlertDialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-        title: const Row(
+        title: Row(
           children: [
-            Icon(Icons.add_circle_outline, color: Colors.blue),
-            SizedBox(width: 8),
-            Text('فاتورة جديدة'),
+            Icon(
+              Icons.add_circle_outline,
+              color: Theme.of(context).colorScheme.primary,
+            ),
+            const SizedBox(width: 8),
+            const Text('فاتورة جديدة'),
           ],
         ),
         content: const Text(
@@ -256,15 +259,17 @@ class _OrderscreenState extends State<Orderscreen>
       return;
     }
 
+    final colors = Theme.of(context).colorScheme;
+    final semanticColors = AppSemanticColors.of(context);
     showDialog(
       context: context,
       builder: (dialogContext) => AlertDialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-        title: const Row(
+        title: Row(
           children: [
-            Icon(Icons.warning, color: Colors.orange),
-            SizedBox(width: 8),
-            Text('حذف الفاتورة المحفوظة'),
+            Icon(Icons.warning, color: semanticColors.warning),
+            const SizedBox(width: 8),
+            const Text('حذف الفاتورة المحفوظة'),
           ],
         ),
         content: const Text(
@@ -300,7 +305,8 @@ class _OrderscreenState extends State<Orderscreen>
             },
             style: ElevatedButton.styleFrom(
               // backgroundColor: Colors.red,
-              foregroundColor: Colors.white,
+              backgroundColor: colors.error,
+              foregroundColor: colors.onError,
             ),
             child: const Text('حذف'),
           ),
@@ -326,7 +332,7 @@ class _OrderscreenState extends State<Orderscreen>
                     constraints: BoxConstraints(
                       minHeight: MediaQuery.of(context).size.height * 0.75,
                     ),
-                    backgroundColor: ColorsManager.moreLighterGray,
+                    backgroundColor: Theme.of(context).colorScheme.surface,
                     shape: const RoundedRectangleBorder(
                       borderRadius: BorderRadius.vertical(
                         top: Radius.circular(25.0),
@@ -341,12 +347,12 @@ class _OrderscreenState extends State<Orderscreen>
                     },
                   );
                 },
-          label: const Text(
+          label: Text(
             'معاينة',
-            style: TextStyle(fontWeight: FontWeight.bold),
+            style: Theme.of(context).textTheme.labelLarge,
           ),
           icon: const Icon(Icons.preview),
-          backgroundColor: Colors.blue[700],
+          backgroundColor: Theme.of(context).colorScheme.primary,
         ),
       ),
     );
@@ -362,22 +368,13 @@ class _OrderscreenState extends State<Orderscreen>
 
   @override
   Widget build(BuildContext context) {
+    final colors = Theme.of(context).colorScheme;
     return Directionality(
       textDirection: TextDirection.rtl,
       child: Scaffold(
-        backgroundColor: Colors.grey[50],
         floatingActionButtonLocation: FloatingActionButtonLocation.startFloat,
         appBar: AppBar(
           elevation: 0,
-          flexibleSpace: Container(
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: [Colors.blue[600]!, Colors.blue[800]!],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-              ),
-            ),
-          ),
           title: const Text(
             "إصدار فاتورة",
           ),
@@ -391,15 +388,15 @@ class _OrderscreenState extends State<Orderscreen>
                     IconButton(
                       onPressed: _startNewInvoice,
                       tooltip: 'جديد',
-                      color: Colors.white,
+                      color: colors.onPrimary,
                       icon: const Icon(Icons.add),
                     ),
                     IconButton(
                       onPressed:
                           _savedInvoiceId == null ? null : _deleteSavedInvoice,
                       tooltip: 'مسح',
-                      color: Colors.white,
-                      disabledColor: Colors.white70,
+                      color: colors.onPrimary,
+                      disabledColor: colors.onPrimary.withValues(alpha: 0.6),
                       icon: const Icon(Icons.delete_forever),
                     ),
                   ] else ...[
@@ -408,8 +405,9 @@ class _OrderscreenState extends State<Orderscreen>
                       icon: const Icon(Icons.add, size: 18),
                       label: const Text('جديد'),
                       style: OutlinedButton.styleFrom(
-                        foregroundColor: Colors.white,
-                        side: const BorderSide(color: Colors.white70),
+                        foregroundColor: colors.onPrimary,
+                        side: BorderSide(
+                            color: colors.onPrimary.withValues(alpha: 0.7)),
                       ),
                     ),
                     const SizedBox(width: 8),
@@ -419,11 +417,13 @@ class _OrderscreenState extends State<Orderscreen>
                       icon: const Icon(Icons.delete_forever, size: 18),
                       label: const Text('مسح'),
                       style: ElevatedButton.styleFrom(
-                        foregroundColor:
-                            _savedInvoiceId == null ? Colors.grey : Colors.red,
-                        backgroundColor: Colors.white,
-                        disabledForegroundColor: Colors.grey,
-                        disabledBackgroundColor: Colors.white70,
+                        foregroundColor: _savedInvoiceId == null
+                            ? colors.onSurface.withValues(alpha: 0.38)
+                            : colors.error,
+                        backgroundColor: colors.surface,
+                        disabledForegroundColor:
+                            colors.onSurface.withValues(alpha: 0.38),
+                        disabledBackgroundColor: colors.surfaceContainerHighest,
                       ),
                     ),
                   ],
@@ -488,22 +488,22 @@ class _OrderscreenState extends State<Orderscreen>
                           return Container(
                             height: 200,
                             decoration: BoxDecoration(
-                              color: Colors.white,
+                              color: colors.surface,
                               borderRadius: BorderRadius.circular(15),
-                              border: Border.all(color: Colors.grey[300]!),
+                              border: Border.all(color: colors.outlineVariant),
                             ),
                             child: Center(
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   Icon(Icons.shopping_cart_outlined,
-                                      size: 60, color: Colors.grey[400]),
+                                      size: 60, color: colors.onSurfaceVariant),
                                   const SizedBox(height: 16),
                                   Text(
                                     'لا توجد منتجات مضافة',
                                     style: TextStyle(
                                       fontSize: 16,
-                                      color: Colors.grey[600],
+                                      color: colors.onSurfaceVariant,
                                     ),
                                   ),
                                   const SizedBox(height: 8),
@@ -511,7 +511,7 @@ class _OrderscreenState extends State<Orderscreen>
                                     'ابدأ بإضافة منتجات للفاتورة',
                                     style: TextStyle(
                                       fontSize: 14,
-                                      color: Colors.grey[500],
+                                      color: colors.onSurfaceVariant,
                                     ),
                                   ),
                                 ],
@@ -540,6 +540,7 @@ class _OrderscreenState extends State<Orderscreen>
 
   Widget _buildPaymentControls() {
     var width = MediaQuery.of(context).size.width;
+    final colors = Theme.of(context).colorScheme;
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 12),
       child: Column(
@@ -576,11 +577,13 @@ class _OrderscreenState extends State<Orderscreen>
                 child: AppTextButton(
                   onPressed: _saveInvoiceOnly,
                   buttonText: 'حفظ',
-                  textStyle: TextStyles.font18WhiteMedium,
+                  textStyle: TextStyles.font18WhiteMedium.copyWith(
+                    color: colors.onSecondary,
+                  ),
                   verticalPadding: 5,
                   buttonHeight: 48,
                   horizontalPadding: 4,
-                  backgroundColor: ColorsManager.gray,
+                  backgroundColor: colors.secondary,
                 ),
               ),
               SizedBox(width: width < 400 ? 14 : 22),
@@ -588,10 +591,12 @@ class _OrderscreenState extends State<Orderscreen>
                 child: AppTextButton(
                   onPressed: _shareInvoice,
                   buttonText: 'إرسال',
-                  textStyle: TextStyles.font18WhiteMedium,
+                  textStyle: TextStyles.font18WhiteMedium.copyWith(
+                    color: colors.onPrimary,
+                  ),
                   verticalPadding: 5,
                   buttonHeight: 48,
-                  backgroundColor: ColorsManager.mainBlue,
+                  backgroundColor: colors.primary,
                 ),
               ),
               SizedBox(width: width < 400 ? 14 : 22),
@@ -616,28 +621,28 @@ class _OrderscreenState extends State<Orderscreen>
   }
 
   Widget _buildTotalCostCard(double totalCost) {
+    final colors = Theme.of(context).colorScheme;
+    final semanticColors = AppSemanticColors.of(context);
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [Colors.green[400]!, Colors.green[600]!],
-        ),
+        color: semanticColors.success,
         borderRadius: BorderRadius.circular(12),
       ),
       child: LayoutBuilder(
         builder: (context, constraints) {
           final total = Text(
             '${totalCost.toStringAsFixed(2)} جنيه',
-            style: const TextStyle(
-              color: Colors.white,
+            style: TextStyle(
+              color: colors.onSecondary,
               fontSize: 20,
               fontWeight: FontWeight.bold,
             ),
           );
-          const label = Text(
+          final label = Text(
             'الإجمالي الكلي',
             style: TextStyle(
-              color: Colors.white,
+              color: colors.onSecondary,
               fontSize: 16,
               fontWeight: FontWeight.bold,
             ),

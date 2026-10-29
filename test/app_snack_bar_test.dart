@@ -1,4 +1,5 @@
 import 'package:arqamy/core/widgets/app_snack_bar.dart';
+import 'package:arqamy/config/theme/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -22,7 +23,7 @@ void main() {
     await tester.pump();
 
     final snackBar = tester.widget<SnackBar>(find.byType(SnackBar));
-    expect(snackBar.backgroundColor, Colors.red);
+    expect(snackBar.backgroundColor, ThemeData.light().colorScheme.error);
     expect(find.byIcon(Icons.error), findsOneWidget);
     expect(find.text('Something went wrong'), findsOneWidget);
   });
@@ -45,7 +46,7 @@ void main() {
     await tester.pump();
 
     final snackBar = tester.widget<SnackBar>(find.byType(SnackBar));
-    expect(snackBar.backgroundColor, Colors.green);
+    expect(snackBar.backgroundColor, LightColors.success);
     expect(find.byIcon(Icons.check_circle), findsOneWidget);
     expect(find.text('Saved'), findsOneWidget);
   });

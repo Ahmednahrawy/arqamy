@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:arqamy/config/theme/colors.dart';
 import 'package:arqamy/core/widgets/app_snack_bar.dart';
 import 'package:arqamy/features/orderscreen/ui/widgets/customer_list_constants.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -42,7 +41,6 @@ class _CustomerNameAutoCompleteState extends State<CustomerNameAutoComplete> {
     }
   }
 
- 
   // Load suggestions from SharedPreferences
   Future<void> _loadSuggestions() async {
     try {
@@ -115,6 +113,7 @@ class _CustomerNameAutoCompleteState extends State<CustomerNameAutoComplete> {
         // FocusScope.of(context).unfocus();
       },
       fieldViewBuilder: (context, controller, focusNode, onFieldSubmitted) {
+        final colors = Theme.of(context).colorScheme;
         focusNode.addListener(() {
           if (!focusNode.hasFocus) {
             _handleSubmit(controller.text);
@@ -154,26 +153,25 @@ class _CustomerNameAutoCompleteState extends State<CustomerNameAutoComplete> {
               vertical: 15,
             ),
             focusedBorder: OutlineInputBorder(
-                borderSide: const BorderSide(
-                  color: ColorsManager.mainBlue,
+                borderSide: BorderSide(
+                  color: colors.primary,
                   width: 1.3,
                 ),
                 borderRadius: BorderRadius.circular(15)),
             enabledBorder: OutlineInputBorder(
-              borderSide:
-                  const BorderSide(color: ColorsManager.lightBlue, width: 1.3),
+              borderSide: BorderSide(color: colors.outline, width: 1.3),
               borderRadius: BorderRadius.circular(15),
             ),
             errorBorder: OutlineInputBorder(
-              borderSide: const BorderSide(
-                color: Colors.red,
+              borderSide: BorderSide(
+                color: colors.error,
                 width: 1.3,
               ),
               borderRadius: BorderRadius.circular(15.0),
             ),
             focusedErrorBorder: OutlineInputBorder(
-              borderSide: const BorderSide(
-                color: Color.fromARGB(255, 166, 19, 5),
+              borderSide: BorderSide(
+                color: colors.error,
                 width: 1.3,
               ),
               borderRadius: BorderRadius.circular(15.0),
@@ -190,6 +188,7 @@ class _CustomerNameAutoCompleteState extends State<CustomerNameAutoComplete> {
         );
       },
       optionsViewBuilder: (context, Function(String) onSelected, customers) {
+        final colors = Theme.of(context).colorScheme;
         return Material(
           child: ListView.builder(
             itemBuilder: (BuildContext context, int index) {
@@ -198,10 +197,10 @@ class _CustomerNameAutoCompleteState extends State<CustomerNameAutoComplete> {
                 key: Key(option),
                 direction: DismissDirection.endToStart,
                 background: Container(
-                  color: ColorsManager.red,
+                  color: colors.error,
                   alignment: Alignment.centerRight,
                   padding: const EdgeInsets.symmetric(horizontal: 20),
-                  child: const Icon(Icons.delete, color: Colors.white),
+                  child: Icon(Icons.delete, color: colors.onError),
                 ),
                 onDismissed: (direction) {
                   // Handle what happens when an item is dismissed

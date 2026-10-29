@@ -51,6 +51,7 @@ class MyDataTable extends StatelessWidget {
 
 Widget _buildDetailedTable(
     List<Product> products, BuildContext context, bool showPackageColumns) {
+  final colors = Theme.of(context).colorScheme;
   void confirmDelete(BuildContext context, int index) {
     showDialog(
       context: context,
@@ -67,7 +68,7 @@ Widget _buildDetailedTable(
               context.read<InvoiceProvider>().removeProductAt(index);
               Navigator.pop(context);
             },
-            child: const Text("حذف", style: TextStyle(color: Colors.red)),
+            child: Text("حذف", style: TextStyle(color: colors.error)),
           ),
         ],
       ),
@@ -114,7 +115,7 @@ Widget _buildDetailedTable(
               Center(
                 child: IconButton(
                   onPressed: () => confirmDelete(context, index),
-                  icon: const Icon(Icons.delete, color: Colors.red),
+                  icon: Icon(Icons.delete, color: colors.error),
                 ),
               ),
             ),
@@ -136,14 +137,12 @@ Widget _buildDetailedTable(
 
           return DataRow(cells: cells);
         }).toList(),
-        dataRowColor: WidgetStateProperty.all<Color>(
-          const Color.fromARGB(255, 232, 217, 216),
-        ),
-        headingTextStyle: const TextStyle(),
-        border: const TableBorder(
-          bottom: BorderSide(width: 1),
-          top: BorderSide(width: 1),
-          verticalInside: BorderSide(width: 1),
+        dataRowColor: WidgetStatePropertyAll(colors.surfaceContainerHighest),
+        headingTextStyle: Theme.of(context).textTheme.labelLarge,
+        border: TableBorder(
+          bottom: BorderSide(width: 1, color: colors.outlineVariant),
+          top: BorderSide(width: 1, color: colors.outlineVariant),
+          verticalInside: BorderSide(width: 1, color: colors.outlineVariant),
         ),
         horizontalMargin: 10,
         columnSpacing: 5,
@@ -157,6 +156,7 @@ Widget _buildTotalsTable(
     List<Product> products, BuildContext context, bool showPackageColumns) {
   return LayoutBuilder(
     builder: (context, constraints) {
+      final colors = Theme.of(context).colorScheme;
       final availableWidth = constraints.hasBoundedWidth
           ? constraints.maxWidth
           : MediaQuery.sizeOf(context).width;
@@ -185,14 +185,14 @@ Widget _buildTotalsTable(
                   _buildDataCell('${totalPrice.toStringAsFixed(2)} L.E'),
                 ]);
               }).toList(),
-              dataRowColor: WidgetStateProperty.all<Color>(
-                const Color.fromARGB(255, 232, 217, 216),
-              ),
-              headingTextStyle: const TextStyle(),
-              border: const TableBorder(
-                bottom: BorderSide(width: 1),
-                top: BorderSide(width: 1),
-                verticalInside: BorderSide(width: 1),
+              dataRowColor:
+                  WidgetStatePropertyAll(colors.surfaceContainerHighest),
+              headingTextStyle: Theme.of(context).textTheme.labelLarge,
+              border: TableBorder(
+                bottom: BorderSide(width: 1, color: colors.outlineVariant),
+                top: BorderSide(width: 1, color: colors.outlineVariant),
+                verticalInside:
+                    BorderSide(width: 1, color: colors.outlineVariant),
               ),
               // columnSpacing: 5,
               horizontalMargin: 8,

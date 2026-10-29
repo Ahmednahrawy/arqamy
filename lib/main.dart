@@ -11,10 +11,10 @@ import 'package:provider/provider.dart';
 import 'firebase_options.dart';
 
 Future<void> main() async {
-  // Make sure Flutter is initialized 
+  // Make sure Flutter is initialized
   WidgetsFlutterBinding.ensureInitialized();
   await SystemChrome.setPreferredOrientations([
-    DeviceOrientation.portraitUp, 
+    DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
   ]);
   // await Future.delayed(const Duration(milliseconds: 300));
@@ -28,10 +28,17 @@ Future<void> main() async {
     debugPrint('Firebase initialization error: $e');
   }
 
+  final themeProvider = ThemeProvider();
+  try {
+    await themeProvider.loadTheme();
+  } catch (error) {
+    debugPrint('Theme preference loading error: $error');
+  }
+
   runApp(MultiProvider(
     providers: [
-      ChangeNotifierProvider(create: (_) => Language()),  
-      ChangeNotifierProvider(create: (_) => ThemeProvider()),
+      ChangeNotifierProvider(create: (_) => Language()),
+      ChangeNotifierProvider.value(value: themeProvider),
       ChangeNotifierProvider(create: (_) => InvoiceProvider()),
       ChangeNotifierProvider(create: (_) => InvoiceSettingsProvider()),
     ],

@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:arqamy/config/theme/colors.dart';
-import 'package:arqamy/config/theme/styles.dart';
 
 class AppTextFormField extends StatelessWidget {
   final EdgeInsetsGeometry? contentPadding;
@@ -48,6 +46,8 @@ class AppTextFormField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colors = theme.colorScheme;
     return TextFormField(
       textDirection: textDirection,
       controller: controller,
@@ -63,41 +63,34 @@ class AppTextFormField extends StatelessWidget {
             ),
         focusedBorder: focusedBorder ??
             OutlineInputBorder(
-                borderSide: const BorderSide(
-                  color: ColorsManager.mainBlue,
-                  width: 1.3,
-                ),
-                borderRadius: BorderRadius.circular(16.sp)),
+              borderSide: BorderSide(color: colors.primary, width: 1.3),
+              borderRadius: BorderRadius.circular(16.sp),
+            ),
         enabledBorder: enabledBorder ??
             OutlineInputBorder(
-              borderSide:
-                  const BorderSide(color: ColorsManager.lightBlue, width: 1.3),
+              borderSide: BorderSide(color: colors.outline, width: 1.3),
               borderRadius: BorderRadius.circular(16.sp),
             ),
         errorBorder: OutlineInputBorder(
-          borderSide: const BorderSide(
-            color: Colors.red,
-            width: 1.3,
-          ),
+          borderSide: BorderSide(color: colors.error, width: 1.3),
           borderRadius: BorderRadius.circular(16.sp),
         ),
         focusedErrorBorder: OutlineInputBorder(
-          borderSide: const BorderSide(
-            color: Color.fromARGB(255, 166, 19, 5),
-            width: 1.3,
-          ),
+          borderSide: BorderSide(color: colors.error, width: 1.3),
           borderRadius: BorderRadius.circular(16.sp),
         ),
-        hintStyle: hintStyle ?? TextStyles.font14LightGrayRegular,
+        hintStyle: hintStyle ??
+            theme.textTheme.bodyMedium
+                ?.copyWith(color: colors.onSurfaceVariant),
         hintText: hintText,
         labelText: labelText,
         suffixIcon: suffixIcon,
         suffixText: suffixText,
-        fillColor: backgroundColor ?? ColorsManager.moreLightGray,
+        fillColor: backgroundColor ?? colors.surface,
         filled: true,
       ),
       obscureText: isObscureText ?? false,
-      style: TextStyles.font14DarkBlueMedium,
+      style: inputTextStyle ?? theme.textTheme.bodyMedium,
       keyboardType: keyboardType ?? TextInputType.number,
       inputFormatters: labelText == 'عدد العبوات'
           ? [FilteringTextInputFormatter.digitsOnly]

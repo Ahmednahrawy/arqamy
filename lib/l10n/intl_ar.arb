@@ -9,6 +9,8 @@
   "language": "اللغة",
   "dark_mode": "الوضع الداكن",
   "light_mode": "الوضع الفاتح",
+  "appearance": "المظهر",
+  "system_mode": "النظام",
   "select_language": "اختر اللغة",
   "arabic": "العربية",
   "english": "الإنجليزية",

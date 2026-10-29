@@ -7,7 +7,6 @@ import 'package:arqamy/core/helpers/spacing.dart';
 import 'package:arqamy/core/widgets/app_snack_bar.dart';
 import 'package:arqamy/core/widgets/text_button.dart';
 import 'package:arqamy/core/widgets/text_form_field.dart';
-import 'package:arqamy/config/theme/colors.dart';
 import 'package:arqamy/config/theme/styles.dart';
 import 'package:arqamy/features/orderscreen/data/models/product_model.dart';
 
@@ -136,6 +135,7 @@ class _ProductInputFormState extends State<ProductInputForm> {
   Widget _actionSelector() {
     return Consumer<InvoiceProvider>(
       builder: (context, provider, _) {
+        final colors = Theme.of(context).colorScheme;
         if (provider.invoiceAction != null) {
           return Center(
             child: Row(
@@ -165,7 +165,7 @@ class _ProductInputFormState extends State<ProductInputForm> {
         return Container(
           padding: const EdgeInsets.all(4),
           decoration: BoxDecoration(
-            color: Colors.grey[100],
+            color: colors.surfaceContainerHighest,
             borderRadius: BorderRadius.circular(12),
           ),
           child: Row(
@@ -178,9 +178,7 @@ class _ProductInputFormState extends State<ProductInputForm> {
                     button: true,
                     selected: isSelected,
                     child: Material(
-                      color: isSelected
-                          ? ColorsManager.mainBlue
-                          : Colors.transparent,
+                      color: isSelected ? colors.primary : Colors.transparent,
                       borderRadius: BorderRadius.circular(9),
                       child: InkWell(
                         borderRadius: BorderRadius.circular(9),
@@ -192,21 +190,19 @@ class _ProductInputFormState extends State<ProductInputForm> {
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(9),
                             border: Border.all(
-                              color: isSelected
-                                  ? ColorsManager.mainBlue
-                                  : ColorsManager.mainBlue.withValues(
-                                      alpha: 0.35,
-                                    ),
+                              color:
+                                  isSelected ? colors.primary : colors.outline,
                             ),
                           ),
                           child: Text(
                             action,
                             textAlign: TextAlign.center,
-                            style: isSelected
-                                ? TextStyles.font16WhiteSemiBold
-                                : TextStyles.font16WhiteSemiBold.copyWith(
-                                    color: ColorsManager.mainBlue,
-                                  ),
+                            style: TextStyle(
+                              color: isSelected
+                                  ? colors.onPrimary
+                                  : colors.primary,
+                              fontWeight: FontWeight.w600,
+                            ),
                           ),
                         ),
                       ),
@@ -262,10 +258,11 @@ class _ProductInputFormState extends State<ProductInputForm> {
                     fit: FlexFit.tight,
                     itemBuilder: (context, item, isDisabled, isSelected) {
                       return Container(
-                        decoration: const BoxDecoration(
+                        decoration: BoxDecoration(
                           border: Border(
                             bottom: BorderSide(
-                              color: ColorsManager.lightGray,
+                              color:
+                                  Theme.of(context).colorScheme.outlineVariant,
                               width: 1.0,
                             ),
                           ),
@@ -395,8 +392,10 @@ class _ProductInputFormState extends State<ProductInputForm> {
                     child: AppTextButton(
                       onPressed: _handleAdd,
                       buttonText: 'أضف منتج',
-                      textStyle: TextStyles.font16WhiteSemiBold,
-                      backgroundColor: ColorsManager.mainBlue,
+                      textStyle: TextStyles.font16WhiteSemiBold.copyWith(
+                        color: Theme.of(context).colorScheme.onPrimary,
+                      ),
+                      backgroundColor: Theme.of(context).colorScheme.primary,
                       buttonHeight: 52,
                     ),
                   ),

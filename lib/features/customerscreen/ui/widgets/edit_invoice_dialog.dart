@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:arqamy/config/theme/colors.dart';
 import 'package:arqamy/core/widgets/app_snack_bar.dart';
 import 'package:arqamy/features/orderscreen/data/models/invoice.dart';
 import 'package:arqamy/features/orderscreen/providers/invoice_provider.dart';
@@ -83,6 +84,8 @@ class _EditInvoiceDialogState extends State<EditInvoiceDialog> {
 
   @override
   Widget build(BuildContext context) {
+    final colors = Theme.of(context).colorScheme;
+    final semanticColors = AppSemanticColors.of(context);
     return Dialog(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(20),
@@ -101,14 +104,11 @@ class _EditInvoiceDialogState extends State<EditInvoiceDialog> {
                 // Header
                 Wrap(
                   children: [
-                    Icon(Icons.edit, color: Colors.orange[700]),
+                    Icon(Icons.edit, color: semanticColors.warning),
                     const SizedBox(width: 8),
                     Text(
                       'تعديل الفاتورة #${widget.invoice.invoiceSerial}',
-                      style: const TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                      ),
+                      style: Theme.of(context).textTheme.titleLarge,
                     ),
                   ],
                 ),
@@ -131,7 +131,7 @@ class _EditInvoiceDialogState extends State<EditInvoiceDialog> {
                 Container(
                   padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
-                    color: Colors.grey[100],
+                    color: colors.surfaceContainerHighest,
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Column(
@@ -176,10 +176,14 @@ class _EditInvoiceDialogState extends State<EditInvoiceDialog> {
                 Container(
                   padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
-                    color: _newRest == 0 ? Colors.green[50] : Colors.orange[50],
+                    color: _newRest == 0
+                        ? semanticColors.success.withValues(alpha: 0.12)
+                        : semanticColors.warning.withValues(alpha: 0.12),
                     borderRadius: BorderRadius.circular(12),
                     border: Border.all(
-                      color: _newRest == 0 ? Colors.green : Colors.orange,
+                      color: _newRest == 0
+                          ? semanticColors.success
+                          : semanticColors.warning,
                       width: 1,
                     ),
                   ),
@@ -198,8 +202,9 @@ class _EditInvoiceDialogState extends State<EditInvoiceDialog> {
                         style: TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
-                          color:
-                              _newRest == 0 ? Colors.green : Colors.orange[800],
+                          color: _newRest == 0
+                              ? semanticColors.success
+                              : semanticColors.warning,
                         ),
                       ),
                     ],
@@ -221,8 +226,8 @@ class _EditInvoiceDialogState extends State<EditInvoiceDialog> {
                       icon: const Icon(Icons.save),
                       label: const Text('حفظ التغييرات'),
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.blue,
-                        foregroundColor: Colors.white,
+                        backgroundColor: colors.primary,
+                        foregroundColor: colors.onPrimary,
                         padding: const EdgeInsets.symmetric(
                           horizontal: 20,
                           vertical: 12,
@@ -244,13 +249,14 @@ class _EditInvoiceDialogState extends State<EditInvoiceDialog> {
 
   Widget _buildReadOnlyRow(String label, String value,
       {bool isHighlighted = false}) {
+    final colors = Theme.of(context).colorScheme;
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Text(
           label,
           style: TextStyle(
-            color: Colors.grey[600],
+            color: colors.onSurfaceVariant,
             fontSize: 14,
           ),
         ),
@@ -259,7 +265,7 @@ class _EditInvoiceDialogState extends State<EditInvoiceDialog> {
           style: TextStyle(
             fontSize: isHighlighted ? 16 : 14,
             fontWeight: isHighlighted ? FontWeight.bold : FontWeight.w500,
-            color: isHighlighted ? Colors.blue : Colors.black87,
+            color: isHighlighted ? colors.primary : colors.onSurface,
           ),
         ),
       ],

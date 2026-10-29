@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:arqamy/config/theme/colors.dart';
 import 'package:arqamy/core/services/invoice_service.dart';
 import 'package:arqamy/features/customerscreen/ui/widgets/edit_invoice_dialog.dart';
 import 'package:arqamy/features/customerscreen/ui/widgets/invoice_detail_dialog.dart';
@@ -98,17 +99,19 @@ class _CustomerScreenState extends State<CustomerScreen> {
   void _deleteInvoice(String invoiceId) {
     final provider = context.read<InvoiceProvider>();
     final messenger = ScaffoldMessenger.of(context);
+    final colors = Theme.of(context).colorScheme;
+    final semanticColors = AppSemanticColors.of(context);
     showDialog(
       context: context,
       builder: (dialogContext) => AlertDialog(
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(15),
         ),
-        title: const Row(
+        title: Row(
           children: [
-            Icon(Icons.warning, color: Colors.orange),
-            SizedBox(width: 8),
-            Text("تأكيد الحذف"),
+            Icon(Icons.warning, color: semanticColors.warning),
+            const SizedBox(width: 8),
+            const Text("تأكيد الحذف"),
           ],
         ),
         content: const Text(
@@ -138,7 +141,7 @@ class _CustomerScreenState extends State<CustomerScreen> {
               }
               Navigator.pop(dialogContext);
             },
-            child: const Text("حذف", style: TextStyle(color: Colors.red)),
+            child: Text("حذف", style: TextStyle(color: colors.error)),
           ),
         ],
       ),
@@ -147,6 +150,7 @@ class _CustomerScreenState extends State<CustomerScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final colors = Theme.of(context).colorScheme;
     final balance = InvoiceProvider.calculateCustomerBalance(_customerInvoices);
     final purchaseBalance = _customerInvoices
         .where((invoice) =>
@@ -171,10 +175,9 @@ class _CustomerScreenState extends State<CustomerScreen> {
               children: [
                 Card(
                   elevation: 0,
-                  color: Colors.white,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(18),
-                    side: BorderSide(color: Colors.blueGrey.shade100),
+                    side: BorderSide(color: colors.outlineVariant),
                   ),
                   child: Padding(
                     padding:
@@ -197,18 +200,15 @@ class _CustomerScreenState extends State<CustomerScreen> {
                     padding: const EdgeInsets.fromLTRB(4, 18, 4, 8),
                     child: Row(
                       children: [
-                        const Expanded(
+                        Expanded(
                           child: Text(
                             'سجل الفواتير',
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                            ),
+                            style: Theme.of(context).textTheme.titleLarge,
                           ),
                         ),
                         Text(
                           '${_customerInvoices.length} فاتورة',
-                          style: TextStyle(color: Colors.grey.shade600),
+                          style: TextStyle(color: colors.onSurfaceVariant),
                         ),
                       ],
                     ),
@@ -222,13 +222,13 @@ class _CustomerScreenState extends State<CustomerScreen> {
                               Container(
                                 padding: const EdgeInsets.all(20),
                                 decoration: BoxDecoration(
-                                  color: Colors.blue.shade50,
+                                  color: colors.primaryContainer,
                                   shape: BoxShape.circle,
                                 ),
                                 child: Icon(
                                   Icons.receipt_long_outlined,
                                   size: 42,
-                                  color: Colors.blue.shade400,
+                                  color: colors.primary,
                                 ),
                               ),
                               const SizedBox(height: 14),
@@ -237,11 +237,10 @@ class _CustomerScreenState extends State<CustomerScreen> {
                                     ? "اختر عميل لعرض الفواتير"
                                     : "لا توجد فواتير لهذا العميل",
                                 textAlign: TextAlign.center,
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  color: Colors.grey.shade700,
-                                  fontWeight: FontWeight.w600,
-                                ),
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .titleMedium
+                                    ?.copyWith(color: colors.onSurfaceVariant),
                               ),
                             ],
                           ),
@@ -263,18 +262,20 @@ class _CustomerScreenState extends State<CustomerScreen> {
     );
   }
 
- Widget _buildCustomerSummary({
+  Widget _buildCustomerSummary({
     required String customerName,
     required int invoiceCount,
     required double balance,
     required double purchaseBalance,
     required double salesBalance,
   }) {
+    final colors = Theme.of(context).colorScheme;
+    final semanticColors = AppSemanticColors.of(context);
     final balanceColor = balance > 0
-        ? Colors.deepOrange.shade700
+        ? semanticColors.warning
         : balance < 0
-            ? Colors.blue.shade700
-            : Colors.green.shade700;
+            ? colors.primary
+            : semanticColors.success;
     final balanceLabel = balance > 0
         ? 'صافي مستحق لك'
         : balance < 0
@@ -285,16 +286,9 @@ class _CustomerScreenState extends State<CustomerScreen> {
       margin: const EdgeInsets.only(top: 14),
       padding: const EdgeInsets.all(18),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: colors.surface,
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: Colors.blueGrey.shade50),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.blueGrey.withValues(alpha: 0.08),
-            blurRadius: 18,
-            offset: const Offset(0, 7),
-          ),
-        ],
+        border: Border.all(color: colors.outlineVariant),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -302,8 +296,8 @@ class _CustomerScreenState extends State<CustomerScreen> {
           Row(
             children: [
               CircleAvatar(
-                backgroundColor: Colors.blue.shade50,
-                foregroundColor: Colors.blue.shade700,
+                backgroundColor: colors.primaryContainer,
+                foregroundColor: colors.onPrimaryContainer,
                 child: const Icon(Icons.person_outline),
               ),
               const SizedBox(width: 12),
@@ -312,23 +306,20 @@ class _CustomerScreenState extends State<CustomerScreen> {
                   customerName,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(
-                    fontSize: 17,
-                    fontWeight: FontWeight.bold,
-                  ),
+                  style: Theme.of(context).textTheme.titleMedium,
                 ),
               ),
               Container(
                 padding:
                     const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
                 decoration: BoxDecoration(
-                  color: Colors.blueGrey.shade50,
+                  color: colors.surfaceContainerHighest,
                   borderRadius: BorderRadius.circular(20),
                 ),
                 child: Text(
                   '$invoiceCount فاتورة',
                   style: TextStyle(
-                    color: Colors.blueGrey.shade700,
+                    color: colors.onSurfaceVariant,
                     fontWeight: FontWeight.w600,
                   ),
                 ),
@@ -339,8 +330,7 @@ class _CustomerScreenState extends State<CustomerScreen> {
           Text(
             balanceLabel,
             style: TextStyle(
-              color: Colors.grey.shade600,
-              fontSize: 13,
+              color: colors.onSurfaceVariant,
             ),
           ),
           const SizedBox(height: 2),
@@ -360,7 +350,7 @@ class _CustomerScreenState extends State<CustomerScreen> {
                 child: _buildBalanceBreakdown(
                   label: 'مشتريات',
                   amount: purchaseBalance,
-                  color: Colors.blue.shade700,
+                  color: colors.primary,
                   icon: Icons.south_west,
                 ),
               ),
@@ -369,7 +359,7 @@ class _CustomerScreenState extends State<CustomerScreen> {
                 child: _buildBalanceBreakdown(
                   label: 'مبيعات',
                   amount: salesBalance,
-                  color: Colors.green.shade700,
+                  color: semanticColors.success,
                   icon: Icons.north_east,
                 ),
               ),
@@ -379,7 +369,8 @@ class _CustomerScreenState extends State<CustomerScreen> {
       ),
     );
   }
-Widget _buildBalanceBreakdown({
+
+  Widget _buildBalanceBreakdown({
     required String label,
     required double amount,
     required Color color,
@@ -401,7 +392,10 @@ Widget _buildBalanceBreakdown({
               children: [
                 Text(
                   label,
-                  style: TextStyle(color: Colors.grey.shade600, fontSize: 12),
+                  style: TextStyle(
+                    color: Theme.of(context).colorScheme.onSurfaceVariant,
+                    fontSize: 12,
+                  ),
                 ),
                 const SizedBox(height: 2),
                 Text(
@@ -423,18 +417,18 @@ Widget _buildBalanceBreakdown({
   }
 
   Widget _buildInvoiceCard(Invoice invoice) {
-    final actionColor = _getActionColor(invoice.invoiceAction);
+    final colors = Theme.of(context).colorScheme;
+    final semanticColors = AppSemanticColors.of(context);
+    final actionColor = _getActionColor(context, invoice.invoiceAction);
     final action = invoice.invoiceAction ?? 'عملية';
     final isPaid = invoice.rest <= 0;
 
     return Card(
       margin: const EdgeInsets.symmetric(vertical: 6),
-      color: Colors.white,
       elevation: 1,
-      shadowColor: Colors.blueGrey.withValues(alpha: 0.15),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(18),
-        side: BorderSide(color: Colors.blueGrey.shade50),
+        side: BorderSide(color: colors.outlineVariant),
       ),
       clipBehavior: Clip.antiAlias,
       child: InkWell(
@@ -464,10 +458,7 @@ Widget _buildBalanceBreakdown({
                       children: [
                         Text(
                           'فاتورة #${invoice.invoiceSerial}',
-                          style: const TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 14,
-                          ),
+                          style: Theme.of(context).textTheme.titleSmall,
                         ),
                         Container(
                           padding: const EdgeInsets.symmetric(
@@ -491,7 +482,7 @@ Widget _buildBalanceBreakdown({
                     Text(
                       '${invoice.formattedDate}  •  ${invoice.formattedTime}',
                       style: TextStyle(
-                        color: Colors.grey.shade600,
+                        color: colors.onSurfaceVariant,
                         fontSize: 12,
                       ),
                     ),
@@ -513,8 +504,8 @@ Widget _buildBalanceBreakdown({
                               : 'متبقي ${invoice.rest.toStringAsFixed(2)} ج.م',
                           style: TextStyle(
                             color: isPaid
-                                ? Colors.green.shade700
-                                : Colors.deepOrange.shade700,
+                                ? semanticColors.success
+                                : semanticColors.warning,
                             fontWeight: FontWeight.w700,
                             fontSize: 12,
                           ),
@@ -540,27 +531,36 @@ Widget _buildBalanceBreakdown({
                   }
                 },
                 itemBuilder: (context) => [
-                  const PopupMenuItem(
+                  PopupMenuItem(
                     value: 'edit',
                     child: ListTile(
-                      leading: Icon(Icons.edit_outlined, color: Colors.orange),
-                      title: Text('تعديل'),
+                      leading: Icon(
+                        Icons.edit_outlined,
+                        color: semanticColors.warning,
+                      ),
+                      title: const Text('تعديل'),
                       contentPadding: EdgeInsets.zero,
                     ),
                   ),
-                  const PopupMenuItem(
+                  PopupMenuItem(
                     value: 'share',
                     child: ListTile(
-                      leading: Icon(Icons.share_outlined, color: Colors.blue),
-                      title: Text('مشاركة'),
+                      leading: Icon(
+                        Icons.share_outlined,
+                        color: colors.primary,
+                      ),
+                      title: const Text('مشاركة'),
                       contentPadding: EdgeInsets.zero,
                     ),
                   ),
-                  const PopupMenuItem(
+                  PopupMenuItem(
                     value: 'delete',
                     child: ListTile(
-                      leading: Icon(Icons.delete_outline, color: Colors.red),
-                      title: Text('حذف'),
+                      leading: Icon(
+                        Icons.delete_outline,
+                        color: colors.error,
+                      ),
+                      title: const Text('حذف'),
                       contentPadding: EdgeInsets.zero,
                     ),
                   ),
@@ -573,16 +573,17 @@ Widget _buildBalanceBreakdown({
     );
   }
 
-  Color _getActionColor(String? action) {
+  Color _getActionColor(BuildContext context, String? action) {
+    final colors = Theme.of(context).colorScheme;
     switch (action?.replaceAll('\u0640', '').trim()) {
       case 'شراء':
-        return Colors.blue;
+        return colors.primary;
       case 'بيع':
-        return Colors.green;
+        return colors.secondary;
       case 'تخزين':
-        return Colors.purple;
+        return colors.tertiary;
       default:
-        return Colors.grey;
+        return colors.onSurfaceVariant;
     }
   }
 
@@ -594,7 +595,7 @@ Widget _buildBalanceBreakdown({
       tempProvider.addProduct(product);
     }
 // generateAndShareInvoice
-     try {
+    try {
       await InvoiceService.generateAndShareInvoice(
         provider: tempProvider,
         settings: settings,

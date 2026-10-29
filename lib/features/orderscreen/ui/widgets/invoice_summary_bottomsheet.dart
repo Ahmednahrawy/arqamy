@@ -17,49 +17,39 @@ class InvoiceSummaryBottomSheet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.sizeOf(context);
-    return Directionality(
-      textDirection: TextDirection.rtl,
-      child: Padding(
-        padding: EdgeInsets.only(
-          bottom: MediaQuery.of(context).viewInsets.bottom +
-              MediaQuery.of(context).viewPadding.bottom,
-        ),
-        child: Consumer<InvoiceProvider>(
-          builder: (context, provider, _) {
-            final totalCost = provider.totalCost;
-            return SingleChildScrollView(
-              scrollDirection: Axis.vertical,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  verticalSpace(5),
-                  SizedBox(
-                    width: size.width,
-                    // child: const SingleChildScrollView(
-                    //   scrollDirection: Axis.horizontal,
-                    //   child: MyDataTable(isInModal: true),
-                    // ),
-                    child: const Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 8.0),
-                      child: MyDataTable(isInModal: true),
-                    ),
+    return Padding(
+      padding: EdgeInsets.only(
+        bottom: MediaQuery.of(context).viewInsets.bottom +
+            MediaQuery.of(context).viewPadding.bottom,
+      ),
+      child: Consumer<InvoiceProvider>(
+        builder: (context, provider, _) {
+          final totalCost = provider.totalCost;
+          return SingleChildScrollView(
+            scrollDirection: Axis.vertical,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                verticalSpace(5),
+                SizedBox(
+                  width: size.width,
+                  child: const Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 8.0),
+                    child: MyDataTable(isInModal: true),
                   ),
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      Text('إجمالي المبلغ: ${totalCost.toStringAsFixed(2)} L.E',
-                          textDirection: TextDirection.rtl),
-                      Text('التحصيل : ${paid.toStringAsFixed(2)} L.E',
-                          textDirection: TextDirection.rtl),
-                      Text('الباقي: ${rest.toStringAsFixed(2)} L.E',
-                          textDirection: TextDirection.rtl),
-                    ],
-                  ),
-                ],
-              ),
-            );
-          },
-        ),
+                ),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Text('إجمالي المبلغ: ${totalCost.toStringAsFixed(2)} L.E'),
+                    Text('التحصيل : ${paid.toStringAsFixed(2)} L.E'),
+                    Text('الباقي: ${rest.toStringAsFixed(2)} L.E'),
+                  ],
+                ),
+              ],
+            ),
+          );
+        },
       ),
     );
   }

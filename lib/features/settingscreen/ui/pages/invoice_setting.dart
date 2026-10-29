@@ -79,6 +79,7 @@ class _InvoiceSettingsScreenState extends State<InvoiceSettingsScreen> {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.sizeOf(context);
+    final colors = Theme.of(context).colorScheme;
     final settingsProvider = context.watch<InvoiceSettingsProvider>();
     // Check if the path is a file path (not starting with 'assets/')
     final isFilePath = !settingsProvider.logoPath.startsWith('assets/');
@@ -97,10 +98,10 @@ class _InvoiceSettingsScreenState extends State<InvoiceSettingsScreen> {
         );
       } else {
         // Fallback if the saved permanent file is somehow missing
-        logoWidget = const Icon(
+        logoWidget = Icon(
           Icons.broken_image,
           size: 60,
-          color: Colors.red,
+          color: colors.error,
         );
       }
     } else {
@@ -112,11 +113,11 @@ class _InvoiceSettingsScreenState extends State<InvoiceSettingsScreen> {
               height: 100,
               fit: BoxFit.cover,
             )
-          : const Icon(
+          : Icon(
               // Fallback for a blank path or other issue
               Icons.image,
               size: 60,
-              color: Colors.grey,
+              color: colors.onSurfaceVariant,
             );
     }
 
@@ -138,7 +139,7 @@ class _InvoiceSettingsScreenState extends State<InvoiceSettingsScreen> {
                         width: 120,
                         height: 120,
                         decoration: BoxDecoration(
-                          border: Border.all(color: Colors.grey.shade300),
+                          border: Border.all(color: colors.outlineVariant),
                           borderRadius: BorderRadius.circular(8),
                         ),
                         child: logoWidget,
@@ -148,13 +149,13 @@ class _InvoiceSettingsScreenState extends State<InvoiceSettingsScreen> {
                           onTap: _removeLogo,
                           child: Container(
                             margin: const EdgeInsets.all(4),
-                            decoration: const BoxDecoration(
-                              color: Colors.red,
+                            decoration: BoxDecoration(
+                              color: colors.error,
                               shape: BoxShape.circle,
                             ),
-                            child: const Icon(
+                            child: Icon(
                               Icons.close,
-                              color: Colors.white,
+                              color: colors.onError,
                               size: 20,
                             ),
                           ),

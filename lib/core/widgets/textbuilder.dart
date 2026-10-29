@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class TextBuilder extends StatelessWidget {
   final String text;
@@ -34,16 +33,16 @@ class TextBuilder extends StatelessWidget {
   Widget build(BuildContext context) {
     return Text(
       text,
-      style: GoogleFonts.lato(
-        fontSize: fontSize,
-        color: color,
-        fontWeight: fontWeight,
-        letterSpacing: latterSpacing,
-        height: height,
-        wordSpacing: wordSpacing,
-        decoration: textDecoration,
-        fontStyle: fontStyle,
-      ),
+      style: DefaultTextStyle.of(context).style.copyWith(
+            fontSize: fontSize,
+            color: color,
+            fontWeight: fontWeight,
+            letterSpacing: latterSpacing,
+            height: height,
+            wordSpacing: wordSpacing,
+            decoration: textDecoration,
+            fontStyle: fontStyle,
+          ),
       maxLines: maxLines,
       overflow: textOverflow,
       textAlign: textAlign,
