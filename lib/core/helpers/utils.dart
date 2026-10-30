@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:arqamy/features/orderscreen/providers/invoice_provider.dart';
 import 'package:arqamy/features/orderscreen/ui/widgets/pw_grouped_table.dart';
 import 'package:arqamy/features/settingscreen/providers/invoice_setting_provider.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
@@ -38,7 +39,9 @@ Future<Uint8List> generatePDF(
       }
     }
   } catch (e) {
-    print('Error loading logo: $e');
+    if (kDebugMode) {
+      print('Error loading logo: $e');
+    }
   }
   logoImage ??= pw.MemoryImage(
     (await rootBundle.load('assets/images/arqamy.png')).buffer.asUint8List(),

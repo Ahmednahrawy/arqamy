@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:arqamy/core/widgets/app_snack_bar.dart';
 import 'package:arqamy/features/orderscreen/ui/widgets/customer_list_constants.dart';
@@ -22,7 +23,9 @@ class _CustomerNameAutoCompleteState extends State<CustomerNameAutoComplete> {
   @override
   void initState() {
     super.initState();
-    print('Init with initialValue: ${widget.initialValue}');
+    if (kDebugMode) {
+      print('Init with initialValue: ${widget.initialValue}');
+    }
     // _controller = TextEditingController(text: widget.initialValue ?? '');
     _loadSuggestions();
   }
@@ -53,7 +56,9 @@ class _CustomerNameAutoCompleteState extends State<CustomerNameAutoComplete> {
       if (!mounted) return;
       showAppSnackBar(context, 'Error loading suggestions: $e', isError: true);
     }
-    print('load done #########################');
+    if (kDebugMode) {
+      print('load done #########################');
+    }
   }
 
   // Save suggestions to SharedPreferences
@@ -66,7 +71,9 @@ class _CustomerNameAutoCompleteState extends State<CustomerNameAutoComplete> {
       if (!mounted) return;
       showAppSnackBar(context, 'Error saving suggestions: $e', isError: true);
     }
-    print('save done ##############################');
+    if (kDebugMode) {
+      print('save done ##############################');
+    }
   }
 
   // Add new suggestion if it doesn't exist
@@ -78,7 +85,9 @@ class _CustomerNameAutoCompleteState extends State<CustomerNameAutoComplete> {
           _saveSuggestions();
         });
       }
-      print('add done ###################################################');
+      if (kDebugMode) {
+        print('add done ###################################################');
+      }
     } catch (e) {
       showAppSnackBar(context, 'Error adding suggestions: $e', isError: true);
     }
@@ -129,7 +138,9 @@ class _CustomerNameAutoCompleteState extends State<CustomerNameAutoComplete> {
                 _addSuggestion(value);
                 _handleSubmit(value);
               }
-              print('Field submitted #############################');
+              if (kDebugMode) {
+                print('Field submitted #############################');
+              }
             } catch (e) {
               showAppSnackBar(
                 context,
