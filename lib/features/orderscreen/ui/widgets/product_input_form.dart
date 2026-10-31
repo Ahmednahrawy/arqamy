@@ -2,6 +2,7 @@ import 'package:arqamy/features/orderscreen/providers/invoice_provider.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:material_ui/material_ui.dart' as mui;
 
 import 'package:arqamy/core/helpers/spacing.dart';
 import 'package:arqamy/core/widgets/app_snack_bar.dart';
@@ -231,7 +232,7 @@ class _ProductInputFormState extends State<ProductInputForm> {
   }
 
   @override
-  Widget build(BuildContext context) {
+    Widget build(BuildContext context) {
     return Center(
       child: ConstrainedBox(
         constraints: const BoxConstraints(maxWidth: 760),
@@ -248,7 +249,7 @@ class _ProductInputFormState extends State<ProductInputForm> {
                   items: (filter, _) => provider.masterProductList,
                   selectedItem: _selectedProduct,
                   decoratorProps: const DropDownDecoratorProps(
-                    decoration: InputDecoration(
+                    decoration: mui.InputDecoration(
                       labelText: 'المنتج',
                       suffixIcon: Icon(Icons.search),
                       hintText: 'اختر منتج',
