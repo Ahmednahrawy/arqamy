@@ -68,7 +68,7 @@ class _OrderscreenState extends State<Orderscreen>
     _animationController.forward();
   }
 
-  _selectDate(BuildContext context) {
+  void _selectDate(BuildContext context) {
     formattedDate = Utils.formatDate(selectedDate);
     formattedTime = Utils.formateTimeNow(selectedDate);
   }

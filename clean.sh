@@ -11,6 +11,7 @@ flutter pub outdated
 echo "##########upgrading flutter"
 flutter pub upgrade
 flutter pub outdated
+flutter pub upgrade --major-versions
 
 
 echo All commands executed successfully!
