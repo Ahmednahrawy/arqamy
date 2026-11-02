@@ -69,5 +69,10 @@
   "sale": "Sale",
   "storage": "Storage",
   "couldNotSaveInvoice": "Could not save invoice changes",
-  "saveChanges": "Save changes"
+  "saveChanges": "Save changes",
+  "storageInvoiceValue": "Storage value",
+  "storedNetWeight": "Stored net weight",
+  "storageInvoiceCount": "Storage invoices",
+  "storageCurrency": "EGP",
+  "kilograms": "kg"
 }

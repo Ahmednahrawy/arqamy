@@ -7,6 +7,7 @@ import 'package:arqamy/features/customerscreen/ui/widgets/invoice_detail_dialog.
 import 'package:arqamy/features/orderscreen/data/models/invoice.dart';
 import 'package:arqamy/features/orderscreen/providers/invoice_provider.dart';
 import 'package:arqamy/core/widgets/app_snack_bar.dart';
+import 'package:arqamy/generated/l10n.dart';
 import 'package:arqamy/features/settingscreen/providers/invoice_setting_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:arqamy/features/orderscreen/ui/widgets/customer_name.dart';
@@ -160,6 +161,22 @@ class _CustomerScreenState extends State<CustomerScreen> {
         .where((invoice) =>
             invoice.invoiceAction?.replaceAll('\u0640', '').trim() == 'بيع')
         .fold<double>(0, (sum, invoice) => sum + invoice.rest);
+    final storageInvoices = _customerInvoices.where((invoice) =>
+        invoice.invoiceAction?.replaceAll('\u0640', '').trim() == 'تخزين');
+    final storageValue = storageInvoices.fold<double>(
+      0,
+      (sum, invoice) => sum + invoice.totalCost,
+    );
+    final storageNetWeight = storageInvoices.fold<double>(
+      0,
+      (sum, invoice) =>
+          sum +
+          invoice.products.fold<double>(
+            0,
+            (weight, product) => weight + product.netWeight,
+          ),
+    );
+    final storageInvoiceCount = storageInvoices.length;
 
     return Directionality(
       textDirection: TextDirection.rtl,
@@ -194,6 +211,9 @@ class _CustomerScreenState extends State<CustomerScreen> {
                     balance: balance,
                     purchaseBalance: purchaseBalance,
                     salesBalance: salesBalance,
+                    storageValue: storageValue,
+                    storageNetWeight: storageNetWeight,
+                    storageInvoiceCount: storageInvoiceCount,
                   ),
                 if (_customerName != null && _customerName!.isNotEmpty)
                   Padding(
@@ -268,6 +288,9 @@ class _CustomerScreenState extends State<CustomerScreen> {
     required double balance,
     required double purchaseBalance,
     required double salesBalance,
+    required double storageValue,
+    required double storageNetWeight,
+    required int storageInvoiceCount,
   }) {
     final colors = Theme.of(context).colorScheme;
     final semanticColors = AppSemanticColors.of(context);
@@ -365,8 +388,101 @@ class _CustomerScreenState extends State<CustomerScreen> {
               ),
             ],
           ),
+          const SizedBox(height: 12),
+          _buildStorageSummary(
+            value: storageValue,
+            netWeight: storageNetWeight,
+            invoiceCount: storageInvoiceCount,
+          ),
         ],
       ),
+    );
+  }
+
+  Widget _buildStorageSummary({
+    required double value,
+    required double netWeight,
+    required int invoiceCount,
+  }) {
+    final colors = Theme.of(context).colorScheme;
+    final strings = S.of(context);
+
+    return Container(
+      key: const ValueKey('customer-storage-summary'),
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: colors.surfaceContainerHighest.withValues(alpha: 0.45),
+        borderRadius: BorderRadius.circular(14),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Row(
+            children: [
+              Icon(Icons.inventory_2_outlined, color: colors.primary, size: 18),
+              const SizedBox(width: 8),
+              Text(
+                strings.storage,
+                style: Theme.of(context).textTheme.titleSmall,
+              ),
+            ],
+          ),
+          const SizedBox(height: 10),
+          Row(
+            children: [
+              Expanded(
+                child: _buildStorageMetric(
+                  label: strings.storageInvoiceValue,
+                  value:
+                      '${value.toStringAsFixed(2)} ${strings.storageCurrency}',
+                ),
+              ),
+              const SizedBox(width: 8),
+              Expanded(
+                child: _buildStorageMetric(
+                  label: strings.storedNetWeight,
+                  value: '${netWeight.toStringAsFixed(2)} ${strings.kilograms}',
+                ),
+              ),
+              const SizedBox(width: 8),
+              Expanded(
+                child: _buildStorageMetric(
+                  label: strings.storageInvoiceCount,
+                  value: invoiceCount.toString(),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildStorageMetric({required String label, required String value}) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          label,
+          key: ValueKey('storage-metric-label-$label'),
+          maxLines: 2,
+          overflow: TextOverflow.ellipsis,
+          style: TextStyle(
+            color: Theme.of(context).colorScheme.onSurfaceVariant,
+            fontSize: 11,
+          ),
+        ),
+        const SizedBox(height: 3),
+        Text(
+          value,
+          key: ValueKey('storage-metric-value-$label'),
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+          style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                fontWeight: FontWeight.bold,
+              ),
+        ),
+      ],
     );
   }
 

@@ -69,5 +69,10 @@
   "sale": "بيع",
   "storage": "تخزين",
   "couldNotSaveInvoice": "تعذر حفظ تعديلات الفاتورة",
-  "saveChanges": "حفظ التغييرات"
+  "saveChanges": "حفظ التغييرات",
+  "storageInvoiceValue": "قيمة فواتير التخزين",
+  "storedNetWeight": "الوزن الصافي المخزن",
+  "storageInvoiceCount": "عدد فواتير التخزين",
+  "storageCurrency": "ج.م",
+  "kilograms": "كجم"
 }
