@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:arqamy/config/theme/colors.dart';
+import 'package:arqamy/core/helpers/invoice_date_parser.dart';
 import 'package:arqamy/core/services/invoice_service.dart';
 import 'package:arqamy/features/customerscreen/ui/widgets/edit_invoice_dialog.dart';
 import 'package:arqamy/features/customerscreen/ui/widgets/invoice_detail_dialog.dart';
@@ -37,6 +38,7 @@ class _CustomerScreenState extends State<CustomerScreen> {
   String _invoiceSearchQuery = '';
   _InvoiceActionFilter _actionFilter = _InvoiceActionFilter.all;
   _PaymentStatusFilter _paymentStatusFilter = _PaymentStatusFilter.all;
+  DateTimeRange? _invoiceDateRange;
 
   @override
   void initState() {
@@ -113,6 +115,7 @@ class _CustomerScreenState extends State<CustomerScreen> {
       _invoiceSearchQuery = '';
       _actionFilter = _InvoiceActionFilter.all;
       _paymentStatusFilter = _PaymentStatusFilter.all;
+      _invoiceDateRange = null;
       _allInvoices = provider.invoices;
       _customerInvoices = _getCustomerInvoices(provider);
     });
@@ -125,8 +128,54 @@ class _CustomerScreenState extends State<CustomerScreen> {
         return false;
       }
       if (!_matchesActionFilter(invoice)) return false;
-      return _matchesPaymentStatusFilter(invoice);
+      if (!_matchesPaymentStatusFilter(invoice)) return false;
+      return _matchesDateRange(invoice);
     }).toList();
+  }
+
+  List<Invoice> _sortInvoices(List<Invoice> invoices) {
+    final indexedInvoices = invoices.indexed
+        .map(
+          (entry) => (
+            invoice: entry.$2,
+            sourceIndex: entry.$1,
+            dateTime: InvoiceDateParser.parseDateTime(
+              entry.$2.formattedDate,
+              entry.$2.formattedTime,
+            ),
+          ),
+        )
+        .toList();
+    indexedInvoices.sort((first, second) {
+      final firstDateTime = first.dateTime;
+      final secondDateTime = second.dateTime;
+      if (firstDateTime == null && secondDateTime == null) {
+        return first.sourceIndex.compareTo(second.sourceIndex);
+      }
+      if (firstDateTime == null) return 1;
+      if (secondDateTime == null) return -1;
+      final dateOrder = secondDateTime.compareTo(firstDateTime);
+      return dateOrder != 0
+          ? dateOrder
+          : first.sourceIndex.compareTo(second.sourceIndex);
+    });
+    return indexedInvoices.map((entry) => entry.invoice).toList();
+  }
+
+  bool _matchesDateRange(Invoice invoice) {
+    final dateRange = _invoiceDateRange;
+    if (dateRange == null) return true;
+
+    final invoiceDate = InvoiceDateParser.parseDateTime(
+      invoice.formattedDate,
+      invoice.formattedTime,
+    );
+    if (invoiceDate == null) return false;
+
+    final invoiceDay = DateUtils.dateOnly(invoiceDate.toLocal());
+    final startDay = DateUtils.dateOnly(dateRange.start);
+    final endDay = DateUtils.dateOnly(dateRange.end);
+    return !invoiceDay.isBefore(startDay) && !invoiceDay.isAfter(endDay);
   }
 
   bool _matchesInvoiceSearch(Invoice invoice, String query) {
@@ -180,14 +229,17 @@ class _CustomerScreenState extends State<CustomerScreen> {
 
   bool get _hasActiveFilters =>
       _actionFilter != _InvoiceActionFilter.all ||
-      _paymentStatusFilter != _PaymentStatusFilter.all;
+      _paymentStatusFilter != _PaymentStatusFilter.all ||
+      _invoiceDateRange != null;
 
   Widget _buildInvoiceFilters(
     S strings, {
     required _InvoiceActionFilter actionFilterValue,
     required _PaymentStatusFilter paymentStatusFilterValue,
+    required DateTimeRange? invoiceDateRangeValue,
     required ValueChanged<_InvoiceActionFilter> onActionFilterChanged,
     required ValueChanged<_PaymentStatusFilter> onPaymentStatusFilterChanged,
+    required ValueChanged<DateTimeRange?> onInvoiceDateRangeChanged,
   }) {
     final actionFilter = DropdownButtonFormField<_InvoiceActionFilter>(
       key: const ValueKey('invoice-action-filter'),
@@ -258,11 +310,55 @@ class _CustomerScreenState extends State<CustomerScreen> {
       },
     );
 
+    final dateRangeButton = OutlinedButton.icon(
+      key: const ValueKey('invoice-date-range-filter'),
+      onPressed: () async {
+        final selectedRange = await showDateRangePicker(
+          context: context,
+          firstDate: DateTime(1900),
+          lastDate: DateTime(2200),
+          initialDateRange: invoiceDateRangeValue,
+        );
+        if (selectedRange == null) return;
+        onInvoiceDateRangeChanged(
+          DateTimeRange(
+            start: DateUtils.dateOnly(selectedRange.start),
+            end: DateUtils.dateOnly(selectedRange.end),
+          ),
+        );
+      },
+      icon: const Icon(Icons.date_range),
+      label: Text(
+        invoiceDateRangeValue == null
+            ? strings.selectDateRange
+            : '${MaterialLocalizations.of(context).formatMediumDate(invoiceDateRangeValue.start)}'
+                ' – '
+                '${MaterialLocalizations.of(context).formatMediumDate(invoiceDateRangeValue.end)}',
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
+      ),
+    );
+
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         actionFilter,
         const SizedBox(height: 8),
         paymentFilter,
+        const SizedBox(height: 8),
+        Text(strings.dateRangeFilter),
+        const SizedBox(height: 4),
+        dateRangeButton,
+        if (invoiceDateRangeValue != null)
+          Align(
+            alignment: AlignmentDirectional.centerEnd,
+            child: TextButton.icon(
+              key: const ValueKey('clear-invoice-date-range'),
+              onPressed: () => onInvoiceDateRangeChanged(null),
+              icon: const Icon(Icons.clear, size: 18),
+              label: Text(strings.clearDateFilter),
+            ),
+          ),
       ],
     );
   }
@@ -286,6 +382,7 @@ class _CustomerScreenState extends State<CustomerScreen> {
   Future<void> _showInvoiceFilters(S strings) async {
     var actionFilter = _actionFilter;
     var paymentStatusFilter = _paymentStatusFilter;
+    var invoiceDateRange = _invoiceDateRange;
 
     await showDialog<void>(
       context: context,
@@ -298,23 +395,29 @@ class _CustomerScreenState extends State<CustomerScreen> {
               strings,
               actionFilterValue: actionFilter,
               paymentStatusFilterValue: paymentStatusFilter,
+              invoiceDateRangeValue: invoiceDateRange,
               onActionFilterChanged: (filter) {
                 setDialogState(() => actionFilter = filter);
               },
               onPaymentStatusFilterChanged: (filter) {
                 setDialogState(() => paymentStatusFilter = filter);
               },
+              onInvoiceDateRangeChanged: (dateRange) {
+                setDialogState(() => invoiceDateRange = dateRange);
+              },
             ),
           ),
           actions: [
             if (actionFilter != _InvoiceActionFilter.all ||
-                paymentStatusFilter != _PaymentStatusFilter.all)
+                paymentStatusFilter != _PaymentStatusFilter.all ||
+                invoiceDateRange != null)
               TextButton(
                 key: const ValueKey('reset-invoice-filters'),
                 onPressed: () {
                   setDialogState(() {
                     actionFilter = _InvoiceActionFilter.all;
                     paymentStatusFilter = _PaymentStatusFilter.all;
+                    invoiceDateRange = null;
                   });
                 },
                 child: Text(strings.resetInvoiceFilters),
@@ -329,6 +432,7 @@ class _CustomerScreenState extends State<CustomerScreen> {
                 setState(() {
                   _actionFilter = actionFilter;
                   _paymentStatusFilter = paymentStatusFilter;
+                  _invoiceDateRange = invoiceDateRange;
                 });
                 Navigator.pop(dialogContext);
               },
@@ -458,7 +562,7 @@ class _CustomerScreenState extends State<CustomerScreen> {
     final invoices = hasSelectedCustomer
         ? _customerInvoices
         : _allInvoices.reversed.toList();
-    final visibleInvoices = _filterInvoices(invoices);
+    final visibleInvoices = _filterInvoices(_sortInvoices(invoices));
     final hasInvoiceSearchQuery =
         _normalizeSearchText(_invoiceSearchQuery).isNotEmpty;
     final hasActiveFilters = _hasActiveFilters;

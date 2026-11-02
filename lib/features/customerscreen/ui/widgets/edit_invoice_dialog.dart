@@ -1,4 +1,5 @@
 import 'package:arqamy/config/theme/colors.dart';
+import 'package:arqamy/core/helpers/invoice_date_parser.dart';
 import 'package:arqamy/core/widgets/app_snack_bar.dart';
 import 'package:arqamy/features/orderscreen/data/models/invoice.dart';
 import 'package:arqamy/features/orderscreen/data/models/product_model.dart';
@@ -113,36 +114,11 @@ class _EditInvoiceDialogState extends State<EditInvoiceDialog> {
   }
 
   DateTime? _parseStoredDate(String value) {
-    final isoDate = DateTime.tryParse(value);
-    if (isoDate != null) return isoDate;
-    for (final locale in const ['ar', 'en']) {
-      try {
-        return intl.DateFormat.yMMMd(locale).parseStrict(value);
-      } on FormatException {
-        // Try the other supported persisted locale.
-      }
-    }
-    return null;
+    return InvoiceDateParser.parseDate(value);
   }
 
   TimeOfDay? _parseStoredTime(String value) {
-    for (final locale in const ['ar', 'en']) {
-      for (final format in [
-        intl.DateFormat.Hm(locale),
-        intl.DateFormat.jm(locale),
-      ]) {
-        try {
-          final parsed = format.parseStrict(value);
-          return TimeOfDay(hour: parsed.hour, minute: parsed.minute);
-        } on FormatException {
-          // Try the other supported locale and time format.
-        }
-      }
-    }
-    final isoTime = DateTime.tryParse('1970-01-01T$value');
-    return isoTime == null
-        ? null
-        : TimeOfDay(hour: isoTime.hour, minute: isoTime.minute);
+    return InvoiceDateParser.parseTime(value);
   }
 
   Future<void> _selectDate() async {

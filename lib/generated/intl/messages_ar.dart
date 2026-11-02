@@ -66,6 +66,11 @@ class MessageLookup extends MessageLookupByLibrary {
       "أضف منتجًا واحدًا على الأقل قبل الحفظ.",
     ),
     "invoiceNumber": MessageLookupByLibrary.simpleMessage("فاتورة #"),
+    "dateRangeFilter": MessageLookupByLibrary.simpleMessage("النطاق الزمني"),
+    "selectDateRange": MessageLookupByLibrary.simpleMessage("تحديد نطاق زمني"),
+    "clearDateFilter": MessageLookupByLibrary.simpleMessage(
+      "مسح تصفية التاريخ",
+    ),
     "invoiceTotal": MessageLookupByLibrary.simpleMessage("إجمالي الفاتورة"),
     "invoiceType": MessageLookupByLibrary.simpleMessage("نوع العملية"),
     "invoice_management": MessageLookupByLibrary.simpleMessage(

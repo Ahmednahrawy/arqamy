@@ -66,6 +66,13 @@ class MessageLookup extends MessageLookupByLibrary {
       "Add at least one product before saving.",
     ),
     "invoiceNumber": MessageLookupByLibrary.simpleMessage("Invoice #"),
+    "dateRangeFilter": MessageLookupByLibrary.simpleMessage("Date range"),
+    "selectDateRange": MessageLookupByLibrary.simpleMessage(
+      "Select date range",
+    ),
+    "clearDateFilter": MessageLookupByLibrary.simpleMessage(
+      "Clear date filter",
+    ),
     "invoiceTotal": MessageLookupByLibrary.simpleMessage("Invoice total"),
     "invoiceType": MessageLookupByLibrary.simpleMessage("Invoice type"),
     "invoice_management": MessageLookupByLibrary.simpleMessage(

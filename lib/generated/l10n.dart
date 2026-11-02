@@ -299,6 +299,24 @@ class S {
     return Intl.message('Invoice #', name: 'invoiceNumber', desc: '', args: []);
   }
 
+  /// `Date range`
+  String get dateRangeFilter {
+    return Intl.message('Date range',
+        name: 'dateRangeFilter', desc: '', args: []);
+  }
+
+  /// `Select date range`
+  String get selectDateRange {
+    return Intl.message('Select date range',
+        name: 'selectDateRange', desc: '', args: []);
+  }
+
+  /// `Clear date filter`
+  String get clearDateFilter {
+    return Intl.message('Clear date filter',
+        name: 'clearDateFilter', desc: '', args: []);
+  }
+
   /// `Payment status`
   String get paymentStatusFilter {
     return Intl.message(

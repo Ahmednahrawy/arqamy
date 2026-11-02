@@ -6,6 +6,7 @@ import 'package:arqamy/features/settingscreen/providers/invoice_setting_provider
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:intl/intl.dart' as intl;
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:arqamy/generated/l10n.dart';
@@ -41,6 +42,8 @@ Invoice _invoice({
   double paid = 0,
   List<Product>? products,
   String invoiceSerial = 'legacy-serial',
+  String formattedDate = 'Oct 28, 2026',
+  String formattedTime = '12:34',
 }) {
   return Invoice(
     id: id,
@@ -58,8 +61,8 @@ Invoice _invoice({
     totalCost: totalCost,
     paid: paid,
     rest: rest,
-    formattedDate: 'Oct 28, 2026',
-    formattedTime: '12:34',
+    formattedDate: formattedDate,
+    formattedTime: formattedTime,
     invoiceAction: action,
     invoiceSerial: invoiceSerial,
   );
@@ -117,6 +120,53 @@ Future<void> _resetInvoiceFilters(WidgetTester tester) async {
   await tester.tap(find.byKey(const ValueKey('show-invoice-filters')));
   await tester.pumpAndSettle();
   await tester.tap(find.byKey(const ValueKey('reset-invoice-filters')));
+  await tester.pumpAndSettle();
+  await tester.tap(find.byKey(const ValueKey('apply-invoice-filters')));
+  await tester.pumpAndSettle();
+}
+
+Future<void> _selectInvoiceDateRange(
+  WidgetTester tester, {
+  required DateTime start,
+  required DateTime end,
+}) async {
+  await tester.tap(find.byKey(const ValueKey('show-invoice-filters')));
+  await tester.pumpAndSettle();
+  await tester.tap(find.byKey(const ValueKey('invoice-date-range-filter')));
+  await tester.pumpAndSettle();
+  final picker = find.byType(DateRangePickerDialog);
+  await tester.tap(
+    find.descendant(
+      of: picker,
+      matching: find.byIcon(Icons.edit_outlined),
+    ),
+  );
+  await tester.pumpAndSettle();
+
+  final dateFields =
+      find.descendant(of: picker, matching: find.byType(TextField));
+  expect(dateFields, findsNWidgets(2));
+  final localizations =
+      MaterialLocalizations.of(tester.element(dateFields.first));
+  await tester.enterText(
+    dateFields.at(0),
+    localizations.formatCompactDate(start),
+  );
+  await tester.enterText(
+    dateFields.at(1),
+    localizations.formatCompactDate(end),
+  );
+  await tester.pumpAndSettle();
+  await tester.tap(find.text(localizations.okButtonLabel));
+  await tester.pumpAndSettle();
+  await tester.tap(find.byKey(const ValueKey('apply-invoice-filters')));
+  await tester.pumpAndSettle();
+}
+
+Future<void> _clearInvoiceDateRange(WidgetTester tester) async {
+  await tester.tap(find.byKey(const ValueKey('show-invoice-filters')));
+  await tester.pumpAndSettle();
+  await tester.tap(find.byKey(const ValueKey('clear-invoice-date-range')));
   await tester.pumpAndSettle();
   await tester.tap(find.byKey(const ValueKey('apply-invoice-filters')));
   await tester.pumpAndSettle();
@@ -1629,5 +1679,398 @@ void main() {
     expect(find.text('تعديل'), findsOneWidget);
     expect(find.text('مشاركة'), findsOneWidget);
     expect(find.text('حذف'), findsOneWidget);
+  });
+
+  testWidgets(
+      'invoices sort chronologically across formats and keep ties stable',
+      (tester) async {
+    _useTallViewport(tester);
+    SharedPreferences.setMockInitialValues({});
+    final provider = InvoiceProvider();
+    final arabicDate =
+        intl.DateFormat.yMMMd('ar').format(DateTime(2026, 10, 29));
+    await provider.saveInvoice(
+      _invoice(
+        id: 'tie-arabic',
+        invoiceSerial: 'TIE-AR',
+        formattedDate: arabicDate,
+        formattedTime: '14:00',
+      ),
+    );
+    await provider.saveInvoice(
+      _invoice(
+        id: 'tie-english',
+        invoiceSerial: 'TIE-EN',
+        formattedDate: 'Oct 29, 2026',
+        formattedTime: '14:00',
+      ),
+    );
+    await provider.saveInvoice(
+      _invoice(
+        id: 'date-newest',
+        invoiceSerial: 'SORT-NEW',
+        formattedDate: '2026-10-30',
+        formattedTime: '08:00',
+      ),
+    );
+    await provider.saveInvoice(
+      _invoice(
+        id: 'date-oldest',
+        invoiceSerial: 'SORT-OLD',
+        formattedDate: 'Oct 28, 2026',
+        formattedTime: '12:34',
+      ),
+    );
+    await provider.saveInvoice(
+      _invoice(
+        id: 'date-invalid',
+        invoiceSerial: 'SORT-INVALID',
+        formattedDate: '',
+        formattedTime: '',
+      ),
+    );
+    await provider.saveInvoice(
+      _invoice(
+        id: 'date-malformed',
+        invoiceSerial: 'SORT-MALFORMED',
+        formattedDate: '2026-02-30',
+        formattedTime: '12:00',
+      ),
+    );
+
+    await tester.pumpWidget(_customerScreen(provider));
+    await tester.pumpAndSettle();
+    final orderedSerials = [
+      'SORT-NEW',
+      'TIE-EN',
+      'TIE-AR',
+      'SORT-OLD',
+      'SORT-MALFORMED',
+      'SORT-INVALID',
+    ];
+    final positions = orderedSerials
+        .map((serial) => tester.getTopLeft(find.text('فاتورة #$serial')).dy)
+        .toList();
+    for (var index = 1; index < positions.length; index++) {
+      expect(positions[index - 1], lessThan(positions[index]));
+    }
+  });
+
+  testWidgets(
+      'date range includes boundary dates and clearing restores invalid dates',
+      (tester) async {
+    _useTallViewport(tester);
+    SharedPreferences.setMockInitialValues({});
+    final provider = InvoiceProvider();
+    for (final invoice in [
+      _invoice(
+        id: 'range-start',
+        invoiceSerial: 'RANGE-START',
+        formattedDate: '2026-10-10',
+        formattedTime: '23:59',
+      ),
+      _invoice(
+        id: 'range-end',
+        invoiceSerial: 'RANGE-END',
+        formattedDate: 'Oct 20, 2026',
+        formattedTime: '00:01',
+      ),
+      _invoice(
+        id: 'range-before',
+        invoiceSerial: 'RANGE-BEFORE',
+        formattedDate: '2026-10-09',
+      ),
+      _invoice(
+        id: 'range-after',
+        invoiceSerial: 'RANGE-AFTER',
+        formattedDate: 'Oct 21, 2026',
+      ),
+      _invoice(
+        id: 'range-invalid',
+        invoiceSerial: 'RANGE-INVALID',
+        formattedDate: '',
+        formattedTime: '',
+      ),
+    ]) {
+      await provider.saveInvoice(invoice);
+    }
+    await tester.pumpWidget(
+      _customerScreen(provider, locale: const Locale('en')),
+    );
+    await tester.pumpAndSettle();
+
+    await _selectInvoiceDateRange(
+      tester,
+      start: DateTime(2026, 10, 10),
+      end: DateTime(2026, 10, 20),
+    );
+
+    expect(find.text('Invoice #RANGE-START'), findsOneWidget);
+    expect(find.text('Invoice #RANGE-END'), findsOneWidget);
+    expect(find.text('Invoice #RANGE-BEFORE'), findsNothing);
+    expect(find.text('Invoice #RANGE-AFTER'), findsNothing);
+    expect(find.text('Invoice #RANGE-INVALID'), findsNothing);
+
+    await _clearInvoiceDateRange(tester);
+    for (final serial in [
+      'RANGE-START',
+      'RANGE-END',
+      'RANGE-BEFORE',
+      'RANGE-AFTER',
+      'RANGE-INVALID',
+    ]) {
+      expect(find.text('Invoice #$serial'), findsOneWidget);
+    }
+  });
+
+  testWidgets('date picker rejects reversed date ranges', (tester) async {
+    _useTallViewport(tester);
+    SharedPreferences.setMockInitialValues({});
+    await tester.pumpWidget(_customerScreen(InvoiceProvider()));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const ValueKey('show-invoice-filters')));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const ValueKey('invoice-date-range-filter')));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byIcon(Icons.edit_outlined));
+    await tester.pumpAndSettle();
+
+    final picker = find.byType(DateRangePickerDialog);
+    final dateFields =
+        find.descendant(of: picker, matching: find.byType(TextField));
+    final localizations =
+        MaterialLocalizations.of(tester.element(dateFields.first));
+    await tester.enterText(
+      dateFields.at(0),
+      localizations.formatCompactDate(DateTime(2026, 10, 20)),
+    );
+    await tester.enterText(
+      dateFields.at(1),
+      localizations.formatCompactDate(DateTime(2026, 10, 10)),
+    );
+    await tester.pumpAndSettle();
+    await tester.tap(find.text(localizations.okButtonLabel));
+    await tester.pumpAndSettle();
+
+    expect(picker, findsOneWidget);
+    await tester.tap(find.text(localizations.cancelButtonLabel));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('إلغاء'));
+    await tester.pumpAndSettle();
+    expect(find.text('تحديد نطاق زمني'), findsNothing);
+  });
+
+  testWidgets('date-range filtering uses local day for zoned ISO timestamps',
+      (tester) async {
+    _useTallViewport(tester);
+    SharedPreferences.setMockInitialValues({});
+    final provider = InvoiceProvider();
+    const zonedTimestamp = '2026-10-10T00:30:00+14:00';
+    final localDay = DateUtils.dateOnly(
+      DateTime.parse(zonedTimestamp).toLocal(),
+    );
+    String isoDate(DateTime date) => '${date.year.toString().padLeft(4, '0')}-'
+        '${date.month.toString().padLeft(2, '0')}-'
+        '${date.day.toString().padLeft(2, '0')}';
+    await provider.saveInvoice(
+      _invoice(
+        id: 'zoned-date',
+        invoiceSerial: 'ZONED-DATE',
+        formattedDate: zonedTimestamp,
+      ),
+    );
+    await provider.saveInvoice(
+      _invoice(
+        id: 'zoned-local-day',
+        invoiceSerial: 'ZONED-LOCAL-DAY',
+        formattedDate: isoDate(localDay),
+      ),
+    );
+    await provider.saveInvoice(
+      _invoice(
+        id: 'zoned-wall-day',
+        invoiceSerial: 'ZONED-WALL-DAY',
+        formattedDate: '2026-10-10',
+      ),
+    );
+
+    await tester.pumpWidget(
+      _customerScreen(provider, locale: const Locale('en')),
+    );
+    await tester.pumpAndSettle();
+    await _selectInvoiceDateRange(
+      tester,
+      start: localDay,
+      end: localDay,
+    );
+
+    expect(find.text('Invoice #ZONED-DATE'), findsOneWidget);
+    expect(find.text('Invoice #ZONED-LOCAL-DAY'), findsOneWidget);
+    if (localDay != DateTime(2026, 10, 10)) {
+      expect(find.text('Invoice #ZONED-WALL-DAY'), findsNothing);
+    }
+  });
+
+  testWidgets(
+      'date range combines with other filters and provider updates, not summaries',
+      (tester) async {
+    _useTallViewport(tester);
+    SharedPreferences.setMockInitialValues({});
+    final provider = InvoiceProvider();
+    final partialWithinRange = _invoice(
+      id: 'date-filter-within',
+      customerName: 'Customer',
+      action: 'بيع',
+      totalCost: 20,
+      paid: 5,
+      rest: 15,
+      invoiceSerial: 'DATE-WITHIN',
+      formattedDate: '2026-10-15',
+      products: [
+        Product(
+          name: 'Brown Rice',
+          weight: 2,
+          packageWeight: 0,
+          numberPackage: 0,
+          price: 10,
+        ),
+      ],
+    );
+    final partialOutsideRange = _invoice(
+      id: 'date-filter-outside',
+      customerName: 'Customer',
+      action: 'بيع',
+      totalCost: 20,
+      paid: 5,
+      rest: 15,
+      invoiceSerial: 'DATE-OUTSIDE',
+      formattedDate: '2026-10-25',
+      products: [
+        Product(
+          name: 'Brown Rice',
+          weight: 2,
+          packageWeight: 0,
+          numberPackage: 0,
+          price: 10,
+        ),
+      ],
+    );
+    await provider.saveInvoice(partialWithinRange);
+    await provider.saveInvoice(partialOutsideRange);
+    await provider.saveInvoice(
+      _invoice(
+        id: 'date-filter-storage',
+        customerName: 'Customer',
+        action: 'تخزين',
+        totalCost: 40,
+        paid: 0,
+        rest: 40,
+        invoiceSerial: 'DATE-STORAGE',
+        formattedDate: '2026-10-16',
+      ),
+    );
+
+    await tester.pumpWidget(_customerScreen(provider));
+    await tester.pumpAndSettle();
+    await tester.enterText(find.byType(TextFormField), 'Customer');
+    await tester.testTextInput.receiveAction(TextInputAction.done);
+    await tester.pumpAndSettle();
+
+    await _selectInvoiceDateRange(
+      tester,
+      start: DateTime(2026, 10, 10),
+      end: DateTime(2026, 10, 20),
+    );
+    await _selectFilterOption(
+      tester,
+      key: 'invoice-action-filter',
+      option: 'بيع',
+    );
+    await _selectFilterOption(
+      tester,
+      key: 'invoice-payment-status-filter',
+      option: 'مدفوعة جزئياً',
+    );
+    await tester.enterText(
+      find.byKey(const ValueKey('customer-invoice-search')),
+      'brown',
+    );
+    await tester.pumpAndSettle();
+
+    expect(find.text('فاتورة #DATE-WITHIN'), findsOneWidget);
+    expect(find.text('فاتورة #DATE-OUTSIDE'), findsNothing);
+    expect(find.text('فاتورة #DATE-STORAGE'), findsNothing);
+    expect(find.text('صافي مستحق لك'), findsOneWidget);
+    expect(find.text('30.00 ج.م'), findsNWidgets(2));
+    final storageSummary = find.byKey(
+      const ValueKey('customer-storage-summary'),
+    );
+    expect(
+      find.descendant(
+        of: storageSummary,
+        matching: find.text('40.00 ج.م'),
+      ),
+      findsOneWidget,
+    );
+
+    await provider.updateInvoice(
+      _invoice(
+        id: partialOutsideRange.id,
+        customerName: 'Customer',
+        action: 'بيع',
+        totalCost: 20,
+        paid: 5,
+        rest: 15,
+        invoiceSerial: partialOutsideRange.invoiceSerial,
+        formattedDate: '2026-10-18',
+        products: partialOutsideRange.products,
+      ),
+    );
+    await tester.pumpAndSettle();
+    expect(find.text('فاتورة #DATE-OUTSIDE'), findsOneWidget);
+  });
+
+  testWidgets('date filters reset when switching customers', (tester) async {
+    _useTallViewport(tester);
+    SharedPreferences.setMockInitialValues({});
+    final provider = InvoiceProvider();
+    await provider.saveInvoice(
+      _invoice(
+        id: 'switch-customer-one',
+        customerName: 'Customer One',
+        invoiceSerial: 'SWITCH-ONE',
+        formattedDate: '2026-10-15',
+      ),
+    );
+    await provider.saveInvoice(
+      _invoice(
+        id: 'switch-customer-two',
+        customerName: 'Customer Two',
+        invoiceSerial: 'SWITCH-TWO',
+        formattedDate: '2026-10-15',
+      ),
+    );
+
+    await tester.pumpWidget(_customerScreen(provider));
+    await tester.pumpAndSettle();
+    await tester.enterText(find.byType(TextFormField), 'Customer One');
+    await tester.testTextInput.receiveAction(TextInputAction.done);
+    await tester.pumpAndSettle();
+    await _selectInvoiceDateRange(
+      tester,
+      start: DateTime(2026, 10, 10),
+      end: DateTime(2026, 10, 20),
+    );
+
+    await tester.enterText(find.byType(TextFormField), 'Customer Two');
+    await tester.testTextInput.receiveAction(TextInputAction.done);
+    await tester.pumpAndSettle();
+    expect(find.text('فاتورة #SWITCH-TWO'), findsOneWidget);
+
+    await tester.tap(find.byKey(const ValueKey('show-invoice-filters')));
+    await tester.pumpAndSettle();
+    expect(find.text('تحديد نطاق زمني'), findsOneWidget);
+    expect(
+        find.byKey(const ValueKey('clear-invoice-date-range')), findsNothing);
   });
 }
