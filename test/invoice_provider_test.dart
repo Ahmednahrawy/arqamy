@@ -788,4 +788,47 @@ void main() {
     expect(balanceWithoutStorage, 300);
     expect(balanceWithStorage, balanceWithoutStorage);
   });
+
+  test('customer invoice lookup matches normalized names exactly', () async {
+    SharedPreferences.setMockInitialValues({});
+    final provider = InvoiceProvider();
+    final exactCustomer = _invoice(
+      id: 'exact-customer',
+      serial: '1001',
+      customerName: '  ACME   Trading  ',
+    );
+    final similarCustomer = _invoice(
+      id: 'similar-customer',
+      serial: '1002',
+      customerName: 'Acme Trading Company',
+    );
+    final differentCustomer = _invoice(
+      id: 'different-customer',
+      serial: '1003',
+      customerName: 'Other Customer',
+    );
+    await provider.saveInvoice(exactCustomer);
+    await provider.saveInvoice(similarCustomer);
+    await provider.saveInvoice(differentCustomer);
+
+    expect(
+      provider
+          .getInvoicesByCustomer(' acme trading ')
+          .map((invoice) => invoice.id),
+      ['exact-customer'],
+    );
+    expect(
+      provider.getInvoicesByCustomer('ACME   TRADING').single.customerName,
+      '  ACME   Trading  ',
+    );
+    expect(provider.getInvoicesByCustomer('Acme'), isEmpty);
+    expect(
+      provider
+          .getInvoicesByCustomer('acme trading company')
+          .map((invoice) => invoice.id),
+      ['similar-customer'],
+    );
+    expect(provider.getInvoicesByCustomer('Missing Customer'), isEmpty);
+    expect(provider.getInvoicesByCustomer('   '), isEmpty);
+  });
 }
