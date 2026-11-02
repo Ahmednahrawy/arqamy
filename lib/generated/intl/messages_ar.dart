@@ -82,6 +82,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "resetInvoiceFilters": MessageLookupByLibrary.simpleMessage(
       "إعادة ضبط عوامل التصفية",
     ),
+    "invoiceFilters": MessageLookupByLibrary.simpleMessage("عوامل التصفية"),
+    "applyFilters": MessageLookupByLibrary.simpleMessage("تطبيق"),
     "noInvoicesMatchFilters": MessageLookupByLibrary.simpleMessage(
       "لا توجد فواتير تطابق البحث أو عوامل التصفية",
     ),

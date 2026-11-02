@@ -102,11 +102,23 @@ Future<void> _selectFilterOption(
   required String key,
   required String option,
 }) async {
+  await tester.tap(find.byKey(const ValueKey('show-invoice-filters')));
+  await tester.pumpAndSettle();
   final dropdown = find.byKey(ValueKey(key));
-  await tester.ensureVisible(dropdown);
   await tester.tap(dropdown);
   await tester.pumpAndSettle();
   await tester.tap(find.text(option).last);
+  await tester.pumpAndSettle();
+  await tester.tap(find.byKey(const ValueKey('apply-invoice-filters')));
+  await tester.pumpAndSettle();
+}
+
+Future<void> _resetInvoiceFilters(WidgetTester tester) async {
+  await tester.tap(find.byKey(const ValueKey('show-invoice-filters')));
+  await tester.pumpAndSettle();
+  await tester.tap(find.byKey(const ValueKey('reset-invoice-filters')));
+  await tester.pumpAndSettle();
+  await tester.tap(find.byKey(const ValueKey('apply-invoice-filters')));
   await tester.pumpAndSettle();
 }
 
@@ -772,8 +784,15 @@ void main() {
       find.text('Search by serial or product name'),
       findsOneWidget,
     );
+    expect(find.text('Invoice action'), findsNothing);
+    expect(find.text('Payment status'), findsNothing);
+    await tester.tap(find.byKey(const ValueKey('show-invoice-filters')));
+    await tester.pumpAndSettle();
+    expect(find.text('Invoice filters'), findsOneWidget);
     expect(find.text('Invoice action'), findsOneWidget);
     expect(find.text('Payment status'), findsOneWidget);
+    await tester.tap(find.text('Cancel'));
+    await tester.pumpAndSettle();
     await tester.enterText(
       find.byKey(const ValueKey('customer-invoice-search')),
       'missing',
@@ -881,6 +900,10 @@ void main() {
 
     await tester.pumpWidget(_customerScreen(provider));
     await tester.pumpAndSettle();
+    expect(find.byKey(const ValueKey('invoice-action-filter')), findsNothing);
+    expect(find.byKey(const ValueKey('invoice-payment-status-filter')),
+        findsNothing);
+    expect(find.byKey(const ValueKey('show-invoice-filters')), findsOneWidget);
     for (final serial in ['ACT-1', 'ACT-2', 'ACT-3', 'ACT-4', 'ACT-5']) {
       expect(find.text('فاتورة #$serial'), findsOneWidget);
     }
@@ -909,8 +932,7 @@ void main() {
     expect(find.text('فاتورة #ACT-3'), findsOneWidget);
     expect(find.text('فاتورة #ACT-2'), findsNothing);
 
-    await tester.tap(find.byKey(const ValueKey('reset-invoice-filters')));
-    await tester.pumpAndSettle();
+    await _resetInvoiceFilters(tester);
     for (final serial in ['ACT-1', 'ACT-2', 'ACT-3', 'ACT-4', 'ACT-5']) {
       expect(find.text('فاتورة #$serial'), findsOneWidget);
     }
@@ -1098,8 +1120,7 @@ void main() {
     expect(find.text('فاتورة #COMB-4'), findsOneWidget);
     expect(find.text('فاتورة #COMB-2'), findsNothing);
 
-    await tester.tap(find.byKey(const ValueKey('reset-invoice-filters')));
-    await tester.pumpAndSettle();
+    await _resetInvoiceFilters(tester);
     for (final serial in ['COMB-1', 'COMB-2', 'COMB-3', 'COMB-4']) {
       expect(find.text('فاتورة #$serial'), findsOneWidget);
     }

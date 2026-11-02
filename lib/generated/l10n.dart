@@ -344,6 +344,21 @@ class S {
     );
   }
 
+  /// `Invoice filters`
+  String get invoiceFilters {
+    return Intl.message(
+      'Invoice filters',
+      name: 'invoiceFilters',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Apply`
+  String get applyFilters {
+    return Intl.message('Apply', name: 'applyFilters', desc: '', args: []);
+  }
+
   /// `No invoices match the search or filters`
   String get noInvoicesMatchFilters {
     return Intl.message(

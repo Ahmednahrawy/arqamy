@@ -88,5 +88,7 @@
   "partiallyPaidStatus": "Partially paid",
   "unpaidStatus": "Unpaid",
   "resetInvoiceFilters": "Reset filters",
+  "invoiceFilters": "Invoice filters",
+  "applyFilters": "Apply",
   "noInvoicesMatchFilters": "No invoices match the search or filters"
 }

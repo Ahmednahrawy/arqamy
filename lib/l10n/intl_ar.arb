@@ -88,5 +88,7 @@
   "partiallyPaidStatus": "مدفوعة جزئياً",
   "unpaidStatus": "غير مدفوعة",
   "resetInvoiceFilters": "إعادة ضبط عوامل التصفية",
+  "invoiceFilters": "عوامل التصفية",
+  "applyFilters": "تطبيق",
   "noInvoicesMatchFilters": "لا توجد فواتير تطابق البحث أو عوامل التصفية"
 }

@@ -80,6 +80,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "partiallyPaidStatus": MessageLookupByLibrary.simpleMessage("Partially paid"),
     "unpaidStatus": MessageLookupByLibrary.simpleMessage("Unpaid"),
     "resetInvoiceFilters": MessageLookupByLibrary.simpleMessage("Reset filters"),
+    "invoiceFilters": MessageLookupByLibrary.simpleMessage("Invoice filters"),
+    "applyFilters": MessageLookupByLibrary.simpleMessage("Apply"),
     "noInvoicesMatchFilters": MessageLookupByLibrary.simpleMessage(
       "No invoices match the search or filters",
     ),

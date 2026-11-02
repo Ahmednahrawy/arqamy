@@ -168,10 +168,16 @@ class _CustomerScreenState extends State<CustomerScreen> {
       _actionFilter != _InvoiceActionFilter.all ||
       _paymentStatusFilter != _PaymentStatusFilter.all;
 
-  Widget _buildInvoiceFilters(S strings, double availableWidth) {
+  Widget _buildInvoiceFilters(
+    S strings, {
+    required _InvoiceActionFilter actionFilterValue,
+    required _PaymentStatusFilter paymentStatusFilterValue,
+    required ValueChanged<_InvoiceActionFilter> onActionFilterChanged,
+    required ValueChanged<_PaymentStatusFilter> onPaymentStatusFilterChanged,
+  }) {
     final actionFilter = DropdownButtonFormField<_InvoiceActionFilter>(
       key: const ValueKey('invoice-action-filter'),
-      initialValue: _actionFilter,
+      initialValue: actionFilterValue,
       isExpanded: true,
       decoration: InputDecoration(
         labelText: strings.invoiceActionFilter,
@@ -200,12 +206,12 @@ class _CustomerScreenState extends State<CustomerScreen> {
           .toList(),
       onChanged: (filter) {
         if (filter == null) return;
-        setState(() => _actionFilter = filter);
+        onActionFilterChanged(filter);
       },
     );
     final paymentFilter = DropdownButtonFormField<_PaymentStatusFilter>(
       key: const ValueKey('invoice-payment-status-filter'),
-      initialValue: _paymentStatusFilter,
+      initialValue: paymentStatusFilterValue,
       isExpanded: true,
       decoration: InputDecoration(
         labelText: strings.paymentStatusFilter,
@@ -234,19 +240,10 @@ class _CustomerScreenState extends State<CustomerScreen> {
           .toList(),
       onChanged: (filter) {
         if (filter == null) return;
-        setState(() => _paymentStatusFilter = filter);
+        onPaymentStatusFilterChanged(filter);
       },
     );
 
-    if (availableWidth >= 520) {
-      return Row(
-        children: [
-          Expanded(child: actionFilter),
-          const SizedBox(width: 8),
-          Expanded(child: paymentFilter),
-        ],
-      );
-    }
     return Column(
       children: [
         actionFilter,
@@ -272,11 +269,61 @@ class _CustomerScreenState extends State<CustomerScreen> {
         _PaymentStatusFilter.unpaid => strings.unpaidStatus,
       };
 
-  void _resetFilters() {
-    setState(() {
-      _actionFilter = _InvoiceActionFilter.all;
-      _paymentStatusFilter = _PaymentStatusFilter.all;
-    });
+  Future<void> _showInvoiceFilters(S strings) async {
+    var actionFilter = _actionFilter;
+    var paymentStatusFilter = _paymentStatusFilter;
+
+    await showDialog<void>(
+      context: context,
+      builder: (dialogContext) => StatefulBuilder(
+        builder: (context, setDialogState) => AlertDialog(
+          title: Text(strings.invoiceFilters),
+          content: SizedBox(
+            width: 360,
+            child: _buildInvoiceFilters(
+              strings,
+              actionFilterValue: actionFilter,
+              paymentStatusFilterValue: paymentStatusFilter,
+              onActionFilterChanged: (filter) {
+                setDialogState(() => actionFilter = filter);
+              },
+              onPaymentStatusFilterChanged: (filter) {
+                setDialogState(() => paymentStatusFilter = filter);
+              },
+            ),
+          ),
+          actions: [
+            if (actionFilter != _InvoiceActionFilter.all ||
+                paymentStatusFilter != _PaymentStatusFilter.all)
+              TextButton(
+                key: const ValueKey('reset-invoice-filters'),
+                onPressed: () {
+                  setDialogState(() {
+                    actionFilter = _InvoiceActionFilter.all;
+                    paymentStatusFilter = _PaymentStatusFilter.all;
+                  });
+                },
+                child: Text(strings.resetInvoiceFilters),
+              ),
+            TextButton(
+              onPressed: () => Navigator.pop(dialogContext),
+              child: Text(strings.cancel),
+            ),
+            FilledButton(
+              key: const ValueKey('apply-invoice-filters'),
+              onPressed: () {
+                setState(() {
+                  _actionFilter = actionFilter;
+                  _paymentStatusFilter = paymentStatusFilter;
+                });
+                Navigator.pop(dialogContext);
+              },
+              child: Text(strings.applyFilters),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
   String _normalizeSearchText(String value) =>
@@ -489,48 +536,53 @@ class _CustomerScreenState extends State<CustomerScreen> {
                     ),
                     Padding(
                       padding: const EdgeInsets.only(bottom: 8),
-                      child: TextField(
-                        key: const ValueKey('customer-invoice-search'),
-                        controller: _invoiceSearchController,
-                        onChanged: _handleInvoiceSearchChanged,
-                        textInputAction: TextInputAction.search,
-                        decoration: InputDecoration(
-                          hintText: hasSelectedCustomer
-                              ? strings.customerInvoiceSearchHint
-                              : strings.allInvoicesSearchHint,
-                          prefixIcon: const Icon(Icons.search),
-                          suffixIcon: _invoiceSearchQuery.isEmpty
-                              ? null
-                              : IconButton(
-                                  key: const ValueKey('clear-invoice-search'),
-                                  tooltip: strings.clearInvoiceSearch,
-                                  onPressed: _clearInvoiceSearch,
-                                  icon: const Icon(Icons.clear),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: TextField(
+                              key: const ValueKey('customer-invoice-search'),
+                              controller: _invoiceSearchController,
+                              onChanged: _handleInvoiceSearchChanged,
+                              textInputAction: TextInputAction.search,
+                              decoration: InputDecoration(
+                                hintText: hasSelectedCustomer
+                                    ? strings.customerInvoiceSearchHint
+                                    : strings.allInvoicesSearchHint,
+                                prefixIcon: const Icon(Icons.search),
+                                suffixIcon: _invoiceSearchQuery.isEmpty
+                                    ? null
+                                    : IconButton(
+                                        key: const ValueKey(
+                                          'clear-invoice-search',
+                                        ),
+                                        tooltip: strings.clearInvoiceSearch,
+                                        onPressed: _clearInvoiceSearch,
+                                        icon: const Icon(Icons.clear),
+                                      ),
+                                isDense: true,
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(14),
                                 ),
-                          isDense: true,
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(14),
+                              ),
+                            ),
                           ),
-                        ),
+                          const SizedBox(width: 8),
+                          IconButton(
+                            key: const ValueKey('show-invoice-filters'),
+                            tooltip: strings.invoiceFilters,
+                            style: IconButton.styleFrom(
+                              backgroundColor: hasActiveFilters
+                                  ? colors.primaryContainer
+                                  : null,
+                              foregroundColor:
+                                  hasActiveFilters ? colors.primary : null,
+                            ),
+                            onPressed: () => _showInvoiceFilters(strings),
+                            icon: const Icon(Icons.filter_list),
+                          ),
+                        ],
                       ),
                     ),
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(4, 0, 4, 8),
-                      child: LayoutBuilder(
-                        builder: (context, constraints) =>
-                            _buildInvoiceFilters(strings, constraints.maxWidth),
-                      ),
-                    ),
-                    if (hasActiveFilters)
-                      Align(
-                        alignment: AlignmentDirectional.centerEnd,
-                        child: TextButton.icon(
-                          key: const ValueKey('reset-invoice-filters'),
-                          onPressed: _resetFilters,
-                          icon: const Icon(Icons.filter_alt_off_outlined),
-                          label: Text(strings.resetInvoiceFilters),
-                        ),
-                      ),
                   ]),
                 ),
               ),
