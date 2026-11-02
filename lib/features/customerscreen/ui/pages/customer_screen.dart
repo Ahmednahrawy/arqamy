@@ -263,137 +263,148 @@ class _CustomerScreenState extends State<CustomerScreen> {
           title: const Text('موردين و عملاء'),
         ),
         body: SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.fromLTRB(16, 12, 16, 8),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Card(
-                  elevation: 0,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(18),
-                    side: BorderSide(color: colors.outlineVariant),
-                  ),
-                  child: Padding(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-                    child: CustomerNameAutoComplete(
-                      onCustomerSelected: _handleCustomerSelection,
+          child: CustomScrollView(
+            keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+            slivers: [
+              SliverPadding(
+                padding: const EdgeInsets.fromLTRB(16, 12, 16, 8),
+                sliver: SliverList(
+                  delegate: SliverChildListDelegate([
+                    Card(
+                      elevation: 0,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(18),
+                        side: BorderSide(color: colors.outlineVariant),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 12,
+                          vertical: 4,
+                        ),
+                        child: CustomerNameAutoComplete(
+                          onCustomerSelected: _handleCustomerSelection,
+                        ),
+                      ),
                     ),
-                  ),
-                ),
-                if (_customerName != null && _customerName!.isNotEmpty)
-                  _buildCustomerSummary(
-                    customerName: _customerName!,
-                    invoiceCount: _customerInvoices.length,
-                    balance: balance,
-                    purchaseBalance: purchaseBalance,
-                    salesBalance: salesBalance,
-                    storageValue: storageValue,
-                    storageNetWeight: storageNetWeight,
-                    storageInvoiceCount: storageInvoiceCount,
-                  ),
-                if (_customerName != null && _customerName!.isNotEmpty)
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(4, 18, 4, 8),
-                    child: Row(
-                      children: [
-                        Expanded(
-                          child: Text(
-                            'سجل الفواتير',
-                            style: Theme.of(context).textTheme.titleLarge,
+                    if (_customerName != null && _customerName!.isNotEmpty)
+                      _buildCustomerSummary(
+                        customerName: _customerName!,
+                        invoiceCount: _customerInvoices.length,
+                        balance: balance,
+                        purchaseBalance: purchaseBalance,
+                        salesBalance: salesBalance,
+                        storageValue: storageValue,
+                        storageNetWeight: storageNetWeight,
+                        storageInvoiceCount: storageInvoiceCount,
+                      ),
+                    if (_customerName != null && _customerName!.isNotEmpty)
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(4, 18, 4, 8),
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: Text(
+                                'سجل الفواتير',
+                                style: Theme.of(context).textTheme.titleLarge,
+                              ),
+                            ),
+                            Text(
+                              '${visibleInvoices.length} فاتورة',
+                              style: TextStyle(color: colors.onSurfaceVariant),
+                            ),
+                          ],
+                        ),
+                      ),
+                    if (_customerName != null && _customerName!.isNotEmpty)
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 8),
+                        child: TextField(
+                          key: const ValueKey('customer-invoice-search'),
+                          controller: _invoiceSearchController,
+                          onChanged: _handleInvoiceSearchChanged,
+                          textInputAction: TextInputAction.search,
+                          decoration: InputDecoration(
+                            hintText: strings.customerInvoiceSearchHint,
+                            prefixIcon: const Icon(Icons.search),
+                            suffixIcon: _invoiceSearchQuery.isEmpty
+                                ? null
+                                : IconButton(
+                                    key: const ValueKey('clear-invoice-search'),
+                                    tooltip: strings.clearInvoiceSearch,
+                                    onPressed: _clearInvoiceSearch,
+                                    icon: const Icon(Icons.clear),
+                                  ),
+                            isDense: true,
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(14),
+                            ),
                           ),
                         ),
+                      ),
+                  ]),
+                ),
+              ),
+              if (_customerName == null ||
+                  (_customerInvoices.isEmpty && !hasInvoiceSearchQuery))
+                SliverFillRemaining(
+                  hasScrollBody: false,
+                  child: Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.all(20),
+                          decoration: BoxDecoration(
+                            color: colors.primaryContainer,
+                            shape: BoxShape.circle,
+                          ),
+                          child: Icon(
+                            Icons.receipt_long_outlined,
+                            size: 42,
+                            color: colors.primary,
+                          ),
+                        ),
+                        const SizedBox(height: 14),
                         Text(
-                          '${visibleInvoices.length} فاتورة',
-                          style: TextStyle(color: colors.onSurfaceVariant),
+                          _customerName == null
+                              ? "اختر عميل لعرض الفواتير"
+                              : "لا توجد فواتير لهذا العميل",
+                          textAlign: TextAlign.center,
+                          style: Theme.of(context)
+                              .textTheme
+                              .titleMedium
+                              ?.copyWith(color: colors.onSurfaceVariant),
                         ),
                       ],
                     ),
                   ),
-                if (_customerName != null && _customerName!.isNotEmpty)
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 8),
-                    child: TextField(
-                      key: const ValueKey('customer-invoice-search'),
-                      controller: _invoiceSearchController,
-                      onChanged: _handleInvoiceSearchChanged,
-                      textInputAction: TextInputAction.search,
-                      decoration: InputDecoration(
-                        hintText: strings.customerInvoiceSearchHint,
-                        prefixIcon: const Icon(Icons.search),
-                        suffixIcon: _invoiceSearchQuery.isEmpty
-                            ? null
-                            : IconButton(
-                                key: const ValueKey('clear-invoice-search'),
-                                tooltip: strings.clearInvoiceSearch,
-                                onPressed: _clearInvoiceSearch,
-                                icon: const Icon(Icons.clear),
-                              ),
-                        isDense: true,
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(14),
-                        ),
-                      ),
+                )
+              else if (visibleInvoices.isEmpty)
+                SliverFillRemaining(
+                  hasScrollBody: false,
+                  child: Center(
+                    child: Text(
+                      strings.noInvoicesMatchSearch,
+                      textAlign: TextAlign.center,
+                      style: Theme.of(context)
+                          .textTheme
+                          .titleMedium
+                          ?.copyWith(color: colors.onSurfaceVariant),
                     ),
                   ),
-                Expanded(
-                  child: _customerName == null ||
-                          (_customerInvoices.isEmpty && !hasInvoiceSearchQuery)
-                      ? Center(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Container(
-                                padding: const EdgeInsets.all(20),
-                                decoration: BoxDecoration(
-                                  color: colors.primaryContainer,
-                                  shape: BoxShape.circle,
-                                ),
-                                child: Icon(
-                                  Icons.receipt_long_outlined,
-                                  size: 42,
-                                  color: colors.primary,
-                                ),
-                              ),
-                              const SizedBox(height: 14),
-                              Text(
-                                _customerName == null
-                                    ? "اختر عميل لعرض الفواتير"
-                                    : "لا توجد فواتير لهذا العميل",
-                                textAlign: TextAlign.center,
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .titleMedium
-                                    ?.copyWith(color: colors.onSurfaceVariant),
-                              ),
-                            ],
-                          ),
-                        )
-                      : visibleInvoices.isEmpty
-                          ? Center(
-                              child: Text(
-                                strings.noInvoicesMatchSearch,
-                                textAlign: TextAlign.center,
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .titleMedium
-                                    ?.copyWith(
-                                      color: colors.onSurfaceVariant,
-                                    ),
-                              ),
-                            )
-                          : ListView.builder(
-                              padding: const EdgeInsets.only(bottom: 12),
-                              itemCount: visibleInvoices.length,
-                              itemBuilder: (context, index) {
-                                final invoice = visibleInvoices[index];
-                                return _buildInvoiceCard(invoice);
-                              },
-                            ),
+                )
+              else
+                SliverPadding(
+                  padding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
+                  sliver: SliverList(
+                    delegate: SliverChildBuilderDelegate(
+                      (context, index) =>
+                          _buildInvoiceCard(visibleInvoices[index]),
+                      childCount: visibleInvoices.length,
+                    ),
+                  ),
                 ),
-              ],
-            ),
+            ],
           ),
         ),
       ),
