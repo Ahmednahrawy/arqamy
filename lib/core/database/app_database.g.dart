@@ -2971,6 +2971,5687 @@ class InvoiceLinesCompanion extends UpdateCompanion<InvoiceLine> {
   }
 }
 
+class $PaymentIdentitiesTable extends PaymentIdentities
+    with TableInfo<$PaymentIdentitiesTable, PaymentIdentity> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $PaymentIdentitiesTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+    'payment_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _financialAccountIdMeta =
+      const VerificationMeta('financialAccountId');
+  @override
+  late final GeneratedColumn<String> financialAccountId =
+      GeneratedColumn<String>(
+        'financial_account_id',
+        aliasedName,
+        false,
+        type: DriftSqlType.string,
+        requiredDuringInsert: true,
+      );
+  static const VerificationMeta _partyIdMeta = const VerificationMeta(
+    'partyId',
+  );
+  @override
+  late final GeneratedColumn<String> partyId = GeneratedColumn<String>(
+    'party_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _partyRoleMeta = const VerificationMeta(
+    'partyRole',
+  );
+  @override
+  late final GeneratedColumn<String> partyRole = GeneratedColumn<String>(
+    'party_role',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _currencyCodeMeta = const VerificationMeta(
+    'currencyCode',
+  );
+  @override
+  late final GeneratedColumn<String> currencyCode = GeneratedColumn<String>(
+    'currency_code',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _financialDirectionMeta =
+      const VerificationMeta('financialDirection');
+  @override
+  late final GeneratedColumn<String> financialDirection =
+      GeneratedColumn<String>(
+        'financial_direction',
+        aliasedName,
+        false,
+        type: DriftSqlType.string,
+        requiredDuringInsert: true,
+      );
+  static const VerificationMeta _createdByActorIdMeta = const VerificationMeta(
+    'createdByActorId',
+  );
+  @override
+  late final GeneratedColumn<String> createdByActorId = GeneratedColumn<String>(
+    'created_by_actor_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+    'created_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    financialAccountId,
+    partyId,
+    partyRole,
+    currencyCode,
+    financialDirection,
+    createdByActorId,
+    createdAt,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'payment_identities';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<PaymentIdentity> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('payment_id')) {
+      context.handle(
+        _idMeta,
+        id.isAcceptableOrUnknown(data['payment_id']!, _idMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_idMeta);
+    }
+    if (data.containsKey('financial_account_id')) {
+      context.handle(
+        _financialAccountIdMeta,
+        financialAccountId.isAcceptableOrUnknown(
+          data['financial_account_id']!,
+          _financialAccountIdMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_financialAccountIdMeta);
+    }
+    if (data.containsKey('party_id')) {
+      context.handle(
+        _partyIdMeta,
+        partyId.isAcceptableOrUnknown(data['party_id']!, _partyIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_partyIdMeta);
+    }
+    if (data.containsKey('party_role')) {
+      context.handle(
+        _partyRoleMeta,
+        partyRole.isAcceptableOrUnknown(data['party_role']!, _partyRoleMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_partyRoleMeta);
+    }
+    if (data.containsKey('currency_code')) {
+      context.handle(
+        _currencyCodeMeta,
+        currencyCode.isAcceptableOrUnknown(
+          data['currency_code']!,
+          _currencyCodeMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_currencyCodeMeta);
+    }
+    if (data.containsKey('financial_direction')) {
+      context.handle(
+        _financialDirectionMeta,
+        financialDirection.isAcceptableOrUnknown(
+          data['financial_direction']!,
+          _financialDirectionMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_financialDirectionMeta);
+    }
+    if (data.containsKey('created_by_actor_id')) {
+      context.handle(
+        _createdByActorIdMeta,
+        createdByActorId.isAcceptableOrUnknown(
+          data['created_by_actor_id']!,
+          _createdByActorIdMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_createdByActorIdMeta);
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_createdAtMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  List<Set<GeneratedColumn>> get uniqueKeys => [
+    {id, financialAccountId, partyId, partyRole, currencyCode},
+  ];
+  @override
+  PaymentIdentity map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return PaymentIdentity(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}payment_id'],
+      )!,
+      financialAccountId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}financial_account_id'],
+      )!,
+      partyId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}party_id'],
+      )!,
+      partyRole: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}party_role'],
+      )!,
+      currencyCode: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}currency_code'],
+      )!,
+      financialDirection: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}financial_direction'],
+      )!,
+      createdByActorId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}created_by_actor_id'],
+      )!,
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}created_at'],
+      )!,
+    );
+  }
+
+  @override
+  $PaymentIdentitiesTable createAlias(String alias) {
+    return $PaymentIdentitiesTable(attachedDatabase, alias);
+  }
+}
+
+class PaymentIdentity extends DataClass implements Insertable<PaymentIdentity> {
+  final String id;
+  final String financialAccountId;
+  final String partyId;
+  final String partyRole;
+  final String currencyCode;
+  final String financialDirection;
+  final String createdByActorId;
+  final DateTime createdAt;
+  const PaymentIdentity({
+    required this.id,
+    required this.financialAccountId,
+    required this.partyId,
+    required this.partyRole,
+    required this.currencyCode,
+    required this.financialDirection,
+    required this.createdByActorId,
+    required this.createdAt,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['payment_id'] = Variable<String>(id);
+    map['financial_account_id'] = Variable<String>(financialAccountId);
+    map['party_id'] = Variable<String>(partyId);
+    map['party_role'] = Variable<String>(partyRole);
+    map['currency_code'] = Variable<String>(currencyCode);
+    map['financial_direction'] = Variable<String>(financialDirection);
+    map['created_by_actor_id'] = Variable<String>(createdByActorId);
+    map['created_at'] = Variable<DateTime>(createdAt);
+    return map;
+  }
+
+  PaymentIdentitiesCompanion toCompanion(bool nullToAbsent) {
+    return PaymentIdentitiesCompanion(
+      id: Value(id),
+      financialAccountId: Value(financialAccountId),
+      partyId: Value(partyId),
+      partyRole: Value(partyRole),
+      currencyCode: Value(currencyCode),
+      financialDirection: Value(financialDirection),
+      createdByActorId: Value(createdByActorId),
+      createdAt: Value(createdAt),
+    );
+  }
+
+  factory PaymentIdentity.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return PaymentIdentity(
+      id: serializer.fromJson<String>(json['id']),
+      financialAccountId: serializer.fromJson<String>(
+        json['financialAccountId'],
+      ),
+      partyId: serializer.fromJson<String>(json['partyId']),
+      partyRole: serializer.fromJson<String>(json['partyRole']),
+      currencyCode: serializer.fromJson<String>(json['currencyCode']),
+      financialDirection: serializer.fromJson<String>(
+        json['financialDirection'],
+      ),
+      createdByActorId: serializer.fromJson<String>(json['createdByActorId']),
+      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<String>(id),
+      'financialAccountId': serializer.toJson<String>(financialAccountId),
+      'partyId': serializer.toJson<String>(partyId),
+      'partyRole': serializer.toJson<String>(partyRole),
+      'currencyCode': serializer.toJson<String>(currencyCode),
+      'financialDirection': serializer.toJson<String>(financialDirection),
+      'createdByActorId': serializer.toJson<String>(createdByActorId),
+      'createdAt': serializer.toJson<DateTime>(createdAt),
+    };
+  }
+
+  PaymentIdentity copyWith({
+    String? id,
+    String? financialAccountId,
+    String? partyId,
+    String? partyRole,
+    String? currencyCode,
+    String? financialDirection,
+    String? createdByActorId,
+    DateTime? createdAt,
+  }) => PaymentIdentity(
+    id: id ?? this.id,
+    financialAccountId: financialAccountId ?? this.financialAccountId,
+    partyId: partyId ?? this.partyId,
+    partyRole: partyRole ?? this.partyRole,
+    currencyCode: currencyCode ?? this.currencyCode,
+    financialDirection: financialDirection ?? this.financialDirection,
+    createdByActorId: createdByActorId ?? this.createdByActorId,
+    createdAt: createdAt ?? this.createdAt,
+  );
+  PaymentIdentity copyWithCompanion(PaymentIdentitiesCompanion data) {
+    return PaymentIdentity(
+      id: data.id.present ? data.id.value : this.id,
+      financialAccountId: data.financialAccountId.present
+          ? data.financialAccountId.value
+          : this.financialAccountId,
+      partyId: data.partyId.present ? data.partyId.value : this.partyId,
+      partyRole: data.partyRole.present ? data.partyRole.value : this.partyRole,
+      currencyCode: data.currencyCode.present
+          ? data.currencyCode.value
+          : this.currencyCode,
+      financialDirection: data.financialDirection.present
+          ? data.financialDirection.value
+          : this.financialDirection,
+      createdByActorId: data.createdByActorId.present
+          ? data.createdByActorId.value
+          : this.createdByActorId,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('PaymentIdentity(')
+          ..write('id: $id, ')
+          ..write('financialAccountId: $financialAccountId, ')
+          ..write('partyId: $partyId, ')
+          ..write('partyRole: $partyRole, ')
+          ..write('currencyCode: $currencyCode, ')
+          ..write('financialDirection: $financialDirection, ')
+          ..write('createdByActorId: $createdByActorId, ')
+          ..write('createdAt: $createdAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    id,
+    financialAccountId,
+    partyId,
+    partyRole,
+    currencyCode,
+    financialDirection,
+    createdByActorId,
+    createdAt,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is PaymentIdentity &&
+          other.id == this.id &&
+          other.financialAccountId == this.financialAccountId &&
+          other.partyId == this.partyId &&
+          other.partyRole == this.partyRole &&
+          other.currencyCode == this.currencyCode &&
+          other.financialDirection == this.financialDirection &&
+          other.createdByActorId == this.createdByActorId &&
+          other.createdAt == this.createdAt);
+}
+
+class PaymentIdentitiesCompanion extends UpdateCompanion<PaymentIdentity> {
+  final Value<String> id;
+  final Value<String> financialAccountId;
+  final Value<String> partyId;
+  final Value<String> partyRole;
+  final Value<String> currencyCode;
+  final Value<String> financialDirection;
+  final Value<String> createdByActorId;
+  final Value<DateTime> createdAt;
+  final Value<int> rowid;
+  const PaymentIdentitiesCompanion({
+    this.id = const Value.absent(),
+    this.financialAccountId = const Value.absent(),
+    this.partyId = const Value.absent(),
+    this.partyRole = const Value.absent(),
+    this.currencyCode = const Value.absent(),
+    this.financialDirection = const Value.absent(),
+    this.createdByActorId = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  PaymentIdentitiesCompanion.insert({
+    required String id,
+    required String financialAccountId,
+    required String partyId,
+    required String partyRole,
+    required String currencyCode,
+    required String financialDirection,
+    required String createdByActorId,
+    required DateTime createdAt,
+    this.rowid = const Value.absent(),
+  }) : id = Value(id),
+       financialAccountId = Value(financialAccountId),
+       partyId = Value(partyId),
+       partyRole = Value(partyRole),
+       currencyCode = Value(currencyCode),
+       financialDirection = Value(financialDirection),
+       createdByActorId = Value(createdByActorId),
+       createdAt = Value(createdAt);
+  static Insertable<PaymentIdentity> custom({
+    Expression<String>? id,
+    Expression<String>? financialAccountId,
+    Expression<String>? partyId,
+    Expression<String>? partyRole,
+    Expression<String>? currencyCode,
+    Expression<String>? financialDirection,
+    Expression<String>? createdByActorId,
+    Expression<DateTime>? createdAt,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'payment_id': id,
+      if (financialAccountId != null)
+        'financial_account_id': financialAccountId,
+      if (partyId != null) 'party_id': partyId,
+      if (partyRole != null) 'party_role': partyRole,
+      if (currencyCode != null) 'currency_code': currencyCode,
+      if (financialDirection != null) 'financial_direction': financialDirection,
+      if (createdByActorId != null) 'created_by_actor_id': createdByActorId,
+      if (createdAt != null) 'created_at': createdAt,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  PaymentIdentitiesCompanion copyWith({
+    Value<String>? id,
+    Value<String>? financialAccountId,
+    Value<String>? partyId,
+    Value<String>? partyRole,
+    Value<String>? currencyCode,
+    Value<String>? financialDirection,
+    Value<String>? createdByActorId,
+    Value<DateTime>? createdAt,
+    Value<int>? rowid,
+  }) {
+    return PaymentIdentitiesCompanion(
+      id: id ?? this.id,
+      financialAccountId: financialAccountId ?? this.financialAccountId,
+      partyId: partyId ?? this.partyId,
+      partyRole: partyRole ?? this.partyRole,
+      currencyCode: currencyCode ?? this.currencyCode,
+      financialDirection: financialDirection ?? this.financialDirection,
+      createdByActorId: createdByActorId ?? this.createdByActorId,
+      createdAt: createdAt ?? this.createdAt,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['payment_id'] = Variable<String>(id.value);
+    }
+    if (financialAccountId.present) {
+      map['financial_account_id'] = Variable<String>(financialAccountId.value);
+    }
+    if (partyId.present) {
+      map['party_id'] = Variable<String>(partyId.value);
+    }
+    if (partyRole.present) {
+      map['party_role'] = Variable<String>(partyRole.value);
+    }
+    if (currencyCode.present) {
+      map['currency_code'] = Variable<String>(currencyCode.value);
+    }
+    if (financialDirection.present) {
+      map['financial_direction'] = Variable<String>(financialDirection.value);
+    }
+    if (createdByActorId.present) {
+      map['created_by_actor_id'] = Variable<String>(createdByActorId.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('PaymentIdentitiesCompanion(')
+          ..write('id: $id, ')
+          ..write('financialAccountId: $financialAccountId, ')
+          ..write('partyId: $partyId, ')
+          ..write('partyRole: $partyRole, ')
+          ..write('currencyCode: $currencyCode, ')
+          ..write('financialDirection: $financialDirection, ')
+          ..write('createdByActorId: $createdByActorId, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $CashEventsTable extends CashEvents
+    with TableInfo<$CashEventsTable, CashEvent> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $CashEventsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+    'cash_event_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _paymentIdMeta = const VerificationMeta(
+    'paymentId',
+  );
+  @override
+  late final GeneratedColumn<String> paymentId = GeneratedColumn<String>(
+    'payment_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _createdByActorIdMeta = const VerificationMeta(
+    'createdByActorId',
+  );
+  @override
+  late final GeneratedColumn<String> createdByActorId = GeneratedColumn<String>(
+    'created_by_actor_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+    'created_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    paymentId,
+    createdByActorId,
+    createdAt,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'cash_events';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<CashEvent> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('cash_event_id')) {
+      context.handle(
+        _idMeta,
+        id.isAcceptableOrUnknown(data['cash_event_id']!, _idMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_idMeta);
+    }
+    if (data.containsKey('payment_id')) {
+      context.handle(
+        _paymentIdMeta,
+        paymentId.isAcceptableOrUnknown(data['payment_id']!, _paymentIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_paymentIdMeta);
+    }
+    if (data.containsKey('created_by_actor_id')) {
+      context.handle(
+        _createdByActorIdMeta,
+        createdByActorId.isAcceptableOrUnknown(
+          data['created_by_actor_id']!,
+          _createdByActorIdMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_createdByActorIdMeta);
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_createdAtMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  List<Set<GeneratedColumn>> get uniqueKeys => [
+    {paymentId},
+    {id, paymentId},
+  ];
+  @override
+  CashEvent map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return CashEvent(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}cash_event_id'],
+      )!,
+      paymentId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}payment_id'],
+      )!,
+      createdByActorId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}created_by_actor_id'],
+      )!,
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}created_at'],
+      )!,
+    );
+  }
+
+  @override
+  $CashEventsTable createAlias(String alias) {
+    return $CashEventsTable(attachedDatabase, alias);
+  }
+}
+
+class CashEvent extends DataClass implements Insertable<CashEvent> {
+  final String id;
+  final String paymentId;
+  final String createdByActorId;
+  final DateTime createdAt;
+  const CashEvent({
+    required this.id,
+    required this.paymentId,
+    required this.createdByActorId,
+    required this.createdAt,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['cash_event_id'] = Variable<String>(id);
+    map['payment_id'] = Variable<String>(paymentId);
+    map['created_by_actor_id'] = Variable<String>(createdByActorId);
+    map['created_at'] = Variable<DateTime>(createdAt);
+    return map;
+  }
+
+  CashEventsCompanion toCompanion(bool nullToAbsent) {
+    return CashEventsCompanion(
+      id: Value(id),
+      paymentId: Value(paymentId),
+      createdByActorId: Value(createdByActorId),
+      createdAt: Value(createdAt),
+    );
+  }
+
+  factory CashEvent.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return CashEvent(
+      id: serializer.fromJson<String>(json['id']),
+      paymentId: serializer.fromJson<String>(json['paymentId']),
+      createdByActorId: serializer.fromJson<String>(json['createdByActorId']),
+      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<String>(id),
+      'paymentId': serializer.toJson<String>(paymentId),
+      'createdByActorId': serializer.toJson<String>(createdByActorId),
+      'createdAt': serializer.toJson<DateTime>(createdAt),
+    };
+  }
+
+  CashEvent copyWith({
+    String? id,
+    String? paymentId,
+    String? createdByActorId,
+    DateTime? createdAt,
+  }) => CashEvent(
+    id: id ?? this.id,
+    paymentId: paymentId ?? this.paymentId,
+    createdByActorId: createdByActorId ?? this.createdByActorId,
+    createdAt: createdAt ?? this.createdAt,
+  );
+  CashEvent copyWithCompanion(CashEventsCompanion data) {
+    return CashEvent(
+      id: data.id.present ? data.id.value : this.id,
+      paymentId: data.paymentId.present ? data.paymentId.value : this.paymentId,
+      createdByActorId: data.createdByActorId.present
+          ? data.createdByActorId.value
+          : this.createdByActorId,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('CashEvent(')
+          ..write('id: $id, ')
+          ..write('paymentId: $paymentId, ')
+          ..write('createdByActorId: $createdByActorId, ')
+          ..write('createdAt: $createdAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(id, paymentId, createdByActorId, createdAt);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is CashEvent &&
+          other.id == this.id &&
+          other.paymentId == this.paymentId &&
+          other.createdByActorId == this.createdByActorId &&
+          other.createdAt == this.createdAt);
+}
+
+class CashEventsCompanion extends UpdateCompanion<CashEvent> {
+  final Value<String> id;
+  final Value<String> paymentId;
+  final Value<String> createdByActorId;
+  final Value<DateTime> createdAt;
+  final Value<int> rowid;
+  const CashEventsCompanion({
+    this.id = const Value.absent(),
+    this.paymentId = const Value.absent(),
+    this.createdByActorId = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  CashEventsCompanion.insert({
+    required String id,
+    required String paymentId,
+    required String createdByActorId,
+    required DateTime createdAt,
+    this.rowid = const Value.absent(),
+  }) : id = Value(id),
+       paymentId = Value(paymentId),
+       createdByActorId = Value(createdByActorId),
+       createdAt = Value(createdAt);
+  static Insertable<CashEvent> custom({
+    Expression<String>? id,
+    Expression<String>? paymentId,
+    Expression<String>? createdByActorId,
+    Expression<DateTime>? createdAt,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'cash_event_id': id,
+      if (paymentId != null) 'payment_id': paymentId,
+      if (createdByActorId != null) 'created_by_actor_id': createdByActorId,
+      if (createdAt != null) 'created_at': createdAt,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  CashEventsCompanion copyWith({
+    Value<String>? id,
+    Value<String>? paymentId,
+    Value<String>? createdByActorId,
+    Value<DateTime>? createdAt,
+    Value<int>? rowid,
+  }) {
+    return CashEventsCompanion(
+      id: id ?? this.id,
+      paymentId: paymentId ?? this.paymentId,
+      createdByActorId: createdByActorId ?? this.createdByActorId,
+      createdAt: createdAt ?? this.createdAt,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['cash_event_id'] = Variable<String>(id.value);
+    }
+    if (paymentId.present) {
+      map['payment_id'] = Variable<String>(paymentId.value);
+    }
+    if (createdByActorId.present) {
+      map['created_by_actor_id'] = Variable<String>(createdByActorId.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('CashEventsCompanion(')
+          ..write('id: $id, ')
+          ..write('paymentId: $paymentId, ')
+          ..write('createdByActorId: $createdByActorId, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $FinancialTransactionsTable extends FinancialTransactions
+    with TableInfo<$FinancialTransactionsTable, FinancialTransaction> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $FinancialTransactionsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+    'transaction_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _cashEventIdMeta = const VerificationMeta(
+    'cashEventId',
+  );
+  @override
+  late final GeneratedColumn<String> cashEventId = GeneratedColumn<String>(
+    'cash_event_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _paymentIdMeta = const VerificationMeta(
+    'paymentId',
+  );
+  @override
+  late final GeneratedColumn<String> paymentId = GeneratedColumn<String>(
+    'payment_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _financialAccountIdMeta =
+      const VerificationMeta('financialAccountId');
+  @override
+  late final GeneratedColumn<String> financialAccountId =
+      GeneratedColumn<String>(
+        'financial_account_id',
+        aliasedName,
+        false,
+        type: DriftSqlType.string,
+        requiredDuringInsert: true,
+      );
+  static const VerificationMeta _partyIdMeta = const VerificationMeta(
+    'partyId',
+  );
+  @override
+  late final GeneratedColumn<String> partyId = GeneratedColumn<String>(
+    'party_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _partyRoleMeta = const VerificationMeta(
+    'partyRole',
+  );
+  @override
+  late final GeneratedColumn<String> partyRole = GeneratedColumn<String>(
+    'party_role',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _currencyCodeMeta = const VerificationMeta(
+    'currencyCode',
+  );
+  @override
+  late final GeneratedColumn<String> currencyCode = GeneratedColumn<String>(
+    'currency_code',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _transactionTypeMeta = const VerificationMeta(
+    'transactionType',
+  );
+  @override
+  late final GeneratedColumn<String> transactionType = GeneratedColumn<String>(
+    'transaction_type',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _directionMeta = const VerificationMeta(
+    'direction',
+  );
+  @override
+  late final GeneratedColumn<String> direction = GeneratedColumn<String>(
+    'direction',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _amountMinorMeta = const VerificationMeta(
+    'amountMinor',
+  );
+  @override
+  late final GeneratedColumn<int> amountMinor = GeneratedColumn<int>(
+    'amount_minor',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _relatedTransactionIdMeta =
+      const VerificationMeta('relatedTransactionId');
+  @override
+  late final GeneratedColumn<String> relatedTransactionId =
+      GeneratedColumn<String>(
+        'related_transaction_id',
+        aliasedName,
+        true,
+        type: DriftSqlType.string,
+        requiredDuringInsert: false,
+      );
+  static const VerificationMeta _actorIdMeta = const VerificationMeta(
+    'actorId',
+  );
+  @override
+  late final GeneratedColumn<String> actorId = GeneratedColumn<String>(
+    'actor_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _reasonMeta = const VerificationMeta('reason');
+  @override
+  late final GeneratedColumn<String> reason = GeneratedColumn<String>(
+    'reason',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _idempotencyKeyMeta = const VerificationMeta(
+    'idempotencyKey',
+  );
+  @override
+  late final GeneratedColumn<String> idempotencyKey = GeneratedColumn<String>(
+    'idempotency_key',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _occurredAtMeta = const VerificationMeta(
+    'occurredAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> occurredAt = GeneratedColumn<DateTime>(
+    'occurred_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    cashEventId,
+    paymentId,
+    financialAccountId,
+    partyId,
+    partyRole,
+    currencyCode,
+    transactionType,
+    direction,
+    amountMinor,
+    relatedTransactionId,
+    actorId,
+    reason,
+    idempotencyKey,
+    occurredAt,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'financial_transactions';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<FinancialTransaction> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('transaction_id')) {
+      context.handle(
+        _idMeta,
+        id.isAcceptableOrUnknown(data['transaction_id']!, _idMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_idMeta);
+    }
+    if (data.containsKey('cash_event_id')) {
+      context.handle(
+        _cashEventIdMeta,
+        cashEventId.isAcceptableOrUnknown(
+          data['cash_event_id']!,
+          _cashEventIdMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_cashEventIdMeta);
+    }
+    if (data.containsKey('payment_id')) {
+      context.handle(
+        _paymentIdMeta,
+        paymentId.isAcceptableOrUnknown(data['payment_id']!, _paymentIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_paymentIdMeta);
+    }
+    if (data.containsKey('financial_account_id')) {
+      context.handle(
+        _financialAccountIdMeta,
+        financialAccountId.isAcceptableOrUnknown(
+          data['financial_account_id']!,
+          _financialAccountIdMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_financialAccountIdMeta);
+    }
+    if (data.containsKey('party_id')) {
+      context.handle(
+        _partyIdMeta,
+        partyId.isAcceptableOrUnknown(data['party_id']!, _partyIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_partyIdMeta);
+    }
+    if (data.containsKey('party_role')) {
+      context.handle(
+        _partyRoleMeta,
+        partyRole.isAcceptableOrUnknown(data['party_role']!, _partyRoleMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_partyRoleMeta);
+    }
+    if (data.containsKey('currency_code')) {
+      context.handle(
+        _currencyCodeMeta,
+        currencyCode.isAcceptableOrUnknown(
+          data['currency_code']!,
+          _currencyCodeMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_currencyCodeMeta);
+    }
+    if (data.containsKey('transaction_type')) {
+      context.handle(
+        _transactionTypeMeta,
+        transactionType.isAcceptableOrUnknown(
+          data['transaction_type']!,
+          _transactionTypeMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_transactionTypeMeta);
+    }
+    if (data.containsKey('direction')) {
+      context.handle(
+        _directionMeta,
+        direction.isAcceptableOrUnknown(data['direction']!, _directionMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_directionMeta);
+    }
+    if (data.containsKey('amount_minor')) {
+      context.handle(
+        _amountMinorMeta,
+        amountMinor.isAcceptableOrUnknown(
+          data['amount_minor']!,
+          _amountMinorMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_amountMinorMeta);
+    }
+    if (data.containsKey('related_transaction_id')) {
+      context.handle(
+        _relatedTransactionIdMeta,
+        relatedTransactionId.isAcceptableOrUnknown(
+          data['related_transaction_id']!,
+          _relatedTransactionIdMeta,
+        ),
+      );
+    }
+    if (data.containsKey('actor_id')) {
+      context.handle(
+        _actorIdMeta,
+        actorId.isAcceptableOrUnknown(data['actor_id']!, _actorIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_actorIdMeta);
+    }
+    if (data.containsKey('reason')) {
+      context.handle(
+        _reasonMeta,
+        reason.isAcceptableOrUnknown(data['reason']!, _reasonMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_reasonMeta);
+    }
+    if (data.containsKey('idempotency_key')) {
+      context.handle(
+        _idempotencyKeyMeta,
+        idempotencyKey.isAcceptableOrUnknown(
+          data['idempotency_key']!,
+          _idempotencyKeyMeta,
+        ),
+      );
+    }
+    if (data.containsKey('occurred_at')) {
+      context.handle(
+        _occurredAtMeta,
+        occurredAt.isAcceptableOrUnknown(data['occurred_at']!, _occurredAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_occurredAtMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  List<Set<GeneratedColumn>> get uniqueKeys => [
+    {id, cashEventId, paymentId},
+    {idempotencyKey},
+  ];
+  @override
+  FinancialTransaction map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return FinancialTransaction(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}transaction_id'],
+      )!,
+      cashEventId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}cash_event_id'],
+      )!,
+      paymentId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}payment_id'],
+      )!,
+      financialAccountId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}financial_account_id'],
+      )!,
+      partyId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}party_id'],
+      )!,
+      partyRole: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}party_role'],
+      )!,
+      currencyCode: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}currency_code'],
+      )!,
+      transactionType: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}transaction_type'],
+      )!,
+      direction: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}direction'],
+      )!,
+      amountMinor: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}amount_minor'],
+      )!,
+      relatedTransactionId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}related_transaction_id'],
+      ),
+      actorId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}actor_id'],
+      )!,
+      reason: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}reason'],
+      )!,
+      idempotencyKey: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}idempotency_key'],
+      ),
+      occurredAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}occurred_at'],
+      )!,
+    );
+  }
+
+  @override
+  $FinancialTransactionsTable createAlias(String alias) {
+    return $FinancialTransactionsTable(attachedDatabase, alias);
+  }
+}
+
+class FinancialTransaction extends DataClass
+    implements Insertable<FinancialTransaction> {
+  final String id;
+  final String cashEventId;
+  final String paymentId;
+  final String financialAccountId;
+  final String partyId;
+  final String partyRole;
+  final String currencyCode;
+  final String transactionType;
+  final String direction;
+  final int amountMinor;
+  final String? relatedTransactionId;
+  final String actorId;
+  final String reason;
+  final String? idempotencyKey;
+  final DateTime occurredAt;
+  const FinancialTransaction({
+    required this.id,
+    required this.cashEventId,
+    required this.paymentId,
+    required this.financialAccountId,
+    required this.partyId,
+    required this.partyRole,
+    required this.currencyCode,
+    required this.transactionType,
+    required this.direction,
+    required this.amountMinor,
+    this.relatedTransactionId,
+    required this.actorId,
+    required this.reason,
+    this.idempotencyKey,
+    required this.occurredAt,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['transaction_id'] = Variable<String>(id);
+    map['cash_event_id'] = Variable<String>(cashEventId);
+    map['payment_id'] = Variable<String>(paymentId);
+    map['financial_account_id'] = Variable<String>(financialAccountId);
+    map['party_id'] = Variable<String>(partyId);
+    map['party_role'] = Variable<String>(partyRole);
+    map['currency_code'] = Variable<String>(currencyCode);
+    map['transaction_type'] = Variable<String>(transactionType);
+    map['direction'] = Variable<String>(direction);
+    map['amount_minor'] = Variable<int>(amountMinor);
+    if (!nullToAbsent || relatedTransactionId != null) {
+      map['related_transaction_id'] = Variable<String>(relatedTransactionId);
+    }
+    map['actor_id'] = Variable<String>(actorId);
+    map['reason'] = Variable<String>(reason);
+    if (!nullToAbsent || idempotencyKey != null) {
+      map['idempotency_key'] = Variable<String>(idempotencyKey);
+    }
+    map['occurred_at'] = Variable<DateTime>(occurredAt);
+    return map;
+  }
+
+  FinancialTransactionsCompanion toCompanion(bool nullToAbsent) {
+    return FinancialTransactionsCompanion(
+      id: Value(id),
+      cashEventId: Value(cashEventId),
+      paymentId: Value(paymentId),
+      financialAccountId: Value(financialAccountId),
+      partyId: Value(partyId),
+      partyRole: Value(partyRole),
+      currencyCode: Value(currencyCode),
+      transactionType: Value(transactionType),
+      direction: Value(direction),
+      amountMinor: Value(amountMinor),
+      relatedTransactionId: relatedTransactionId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(relatedTransactionId),
+      actorId: Value(actorId),
+      reason: Value(reason),
+      idempotencyKey: idempotencyKey == null && nullToAbsent
+          ? const Value.absent()
+          : Value(idempotencyKey),
+      occurredAt: Value(occurredAt),
+    );
+  }
+
+  factory FinancialTransaction.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return FinancialTransaction(
+      id: serializer.fromJson<String>(json['id']),
+      cashEventId: serializer.fromJson<String>(json['cashEventId']),
+      paymentId: serializer.fromJson<String>(json['paymentId']),
+      financialAccountId: serializer.fromJson<String>(
+        json['financialAccountId'],
+      ),
+      partyId: serializer.fromJson<String>(json['partyId']),
+      partyRole: serializer.fromJson<String>(json['partyRole']),
+      currencyCode: serializer.fromJson<String>(json['currencyCode']),
+      transactionType: serializer.fromJson<String>(json['transactionType']),
+      direction: serializer.fromJson<String>(json['direction']),
+      amountMinor: serializer.fromJson<int>(json['amountMinor']),
+      relatedTransactionId: serializer.fromJson<String?>(
+        json['relatedTransactionId'],
+      ),
+      actorId: serializer.fromJson<String>(json['actorId']),
+      reason: serializer.fromJson<String>(json['reason']),
+      idempotencyKey: serializer.fromJson<String?>(json['idempotencyKey']),
+      occurredAt: serializer.fromJson<DateTime>(json['occurredAt']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<String>(id),
+      'cashEventId': serializer.toJson<String>(cashEventId),
+      'paymentId': serializer.toJson<String>(paymentId),
+      'financialAccountId': serializer.toJson<String>(financialAccountId),
+      'partyId': serializer.toJson<String>(partyId),
+      'partyRole': serializer.toJson<String>(partyRole),
+      'currencyCode': serializer.toJson<String>(currencyCode),
+      'transactionType': serializer.toJson<String>(transactionType),
+      'direction': serializer.toJson<String>(direction),
+      'amountMinor': serializer.toJson<int>(amountMinor),
+      'relatedTransactionId': serializer.toJson<String?>(relatedTransactionId),
+      'actorId': serializer.toJson<String>(actorId),
+      'reason': serializer.toJson<String>(reason),
+      'idempotencyKey': serializer.toJson<String?>(idempotencyKey),
+      'occurredAt': serializer.toJson<DateTime>(occurredAt),
+    };
+  }
+
+  FinancialTransaction copyWith({
+    String? id,
+    String? cashEventId,
+    String? paymentId,
+    String? financialAccountId,
+    String? partyId,
+    String? partyRole,
+    String? currencyCode,
+    String? transactionType,
+    String? direction,
+    int? amountMinor,
+    Value<String?> relatedTransactionId = const Value.absent(),
+    String? actorId,
+    String? reason,
+    Value<String?> idempotencyKey = const Value.absent(),
+    DateTime? occurredAt,
+  }) => FinancialTransaction(
+    id: id ?? this.id,
+    cashEventId: cashEventId ?? this.cashEventId,
+    paymentId: paymentId ?? this.paymentId,
+    financialAccountId: financialAccountId ?? this.financialAccountId,
+    partyId: partyId ?? this.partyId,
+    partyRole: partyRole ?? this.partyRole,
+    currencyCode: currencyCode ?? this.currencyCode,
+    transactionType: transactionType ?? this.transactionType,
+    direction: direction ?? this.direction,
+    amountMinor: amountMinor ?? this.amountMinor,
+    relatedTransactionId: relatedTransactionId.present
+        ? relatedTransactionId.value
+        : this.relatedTransactionId,
+    actorId: actorId ?? this.actorId,
+    reason: reason ?? this.reason,
+    idempotencyKey: idempotencyKey.present
+        ? idempotencyKey.value
+        : this.idempotencyKey,
+    occurredAt: occurredAt ?? this.occurredAt,
+  );
+  FinancialTransaction copyWithCompanion(FinancialTransactionsCompanion data) {
+    return FinancialTransaction(
+      id: data.id.present ? data.id.value : this.id,
+      cashEventId: data.cashEventId.present
+          ? data.cashEventId.value
+          : this.cashEventId,
+      paymentId: data.paymentId.present ? data.paymentId.value : this.paymentId,
+      financialAccountId: data.financialAccountId.present
+          ? data.financialAccountId.value
+          : this.financialAccountId,
+      partyId: data.partyId.present ? data.partyId.value : this.partyId,
+      partyRole: data.partyRole.present ? data.partyRole.value : this.partyRole,
+      currencyCode: data.currencyCode.present
+          ? data.currencyCode.value
+          : this.currencyCode,
+      transactionType: data.transactionType.present
+          ? data.transactionType.value
+          : this.transactionType,
+      direction: data.direction.present ? data.direction.value : this.direction,
+      amountMinor: data.amountMinor.present
+          ? data.amountMinor.value
+          : this.amountMinor,
+      relatedTransactionId: data.relatedTransactionId.present
+          ? data.relatedTransactionId.value
+          : this.relatedTransactionId,
+      actorId: data.actorId.present ? data.actorId.value : this.actorId,
+      reason: data.reason.present ? data.reason.value : this.reason,
+      idempotencyKey: data.idempotencyKey.present
+          ? data.idempotencyKey.value
+          : this.idempotencyKey,
+      occurredAt: data.occurredAt.present
+          ? data.occurredAt.value
+          : this.occurredAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('FinancialTransaction(')
+          ..write('id: $id, ')
+          ..write('cashEventId: $cashEventId, ')
+          ..write('paymentId: $paymentId, ')
+          ..write('financialAccountId: $financialAccountId, ')
+          ..write('partyId: $partyId, ')
+          ..write('partyRole: $partyRole, ')
+          ..write('currencyCode: $currencyCode, ')
+          ..write('transactionType: $transactionType, ')
+          ..write('direction: $direction, ')
+          ..write('amountMinor: $amountMinor, ')
+          ..write('relatedTransactionId: $relatedTransactionId, ')
+          ..write('actorId: $actorId, ')
+          ..write('reason: $reason, ')
+          ..write('idempotencyKey: $idempotencyKey, ')
+          ..write('occurredAt: $occurredAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    id,
+    cashEventId,
+    paymentId,
+    financialAccountId,
+    partyId,
+    partyRole,
+    currencyCode,
+    transactionType,
+    direction,
+    amountMinor,
+    relatedTransactionId,
+    actorId,
+    reason,
+    idempotencyKey,
+    occurredAt,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is FinancialTransaction &&
+          other.id == this.id &&
+          other.cashEventId == this.cashEventId &&
+          other.paymentId == this.paymentId &&
+          other.financialAccountId == this.financialAccountId &&
+          other.partyId == this.partyId &&
+          other.partyRole == this.partyRole &&
+          other.currencyCode == this.currencyCode &&
+          other.transactionType == this.transactionType &&
+          other.direction == this.direction &&
+          other.amountMinor == this.amountMinor &&
+          other.relatedTransactionId == this.relatedTransactionId &&
+          other.actorId == this.actorId &&
+          other.reason == this.reason &&
+          other.idempotencyKey == this.idempotencyKey &&
+          other.occurredAt == this.occurredAt);
+}
+
+class FinancialTransactionsCompanion
+    extends UpdateCompanion<FinancialTransaction> {
+  final Value<String> id;
+  final Value<String> cashEventId;
+  final Value<String> paymentId;
+  final Value<String> financialAccountId;
+  final Value<String> partyId;
+  final Value<String> partyRole;
+  final Value<String> currencyCode;
+  final Value<String> transactionType;
+  final Value<String> direction;
+  final Value<int> amountMinor;
+  final Value<String?> relatedTransactionId;
+  final Value<String> actorId;
+  final Value<String> reason;
+  final Value<String?> idempotencyKey;
+  final Value<DateTime> occurredAt;
+  final Value<int> rowid;
+  const FinancialTransactionsCompanion({
+    this.id = const Value.absent(),
+    this.cashEventId = const Value.absent(),
+    this.paymentId = const Value.absent(),
+    this.financialAccountId = const Value.absent(),
+    this.partyId = const Value.absent(),
+    this.partyRole = const Value.absent(),
+    this.currencyCode = const Value.absent(),
+    this.transactionType = const Value.absent(),
+    this.direction = const Value.absent(),
+    this.amountMinor = const Value.absent(),
+    this.relatedTransactionId = const Value.absent(),
+    this.actorId = const Value.absent(),
+    this.reason = const Value.absent(),
+    this.idempotencyKey = const Value.absent(),
+    this.occurredAt = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  FinancialTransactionsCompanion.insert({
+    required String id,
+    required String cashEventId,
+    required String paymentId,
+    required String financialAccountId,
+    required String partyId,
+    required String partyRole,
+    required String currencyCode,
+    required String transactionType,
+    required String direction,
+    required int amountMinor,
+    this.relatedTransactionId = const Value.absent(),
+    required String actorId,
+    required String reason,
+    this.idempotencyKey = const Value.absent(),
+    required DateTime occurredAt,
+    this.rowid = const Value.absent(),
+  }) : id = Value(id),
+       cashEventId = Value(cashEventId),
+       paymentId = Value(paymentId),
+       financialAccountId = Value(financialAccountId),
+       partyId = Value(partyId),
+       partyRole = Value(partyRole),
+       currencyCode = Value(currencyCode),
+       transactionType = Value(transactionType),
+       direction = Value(direction),
+       amountMinor = Value(amountMinor),
+       actorId = Value(actorId),
+       reason = Value(reason),
+       occurredAt = Value(occurredAt);
+  static Insertable<FinancialTransaction> custom({
+    Expression<String>? id,
+    Expression<String>? cashEventId,
+    Expression<String>? paymentId,
+    Expression<String>? financialAccountId,
+    Expression<String>? partyId,
+    Expression<String>? partyRole,
+    Expression<String>? currencyCode,
+    Expression<String>? transactionType,
+    Expression<String>? direction,
+    Expression<int>? amountMinor,
+    Expression<String>? relatedTransactionId,
+    Expression<String>? actorId,
+    Expression<String>? reason,
+    Expression<String>? idempotencyKey,
+    Expression<DateTime>? occurredAt,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'transaction_id': id,
+      if (cashEventId != null) 'cash_event_id': cashEventId,
+      if (paymentId != null) 'payment_id': paymentId,
+      if (financialAccountId != null)
+        'financial_account_id': financialAccountId,
+      if (partyId != null) 'party_id': partyId,
+      if (partyRole != null) 'party_role': partyRole,
+      if (currencyCode != null) 'currency_code': currencyCode,
+      if (transactionType != null) 'transaction_type': transactionType,
+      if (direction != null) 'direction': direction,
+      if (amountMinor != null) 'amount_minor': amountMinor,
+      if (relatedTransactionId != null)
+        'related_transaction_id': relatedTransactionId,
+      if (actorId != null) 'actor_id': actorId,
+      if (reason != null) 'reason': reason,
+      if (idempotencyKey != null) 'idempotency_key': idempotencyKey,
+      if (occurredAt != null) 'occurred_at': occurredAt,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  FinancialTransactionsCompanion copyWith({
+    Value<String>? id,
+    Value<String>? cashEventId,
+    Value<String>? paymentId,
+    Value<String>? financialAccountId,
+    Value<String>? partyId,
+    Value<String>? partyRole,
+    Value<String>? currencyCode,
+    Value<String>? transactionType,
+    Value<String>? direction,
+    Value<int>? amountMinor,
+    Value<String?>? relatedTransactionId,
+    Value<String>? actorId,
+    Value<String>? reason,
+    Value<String?>? idempotencyKey,
+    Value<DateTime>? occurredAt,
+    Value<int>? rowid,
+  }) {
+    return FinancialTransactionsCompanion(
+      id: id ?? this.id,
+      cashEventId: cashEventId ?? this.cashEventId,
+      paymentId: paymentId ?? this.paymentId,
+      financialAccountId: financialAccountId ?? this.financialAccountId,
+      partyId: partyId ?? this.partyId,
+      partyRole: partyRole ?? this.partyRole,
+      currencyCode: currencyCode ?? this.currencyCode,
+      transactionType: transactionType ?? this.transactionType,
+      direction: direction ?? this.direction,
+      amountMinor: amountMinor ?? this.amountMinor,
+      relatedTransactionId: relatedTransactionId ?? this.relatedTransactionId,
+      actorId: actorId ?? this.actorId,
+      reason: reason ?? this.reason,
+      idempotencyKey: idempotencyKey ?? this.idempotencyKey,
+      occurredAt: occurredAt ?? this.occurredAt,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['transaction_id'] = Variable<String>(id.value);
+    }
+    if (cashEventId.present) {
+      map['cash_event_id'] = Variable<String>(cashEventId.value);
+    }
+    if (paymentId.present) {
+      map['payment_id'] = Variable<String>(paymentId.value);
+    }
+    if (financialAccountId.present) {
+      map['financial_account_id'] = Variable<String>(financialAccountId.value);
+    }
+    if (partyId.present) {
+      map['party_id'] = Variable<String>(partyId.value);
+    }
+    if (partyRole.present) {
+      map['party_role'] = Variable<String>(partyRole.value);
+    }
+    if (currencyCode.present) {
+      map['currency_code'] = Variable<String>(currencyCode.value);
+    }
+    if (transactionType.present) {
+      map['transaction_type'] = Variable<String>(transactionType.value);
+    }
+    if (direction.present) {
+      map['direction'] = Variable<String>(direction.value);
+    }
+    if (amountMinor.present) {
+      map['amount_minor'] = Variable<int>(amountMinor.value);
+    }
+    if (relatedTransactionId.present) {
+      map['related_transaction_id'] = Variable<String>(
+        relatedTransactionId.value,
+      );
+    }
+    if (actorId.present) {
+      map['actor_id'] = Variable<String>(actorId.value);
+    }
+    if (reason.present) {
+      map['reason'] = Variable<String>(reason.value);
+    }
+    if (idempotencyKey.present) {
+      map['idempotency_key'] = Variable<String>(idempotencyKey.value);
+    }
+    if (occurredAt.present) {
+      map['occurred_at'] = Variable<DateTime>(occurredAt.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('FinancialTransactionsCompanion(')
+          ..write('id: $id, ')
+          ..write('cashEventId: $cashEventId, ')
+          ..write('paymentId: $paymentId, ')
+          ..write('financialAccountId: $financialAccountId, ')
+          ..write('partyId: $partyId, ')
+          ..write('partyRole: $partyRole, ')
+          ..write('currencyCode: $currencyCode, ')
+          ..write('transactionType: $transactionType, ')
+          ..write('direction: $direction, ')
+          ..write('amountMinor: $amountMinor, ')
+          ..write('relatedTransactionId: $relatedTransactionId, ')
+          ..write('actorId: $actorId, ')
+          ..write('reason: $reason, ')
+          ..write('idempotencyKey: $idempotencyKey, ')
+          ..write('occurredAt: $occurredAt, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $CashEventVersionsTable extends CashEventVersions
+    with TableInfo<$CashEventVersionsTable, CashEventVersion> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $CashEventVersionsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+    'version_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _cashEventIdMeta = const VerificationMeta(
+    'cashEventId',
+  );
+  @override
+  late final GeneratedColumn<String> cashEventId = GeneratedColumn<String>(
+    'cash_event_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _paymentIdMeta = const VerificationMeta(
+    'paymentId',
+  );
+  @override
+  late final GeneratedColumn<String> paymentId = GeneratedColumn<String>(
+    'payment_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _sequenceMeta = const VerificationMeta(
+    'sequence',
+  );
+  @override
+  late final GeneratedColumn<int> sequence = GeneratedColumn<int>(
+    'sequence',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _operationMeta = const VerificationMeta(
+    'operation',
+  );
+  @override
+  late final GeneratedColumn<String> operation = GeneratedColumn<String>(
+    'operation',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _occurredMeta = const VerificationMeta(
+    'occurred',
+  );
+  @override
+  late final GeneratedColumn<String> occurred = GeneratedColumn<String>(
+    'occurred',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _cashDirectionMeta = const VerificationMeta(
+    'cashDirection',
+  );
+  @override
+  late final GeneratedColumn<String> cashDirection = GeneratedColumn<String>(
+    'cash_direction',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _physicalAmountMinorMeta =
+      const VerificationMeta('physicalAmountMinor');
+  @override
+  late final GeneratedColumn<int> physicalAmountMinor = GeneratedColumn<int>(
+    'physical_amount_minor',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _effectiveRecognizedMinorMeta =
+      const VerificationMeta('effectiveRecognizedMinor');
+  @override
+  late final GeneratedColumn<int> effectiveRecognizedMinor =
+      GeneratedColumn<int>(
+        'effective_recognized_minor',
+        aliasedName,
+        false,
+        type: DriftSqlType.int,
+        requiredDuringInsert: true,
+      );
+  static const VerificationMeta _transactionIdMeta = const VerificationMeta(
+    'transactionId',
+  );
+  @override
+  late final GeneratedColumn<String> transactionId = GeneratedColumn<String>(
+    'transaction_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _previousVersionIdMeta = const VerificationMeta(
+    'previousVersionId',
+  );
+  @override
+  late final GeneratedColumn<String> previousVersionId =
+      GeneratedColumn<String>(
+        'previous_version_id',
+        aliasedName,
+        true,
+        type: DriftSqlType.string,
+        requiredDuringInsert: false,
+      );
+  static const VerificationMeta _idempotencyKeyMeta = const VerificationMeta(
+    'idempotencyKey',
+  );
+  @override
+  late final GeneratedColumn<String> idempotencyKey = GeneratedColumn<String>(
+    'idempotency_key',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _requestPayloadMeta = const VerificationMeta(
+    'requestPayload',
+  );
+  @override
+  late final GeneratedColumn<String> requestPayload = GeneratedColumn<String>(
+    'request_payload',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _actorIdMeta = const VerificationMeta(
+    'actorId',
+  );
+  @override
+  late final GeneratedColumn<String> actorId = GeneratedColumn<String>(
+    'actor_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _reasonMeta = const VerificationMeta('reason');
+  @override
+  late final GeneratedColumn<String> reason = GeneratedColumn<String>(
+    'reason',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _recordedAtMeta = const VerificationMeta(
+    'recordedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> recordedAt = GeneratedColumn<DateTime>(
+    'recorded_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    cashEventId,
+    paymentId,
+    sequence,
+    operation,
+    occurred,
+    cashDirection,
+    physicalAmountMinor,
+    effectiveRecognizedMinor,
+    transactionId,
+    previousVersionId,
+    idempotencyKey,
+    requestPayload,
+    actorId,
+    reason,
+    recordedAt,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'cash_event_versions';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<CashEventVersion> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('version_id')) {
+      context.handle(
+        _idMeta,
+        id.isAcceptableOrUnknown(data['version_id']!, _idMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_idMeta);
+    }
+    if (data.containsKey('cash_event_id')) {
+      context.handle(
+        _cashEventIdMeta,
+        cashEventId.isAcceptableOrUnknown(
+          data['cash_event_id']!,
+          _cashEventIdMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_cashEventIdMeta);
+    }
+    if (data.containsKey('payment_id')) {
+      context.handle(
+        _paymentIdMeta,
+        paymentId.isAcceptableOrUnknown(data['payment_id']!, _paymentIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_paymentIdMeta);
+    }
+    if (data.containsKey('sequence')) {
+      context.handle(
+        _sequenceMeta,
+        sequence.isAcceptableOrUnknown(data['sequence']!, _sequenceMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_sequenceMeta);
+    }
+    if (data.containsKey('operation')) {
+      context.handle(
+        _operationMeta,
+        operation.isAcceptableOrUnknown(data['operation']!, _operationMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_operationMeta);
+    }
+    if (data.containsKey('occurred')) {
+      context.handle(
+        _occurredMeta,
+        occurred.isAcceptableOrUnknown(data['occurred']!, _occurredMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_occurredMeta);
+    }
+    if (data.containsKey('cash_direction')) {
+      context.handle(
+        _cashDirectionMeta,
+        cashDirection.isAcceptableOrUnknown(
+          data['cash_direction']!,
+          _cashDirectionMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_cashDirectionMeta);
+    }
+    if (data.containsKey('physical_amount_minor')) {
+      context.handle(
+        _physicalAmountMinorMeta,
+        physicalAmountMinor.isAcceptableOrUnknown(
+          data['physical_amount_minor']!,
+          _physicalAmountMinorMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_physicalAmountMinorMeta);
+    }
+    if (data.containsKey('effective_recognized_minor')) {
+      context.handle(
+        _effectiveRecognizedMinorMeta,
+        effectiveRecognizedMinor.isAcceptableOrUnknown(
+          data['effective_recognized_minor']!,
+          _effectiveRecognizedMinorMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_effectiveRecognizedMinorMeta);
+    }
+    if (data.containsKey('transaction_id')) {
+      context.handle(
+        _transactionIdMeta,
+        transactionId.isAcceptableOrUnknown(
+          data['transaction_id']!,
+          _transactionIdMeta,
+        ),
+      );
+    }
+    if (data.containsKey('previous_version_id')) {
+      context.handle(
+        _previousVersionIdMeta,
+        previousVersionId.isAcceptableOrUnknown(
+          data['previous_version_id']!,
+          _previousVersionIdMeta,
+        ),
+      );
+    }
+    if (data.containsKey('idempotency_key')) {
+      context.handle(
+        _idempotencyKeyMeta,
+        idempotencyKey.isAcceptableOrUnknown(
+          data['idempotency_key']!,
+          _idempotencyKeyMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_idempotencyKeyMeta);
+    }
+    if (data.containsKey('request_payload')) {
+      context.handle(
+        _requestPayloadMeta,
+        requestPayload.isAcceptableOrUnknown(
+          data['request_payload']!,
+          _requestPayloadMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_requestPayloadMeta);
+    }
+    if (data.containsKey('actor_id')) {
+      context.handle(
+        _actorIdMeta,
+        actorId.isAcceptableOrUnknown(data['actor_id']!, _actorIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_actorIdMeta);
+    }
+    if (data.containsKey('reason')) {
+      context.handle(
+        _reasonMeta,
+        reason.isAcceptableOrUnknown(data['reason']!, _reasonMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_reasonMeta);
+    }
+    if (data.containsKey('recorded_at')) {
+      context.handle(
+        _recordedAtMeta,
+        recordedAt.isAcceptableOrUnknown(data['recorded_at']!, _recordedAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_recordedAtMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  List<Set<GeneratedColumn>> get uniqueKeys => [
+    {cashEventId, sequence},
+    {id, cashEventId, paymentId},
+    {idempotencyKey},
+  ];
+  @override
+  CashEventVersion map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return CashEventVersion(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}version_id'],
+      )!,
+      cashEventId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}cash_event_id'],
+      )!,
+      paymentId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}payment_id'],
+      )!,
+      sequence: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}sequence'],
+      )!,
+      operation: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}operation'],
+      )!,
+      occurred: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}occurred'],
+      )!,
+      cashDirection: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}cash_direction'],
+      )!,
+      physicalAmountMinor: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}physical_amount_minor'],
+      )!,
+      effectiveRecognizedMinor: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}effective_recognized_minor'],
+      )!,
+      transactionId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}transaction_id'],
+      ),
+      previousVersionId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}previous_version_id'],
+      ),
+      idempotencyKey: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}idempotency_key'],
+      )!,
+      requestPayload: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}request_payload'],
+      )!,
+      actorId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}actor_id'],
+      )!,
+      reason: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}reason'],
+      )!,
+      recordedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}recorded_at'],
+      )!,
+    );
+  }
+
+  @override
+  $CashEventVersionsTable createAlias(String alias) {
+    return $CashEventVersionsTable(attachedDatabase, alias);
+  }
+}
+
+class CashEventVersion extends DataClass
+    implements Insertable<CashEventVersion> {
+  final String id;
+  final String cashEventId;
+  final String paymentId;
+  final int sequence;
+  final String operation;
+  final String occurred;
+  final String cashDirection;
+  final int physicalAmountMinor;
+  final int effectiveRecognizedMinor;
+  final String? transactionId;
+  final String? previousVersionId;
+  final String idempotencyKey;
+  final String requestPayload;
+  final String actorId;
+  final String reason;
+  final DateTime recordedAt;
+  const CashEventVersion({
+    required this.id,
+    required this.cashEventId,
+    required this.paymentId,
+    required this.sequence,
+    required this.operation,
+    required this.occurred,
+    required this.cashDirection,
+    required this.physicalAmountMinor,
+    required this.effectiveRecognizedMinor,
+    this.transactionId,
+    this.previousVersionId,
+    required this.idempotencyKey,
+    required this.requestPayload,
+    required this.actorId,
+    required this.reason,
+    required this.recordedAt,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['version_id'] = Variable<String>(id);
+    map['cash_event_id'] = Variable<String>(cashEventId);
+    map['payment_id'] = Variable<String>(paymentId);
+    map['sequence'] = Variable<int>(sequence);
+    map['operation'] = Variable<String>(operation);
+    map['occurred'] = Variable<String>(occurred);
+    map['cash_direction'] = Variable<String>(cashDirection);
+    map['physical_amount_minor'] = Variable<int>(physicalAmountMinor);
+    map['effective_recognized_minor'] = Variable<int>(effectiveRecognizedMinor);
+    if (!nullToAbsent || transactionId != null) {
+      map['transaction_id'] = Variable<String>(transactionId);
+    }
+    if (!nullToAbsent || previousVersionId != null) {
+      map['previous_version_id'] = Variable<String>(previousVersionId);
+    }
+    map['idempotency_key'] = Variable<String>(idempotencyKey);
+    map['request_payload'] = Variable<String>(requestPayload);
+    map['actor_id'] = Variable<String>(actorId);
+    map['reason'] = Variable<String>(reason);
+    map['recorded_at'] = Variable<DateTime>(recordedAt);
+    return map;
+  }
+
+  CashEventVersionsCompanion toCompanion(bool nullToAbsent) {
+    return CashEventVersionsCompanion(
+      id: Value(id),
+      cashEventId: Value(cashEventId),
+      paymentId: Value(paymentId),
+      sequence: Value(sequence),
+      operation: Value(operation),
+      occurred: Value(occurred),
+      cashDirection: Value(cashDirection),
+      physicalAmountMinor: Value(physicalAmountMinor),
+      effectiveRecognizedMinor: Value(effectiveRecognizedMinor),
+      transactionId: transactionId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(transactionId),
+      previousVersionId: previousVersionId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(previousVersionId),
+      idempotencyKey: Value(idempotencyKey),
+      requestPayload: Value(requestPayload),
+      actorId: Value(actorId),
+      reason: Value(reason),
+      recordedAt: Value(recordedAt),
+    );
+  }
+
+  factory CashEventVersion.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return CashEventVersion(
+      id: serializer.fromJson<String>(json['id']),
+      cashEventId: serializer.fromJson<String>(json['cashEventId']),
+      paymentId: serializer.fromJson<String>(json['paymentId']),
+      sequence: serializer.fromJson<int>(json['sequence']),
+      operation: serializer.fromJson<String>(json['operation']),
+      occurred: serializer.fromJson<String>(json['occurred']),
+      cashDirection: serializer.fromJson<String>(json['cashDirection']),
+      physicalAmountMinor: serializer.fromJson<int>(
+        json['physicalAmountMinor'],
+      ),
+      effectiveRecognizedMinor: serializer.fromJson<int>(
+        json['effectiveRecognizedMinor'],
+      ),
+      transactionId: serializer.fromJson<String?>(json['transactionId']),
+      previousVersionId: serializer.fromJson<String?>(
+        json['previousVersionId'],
+      ),
+      idempotencyKey: serializer.fromJson<String>(json['idempotencyKey']),
+      requestPayload: serializer.fromJson<String>(json['requestPayload']),
+      actorId: serializer.fromJson<String>(json['actorId']),
+      reason: serializer.fromJson<String>(json['reason']),
+      recordedAt: serializer.fromJson<DateTime>(json['recordedAt']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<String>(id),
+      'cashEventId': serializer.toJson<String>(cashEventId),
+      'paymentId': serializer.toJson<String>(paymentId),
+      'sequence': serializer.toJson<int>(sequence),
+      'operation': serializer.toJson<String>(operation),
+      'occurred': serializer.toJson<String>(occurred),
+      'cashDirection': serializer.toJson<String>(cashDirection),
+      'physicalAmountMinor': serializer.toJson<int>(physicalAmountMinor),
+      'effectiveRecognizedMinor': serializer.toJson<int>(
+        effectiveRecognizedMinor,
+      ),
+      'transactionId': serializer.toJson<String?>(transactionId),
+      'previousVersionId': serializer.toJson<String?>(previousVersionId),
+      'idempotencyKey': serializer.toJson<String>(idempotencyKey),
+      'requestPayload': serializer.toJson<String>(requestPayload),
+      'actorId': serializer.toJson<String>(actorId),
+      'reason': serializer.toJson<String>(reason),
+      'recordedAt': serializer.toJson<DateTime>(recordedAt),
+    };
+  }
+
+  CashEventVersion copyWith({
+    String? id,
+    String? cashEventId,
+    String? paymentId,
+    int? sequence,
+    String? operation,
+    String? occurred,
+    String? cashDirection,
+    int? physicalAmountMinor,
+    int? effectiveRecognizedMinor,
+    Value<String?> transactionId = const Value.absent(),
+    Value<String?> previousVersionId = const Value.absent(),
+    String? idempotencyKey,
+    String? requestPayload,
+    String? actorId,
+    String? reason,
+    DateTime? recordedAt,
+  }) => CashEventVersion(
+    id: id ?? this.id,
+    cashEventId: cashEventId ?? this.cashEventId,
+    paymentId: paymentId ?? this.paymentId,
+    sequence: sequence ?? this.sequence,
+    operation: operation ?? this.operation,
+    occurred: occurred ?? this.occurred,
+    cashDirection: cashDirection ?? this.cashDirection,
+    physicalAmountMinor: physicalAmountMinor ?? this.physicalAmountMinor,
+    effectiveRecognizedMinor:
+        effectiveRecognizedMinor ?? this.effectiveRecognizedMinor,
+    transactionId: transactionId.present
+        ? transactionId.value
+        : this.transactionId,
+    previousVersionId: previousVersionId.present
+        ? previousVersionId.value
+        : this.previousVersionId,
+    idempotencyKey: idempotencyKey ?? this.idempotencyKey,
+    requestPayload: requestPayload ?? this.requestPayload,
+    actorId: actorId ?? this.actorId,
+    reason: reason ?? this.reason,
+    recordedAt: recordedAt ?? this.recordedAt,
+  );
+  CashEventVersion copyWithCompanion(CashEventVersionsCompanion data) {
+    return CashEventVersion(
+      id: data.id.present ? data.id.value : this.id,
+      cashEventId: data.cashEventId.present
+          ? data.cashEventId.value
+          : this.cashEventId,
+      paymentId: data.paymentId.present ? data.paymentId.value : this.paymentId,
+      sequence: data.sequence.present ? data.sequence.value : this.sequence,
+      operation: data.operation.present ? data.operation.value : this.operation,
+      occurred: data.occurred.present ? data.occurred.value : this.occurred,
+      cashDirection: data.cashDirection.present
+          ? data.cashDirection.value
+          : this.cashDirection,
+      physicalAmountMinor: data.physicalAmountMinor.present
+          ? data.physicalAmountMinor.value
+          : this.physicalAmountMinor,
+      effectiveRecognizedMinor: data.effectiveRecognizedMinor.present
+          ? data.effectiveRecognizedMinor.value
+          : this.effectiveRecognizedMinor,
+      transactionId: data.transactionId.present
+          ? data.transactionId.value
+          : this.transactionId,
+      previousVersionId: data.previousVersionId.present
+          ? data.previousVersionId.value
+          : this.previousVersionId,
+      idempotencyKey: data.idempotencyKey.present
+          ? data.idempotencyKey.value
+          : this.idempotencyKey,
+      requestPayload: data.requestPayload.present
+          ? data.requestPayload.value
+          : this.requestPayload,
+      actorId: data.actorId.present ? data.actorId.value : this.actorId,
+      reason: data.reason.present ? data.reason.value : this.reason,
+      recordedAt: data.recordedAt.present
+          ? data.recordedAt.value
+          : this.recordedAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('CashEventVersion(')
+          ..write('id: $id, ')
+          ..write('cashEventId: $cashEventId, ')
+          ..write('paymentId: $paymentId, ')
+          ..write('sequence: $sequence, ')
+          ..write('operation: $operation, ')
+          ..write('occurred: $occurred, ')
+          ..write('cashDirection: $cashDirection, ')
+          ..write('physicalAmountMinor: $physicalAmountMinor, ')
+          ..write('effectiveRecognizedMinor: $effectiveRecognizedMinor, ')
+          ..write('transactionId: $transactionId, ')
+          ..write('previousVersionId: $previousVersionId, ')
+          ..write('idempotencyKey: $idempotencyKey, ')
+          ..write('requestPayload: $requestPayload, ')
+          ..write('actorId: $actorId, ')
+          ..write('reason: $reason, ')
+          ..write('recordedAt: $recordedAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    id,
+    cashEventId,
+    paymentId,
+    sequence,
+    operation,
+    occurred,
+    cashDirection,
+    physicalAmountMinor,
+    effectiveRecognizedMinor,
+    transactionId,
+    previousVersionId,
+    idempotencyKey,
+    requestPayload,
+    actorId,
+    reason,
+    recordedAt,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is CashEventVersion &&
+          other.id == this.id &&
+          other.cashEventId == this.cashEventId &&
+          other.paymentId == this.paymentId &&
+          other.sequence == this.sequence &&
+          other.operation == this.operation &&
+          other.occurred == this.occurred &&
+          other.cashDirection == this.cashDirection &&
+          other.physicalAmountMinor == this.physicalAmountMinor &&
+          other.effectiveRecognizedMinor == this.effectiveRecognizedMinor &&
+          other.transactionId == this.transactionId &&
+          other.previousVersionId == this.previousVersionId &&
+          other.idempotencyKey == this.idempotencyKey &&
+          other.requestPayload == this.requestPayload &&
+          other.actorId == this.actorId &&
+          other.reason == this.reason &&
+          other.recordedAt == this.recordedAt);
+}
+
+class CashEventVersionsCompanion extends UpdateCompanion<CashEventVersion> {
+  final Value<String> id;
+  final Value<String> cashEventId;
+  final Value<String> paymentId;
+  final Value<int> sequence;
+  final Value<String> operation;
+  final Value<String> occurred;
+  final Value<String> cashDirection;
+  final Value<int> physicalAmountMinor;
+  final Value<int> effectiveRecognizedMinor;
+  final Value<String?> transactionId;
+  final Value<String?> previousVersionId;
+  final Value<String> idempotencyKey;
+  final Value<String> requestPayload;
+  final Value<String> actorId;
+  final Value<String> reason;
+  final Value<DateTime> recordedAt;
+  final Value<int> rowid;
+  const CashEventVersionsCompanion({
+    this.id = const Value.absent(),
+    this.cashEventId = const Value.absent(),
+    this.paymentId = const Value.absent(),
+    this.sequence = const Value.absent(),
+    this.operation = const Value.absent(),
+    this.occurred = const Value.absent(),
+    this.cashDirection = const Value.absent(),
+    this.physicalAmountMinor = const Value.absent(),
+    this.effectiveRecognizedMinor = const Value.absent(),
+    this.transactionId = const Value.absent(),
+    this.previousVersionId = const Value.absent(),
+    this.idempotencyKey = const Value.absent(),
+    this.requestPayload = const Value.absent(),
+    this.actorId = const Value.absent(),
+    this.reason = const Value.absent(),
+    this.recordedAt = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  CashEventVersionsCompanion.insert({
+    required String id,
+    required String cashEventId,
+    required String paymentId,
+    required int sequence,
+    required String operation,
+    required String occurred,
+    required String cashDirection,
+    required int physicalAmountMinor,
+    required int effectiveRecognizedMinor,
+    this.transactionId = const Value.absent(),
+    this.previousVersionId = const Value.absent(),
+    required String idempotencyKey,
+    required String requestPayload,
+    required String actorId,
+    required String reason,
+    required DateTime recordedAt,
+    this.rowid = const Value.absent(),
+  }) : id = Value(id),
+       cashEventId = Value(cashEventId),
+       paymentId = Value(paymentId),
+       sequence = Value(sequence),
+       operation = Value(operation),
+       occurred = Value(occurred),
+       cashDirection = Value(cashDirection),
+       physicalAmountMinor = Value(physicalAmountMinor),
+       effectiveRecognizedMinor = Value(effectiveRecognizedMinor),
+       idempotencyKey = Value(idempotencyKey),
+       requestPayload = Value(requestPayload),
+       actorId = Value(actorId),
+       reason = Value(reason),
+       recordedAt = Value(recordedAt);
+  static Insertable<CashEventVersion> custom({
+    Expression<String>? id,
+    Expression<String>? cashEventId,
+    Expression<String>? paymentId,
+    Expression<int>? sequence,
+    Expression<String>? operation,
+    Expression<String>? occurred,
+    Expression<String>? cashDirection,
+    Expression<int>? physicalAmountMinor,
+    Expression<int>? effectiveRecognizedMinor,
+    Expression<String>? transactionId,
+    Expression<String>? previousVersionId,
+    Expression<String>? idempotencyKey,
+    Expression<String>? requestPayload,
+    Expression<String>? actorId,
+    Expression<String>? reason,
+    Expression<DateTime>? recordedAt,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'version_id': id,
+      if (cashEventId != null) 'cash_event_id': cashEventId,
+      if (paymentId != null) 'payment_id': paymentId,
+      if (sequence != null) 'sequence': sequence,
+      if (operation != null) 'operation': operation,
+      if (occurred != null) 'occurred': occurred,
+      if (cashDirection != null) 'cash_direction': cashDirection,
+      if (physicalAmountMinor != null)
+        'physical_amount_minor': physicalAmountMinor,
+      if (effectiveRecognizedMinor != null)
+        'effective_recognized_minor': effectiveRecognizedMinor,
+      if (transactionId != null) 'transaction_id': transactionId,
+      if (previousVersionId != null) 'previous_version_id': previousVersionId,
+      if (idempotencyKey != null) 'idempotency_key': idempotencyKey,
+      if (requestPayload != null) 'request_payload': requestPayload,
+      if (actorId != null) 'actor_id': actorId,
+      if (reason != null) 'reason': reason,
+      if (recordedAt != null) 'recorded_at': recordedAt,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  CashEventVersionsCompanion copyWith({
+    Value<String>? id,
+    Value<String>? cashEventId,
+    Value<String>? paymentId,
+    Value<int>? sequence,
+    Value<String>? operation,
+    Value<String>? occurred,
+    Value<String>? cashDirection,
+    Value<int>? physicalAmountMinor,
+    Value<int>? effectiveRecognizedMinor,
+    Value<String?>? transactionId,
+    Value<String?>? previousVersionId,
+    Value<String>? idempotencyKey,
+    Value<String>? requestPayload,
+    Value<String>? actorId,
+    Value<String>? reason,
+    Value<DateTime>? recordedAt,
+    Value<int>? rowid,
+  }) {
+    return CashEventVersionsCompanion(
+      id: id ?? this.id,
+      cashEventId: cashEventId ?? this.cashEventId,
+      paymentId: paymentId ?? this.paymentId,
+      sequence: sequence ?? this.sequence,
+      operation: operation ?? this.operation,
+      occurred: occurred ?? this.occurred,
+      cashDirection: cashDirection ?? this.cashDirection,
+      physicalAmountMinor: physicalAmountMinor ?? this.physicalAmountMinor,
+      effectiveRecognizedMinor:
+          effectiveRecognizedMinor ?? this.effectiveRecognizedMinor,
+      transactionId: transactionId ?? this.transactionId,
+      previousVersionId: previousVersionId ?? this.previousVersionId,
+      idempotencyKey: idempotencyKey ?? this.idempotencyKey,
+      requestPayload: requestPayload ?? this.requestPayload,
+      actorId: actorId ?? this.actorId,
+      reason: reason ?? this.reason,
+      recordedAt: recordedAt ?? this.recordedAt,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['version_id'] = Variable<String>(id.value);
+    }
+    if (cashEventId.present) {
+      map['cash_event_id'] = Variable<String>(cashEventId.value);
+    }
+    if (paymentId.present) {
+      map['payment_id'] = Variable<String>(paymentId.value);
+    }
+    if (sequence.present) {
+      map['sequence'] = Variable<int>(sequence.value);
+    }
+    if (operation.present) {
+      map['operation'] = Variable<String>(operation.value);
+    }
+    if (occurred.present) {
+      map['occurred'] = Variable<String>(occurred.value);
+    }
+    if (cashDirection.present) {
+      map['cash_direction'] = Variable<String>(cashDirection.value);
+    }
+    if (physicalAmountMinor.present) {
+      map['physical_amount_minor'] = Variable<int>(physicalAmountMinor.value);
+    }
+    if (effectiveRecognizedMinor.present) {
+      map['effective_recognized_minor'] = Variable<int>(
+        effectiveRecognizedMinor.value,
+      );
+    }
+    if (transactionId.present) {
+      map['transaction_id'] = Variable<String>(transactionId.value);
+    }
+    if (previousVersionId.present) {
+      map['previous_version_id'] = Variable<String>(previousVersionId.value);
+    }
+    if (idempotencyKey.present) {
+      map['idempotency_key'] = Variable<String>(idempotencyKey.value);
+    }
+    if (requestPayload.present) {
+      map['request_payload'] = Variable<String>(requestPayload.value);
+    }
+    if (actorId.present) {
+      map['actor_id'] = Variable<String>(actorId.value);
+    }
+    if (reason.present) {
+      map['reason'] = Variable<String>(reason.value);
+    }
+    if (recordedAt.present) {
+      map['recorded_at'] = Variable<DateTime>(recordedAt.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('CashEventVersionsCompanion(')
+          ..write('id: $id, ')
+          ..write('cashEventId: $cashEventId, ')
+          ..write('paymentId: $paymentId, ')
+          ..write('sequence: $sequence, ')
+          ..write('operation: $operation, ')
+          ..write('occurred: $occurred, ')
+          ..write('cashDirection: $cashDirection, ')
+          ..write('physicalAmountMinor: $physicalAmountMinor, ')
+          ..write('effectiveRecognizedMinor: $effectiveRecognizedMinor, ')
+          ..write('transactionId: $transactionId, ')
+          ..write('previousVersionId: $previousVersionId, ')
+          ..write('idempotencyKey: $idempotencyKey, ')
+          ..write('requestPayload: $requestPayload, ')
+          ..write('actorId: $actorId, ')
+          ..write('reason: $reason, ')
+          ..write('recordedAt: $recordedAt, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $CashEventHeadsTable extends CashEventHeads
+    with TableInfo<$CashEventHeadsTable, CashEventHead> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $CashEventHeadsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _cashEventIdMeta = const VerificationMeta(
+    'cashEventId',
+  );
+  @override
+  late final GeneratedColumn<String> cashEventId = GeneratedColumn<String>(
+    'cash_event_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _paymentIdMeta = const VerificationMeta(
+    'paymentId',
+  );
+  @override
+  late final GeneratedColumn<String> paymentId = GeneratedColumn<String>(
+    'payment_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _versionIdMeta = const VerificationMeta(
+    'versionId',
+  );
+  @override
+  late final GeneratedColumn<String> versionId = GeneratedColumn<String>(
+    'version_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _revisionMeta = const VerificationMeta(
+    'revision',
+  );
+  @override
+  late final GeneratedColumn<int> revision = GeneratedColumn<int>(
+    'revision',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _updatedAtMeta = const VerificationMeta(
+    'updatedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
+    'updated_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    cashEventId,
+    paymentId,
+    versionId,
+    revision,
+    updatedAt,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'cash_event_heads';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<CashEventHead> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('cash_event_id')) {
+      context.handle(
+        _cashEventIdMeta,
+        cashEventId.isAcceptableOrUnknown(
+          data['cash_event_id']!,
+          _cashEventIdMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_cashEventIdMeta);
+    }
+    if (data.containsKey('payment_id')) {
+      context.handle(
+        _paymentIdMeta,
+        paymentId.isAcceptableOrUnknown(data['payment_id']!, _paymentIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_paymentIdMeta);
+    }
+    if (data.containsKey('version_id')) {
+      context.handle(
+        _versionIdMeta,
+        versionId.isAcceptableOrUnknown(data['version_id']!, _versionIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_versionIdMeta);
+    }
+    if (data.containsKey('revision')) {
+      context.handle(
+        _revisionMeta,
+        revision.isAcceptableOrUnknown(data['revision']!, _revisionMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_revisionMeta);
+    }
+    if (data.containsKey('updated_at')) {
+      context.handle(
+        _updatedAtMeta,
+        updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_updatedAtMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {cashEventId};
+  @override
+  List<Set<GeneratedColumn>> get uniqueKeys => [
+    {cashEventId, paymentId},
+  ];
+  @override
+  CashEventHead map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return CashEventHead(
+      cashEventId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}cash_event_id'],
+      )!,
+      paymentId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}payment_id'],
+      )!,
+      versionId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}version_id'],
+      )!,
+      revision: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}revision'],
+      )!,
+      updatedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}updated_at'],
+      )!,
+    );
+  }
+
+  @override
+  $CashEventHeadsTable createAlias(String alias) {
+    return $CashEventHeadsTable(attachedDatabase, alias);
+  }
+}
+
+class CashEventHead extends DataClass implements Insertable<CashEventHead> {
+  final String cashEventId;
+  final String paymentId;
+  final String versionId;
+  final int revision;
+  final DateTime updatedAt;
+  const CashEventHead({
+    required this.cashEventId,
+    required this.paymentId,
+    required this.versionId,
+    required this.revision,
+    required this.updatedAt,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['cash_event_id'] = Variable<String>(cashEventId);
+    map['payment_id'] = Variable<String>(paymentId);
+    map['version_id'] = Variable<String>(versionId);
+    map['revision'] = Variable<int>(revision);
+    map['updated_at'] = Variable<DateTime>(updatedAt);
+    return map;
+  }
+
+  CashEventHeadsCompanion toCompanion(bool nullToAbsent) {
+    return CashEventHeadsCompanion(
+      cashEventId: Value(cashEventId),
+      paymentId: Value(paymentId),
+      versionId: Value(versionId),
+      revision: Value(revision),
+      updatedAt: Value(updatedAt),
+    );
+  }
+
+  factory CashEventHead.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return CashEventHead(
+      cashEventId: serializer.fromJson<String>(json['cashEventId']),
+      paymentId: serializer.fromJson<String>(json['paymentId']),
+      versionId: serializer.fromJson<String>(json['versionId']),
+      revision: serializer.fromJson<int>(json['revision']),
+      updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'cashEventId': serializer.toJson<String>(cashEventId),
+      'paymentId': serializer.toJson<String>(paymentId),
+      'versionId': serializer.toJson<String>(versionId),
+      'revision': serializer.toJson<int>(revision),
+      'updatedAt': serializer.toJson<DateTime>(updatedAt),
+    };
+  }
+
+  CashEventHead copyWith({
+    String? cashEventId,
+    String? paymentId,
+    String? versionId,
+    int? revision,
+    DateTime? updatedAt,
+  }) => CashEventHead(
+    cashEventId: cashEventId ?? this.cashEventId,
+    paymentId: paymentId ?? this.paymentId,
+    versionId: versionId ?? this.versionId,
+    revision: revision ?? this.revision,
+    updatedAt: updatedAt ?? this.updatedAt,
+  );
+  CashEventHead copyWithCompanion(CashEventHeadsCompanion data) {
+    return CashEventHead(
+      cashEventId: data.cashEventId.present
+          ? data.cashEventId.value
+          : this.cashEventId,
+      paymentId: data.paymentId.present ? data.paymentId.value : this.paymentId,
+      versionId: data.versionId.present ? data.versionId.value : this.versionId,
+      revision: data.revision.present ? data.revision.value : this.revision,
+      updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('CashEventHead(')
+          ..write('cashEventId: $cashEventId, ')
+          ..write('paymentId: $paymentId, ')
+          ..write('versionId: $versionId, ')
+          ..write('revision: $revision, ')
+          ..write('updatedAt: $updatedAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode =>
+      Object.hash(cashEventId, paymentId, versionId, revision, updatedAt);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is CashEventHead &&
+          other.cashEventId == this.cashEventId &&
+          other.paymentId == this.paymentId &&
+          other.versionId == this.versionId &&
+          other.revision == this.revision &&
+          other.updatedAt == this.updatedAt);
+}
+
+class CashEventHeadsCompanion extends UpdateCompanion<CashEventHead> {
+  final Value<String> cashEventId;
+  final Value<String> paymentId;
+  final Value<String> versionId;
+  final Value<int> revision;
+  final Value<DateTime> updatedAt;
+  final Value<int> rowid;
+  const CashEventHeadsCompanion({
+    this.cashEventId = const Value.absent(),
+    this.paymentId = const Value.absent(),
+    this.versionId = const Value.absent(),
+    this.revision = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  CashEventHeadsCompanion.insert({
+    required String cashEventId,
+    required String paymentId,
+    required String versionId,
+    required int revision,
+    required DateTime updatedAt,
+    this.rowid = const Value.absent(),
+  }) : cashEventId = Value(cashEventId),
+       paymentId = Value(paymentId),
+       versionId = Value(versionId),
+       revision = Value(revision),
+       updatedAt = Value(updatedAt);
+  static Insertable<CashEventHead> custom({
+    Expression<String>? cashEventId,
+    Expression<String>? paymentId,
+    Expression<String>? versionId,
+    Expression<int>? revision,
+    Expression<DateTime>? updatedAt,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (cashEventId != null) 'cash_event_id': cashEventId,
+      if (paymentId != null) 'payment_id': paymentId,
+      if (versionId != null) 'version_id': versionId,
+      if (revision != null) 'revision': revision,
+      if (updatedAt != null) 'updated_at': updatedAt,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  CashEventHeadsCompanion copyWith({
+    Value<String>? cashEventId,
+    Value<String>? paymentId,
+    Value<String>? versionId,
+    Value<int>? revision,
+    Value<DateTime>? updatedAt,
+    Value<int>? rowid,
+  }) {
+    return CashEventHeadsCompanion(
+      cashEventId: cashEventId ?? this.cashEventId,
+      paymentId: paymentId ?? this.paymentId,
+      versionId: versionId ?? this.versionId,
+      revision: revision ?? this.revision,
+      updatedAt: updatedAt ?? this.updatedAt,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (cashEventId.present) {
+      map['cash_event_id'] = Variable<String>(cashEventId.value);
+    }
+    if (paymentId.present) {
+      map['payment_id'] = Variable<String>(paymentId.value);
+    }
+    if (versionId.present) {
+      map['version_id'] = Variable<String>(versionId.value);
+    }
+    if (revision.present) {
+      map['revision'] = Variable<int>(revision.value);
+    }
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<DateTime>(updatedAt.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('CashEventHeadsCompanion(')
+          ..write('cashEventId: $cashEventId, ')
+          ..write('paymentId: $paymentId, ')
+          ..write('versionId: $versionId, ')
+          ..write('revision: $revision, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $ReconciliationCasesTable extends ReconciliationCases
+    with TableInfo<$ReconciliationCasesTable, ReconciliationCase> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $ReconciliationCasesTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+    'case_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _cashEventIdMeta = const VerificationMeta(
+    'cashEventId',
+  );
+  @override
+  late final GeneratedColumn<String> cashEventId = GeneratedColumn<String>(
+    'cash_event_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _paymentIdMeta = const VerificationMeta(
+    'paymentId',
+  );
+  @override
+  late final GeneratedColumn<String> paymentId = GeneratedColumn<String>(
+    'payment_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _financialAccountIdMeta =
+      const VerificationMeta('financialAccountId');
+  @override
+  late final GeneratedColumn<String> financialAccountId =
+      GeneratedColumn<String>(
+        'financial_account_id',
+        aliasedName,
+        false,
+        type: DriftSqlType.string,
+        requiredDuringInsert: true,
+      );
+  static const VerificationMeta _partyIdMeta = const VerificationMeta(
+    'partyId',
+  );
+  @override
+  late final GeneratedColumn<String> partyId = GeneratedColumn<String>(
+    'party_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _partyRoleMeta = const VerificationMeta(
+    'partyRole',
+  );
+  @override
+  late final GeneratedColumn<String> partyRole = GeneratedColumn<String>(
+    'party_role',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _currencyCodeMeta = const VerificationMeta(
+    'currencyCode',
+  );
+  @override
+  late final GeneratedColumn<String> currencyCode = GeneratedColumn<String>(
+    'currency_code',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _reasonMeta = const VerificationMeta('reason');
+  @override
+  late final GeneratedColumn<String> reason = GeneratedColumn<String>(
+    'reason',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _createdByActorIdMeta = const VerificationMeta(
+    'createdByActorId',
+  );
+  @override
+  late final GeneratedColumn<String> createdByActorId = GeneratedColumn<String>(
+    'created_by_actor_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+    'created_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    cashEventId,
+    paymentId,
+    financialAccountId,
+    partyId,
+    partyRole,
+    currencyCode,
+    reason,
+    createdByActorId,
+    createdAt,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'reconciliation_cases';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<ReconciliationCase> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('case_id')) {
+      context.handle(
+        _idMeta,
+        id.isAcceptableOrUnknown(data['case_id']!, _idMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_idMeta);
+    }
+    if (data.containsKey('cash_event_id')) {
+      context.handle(
+        _cashEventIdMeta,
+        cashEventId.isAcceptableOrUnknown(
+          data['cash_event_id']!,
+          _cashEventIdMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_cashEventIdMeta);
+    }
+    if (data.containsKey('payment_id')) {
+      context.handle(
+        _paymentIdMeta,
+        paymentId.isAcceptableOrUnknown(data['payment_id']!, _paymentIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_paymentIdMeta);
+    }
+    if (data.containsKey('financial_account_id')) {
+      context.handle(
+        _financialAccountIdMeta,
+        financialAccountId.isAcceptableOrUnknown(
+          data['financial_account_id']!,
+          _financialAccountIdMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_financialAccountIdMeta);
+    }
+    if (data.containsKey('party_id')) {
+      context.handle(
+        _partyIdMeta,
+        partyId.isAcceptableOrUnknown(data['party_id']!, _partyIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_partyIdMeta);
+    }
+    if (data.containsKey('party_role')) {
+      context.handle(
+        _partyRoleMeta,
+        partyRole.isAcceptableOrUnknown(data['party_role']!, _partyRoleMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_partyRoleMeta);
+    }
+    if (data.containsKey('currency_code')) {
+      context.handle(
+        _currencyCodeMeta,
+        currencyCode.isAcceptableOrUnknown(
+          data['currency_code']!,
+          _currencyCodeMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_currencyCodeMeta);
+    }
+    if (data.containsKey('reason')) {
+      context.handle(
+        _reasonMeta,
+        reason.isAcceptableOrUnknown(data['reason']!, _reasonMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_reasonMeta);
+    }
+    if (data.containsKey('created_by_actor_id')) {
+      context.handle(
+        _createdByActorIdMeta,
+        createdByActorId.isAcceptableOrUnknown(
+          data['created_by_actor_id']!,
+          _createdByActorIdMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_createdByActorIdMeta);
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_createdAtMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  List<Set<GeneratedColumn>> get uniqueKeys => [
+    {
+      id,
+      cashEventId,
+      paymentId,
+      financialAccountId,
+      partyId,
+      partyRole,
+      currencyCode,
+    },
+  ];
+  @override
+  ReconciliationCase map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return ReconciliationCase(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}case_id'],
+      )!,
+      cashEventId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}cash_event_id'],
+      )!,
+      paymentId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}payment_id'],
+      )!,
+      financialAccountId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}financial_account_id'],
+      )!,
+      partyId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}party_id'],
+      )!,
+      partyRole: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}party_role'],
+      )!,
+      currencyCode: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}currency_code'],
+      )!,
+      reason: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}reason'],
+      )!,
+      createdByActorId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}created_by_actor_id'],
+      )!,
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}created_at'],
+      )!,
+    );
+  }
+
+  @override
+  $ReconciliationCasesTable createAlias(String alias) {
+    return $ReconciliationCasesTable(attachedDatabase, alias);
+  }
+}
+
+class ReconciliationCase extends DataClass
+    implements Insertable<ReconciliationCase> {
+  final String id;
+  final String cashEventId;
+  final String paymentId;
+  final String financialAccountId;
+  final String partyId;
+  final String partyRole;
+  final String currencyCode;
+  final String reason;
+  final String createdByActorId;
+  final DateTime createdAt;
+  const ReconciliationCase({
+    required this.id,
+    required this.cashEventId,
+    required this.paymentId,
+    required this.financialAccountId,
+    required this.partyId,
+    required this.partyRole,
+    required this.currencyCode,
+    required this.reason,
+    required this.createdByActorId,
+    required this.createdAt,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['case_id'] = Variable<String>(id);
+    map['cash_event_id'] = Variable<String>(cashEventId);
+    map['payment_id'] = Variable<String>(paymentId);
+    map['financial_account_id'] = Variable<String>(financialAccountId);
+    map['party_id'] = Variable<String>(partyId);
+    map['party_role'] = Variable<String>(partyRole);
+    map['currency_code'] = Variable<String>(currencyCode);
+    map['reason'] = Variable<String>(reason);
+    map['created_by_actor_id'] = Variable<String>(createdByActorId);
+    map['created_at'] = Variable<DateTime>(createdAt);
+    return map;
+  }
+
+  ReconciliationCasesCompanion toCompanion(bool nullToAbsent) {
+    return ReconciliationCasesCompanion(
+      id: Value(id),
+      cashEventId: Value(cashEventId),
+      paymentId: Value(paymentId),
+      financialAccountId: Value(financialAccountId),
+      partyId: Value(partyId),
+      partyRole: Value(partyRole),
+      currencyCode: Value(currencyCode),
+      reason: Value(reason),
+      createdByActorId: Value(createdByActorId),
+      createdAt: Value(createdAt),
+    );
+  }
+
+  factory ReconciliationCase.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return ReconciliationCase(
+      id: serializer.fromJson<String>(json['id']),
+      cashEventId: serializer.fromJson<String>(json['cashEventId']),
+      paymentId: serializer.fromJson<String>(json['paymentId']),
+      financialAccountId: serializer.fromJson<String>(
+        json['financialAccountId'],
+      ),
+      partyId: serializer.fromJson<String>(json['partyId']),
+      partyRole: serializer.fromJson<String>(json['partyRole']),
+      currencyCode: serializer.fromJson<String>(json['currencyCode']),
+      reason: serializer.fromJson<String>(json['reason']),
+      createdByActorId: serializer.fromJson<String>(json['createdByActorId']),
+      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<String>(id),
+      'cashEventId': serializer.toJson<String>(cashEventId),
+      'paymentId': serializer.toJson<String>(paymentId),
+      'financialAccountId': serializer.toJson<String>(financialAccountId),
+      'partyId': serializer.toJson<String>(partyId),
+      'partyRole': serializer.toJson<String>(partyRole),
+      'currencyCode': serializer.toJson<String>(currencyCode),
+      'reason': serializer.toJson<String>(reason),
+      'createdByActorId': serializer.toJson<String>(createdByActorId),
+      'createdAt': serializer.toJson<DateTime>(createdAt),
+    };
+  }
+
+  ReconciliationCase copyWith({
+    String? id,
+    String? cashEventId,
+    String? paymentId,
+    String? financialAccountId,
+    String? partyId,
+    String? partyRole,
+    String? currencyCode,
+    String? reason,
+    String? createdByActorId,
+    DateTime? createdAt,
+  }) => ReconciliationCase(
+    id: id ?? this.id,
+    cashEventId: cashEventId ?? this.cashEventId,
+    paymentId: paymentId ?? this.paymentId,
+    financialAccountId: financialAccountId ?? this.financialAccountId,
+    partyId: partyId ?? this.partyId,
+    partyRole: partyRole ?? this.partyRole,
+    currencyCode: currencyCode ?? this.currencyCode,
+    reason: reason ?? this.reason,
+    createdByActorId: createdByActorId ?? this.createdByActorId,
+    createdAt: createdAt ?? this.createdAt,
+  );
+  ReconciliationCase copyWithCompanion(ReconciliationCasesCompanion data) {
+    return ReconciliationCase(
+      id: data.id.present ? data.id.value : this.id,
+      cashEventId: data.cashEventId.present
+          ? data.cashEventId.value
+          : this.cashEventId,
+      paymentId: data.paymentId.present ? data.paymentId.value : this.paymentId,
+      financialAccountId: data.financialAccountId.present
+          ? data.financialAccountId.value
+          : this.financialAccountId,
+      partyId: data.partyId.present ? data.partyId.value : this.partyId,
+      partyRole: data.partyRole.present ? data.partyRole.value : this.partyRole,
+      currencyCode: data.currencyCode.present
+          ? data.currencyCode.value
+          : this.currencyCode,
+      reason: data.reason.present ? data.reason.value : this.reason,
+      createdByActorId: data.createdByActorId.present
+          ? data.createdByActorId.value
+          : this.createdByActorId,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('ReconciliationCase(')
+          ..write('id: $id, ')
+          ..write('cashEventId: $cashEventId, ')
+          ..write('paymentId: $paymentId, ')
+          ..write('financialAccountId: $financialAccountId, ')
+          ..write('partyId: $partyId, ')
+          ..write('partyRole: $partyRole, ')
+          ..write('currencyCode: $currencyCode, ')
+          ..write('reason: $reason, ')
+          ..write('createdByActorId: $createdByActorId, ')
+          ..write('createdAt: $createdAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    id,
+    cashEventId,
+    paymentId,
+    financialAccountId,
+    partyId,
+    partyRole,
+    currencyCode,
+    reason,
+    createdByActorId,
+    createdAt,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is ReconciliationCase &&
+          other.id == this.id &&
+          other.cashEventId == this.cashEventId &&
+          other.paymentId == this.paymentId &&
+          other.financialAccountId == this.financialAccountId &&
+          other.partyId == this.partyId &&
+          other.partyRole == this.partyRole &&
+          other.currencyCode == this.currencyCode &&
+          other.reason == this.reason &&
+          other.createdByActorId == this.createdByActorId &&
+          other.createdAt == this.createdAt);
+}
+
+class ReconciliationCasesCompanion extends UpdateCompanion<ReconciliationCase> {
+  final Value<String> id;
+  final Value<String> cashEventId;
+  final Value<String> paymentId;
+  final Value<String> financialAccountId;
+  final Value<String> partyId;
+  final Value<String> partyRole;
+  final Value<String> currencyCode;
+  final Value<String> reason;
+  final Value<String> createdByActorId;
+  final Value<DateTime> createdAt;
+  final Value<int> rowid;
+  const ReconciliationCasesCompanion({
+    this.id = const Value.absent(),
+    this.cashEventId = const Value.absent(),
+    this.paymentId = const Value.absent(),
+    this.financialAccountId = const Value.absent(),
+    this.partyId = const Value.absent(),
+    this.partyRole = const Value.absent(),
+    this.currencyCode = const Value.absent(),
+    this.reason = const Value.absent(),
+    this.createdByActorId = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  ReconciliationCasesCompanion.insert({
+    required String id,
+    required String cashEventId,
+    required String paymentId,
+    required String financialAccountId,
+    required String partyId,
+    required String partyRole,
+    required String currencyCode,
+    required String reason,
+    required String createdByActorId,
+    required DateTime createdAt,
+    this.rowid = const Value.absent(),
+  }) : id = Value(id),
+       cashEventId = Value(cashEventId),
+       paymentId = Value(paymentId),
+       financialAccountId = Value(financialAccountId),
+       partyId = Value(partyId),
+       partyRole = Value(partyRole),
+       currencyCode = Value(currencyCode),
+       reason = Value(reason),
+       createdByActorId = Value(createdByActorId),
+       createdAt = Value(createdAt);
+  static Insertable<ReconciliationCase> custom({
+    Expression<String>? id,
+    Expression<String>? cashEventId,
+    Expression<String>? paymentId,
+    Expression<String>? financialAccountId,
+    Expression<String>? partyId,
+    Expression<String>? partyRole,
+    Expression<String>? currencyCode,
+    Expression<String>? reason,
+    Expression<String>? createdByActorId,
+    Expression<DateTime>? createdAt,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'case_id': id,
+      if (cashEventId != null) 'cash_event_id': cashEventId,
+      if (paymentId != null) 'payment_id': paymentId,
+      if (financialAccountId != null)
+        'financial_account_id': financialAccountId,
+      if (partyId != null) 'party_id': partyId,
+      if (partyRole != null) 'party_role': partyRole,
+      if (currencyCode != null) 'currency_code': currencyCode,
+      if (reason != null) 'reason': reason,
+      if (createdByActorId != null) 'created_by_actor_id': createdByActorId,
+      if (createdAt != null) 'created_at': createdAt,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  ReconciliationCasesCompanion copyWith({
+    Value<String>? id,
+    Value<String>? cashEventId,
+    Value<String>? paymentId,
+    Value<String>? financialAccountId,
+    Value<String>? partyId,
+    Value<String>? partyRole,
+    Value<String>? currencyCode,
+    Value<String>? reason,
+    Value<String>? createdByActorId,
+    Value<DateTime>? createdAt,
+    Value<int>? rowid,
+  }) {
+    return ReconciliationCasesCompanion(
+      id: id ?? this.id,
+      cashEventId: cashEventId ?? this.cashEventId,
+      paymentId: paymentId ?? this.paymentId,
+      financialAccountId: financialAccountId ?? this.financialAccountId,
+      partyId: partyId ?? this.partyId,
+      partyRole: partyRole ?? this.partyRole,
+      currencyCode: currencyCode ?? this.currencyCode,
+      reason: reason ?? this.reason,
+      createdByActorId: createdByActorId ?? this.createdByActorId,
+      createdAt: createdAt ?? this.createdAt,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['case_id'] = Variable<String>(id.value);
+    }
+    if (cashEventId.present) {
+      map['cash_event_id'] = Variable<String>(cashEventId.value);
+    }
+    if (paymentId.present) {
+      map['payment_id'] = Variable<String>(paymentId.value);
+    }
+    if (financialAccountId.present) {
+      map['financial_account_id'] = Variable<String>(financialAccountId.value);
+    }
+    if (partyId.present) {
+      map['party_id'] = Variable<String>(partyId.value);
+    }
+    if (partyRole.present) {
+      map['party_role'] = Variable<String>(partyRole.value);
+    }
+    if (currencyCode.present) {
+      map['currency_code'] = Variable<String>(currencyCode.value);
+    }
+    if (reason.present) {
+      map['reason'] = Variable<String>(reason.value);
+    }
+    if (createdByActorId.present) {
+      map['created_by_actor_id'] = Variable<String>(createdByActorId.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('ReconciliationCasesCompanion(')
+          ..write('id: $id, ')
+          ..write('cashEventId: $cashEventId, ')
+          ..write('paymentId: $paymentId, ')
+          ..write('financialAccountId: $financialAccountId, ')
+          ..write('partyId: $partyId, ')
+          ..write('partyRole: $partyRole, ')
+          ..write('currencyCode: $currencyCode, ')
+          ..write('reason: $reason, ')
+          ..write('createdByActorId: $createdByActorId, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $SuspenseResolutionsTable extends SuspenseResolutions
+    with TableInfo<$SuspenseResolutionsTable, SuspenseResolution> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $SuspenseResolutionsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+    'resolution_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _caseIdMeta = const VerificationMeta('caseId');
+  @override
+  late final GeneratedColumn<String> caseId = GeneratedColumn<String>(
+    'case_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _cashEventIdMeta = const VerificationMeta(
+    'cashEventId',
+  );
+  @override
+  late final GeneratedColumn<String> cashEventId = GeneratedColumn<String>(
+    'cash_event_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _paymentIdMeta = const VerificationMeta(
+    'paymentId',
+  );
+  @override
+  late final GeneratedColumn<String> paymentId = GeneratedColumn<String>(
+    'payment_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _financialAccountIdMeta =
+      const VerificationMeta('financialAccountId');
+  @override
+  late final GeneratedColumn<String> financialAccountId =
+      GeneratedColumn<String>(
+        'financial_account_id',
+        aliasedName,
+        false,
+        type: DriftSqlType.string,
+        requiredDuringInsert: true,
+      );
+  static const VerificationMeta _partyIdMeta = const VerificationMeta(
+    'partyId',
+  );
+  @override
+  late final GeneratedColumn<String> partyId = GeneratedColumn<String>(
+    'party_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _partyRoleMeta = const VerificationMeta(
+    'partyRole',
+  );
+  @override
+  late final GeneratedColumn<String> partyRole = GeneratedColumn<String>(
+    'party_role',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _currencyCodeMeta = const VerificationMeta(
+    'currencyCode',
+  );
+  @override
+  late final GeneratedColumn<String> currencyCode = GeneratedColumn<String>(
+    'currency_code',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _amountMinorMeta = const VerificationMeta(
+    'amountMinor',
+  );
+  @override
+  late final GeneratedColumn<int> amountMinor = GeneratedColumn<int>(
+    'amount_minor',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _actorIdMeta = const VerificationMeta(
+    'actorId',
+  );
+  @override
+  late final GeneratedColumn<String> actorId = GeneratedColumn<String>(
+    'actor_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _authorizedByActorIdMeta =
+      const VerificationMeta('authorizedByActorId');
+  @override
+  late final GeneratedColumn<String> authorizedByActorId =
+      GeneratedColumn<String>(
+        'authorized_by_actor_id',
+        aliasedName,
+        false,
+        type: DriftSqlType.string,
+        requiredDuringInsert: true,
+      );
+  static const VerificationMeta _authorizationReferenceMeta =
+      const VerificationMeta('authorizationReference');
+  @override
+  late final GeneratedColumn<String> authorizationReference =
+      GeneratedColumn<String>(
+        'authorization_reference',
+        aliasedName,
+        false,
+        type: DriftSqlType.string,
+        requiredDuringInsert: true,
+      );
+  static const VerificationMeta _reasonMeta = const VerificationMeta('reason');
+  @override
+  late final GeneratedColumn<String> reason = GeneratedColumn<String>(
+    'reason',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _idempotencyKeyMeta = const VerificationMeta(
+    'idempotencyKey',
+  );
+  @override
+  late final GeneratedColumn<String> idempotencyKey = GeneratedColumn<String>(
+    'idempotency_key',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _requestPayloadMeta = const VerificationMeta(
+    'requestPayload',
+  );
+  @override
+  late final GeneratedColumn<String> requestPayload = GeneratedColumn<String>(
+    'request_payload',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _resolvedAtMeta = const VerificationMeta(
+    'resolvedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> resolvedAt = GeneratedColumn<DateTime>(
+    'resolved_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    caseId,
+    cashEventId,
+    paymentId,
+    financialAccountId,
+    partyId,
+    partyRole,
+    currencyCode,
+    amountMinor,
+    actorId,
+    authorizedByActorId,
+    authorizationReference,
+    reason,
+    idempotencyKey,
+    requestPayload,
+    resolvedAt,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'suspense_resolutions';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<SuspenseResolution> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('resolution_id')) {
+      context.handle(
+        _idMeta,
+        id.isAcceptableOrUnknown(data['resolution_id']!, _idMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_idMeta);
+    }
+    if (data.containsKey('case_id')) {
+      context.handle(
+        _caseIdMeta,
+        caseId.isAcceptableOrUnknown(data['case_id']!, _caseIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_caseIdMeta);
+    }
+    if (data.containsKey('cash_event_id')) {
+      context.handle(
+        _cashEventIdMeta,
+        cashEventId.isAcceptableOrUnknown(
+          data['cash_event_id']!,
+          _cashEventIdMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_cashEventIdMeta);
+    }
+    if (data.containsKey('payment_id')) {
+      context.handle(
+        _paymentIdMeta,
+        paymentId.isAcceptableOrUnknown(data['payment_id']!, _paymentIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_paymentIdMeta);
+    }
+    if (data.containsKey('financial_account_id')) {
+      context.handle(
+        _financialAccountIdMeta,
+        financialAccountId.isAcceptableOrUnknown(
+          data['financial_account_id']!,
+          _financialAccountIdMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_financialAccountIdMeta);
+    }
+    if (data.containsKey('party_id')) {
+      context.handle(
+        _partyIdMeta,
+        partyId.isAcceptableOrUnknown(data['party_id']!, _partyIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_partyIdMeta);
+    }
+    if (data.containsKey('party_role')) {
+      context.handle(
+        _partyRoleMeta,
+        partyRole.isAcceptableOrUnknown(data['party_role']!, _partyRoleMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_partyRoleMeta);
+    }
+    if (data.containsKey('currency_code')) {
+      context.handle(
+        _currencyCodeMeta,
+        currencyCode.isAcceptableOrUnknown(
+          data['currency_code']!,
+          _currencyCodeMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_currencyCodeMeta);
+    }
+    if (data.containsKey('amount_minor')) {
+      context.handle(
+        _amountMinorMeta,
+        amountMinor.isAcceptableOrUnknown(
+          data['amount_minor']!,
+          _amountMinorMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_amountMinorMeta);
+    }
+    if (data.containsKey('actor_id')) {
+      context.handle(
+        _actorIdMeta,
+        actorId.isAcceptableOrUnknown(data['actor_id']!, _actorIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_actorIdMeta);
+    }
+    if (data.containsKey('authorized_by_actor_id')) {
+      context.handle(
+        _authorizedByActorIdMeta,
+        authorizedByActorId.isAcceptableOrUnknown(
+          data['authorized_by_actor_id']!,
+          _authorizedByActorIdMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_authorizedByActorIdMeta);
+    }
+    if (data.containsKey('authorization_reference')) {
+      context.handle(
+        _authorizationReferenceMeta,
+        authorizationReference.isAcceptableOrUnknown(
+          data['authorization_reference']!,
+          _authorizationReferenceMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_authorizationReferenceMeta);
+    }
+    if (data.containsKey('reason')) {
+      context.handle(
+        _reasonMeta,
+        reason.isAcceptableOrUnknown(data['reason']!, _reasonMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_reasonMeta);
+    }
+    if (data.containsKey('idempotency_key')) {
+      context.handle(
+        _idempotencyKeyMeta,
+        idempotencyKey.isAcceptableOrUnknown(
+          data['idempotency_key']!,
+          _idempotencyKeyMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_idempotencyKeyMeta);
+    }
+    if (data.containsKey('request_payload')) {
+      context.handle(
+        _requestPayloadMeta,
+        requestPayload.isAcceptableOrUnknown(
+          data['request_payload']!,
+          _requestPayloadMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_requestPayloadMeta);
+    }
+    if (data.containsKey('resolved_at')) {
+      context.handle(
+        _resolvedAtMeta,
+        resolvedAt.isAcceptableOrUnknown(data['resolved_at']!, _resolvedAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_resolvedAtMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  List<Set<GeneratedColumn>> get uniqueKeys => [
+    {
+      id,
+      caseId,
+      cashEventId,
+      paymentId,
+      financialAccountId,
+      partyId,
+      partyRole,
+      currencyCode,
+    },
+    {idempotencyKey},
+  ];
+  @override
+  SuspenseResolution map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return SuspenseResolution(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}resolution_id'],
+      )!,
+      caseId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}case_id'],
+      )!,
+      cashEventId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}cash_event_id'],
+      )!,
+      paymentId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}payment_id'],
+      )!,
+      financialAccountId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}financial_account_id'],
+      )!,
+      partyId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}party_id'],
+      )!,
+      partyRole: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}party_role'],
+      )!,
+      currencyCode: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}currency_code'],
+      )!,
+      amountMinor: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}amount_minor'],
+      )!,
+      actorId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}actor_id'],
+      )!,
+      authorizedByActorId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}authorized_by_actor_id'],
+      )!,
+      authorizationReference: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}authorization_reference'],
+      )!,
+      reason: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}reason'],
+      )!,
+      idempotencyKey: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}idempotency_key'],
+      )!,
+      requestPayload: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}request_payload'],
+      )!,
+      resolvedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}resolved_at'],
+      )!,
+    );
+  }
+
+  @override
+  $SuspenseResolutionsTable createAlias(String alias) {
+    return $SuspenseResolutionsTable(attachedDatabase, alias);
+  }
+}
+
+class SuspenseResolution extends DataClass
+    implements Insertable<SuspenseResolution> {
+  final String id;
+  final String caseId;
+  final String cashEventId;
+  final String paymentId;
+  final String financialAccountId;
+  final String partyId;
+  final String partyRole;
+  final String currencyCode;
+  final int amountMinor;
+  final String actorId;
+  final String authorizedByActorId;
+  final String authorizationReference;
+  final String reason;
+  final String idempotencyKey;
+  final String requestPayload;
+  final DateTime resolvedAt;
+  const SuspenseResolution({
+    required this.id,
+    required this.caseId,
+    required this.cashEventId,
+    required this.paymentId,
+    required this.financialAccountId,
+    required this.partyId,
+    required this.partyRole,
+    required this.currencyCode,
+    required this.amountMinor,
+    required this.actorId,
+    required this.authorizedByActorId,
+    required this.authorizationReference,
+    required this.reason,
+    required this.idempotencyKey,
+    required this.requestPayload,
+    required this.resolvedAt,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['resolution_id'] = Variable<String>(id);
+    map['case_id'] = Variable<String>(caseId);
+    map['cash_event_id'] = Variable<String>(cashEventId);
+    map['payment_id'] = Variable<String>(paymentId);
+    map['financial_account_id'] = Variable<String>(financialAccountId);
+    map['party_id'] = Variable<String>(partyId);
+    map['party_role'] = Variable<String>(partyRole);
+    map['currency_code'] = Variable<String>(currencyCode);
+    map['amount_minor'] = Variable<int>(amountMinor);
+    map['actor_id'] = Variable<String>(actorId);
+    map['authorized_by_actor_id'] = Variable<String>(authorizedByActorId);
+    map['authorization_reference'] = Variable<String>(authorizationReference);
+    map['reason'] = Variable<String>(reason);
+    map['idempotency_key'] = Variable<String>(idempotencyKey);
+    map['request_payload'] = Variable<String>(requestPayload);
+    map['resolved_at'] = Variable<DateTime>(resolvedAt);
+    return map;
+  }
+
+  SuspenseResolutionsCompanion toCompanion(bool nullToAbsent) {
+    return SuspenseResolutionsCompanion(
+      id: Value(id),
+      caseId: Value(caseId),
+      cashEventId: Value(cashEventId),
+      paymentId: Value(paymentId),
+      financialAccountId: Value(financialAccountId),
+      partyId: Value(partyId),
+      partyRole: Value(partyRole),
+      currencyCode: Value(currencyCode),
+      amountMinor: Value(amountMinor),
+      actorId: Value(actorId),
+      authorizedByActorId: Value(authorizedByActorId),
+      authorizationReference: Value(authorizationReference),
+      reason: Value(reason),
+      idempotencyKey: Value(idempotencyKey),
+      requestPayload: Value(requestPayload),
+      resolvedAt: Value(resolvedAt),
+    );
+  }
+
+  factory SuspenseResolution.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return SuspenseResolution(
+      id: serializer.fromJson<String>(json['id']),
+      caseId: serializer.fromJson<String>(json['caseId']),
+      cashEventId: serializer.fromJson<String>(json['cashEventId']),
+      paymentId: serializer.fromJson<String>(json['paymentId']),
+      financialAccountId: serializer.fromJson<String>(
+        json['financialAccountId'],
+      ),
+      partyId: serializer.fromJson<String>(json['partyId']),
+      partyRole: serializer.fromJson<String>(json['partyRole']),
+      currencyCode: serializer.fromJson<String>(json['currencyCode']),
+      amountMinor: serializer.fromJson<int>(json['amountMinor']),
+      actorId: serializer.fromJson<String>(json['actorId']),
+      authorizedByActorId: serializer.fromJson<String>(
+        json['authorizedByActorId'],
+      ),
+      authorizationReference: serializer.fromJson<String>(
+        json['authorizationReference'],
+      ),
+      reason: serializer.fromJson<String>(json['reason']),
+      idempotencyKey: serializer.fromJson<String>(json['idempotencyKey']),
+      requestPayload: serializer.fromJson<String>(json['requestPayload']),
+      resolvedAt: serializer.fromJson<DateTime>(json['resolvedAt']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<String>(id),
+      'caseId': serializer.toJson<String>(caseId),
+      'cashEventId': serializer.toJson<String>(cashEventId),
+      'paymentId': serializer.toJson<String>(paymentId),
+      'financialAccountId': serializer.toJson<String>(financialAccountId),
+      'partyId': serializer.toJson<String>(partyId),
+      'partyRole': serializer.toJson<String>(partyRole),
+      'currencyCode': serializer.toJson<String>(currencyCode),
+      'amountMinor': serializer.toJson<int>(amountMinor),
+      'actorId': serializer.toJson<String>(actorId),
+      'authorizedByActorId': serializer.toJson<String>(authorizedByActorId),
+      'authorizationReference': serializer.toJson<String>(
+        authorizationReference,
+      ),
+      'reason': serializer.toJson<String>(reason),
+      'idempotencyKey': serializer.toJson<String>(idempotencyKey),
+      'requestPayload': serializer.toJson<String>(requestPayload),
+      'resolvedAt': serializer.toJson<DateTime>(resolvedAt),
+    };
+  }
+
+  SuspenseResolution copyWith({
+    String? id,
+    String? caseId,
+    String? cashEventId,
+    String? paymentId,
+    String? financialAccountId,
+    String? partyId,
+    String? partyRole,
+    String? currencyCode,
+    int? amountMinor,
+    String? actorId,
+    String? authorizedByActorId,
+    String? authorizationReference,
+    String? reason,
+    String? idempotencyKey,
+    String? requestPayload,
+    DateTime? resolvedAt,
+  }) => SuspenseResolution(
+    id: id ?? this.id,
+    caseId: caseId ?? this.caseId,
+    cashEventId: cashEventId ?? this.cashEventId,
+    paymentId: paymentId ?? this.paymentId,
+    financialAccountId: financialAccountId ?? this.financialAccountId,
+    partyId: partyId ?? this.partyId,
+    partyRole: partyRole ?? this.partyRole,
+    currencyCode: currencyCode ?? this.currencyCode,
+    amountMinor: amountMinor ?? this.amountMinor,
+    actorId: actorId ?? this.actorId,
+    authorizedByActorId: authorizedByActorId ?? this.authorizedByActorId,
+    authorizationReference:
+        authorizationReference ?? this.authorizationReference,
+    reason: reason ?? this.reason,
+    idempotencyKey: idempotencyKey ?? this.idempotencyKey,
+    requestPayload: requestPayload ?? this.requestPayload,
+    resolvedAt: resolvedAt ?? this.resolvedAt,
+  );
+  SuspenseResolution copyWithCompanion(SuspenseResolutionsCompanion data) {
+    return SuspenseResolution(
+      id: data.id.present ? data.id.value : this.id,
+      caseId: data.caseId.present ? data.caseId.value : this.caseId,
+      cashEventId: data.cashEventId.present
+          ? data.cashEventId.value
+          : this.cashEventId,
+      paymentId: data.paymentId.present ? data.paymentId.value : this.paymentId,
+      financialAccountId: data.financialAccountId.present
+          ? data.financialAccountId.value
+          : this.financialAccountId,
+      partyId: data.partyId.present ? data.partyId.value : this.partyId,
+      partyRole: data.partyRole.present ? data.partyRole.value : this.partyRole,
+      currencyCode: data.currencyCode.present
+          ? data.currencyCode.value
+          : this.currencyCode,
+      amountMinor: data.amountMinor.present
+          ? data.amountMinor.value
+          : this.amountMinor,
+      actorId: data.actorId.present ? data.actorId.value : this.actorId,
+      authorizedByActorId: data.authorizedByActorId.present
+          ? data.authorizedByActorId.value
+          : this.authorizedByActorId,
+      authorizationReference: data.authorizationReference.present
+          ? data.authorizationReference.value
+          : this.authorizationReference,
+      reason: data.reason.present ? data.reason.value : this.reason,
+      idempotencyKey: data.idempotencyKey.present
+          ? data.idempotencyKey.value
+          : this.idempotencyKey,
+      requestPayload: data.requestPayload.present
+          ? data.requestPayload.value
+          : this.requestPayload,
+      resolvedAt: data.resolvedAt.present
+          ? data.resolvedAt.value
+          : this.resolvedAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('SuspenseResolution(')
+          ..write('id: $id, ')
+          ..write('caseId: $caseId, ')
+          ..write('cashEventId: $cashEventId, ')
+          ..write('paymentId: $paymentId, ')
+          ..write('financialAccountId: $financialAccountId, ')
+          ..write('partyId: $partyId, ')
+          ..write('partyRole: $partyRole, ')
+          ..write('currencyCode: $currencyCode, ')
+          ..write('amountMinor: $amountMinor, ')
+          ..write('actorId: $actorId, ')
+          ..write('authorizedByActorId: $authorizedByActorId, ')
+          ..write('authorizationReference: $authorizationReference, ')
+          ..write('reason: $reason, ')
+          ..write('idempotencyKey: $idempotencyKey, ')
+          ..write('requestPayload: $requestPayload, ')
+          ..write('resolvedAt: $resolvedAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    id,
+    caseId,
+    cashEventId,
+    paymentId,
+    financialAccountId,
+    partyId,
+    partyRole,
+    currencyCode,
+    amountMinor,
+    actorId,
+    authorizedByActorId,
+    authorizationReference,
+    reason,
+    idempotencyKey,
+    requestPayload,
+    resolvedAt,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is SuspenseResolution &&
+          other.id == this.id &&
+          other.caseId == this.caseId &&
+          other.cashEventId == this.cashEventId &&
+          other.paymentId == this.paymentId &&
+          other.financialAccountId == this.financialAccountId &&
+          other.partyId == this.partyId &&
+          other.partyRole == this.partyRole &&
+          other.currencyCode == this.currencyCode &&
+          other.amountMinor == this.amountMinor &&
+          other.actorId == this.actorId &&
+          other.authorizedByActorId == this.authorizedByActorId &&
+          other.authorizationReference == this.authorizationReference &&
+          other.reason == this.reason &&
+          other.idempotencyKey == this.idempotencyKey &&
+          other.requestPayload == this.requestPayload &&
+          other.resolvedAt == this.resolvedAt);
+}
+
+class SuspenseResolutionsCompanion extends UpdateCompanion<SuspenseResolution> {
+  final Value<String> id;
+  final Value<String> caseId;
+  final Value<String> cashEventId;
+  final Value<String> paymentId;
+  final Value<String> financialAccountId;
+  final Value<String> partyId;
+  final Value<String> partyRole;
+  final Value<String> currencyCode;
+  final Value<int> amountMinor;
+  final Value<String> actorId;
+  final Value<String> authorizedByActorId;
+  final Value<String> authorizationReference;
+  final Value<String> reason;
+  final Value<String> idempotencyKey;
+  final Value<String> requestPayload;
+  final Value<DateTime> resolvedAt;
+  final Value<int> rowid;
+  const SuspenseResolutionsCompanion({
+    this.id = const Value.absent(),
+    this.caseId = const Value.absent(),
+    this.cashEventId = const Value.absent(),
+    this.paymentId = const Value.absent(),
+    this.financialAccountId = const Value.absent(),
+    this.partyId = const Value.absent(),
+    this.partyRole = const Value.absent(),
+    this.currencyCode = const Value.absent(),
+    this.amountMinor = const Value.absent(),
+    this.actorId = const Value.absent(),
+    this.authorizedByActorId = const Value.absent(),
+    this.authorizationReference = const Value.absent(),
+    this.reason = const Value.absent(),
+    this.idempotencyKey = const Value.absent(),
+    this.requestPayload = const Value.absent(),
+    this.resolvedAt = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  SuspenseResolutionsCompanion.insert({
+    required String id,
+    required String caseId,
+    required String cashEventId,
+    required String paymentId,
+    required String financialAccountId,
+    required String partyId,
+    required String partyRole,
+    required String currencyCode,
+    required int amountMinor,
+    required String actorId,
+    required String authorizedByActorId,
+    required String authorizationReference,
+    required String reason,
+    required String idempotencyKey,
+    required String requestPayload,
+    required DateTime resolvedAt,
+    this.rowid = const Value.absent(),
+  }) : id = Value(id),
+       caseId = Value(caseId),
+       cashEventId = Value(cashEventId),
+       paymentId = Value(paymentId),
+       financialAccountId = Value(financialAccountId),
+       partyId = Value(partyId),
+       partyRole = Value(partyRole),
+       currencyCode = Value(currencyCode),
+       amountMinor = Value(amountMinor),
+       actorId = Value(actorId),
+       authorizedByActorId = Value(authorizedByActorId),
+       authorizationReference = Value(authorizationReference),
+       reason = Value(reason),
+       idempotencyKey = Value(idempotencyKey),
+       requestPayload = Value(requestPayload),
+       resolvedAt = Value(resolvedAt);
+  static Insertable<SuspenseResolution> custom({
+    Expression<String>? id,
+    Expression<String>? caseId,
+    Expression<String>? cashEventId,
+    Expression<String>? paymentId,
+    Expression<String>? financialAccountId,
+    Expression<String>? partyId,
+    Expression<String>? partyRole,
+    Expression<String>? currencyCode,
+    Expression<int>? amountMinor,
+    Expression<String>? actorId,
+    Expression<String>? authorizedByActorId,
+    Expression<String>? authorizationReference,
+    Expression<String>? reason,
+    Expression<String>? idempotencyKey,
+    Expression<String>? requestPayload,
+    Expression<DateTime>? resolvedAt,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'resolution_id': id,
+      if (caseId != null) 'case_id': caseId,
+      if (cashEventId != null) 'cash_event_id': cashEventId,
+      if (paymentId != null) 'payment_id': paymentId,
+      if (financialAccountId != null)
+        'financial_account_id': financialAccountId,
+      if (partyId != null) 'party_id': partyId,
+      if (partyRole != null) 'party_role': partyRole,
+      if (currencyCode != null) 'currency_code': currencyCode,
+      if (amountMinor != null) 'amount_minor': amountMinor,
+      if (actorId != null) 'actor_id': actorId,
+      if (authorizedByActorId != null)
+        'authorized_by_actor_id': authorizedByActorId,
+      if (authorizationReference != null)
+        'authorization_reference': authorizationReference,
+      if (reason != null) 'reason': reason,
+      if (idempotencyKey != null) 'idempotency_key': idempotencyKey,
+      if (requestPayload != null) 'request_payload': requestPayload,
+      if (resolvedAt != null) 'resolved_at': resolvedAt,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  SuspenseResolutionsCompanion copyWith({
+    Value<String>? id,
+    Value<String>? caseId,
+    Value<String>? cashEventId,
+    Value<String>? paymentId,
+    Value<String>? financialAccountId,
+    Value<String>? partyId,
+    Value<String>? partyRole,
+    Value<String>? currencyCode,
+    Value<int>? amountMinor,
+    Value<String>? actorId,
+    Value<String>? authorizedByActorId,
+    Value<String>? authorizationReference,
+    Value<String>? reason,
+    Value<String>? idempotencyKey,
+    Value<String>? requestPayload,
+    Value<DateTime>? resolvedAt,
+    Value<int>? rowid,
+  }) {
+    return SuspenseResolutionsCompanion(
+      id: id ?? this.id,
+      caseId: caseId ?? this.caseId,
+      cashEventId: cashEventId ?? this.cashEventId,
+      paymentId: paymentId ?? this.paymentId,
+      financialAccountId: financialAccountId ?? this.financialAccountId,
+      partyId: partyId ?? this.partyId,
+      partyRole: partyRole ?? this.partyRole,
+      currencyCode: currencyCode ?? this.currencyCode,
+      amountMinor: amountMinor ?? this.amountMinor,
+      actorId: actorId ?? this.actorId,
+      authorizedByActorId: authorizedByActorId ?? this.authorizedByActorId,
+      authorizationReference:
+          authorizationReference ?? this.authorizationReference,
+      reason: reason ?? this.reason,
+      idempotencyKey: idempotencyKey ?? this.idempotencyKey,
+      requestPayload: requestPayload ?? this.requestPayload,
+      resolvedAt: resolvedAt ?? this.resolvedAt,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['resolution_id'] = Variable<String>(id.value);
+    }
+    if (caseId.present) {
+      map['case_id'] = Variable<String>(caseId.value);
+    }
+    if (cashEventId.present) {
+      map['cash_event_id'] = Variable<String>(cashEventId.value);
+    }
+    if (paymentId.present) {
+      map['payment_id'] = Variable<String>(paymentId.value);
+    }
+    if (financialAccountId.present) {
+      map['financial_account_id'] = Variable<String>(financialAccountId.value);
+    }
+    if (partyId.present) {
+      map['party_id'] = Variable<String>(partyId.value);
+    }
+    if (partyRole.present) {
+      map['party_role'] = Variable<String>(partyRole.value);
+    }
+    if (currencyCode.present) {
+      map['currency_code'] = Variable<String>(currencyCode.value);
+    }
+    if (amountMinor.present) {
+      map['amount_minor'] = Variable<int>(amountMinor.value);
+    }
+    if (actorId.present) {
+      map['actor_id'] = Variable<String>(actorId.value);
+    }
+    if (authorizedByActorId.present) {
+      map['authorized_by_actor_id'] = Variable<String>(
+        authorizedByActorId.value,
+      );
+    }
+    if (authorizationReference.present) {
+      map['authorization_reference'] = Variable<String>(
+        authorizationReference.value,
+      );
+    }
+    if (reason.present) {
+      map['reason'] = Variable<String>(reason.value);
+    }
+    if (idempotencyKey.present) {
+      map['idempotency_key'] = Variable<String>(idempotencyKey.value);
+    }
+    if (requestPayload.present) {
+      map['request_payload'] = Variable<String>(requestPayload.value);
+    }
+    if (resolvedAt.present) {
+      map['resolved_at'] = Variable<DateTime>(resolvedAt.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('SuspenseResolutionsCompanion(')
+          ..write('id: $id, ')
+          ..write('caseId: $caseId, ')
+          ..write('cashEventId: $cashEventId, ')
+          ..write('paymentId: $paymentId, ')
+          ..write('financialAccountId: $financialAccountId, ')
+          ..write('partyId: $partyId, ')
+          ..write('partyRole: $partyRole, ')
+          ..write('currencyCode: $currencyCode, ')
+          ..write('amountMinor: $amountMinor, ')
+          ..write('actorId: $actorId, ')
+          ..write('authorizedByActorId: $authorizedByActorId, ')
+          ..write('authorizationReference: $authorizationReference, ')
+          ..write('reason: $reason, ')
+          ..write('idempotencyKey: $idempotencyKey, ')
+          ..write('requestPayload: $requestPayload, ')
+          ..write('resolvedAt: $resolvedAt, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $SuspenseEntriesTable extends SuspenseEntries
+    with TableInfo<$SuspenseEntriesTable, SuspenseEntry> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $SuspenseEntriesTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+    'suspense_entry_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _caseIdMeta = const VerificationMeta('caseId');
+  @override
+  late final GeneratedColumn<String> caseId = GeneratedColumn<String>(
+    'case_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _cashEventIdMeta = const VerificationMeta(
+    'cashEventId',
+  );
+  @override
+  late final GeneratedColumn<String> cashEventId = GeneratedColumn<String>(
+    'cash_event_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _paymentIdMeta = const VerificationMeta(
+    'paymentId',
+  );
+  @override
+  late final GeneratedColumn<String> paymentId = GeneratedColumn<String>(
+    'payment_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _financialAccountIdMeta =
+      const VerificationMeta('financialAccountId');
+  @override
+  late final GeneratedColumn<String> financialAccountId =
+      GeneratedColumn<String>(
+        'financial_account_id',
+        aliasedName,
+        false,
+        type: DriftSqlType.string,
+        requiredDuringInsert: true,
+      );
+  static const VerificationMeta _partyIdMeta = const VerificationMeta(
+    'partyId',
+  );
+  @override
+  late final GeneratedColumn<String> partyId = GeneratedColumn<String>(
+    'party_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _partyRoleMeta = const VerificationMeta(
+    'partyRole',
+  );
+  @override
+  late final GeneratedColumn<String> partyRole = GeneratedColumn<String>(
+    'party_role',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _currencyCodeMeta = const VerificationMeta(
+    'currencyCode',
+  );
+  @override
+  late final GeneratedColumn<String> currencyCode = GeneratedColumn<String>(
+    'currency_code',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _movementTypeMeta = const VerificationMeta(
+    'movementType',
+  );
+  @override
+  late final GeneratedColumn<String> movementType = GeneratedColumn<String>(
+    'movement_type',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _amountMinorMeta = const VerificationMeta(
+    'amountMinor',
+  );
+  @override
+  late final GeneratedColumn<int> amountMinor = GeneratedColumn<int>(
+    'amount_minor',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _resolutionIdMeta = const VerificationMeta(
+    'resolutionId',
+  );
+  @override
+  late final GeneratedColumn<String> resolutionId = GeneratedColumn<String>(
+    'resolution_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _actorIdMeta = const VerificationMeta(
+    'actorId',
+  );
+  @override
+  late final GeneratedColumn<String> actorId = GeneratedColumn<String>(
+    'actor_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _reasonMeta = const VerificationMeta('reason');
+  @override
+  late final GeneratedColumn<String> reason = GeneratedColumn<String>(
+    'reason',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _idempotencyKeyMeta = const VerificationMeta(
+    'idempotencyKey',
+  );
+  @override
+  late final GeneratedColumn<String> idempotencyKey = GeneratedColumn<String>(
+    'idempotency_key',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _requestPayloadMeta = const VerificationMeta(
+    'requestPayload',
+  );
+  @override
+  late final GeneratedColumn<String> requestPayload = GeneratedColumn<String>(
+    'request_payload',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _recordedAtMeta = const VerificationMeta(
+    'recordedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> recordedAt = GeneratedColumn<DateTime>(
+    'recorded_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    caseId,
+    cashEventId,
+    paymentId,
+    financialAccountId,
+    partyId,
+    partyRole,
+    currencyCode,
+    movementType,
+    amountMinor,
+    resolutionId,
+    actorId,
+    reason,
+    idempotencyKey,
+    requestPayload,
+    recordedAt,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'suspense_entries';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<SuspenseEntry> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('suspense_entry_id')) {
+      context.handle(
+        _idMeta,
+        id.isAcceptableOrUnknown(data['suspense_entry_id']!, _idMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_idMeta);
+    }
+    if (data.containsKey('case_id')) {
+      context.handle(
+        _caseIdMeta,
+        caseId.isAcceptableOrUnknown(data['case_id']!, _caseIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_caseIdMeta);
+    }
+    if (data.containsKey('cash_event_id')) {
+      context.handle(
+        _cashEventIdMeta,
+        cashEventId.isAcceptableOrUnknown(
+          data['cash_event_id']!,
+          _cashEventIdMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_cashEventIdMeta);
+    }
+    if (data.containsKey('payment_id')) {
+      context.handle(
+        _paymentIdMeta,
+        paymentId.isAcceptableOrUnknown(data['payment_id']!, _paymentIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_paymentIdMeta);
+    }
+    if (data.containsKey('financial_account_id')) {
+      context.handle(
+        _financialAccountIdMeta,
+        financialAccountId.isAcceptableOrUnknown(
+          data['financial_account_id']!,
+          _financialAccountIdMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_financialAccountIdMeta);
+    }
+    if (data.containsKey('party_id')) {
+      context.handle(
+        _partyIdMeta,
+        partyId.isAcceptableOrUnknown(data['party_id']!, _partyIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_partyIdMeta);
+    }
+    if (data.containsKey('party_role')) {
+      context.handle(
+        _partyRoleMeta,
+        partyRole.isAcceptableOrUnknown(data['party_role']!, _partyRoleMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_partyRoleMeta);
+    }
+    if (data.containsKey('currency_code')) {
+      context.handle(
+        _currencyCodeMeta,
+        currencyCode.isAcceptableOrUnknown(
+          data['currency_code']!,
+          _currencyCodeMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_currencyCodeMeta);
+    }
+    if (data.containsKey('movement_type')) {
+      context.handle(
+        _movementTypeMeta,
+        movementType.isAcceptableOrUnknown(
+          data['movement_type']!,
+          _movementTypeMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_movementTypeMeta);
+    }
+    if (data.containsKey('amount_minor')) {
+      context.handle(
+        _amountMinorMeta,
+        amountMinor.isAcceptableOrUnknown(
+          data['amount_minor']!,
+          _amountMinorMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_amountMinorMeta);
+    }
+    if (data.containsKey('resolution_id')) {
+      context.handle(
+        _resolutionIdMeta,
+        resolutionId.isAcceptableOrUnknown(
+          data['resolution_id']!,
+          _resolutionIdMeta,
+        ),
+      );
+    }
+    if (data.containsKey('actor_id')) {
+      context.handle(
+        _actorIdMeta,
+        actorId.isAcceptableOrUnknown(data['actor_id']!, _actorIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_actorIdMeta);
+    }
+    if (data.containsKey('reason')) {
+      context.handle(
+        _reasonMeta,
+        reason.isAcceptableOrUnknown(data['reason']!, _reasonMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_reasonMeta);
+    }
+    if (data.containsKey('idempotency_key')) {
+      context.handle(
+        _idempotencyKeyMeta,
+        idempotencyKey.isAcceptableOrUnknown(
+          data['idempotency_key']!,
+          _idempotencyKeyMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_idempotencyKeyMeta);
+    }
+    if (data.containsKey('request_payload')) {
+      context.handle(
+        _requestPayloadMeta,
+        requestPayload.isAcceptableOrUnknown(
+          data['request_payload']!,
+          _requestPayloadMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_requestPayloadMeta);
+    }
+    if (data.containsKey('recorded_at')) {
+      context.handle(
+        _recordedAtMeta,
+        recordedAt.isAcceptableOrUnknown(data['recorded_at']!, _recordedAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_recordedAtMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  List<Set<GeneratedColumn>> get uniqueKeys => [
+    {idempotencyKey},
+  ];
+  @override
+  SuspenseEntry map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return SuspenseEntry(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}suspense_entry_id'],
+      )!,
+      caseId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}case_id'],
+      )!,
+      cashEventId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}cash_event_id'],
+      )!,
+      paymentId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}payment_id'],
+      )!,
+      financialAccountId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}financial_account_id'],
+      )!,
+      partyId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}party_id'],
+      )!,
+      partyRole: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}party_role'],
+      )!,
+      currencyCode: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}currency_code'],
+      )!,
+      movementType: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}movement_type'],
+      )!,
+      amountMinor: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}amount_minor'],
+      )!,
+      resolutionId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}resolution_id'],
+      ),
+      actorId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}actor_id'],
+      )!,
+      reason: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}reason'],
+      )!,
+      idempotencyKey: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}idempotency_key'],
+      )!,
+      requestPayload: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}request_payload'],
+      )!,
+      recordedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}recorded_at'],
+      )!,
+    );
+  }
+
+  @override
+  $SuspenseEntriesTable createAlias(String alias) {
+    return $SuspenseEntriesTable(attachedDatabase, alias);
+  }
+}
+
+class SuspenseEntry extends DataClass implements Insertable<SuspenseEntry> {
+  final String id;
+  final String caseId;
+  final String cashEventId;
+  final String paymentId;
+  final String financialAccountId;
+  final String partyId;
+  final String partyRole;
+  final String currencyCode;
+  final String movementType;
+  final int amountMinor;
+  final String? resolutionId;
+  final String actorId;
+  final String reason;
+  final String idempotencyKey;
+  final String requestPayload;
+  final DateTime recordedAt;
+  const SuspenseEntry({
+    required this.id,
+    required this.caseId,
+    required this.cashEventId,
+    required this.paymentId,
+    required this.financialAccountId,
+    required this.partyId,
+    required this.partyRole,
+    required this.currencyCode,
+    required this.movementType,
+    required this.amountMinor,
+    this.resolutionId,
+    required this.actorId,
+    required this.reason,
+    required this.idempotencyKey,
+    required this.requestPayload,
+    required this.recordedAt,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['suspense_entry_id'] = Variable<String>(id);
+    map['case_id'] = Variable<String>(caseId);
+    map['cash_event_id'] = Variable<String>(cashEventId);
+    map['payment_id'] = Variable<String>(paymentId);
+    map['financial_account_id'] = Variable<String>(financialAccountId);
+    map['party_id'] = Variable<String>(partyId);
+    map['party_role'] = Variable<String>(partyRole);
+    map['currency_code'] = Variable<String>(currencyCode);
+    map['movement_type'] = Variable<String>(movementType);
+    map['amount_minor'] = Variable<int>(amountMinor);
+    if (!nullToAbsent || resolutionId != null) {
+      map['resolution_id'] = Variable<String>(resolutionId);
+    }
+    map['actor_id'] = Variable<String>(actorId);
+    map['reason'] = Variable<String>(reason);
+    map['idempotency_key'] = Variable<String>(idempotencyKey);
+    map['request_payload'] = Variable<String>(requestPayload);
+    map['recorded_at'] = Variable<DateTime>(recordedAt);
+    return map;
+  }
+
+  SuspenseEntriesCompanion toCompanion(bool nullToAbsent) {
+    return SuspenseEntriesCompanion(
+      id: Value(id),
+      caseId: Value(caseId),
+      cashEventId: Value(cashEventId),
+      paymentId: Value(paymentId),
+      financialAccountId: Value(financialAccountId),
+      partyId: Value(partyId),
+      partyRole: Value(partyRole),
+      currencyCode: Value(currencyCode),
+      movementType: Value(movementType),
+      amountMinor: Value(amountMinor),
+      resolutionId: resolutionId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(resolutionId),
+      actorId: Value(actorId),
+      reason: Value(reason),
+      idempotencyKey: Value(idempotencyKey),
+      requestPayload: Value(requestPayload),
+      recordedAt: Value(recordedAt),
+    );
+  }
+
+  factory SuspenseEntry.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return SuspenseEntry(
+      id: serializer.fromJson<String>(json['id']),
+      caseId: serializer.fromJson<String>(json['caseId']),
+      cashEventId: serializer.fromJson<String>(json['cashEventId']),
+      paymentId: serializer.fromJson<String>(json['paymentId']),
+      financialAccountId: serializer.fromJson<String>(
+        json['financialAccountId'],
+      ),
+      partyId: serializer.fromJson<String>(json['partyId']),
+      partyRole: serializer.fromJson<String>(json['partyRole']),
+      currencyCode: serializer.fromJson<String>(json['currencyCode']),
+      movementType: serializer.fromJson<String>(json['movementType']),
+      amountMinor: serializer.fromJson<int>(json['amountMinor']),
+      resolutionId: serializer.fromJson<String?>(json['resolutionId']),
+      actorId: serializer.fromJson<String>(json['actorId']),
+      reason: serializer.fromJson<String>(json['reason']),
+      idempotencyKey: serializer.fromJson<String>(json['idempotencyKey']),
+      requestPayload: serializer.fromJson<String>(json['requestPayload']),
+      recordedAt: serializer.fromJson<DateTime>(json['recordedAt']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<String>(id),
+      'caseId': serializer.toJson<String>(caseId),
+      'cashEventId': serializer.toJson<String>(cashEventId),
+      'paymentId': serializer.toJson<String>(paymentId),
+      'financialAccountId': serializer.toJson<String>(financialAccountId),
+      'partyId': serializer.toJson<String>(partyId),
+      'partyRole': serializer.toJson<String>(partyRole),
+      'currencyCode': serializer.toJson<String>(currencyCode),
+      'movementType': serializer.toJson<String>(movementType),
+      'amountMinor': serializer.toJson<int>(amountMinor),
+      'resolutionId': serializer.toJson<String?>(resolutionId),
+      'actorId': serializer.toJson<String>(actorId),
+      'reason': serializer.toJson<String>(reason),
+      'idempotencyKey': serializer.toJson<String>(idempotencyKey),
+      'requestPayload': serializer.toJson<String>(requestPayload),
+      'recordedAt': serializer.toJson<DateTime>(recordedAt),
+    };
+  }
+
+  SuspenseEntry copyWith({
+    String? id,
+    String? caseId,
+    String? cashEventId,
+    String? paymentId,
+    String? financialAccountId,
+    String? partyId,
+    String? partyRole,
+    String? currencyCode,
+    String? movementType,
+    int? amountMinor,
+    Value<String?> resolutionId = const Value.absent(),
+    String? actorId,
+    String? reason,
+    String? idempotencyKey,
+    String? requestPayload,
+    DateTime? recordedAt,
+  }) => SuspenseEntry(
+    id: id ?? this.id,
+    caseId: caseId ?? this.caseId,
+    cashEventId: cashEventId ?? this.cashEventId,
+    paymentId: paymentId ?? this.paymentId,
+    financialAccountId: financialAccountId ?? this.financialAccountId,
+    partyId: partyId ?? this.partyId,
+    partyRole: partyRole ?? this.partyRole,
+    currencyCode: currencyCode ?? this.currencyCode,
+    movementType: movementType ?? this.movementType,
+    amountMinor: amountMinor ?? this.amountMinor,
+    resolutionId: resolutionId.present ? resolutionId.value : this.resolutionId,
+    actorId: actorId ?? this.actorId,
+    reason: reason ?? this.reason,
+    idempotencyKey: idempotencyKey ?? this.idempotencyKey,
+    requestPayload: requestPayload ?? this.requestPayload,
+    recordedAt: recordedAt ?? this.recordedAt,
+  );
+  SuspenseEntry copyWithCompanion(SuspenseEntriesCompanion data) {
+    return SuspenseEntry(
+      id: data.id.present ? data.id.value : this.id,
+      caseId: data.caseId.present ? data.caseId.value : this.caseId,
+      cashEventId: data.cashEventId.present
+          ? data.cashEventId.value
+          : this.cashEventId,
+      paymentId: data.paymentId.present ? data.paymentId.value : this.paymentId,
+      financialAccountId: data.financialAccountId.present
+          ? data.financialAccountId.value
+          : this.financialAccountId,
+      partyId: data.partyId.present ? data.partyId.value : this.partyId,
+      partyRole: data.partyRole.present ? data.partyRole.value : this.partyRole,
+      currencyCode: data.currencyCode.present
+          ? data.currencyCode.value
+          : this.currencyCode,
+      movementType: data.movementType.present
+          ? data.movementType.value
+          : this.movementType,
+      amountMinor: data.amountMinor.present
+          ? data.amountMinor.value
+          : this.amountMinor,
+      resolutionId: data.resolutionId.present
+          ? data.resolutionId.value
+          : this.resolutionId,
+      actorId: data.actorId.present ? data.actorId.value : this.actorId,
+      reason: data.reason.present ? data.reason.value : this.reason,
+      idempotencyKey: data.idempotencyKey.present
+          ? data.idempotencyKey.value
+          : this.idempotencyKey,
+      requestPayload: data.requestPayload.present
+          ? data.requestPayload.value
+          : this.requestPayload,
+      recordedAt: data.recordedAt.present
+          ? data.recordedAt.value
+          : this.recordedAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('SuspenseEntry(')
+          ..write('id: $id, ')
+          ..write('caseId: $caseId, ')
+          ..write('cashEventId: $cashEventId, ')
+          ..write('paymentId: $paymentId, ')
+          ..write('financialAccountId: $financialAccountId, ')
+          ..write('partyId: $partyId, ')
+          ..write('partyRole: $partyRole, ')
+          ..write('currencyCode: $currencyCode, ')
+          ..write('movementType: $movementType, ')
+          ..write('amountMinor: $amountMinor, ')
+          ..write('resolutionId: $resolutionId, ')
+          ..write('actorId: $actorId, ')
+          ..write('reason: $reason, ')
+          ..write('idempotencyKey: $idempotencyKey, ')
+          ..write('requestPayload: $requestPayload, ')
+          ..write('recordedAt: $recordedAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    id,
+    caseId,
+    cashEventId,
+    paymentId,
+    financialAccountId,
+    partyId,
+    partyRole,
+    currencyCode,
+    movementType,
+    amountMinor,
+    resolutionId,
+    actorId,
+    reason,
+    idempotencyKey,
+    requestPayload,
+    recordedAt,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is SuspenseEntry &&
+          other.id == this.id &&
+          other.caseId == this.caseId &&
+          other.cashEventId == this.cashEventId &&
+          other.paymentId == this.paymentId &&
+          other.financialAccountId == this.financialAccountId &&
+          other.partyId == this.partyId &&
+          other.partyRole == this.partyRole &&
+          other.currencyCode == this.currencyCode &&
+          other.movementType == this.movementType &&
+          other.amountMinor == this.amountMinor &&
+          other.resolutionId == this.resolutionId &&
+          other.actorId == this.actorId &&
+          other.reason == this.reason &&
+          other.idempotencyKey == this.idempotencyKey &&
+          other.requestPayload == this.requestPayload &&
+          other.recordedAt == this.recordedAt);
+}
+
+class SuspenseEntriesCompanion extends UpdateCompanion<SuspenseEntry> {
+  final Value<String> id;
+  final Value<String> caseId;
+  final Value<String> cashEventId;
+  final Value<String> paymentId;
+  final Value<String> financialAccountId;
+  final Value<String> partyId;
+  final Value<String> partyRole;
+  final Value<String> currencyCode;
+  final Value<String> movementType;
+  final Value<int> amountMinor;
+  final Value<String?> resolutionId;
+  final Value<String> actorId;
+  final Value<String> reason;
+  final Value<String> idempotencyKey;
+  final Value<String> requestPayload;
+  final Value<DateTime> recordedAt;
+  final Value<int> rowid;
+  const SuspenseEntriesCompanion({
+    this.id = const Value.absent(),
+    this.caseId = const Value.absent(),
+    this.cashEventId = const Value.absent(),
+    this.paymentId = const Value.absent(),
+    this.financialAccountId = const Value.absent(),
+    this.partyId = const Value.absent(),
+    this.partyRole = const Value.absent(),
+    this.currencyCode = const Value.absent(),
+    this.movementType = const Value.absent(),
+    this.amountMinor = const Value.absent(),
+    this.resolutionId = const Value.absent(),
+    this.actorId = const Value.absent(),
+    this.reason = const Value.absent(),
+    this.idempotencyKey = const Value.absent(),
+    this.requestPayload = const Value.absent(),
+    this.recordedAt = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  SuspenseEntriesCompanion.insert({
+    required String id,
+    required String caseId,
+    required String cashEventId,
+    required String paymentId,
+    required String financialAccountId,
+    required String partyId,
+    required String partyRole,
+    required String currencyCode,
+    required String movementType,
+    required int amountMinor,
+    this.resolutionId = const Value.absent(),
+    required String actorId,
+    required String reason,
+    required String idempotencyKey,
+    required String requestPayload,
+    required DateTime recordedAt,
+    this.rowid = const Value.absent(),
+  }) : id = Value(id),
+       caseId = Value(caseId),
+       cashEventId = Value(cashEventId),
+       paymentId = Value(paymentId),
+       financialAccountId = Value(financialAccountId),
+       partyId = Value(partyId),
+       partyRole = Value(partyRole),
+       currencyCode = Value(currencyCode),
+       movementType = Value(movementType),
+       amountMinor = Value(amountMinor),
+       actorId = Value(actorId),
+       reason = Value(reason),
+       idempotencyKey = Value(idempotencyKey),
+       requestPayload = Value(requestPayload),
+       recordedAt = Value(recordedAt);
+  static Insertable<SuspenseEntry> custom({
+    Expression<String>? id,
+    Expression<String>? caseId,
+    Expression<String>? cashEventId,
+    Expression<String>? paymentId,
+    Expression<String>? financialAccountId,
+    Expression<String>? partyId,
+    Expression<String>? partyRole,
+    Expression<String>? currencyCode,
+    Expression<String>? movementType,
+    Expression<int>? amountMinor,
+    Expression<String>? resolutionId,
+    Expression<String>? actorId,
+    Expression<String>? reason,
+    Expression<String>? idempotencyKey,
+    Expression<String>? requestPayload,
+    Expression<DateTime>? recordedAt,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'suspense_entry_id': id,
+      if (caseId != null) 'case_id': caseId,
+      if (cashEventId != null) 'cash_event_id': cashEventId,
+      if (paymentId != null) 'payment_id': paymentId,
+      if (financialAccountId != null)
+        'financial_account_id': financialAccountId,
+      if (partyId != null) 'party_id': partyId,
+      if (partyRole != null) 'party_role': partyRole,
+      if (currencyCode != null) 'currency_code': currencyCode,
+      if (movementType != null) 'movement_type': movementType,
+      if (amountMinor != null) 'amount_minor': amountMinor,
+      if (resolutionId != null) 'resolution_id': resolutionId,
+      if (actorId != null) 'actor_id': actorId,
+      if (reason != null) 'reason': reason,
+      if (idempotencyKey != null) 'idempotency_key': idempotencyKey,
+      if (requestPayload != null) 'request_payload': requestPayload,
+      if (recordedAt != null) 'recorded_at': recordedAt,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  SuspenseEntriesCompanion copyWith({
+    Value<String>? id,
+    Value<String>? caseId,
+    Value<String>? cashEventId,
+    Value<String>? paymentId,
+    Value<String>? financialAccountId,
+    Value<String>? partyId,
+    Value<String>? partyRole,
+    Value<String>? currencyCode,
+    Value<String>? movementType,
+    Value<int>? amountMinor,
+    Value<String?>? resolutionId,
+    Value<String>? actorId,
+    Value<String>? reason,
+    Value<String>? idempotencyKey,
+    Value<String>? requestPayload,
+    Value<DateTime>? recordedAt,
+    Value<int>? rowid,
+  }) {
+    return SuspenseEntriesCompanion(
+      id: id ?? this.id,
+      caseId: caseId ?? this.caseId,
+      cashEventId: cashEventId ?? this.cashEventId,
+      paymentId: paymentId ?? this.paymentId,
+      financialAccountId: financialAccountId ?? this.financialAccountId,
+      partyId: partyId ?? this.partyId,
+      partyRole: partyRole ?? this.partyRole,
+      currencyCode: currencyCode ?? this.currencyCode,
+      movementType: movementType ?? this.movementType,
+      amountMinor: amountMinor ?? this.amountMinor,
+      resolutionId: resolutionId ?? this.resolutionId,
+      actorId: actorId ?? this.actorId,
+      reason: reason ?? this.reason,
+      idempotencyKey: idempotencyKey ?? this.idempotencyKey,
+      requestPayload: requestPayload ?? this.requestPayload,
+      recordedAt: recordedAt ?? this.recordedAt,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['suspense_entry_id'] = Variable<String>(id.value);
+    }
+    if (caseId.present) {
+      map['case_id'] = Variable<String>(caseId.value);
+    }
+    if (cashEventId.present) {
+      map['cash_event_id'] = Variable<String>(cashEventId.value);
+    }
+    if (paymentId.present) {
+      map['payment_id'] = Variable<String>(paymentId.value);
+    }
+    if (financialAccountId.present) {
+      map['financial_account_id'] = Variable<String>(financialAccountId.value);
+    }
+    if (partyId.present) {
+      map['party_id'] = Variable<String>(partyId.value);
+    }
+    if (partyRole.present) {
+      map['party_role'] = Variable<String>(partyRole.value);
+    }
+    if (currencyCode.present) {
+      map['currency_code'] = Variable<String>(currencyCode.value);
+    }
+    if (movementType.present) {
+      map['movement_type'] = Variable<String>(movementType.value);
+    }
+    if (amountMinor.present) {
+      map['amount_minor'] = Variable<int>(amountMinor.value);
+    }
+    if (resolutionId.present) {
+      map['resolution_id'] = Variable<String>(resolutionId.value);
+    }
+    if (actorId.present) {
+      map['actor_id'] = Variable<String>(actorId.value);
+    }
+    if (reason.present) {
+      map['reason'] = Variable<String>(reason.value);
+    }
+    if (idempotencyKey.present) {
+      map['idempotency_key'] = Variable<String>(idempotencyKey.value);
+    }
+    if (requestPayload.present) {
+      map['request_payload'] = Variable<String>(requestPayload.value);
+    }
+    if (recordedAt.present) {
+      map['recorded_at'] = Variable<DateTime>(recordedAt.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('SuspenseEntriesCompanion(')
+          ..write('id: $id, ')
+          ..write('caseId: $caseId, ')
+          ..write('cashEventId: $cashEventId, ')
+          ..write('paymentId: $paymentId, ')
+          ..write('financialAccountId: $financialAccountId, ')
+          ..write('partyId: $partyId, ')
+          ..write('partyRole: $partyRole, ')
+          ..write('currencyCode: $currencyCode, ')
+          ..write('movementType: $movementType, ')
+          ..write('amountMinor: $amountMinor, ')
+          ..write('resolutionId: $resolutionId, ')
+          ..write('actorId: $actorId, ')
+          ..write('reason: $reason, ')
+          ..write('idempotencyKey: $idempotencyKey, ')
+          ..write('requestPayload: $requestPayload, ')
+          ..write('recordedAt: $recordedAt, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(e);
   $AppDatabaseManager get managers => $AppDatabaseManager(this);
@@ -2981,6 +8662,21 @@ abstract class _$AppDatabase extends GeneratedDatabase {
       $FinancialAccountsTable(this);
   late final $InvoicesTable invoices = $InvoicesTable(this);
   late final $InvoiceLinesTable invoiceLines = $InvoiceLinesTable(this);
+  late final $PaymentIdentitiesTable paymentIdentities =
+      $PaymentIdentitiesTable(this);
+  late final $CashEventsTable cashEvents = $CashEventsTable(this);
+  late final $FinancialTransactionsTable financialTransactions =
+      $FinancialTransactionsTable(this);
+  late final $CashEventVersionsTable cashEventVersions =
+      $CashEventVersionsTable(this);
+  late final $CashEventHeadsTable cashEventHeads = $CashEventHeadsTable(this);
+  late final $ReconciliationCasesTable reconciliationCases =
+      $ReconciliationCasesTable(this);
+  late final $SuspenseResolutionsTable suspenseResolutions =
+      $SuspenseResolutionsTable(this);
+  late final $SuspenseEntriesTable suspenseEntries = $SuspenseEntriesTable(
+    this,
+  );
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
@@ -2992,6 +8688,14 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     financialAccounts,
     invoices,
     invoiceLines,
+    paymentIdentities,
+    cashEvents,
+    financialTransactions,
+    cashEventVersions,
+    cashEventHeads,
+    reconciliationCases,
+    suspenseResolutions,
+    suspenseEntries,
   ];
 }
 
@@ -4532,6 +10236,2799 @@ typedef $$InvoiceLinesTableProcessedTableManager =
       InvoiceLine,
       PrefetchHooks Function()
     >;
+typedef $$PaymentIdentitiesTableCreateCompanionBuilder =
+    PaymentIdentitiesCompanion Function({
+      required String id,
+      required String financialAccountId,
+      required String partyId,
+      required String partyRole,
+      required String currencyCode,
+      required String financialDirection,
+      required String createdByActorId,
+      required DateTime createdAt,
+      Value<int> rowid,
+    });
+typedef $$PaymentIdentitiesTableUpdateCompanionBuilder =
+    PaymentIdentitiesCompanion Function({
+      Value<String> id,
+      Value<String> financialAccountId,
+      Value<String> partyId,
+      Value<String> partyRole,
+      Value<String> currencyCode,
+      Value<String> financialDirection,
+      Value<String> createdByActorId,
+      Value<DateTime> createdAt,
+      Value<int> rowid,
+    });
+
+class $$PaymentIdentitiesTableFilterComposer
+    extends Composer<_$AppDatabase, $PaymentIdentitiesTable> {
+  $$PaymentIdentitiesTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get financialAccountId => $composableBuilder(
+    column: $table.financialAccountId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get partyId => $composableBuilder(
+    column: $table.partyId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get partyRole => $composableBuilder(
+    column: $table.partyRole,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get currencyCode => $composableBuilder(
+    column: $table.currencyCode,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get financialDirection => $composableBuilder(
+    column: $table.financialDirection,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get createdByActorId => $composableBuilder(
+    column: $table.createdByActorId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$PaymentIdentitiesTableOrderingComposer
+    extends Composer<_$AppDatabase, $PaymentIdentitiesTable> {
+  $$PaymentIdentitiesTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get financialAccountId => $composableBuilder(
+    column: $table.financialAccountId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get partyId => $composableBuilder(
+    column: $table.partyId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get partyRole => $composableBuilder(
+    column: $table.partyRole,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get currencyCode => $composableBuilder(
+    column: $table.currencyCode,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get financialDirection => $composableBuilder(
+    column: $table.financialDirection,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get createdByActorId => $composableBuilder(
+    column: $table.createdByActorId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$PaymentIdentitiesTableAnnotationComposer
+    extends Composer<_$AppDatabase, $PaymentIdentitiesTable> {
+  $$PaymentIdentitiesTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get financialAccountId => $composableBuilder(
+    column: $table.financialAccountId,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get partyId =>
+      $composableBuilder(column: $table.partyId, builder: (column) => column);
+
+  GeneratedColumn<String> get partyRole =>
+      $composableBuilder(column: $table.partyRole, builder: (column) => column);
+
+  GeneratedColumn<String> get currencyCode => $composableBuilder(
+    column: $table.currencyCode,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get financialDirection => $composableBuilder(
+    column: $table.financialDirection,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get createdByActorId => $composableBuilder(
+    column: $table.createdByActorId,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+}
+
+class $$PaymentIdentitiesTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $PaymentIdentitiesTable,
+          PaymentIdentity,
+          $$PaymentIdentitiesTableFilterComposer,
+          $$PaymentIdentitiesTableOrderingComposer,
+          $$PaymentIdentitiesTableAnnotationComposer,
+          $$PaymentIdentitiesTableCreateCompanionBuilder,
+          $$PaymentIdentitiesTableUpdateCompanionBuilder,
+          (
+            PaymentIdentity,
+            BaseReferences<
+              _$AppDatabase,
+              $PaymentIdentitiesTable,
+              PaymentIdentity
+            >,
+          ),
+          PaymentIdentity,
+          PrefetchHooks Function()
+        > {
+  $$PaymentIdentitiesTableTableManager(
+    _$AppDatabase db,
+    $PaymentIdentitiesTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$PaymentIdentitiesTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$PaymentIdentitiesTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$PaymentIdentitiesTableAnnotationComposer(
+                $db: db,
+                $table: table,
+              ),
+          updateCompanionCallback:
+              ({
+                Value<String> id = const Value.absent(),
+                Value<String> financialAccountId = const Value.absent(),
+                Value<String> partyId = const Value.absent(),
+                Value<String> partyRole = const Value.absent(),
+                Value<String> currencyCode = const Value.absent(),
+                Value<String> financialDirection = const Value.absent(),
+                Value<String> createdByActorId = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => PaymentIdentitiesCompanion(
+                id: id,
+                financialAccountId: financialAccountId,
+                partyId: partyId,
+                partyRole: partyRole,
+                currencyCode: currencyCode,
+                financialDirection: financialDirection,
+                createdByActorId: createdByActorId,
+                createdAt: createdAt,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String id,
+                required String financialAccountId,
+                required String partyId,
+                required String partyRole,
+                required String currencyCode,
+                required String financialDirection,
+                required String createdByActorId,
+                required DateTime createdAt,
+                Value<int> rowid = const Value.absent(),
+              }) => PaymentIdentitiesCompanion.insert(
+                id: id,
+                financialAccountId: financialAccountId,
+                partyId: partyId,
+                partyRole: partyRole,
+                currencyCode: currencyCode,
+                financialDirection: financialDirection,
+                createdByActorId: createdByActorId,
+                createdAt: createdAt,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable<$PaymentIdentitiesTable, PaymentIdentity>(table),
+                  BaseReferences<
+                    _$AppDatabase,
+                    $PaymentIdentitiesTable,
+                    PaymentIdentity
+                  >(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$PaymentIdentitiesTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $PaymentIdentitiesTable,
+      PaymentIdentity,
+      $$PaymentIdentitiesTableFilterComposer,
+      $$PaymentIdentitiesTableOrderingComposer,
+      $$PaymentIdentitiesTableAnnotationComposer,
+      $$PaymentIdentitiesTableCreateCompanionBuilder,
+      $$PaymentIdentitiesTableUpdateCompanionBuilder,
+      (
+        PaymentIdentity,
+        BaseReferences<_$AppDatabase, $PaymentIdentitiesTable, PaymentIdentity>,
+      ),
+      PaymentIdentity,
+      PrefetchHooks Function()
+    >;
+typedef $$CashEventsTableCreateCompanionBuilder =
+    CashEventsCompanion Function({
+      required String id,
+      required String paymentId,
+      required String createdByActorId,
+      required DateTime createdAt,
+      Value<int> rowid,
+    });
+typedef $$CashEventsTableUpdateCompanionBuilder =
+    CashEventsCompanion Function({
+      Value<String> id,
+      Value<String> paymentId,
+      Value<String> createdByActorId,
+      Value<DateTime> createdAt,
+      Value<int> rowid,
+    });
+
+class $$CashEventsTableFilterComposer
+    extends Composer<_$AppDatabase, $CashEventsTable> {
+  $$CashEventsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get paymentId => $composableBuilder(
+    column: $table.paymentId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get createdByActorId => $composableBuilder(
+    column: $table.createdByActorId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$CashEventsTableOrderingComposer
+    extends Composer<_$AppDatabase, $CashEventsTable> {
+  $$CashEventsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get paymentId => $composableBuilder(
+    column: $table.paymentId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get createdByActorId => $composableBuilder(
+    column: $table.createdByActorId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$CashEventsTableAnnotationComposer
+    extends Composer<_$AppDatabase, $CashEventsTable> {
+  $$CashEventsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get paymentId =>
+      $composableBuilder(column: $table.paymentId, builder: (column) => column);
+
+  GeneratedColumn<String> get createdByActorId => $composableBuilder(
+    column: $table.createdByActorId,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+}
+
+class $$CashEventsTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $CashEventsTable,
+          CashEvent,
+          $$CashEventsTableFilterComposer,
+          $$CashEventsTableOrderingComposer,
+          $$CashEventsTableAnnotationComposer,
+          $$CashEventsTableCreateCompanionBuilder,
+          $$CashEventsTableUpdateCompanionBuilder,
+          (
+            CashEvent,
+            BaseReferences<_$AppDatabase, $CashEventsTable, CashEvent>,
+          ),
+          CashEvent,
+          PrefetchHooks Function()
+        > {
+  $$CashEventsTableTableManager(_$AppDatabase db, $CashEventsTable table)
+    : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$CashEventsTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$CashEventsTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$CashEventsTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<String> id = const Value.absent(),
+                Value<String> paymentId = const Value.absent(),
+                Value<String> createdByActorId = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => CashEventsCompanion(
+                id: id,
+                paymentId: paymentId,
+                createdByActorId: createdByActorId,
+                createdAt: createdAt,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String id,
+                required String paymentId,
+                required String createdByActorId,
+                required DateTime createdAt,
+                Value<int> rowid = const Value.absent(),
+              }) => CashEventsCompanion.insert(
+                id: id,
+                paymentId: paymentId,
+                createdByActorId: createdByActorId,
+                createdAt: createdAt,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable<$CashEventsTable, CashEvent>(table),
+                  BaseReferences<_$AppDatabase, $CashEventsTable, CashEvent>(
+                    db,
+                    table,
+                    e,
+                  ),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$CashEventsTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $CashEventsTable,
+      CashEvent,
+      $$CashEventsTableFilterComposer,
+      $$CashEventsTableOrderingComposer,
+      $$CashEventsTableAnnotationComposer,
+      $$CashEventsTableCreateCompanionBuilder,
+      $$CashEventsTableUpdateCompanionBuilder,
+      (CashEvent, BaseReferences<_$AppDatabase, $CashEventsTable, CashEvent>),
+      CashEvent,
+      PrefetchHooks Function()
+    >;
+typedef $$FinancialTransactionsTableCreateCompanionBuilder =
+    FinancialTransactionsCompanion Function({
+      required String id,
+      required String cashEventId,
+      required String paymentId,
+      required String financialAccountId,
+      required String partyId,
+      required String partyRole,
+      required String currencyCode,
+      required String transactionType,
+      required String direction,
+      required int amountMinor,
+      Value<String?> relatedTransactionId,
+      required String actorId,
+      required String reason,
+      Value<String?> idempotencyKey,
+      required DateTime occurredAt,
+      Value<int> rowid,
+    });
+typedef $$FinancialTransactionsTableUpdateCompanionBuilder =
+    FinancialTransactionsCompanion Function({
+      Value<String> id,
+      Value<String> cashEventId,
+      Value<String> paymentId,
+      Value<String> financialAccountId,
+      Value<String> partyId,
+      Value<String> partyRole,
+      Value<String> currencyCode,
+      Value<String> transactionType,
+      Value<String> direction,
+      Value<int> amountMinor,
+      Value<String?> relatedTransactionId,
+      Value<String> actorId,
+      Value<String> reason,
+      Value<String?> idempotencyKey,
+      Value<DateTime> occurredAt,
+      Value<int> rowid,
+    });
+
+class $$FinancialTransactionsTableFilterComposer
+    extends Composer<_$AppDatabase, $FinancialTransactionsTable> {
+  $$FinancialTransactionsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get cashEventId => $composableBuilder(
+    column: $table.cashEventId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get paymentId => $composableBuilder(
+    column: $table.paymentId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get financialAccountId => $composableBuilder(
+    column: $table.financialAccountId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get partyId => $composableBuilder(
+    column: $table.partyId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get partyRole => $composableBuilder(
+    column: $table.partyRole,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get currencyCode => $composableBuilder(
+    column: $table.currencyCode,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get transactionType => $composableBuilder(
+    column: $table.transactionType,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get direction => $composableBuilder(
+    column: $table.direction,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get amountMinor => $composableBuilder(
+    column: $table.amountMinor,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get relatedTransactionId => $composableBuilder(
+    column: $table.relatedTransactionId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get actorId => $composableBuilder(
+    column: $table.actorId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get reason => $composableBuilder(
+    column: $table.reason,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get idempotencyKey => $composableBuilder(
+    column: $table.idempotencyKey,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get occurredAt => $composableBuilder(
+    column: $table.occurredAt,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$FinancialTransactionsTableOrderingComposer
+    extends Composer<_$AppDatabase, $FinancialTransactionsTable> {
+  $$FinancialTransactionsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get cashEventId => $composableBuilder(
+    column: $table.cashEventId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get paymentId => $composableBuilder(
+    column: $table.paymentId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get financialAccountId => $composableBuilder(
+    column: $table.financialAccountId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get partyId => $composableBuilder(
+    column: $table.partyId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get partyRole => $composableBuilder(
+    column: $table.partyRole,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get currencyCode => $composableBuilder(
+    column: $table.currencyCode,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get transactionType => $composableBuilder(
+    column: $table.transactionType,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get direction => $composableBuilder(
+    column: $table.direction,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get amountMinor => $composableBuilder(
+    column: $table.amountMinor,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get relatedTransactionId => $composableBuilder(
+    column: $table.relatedTransactionId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get actorId => $composableBuilder(
+    column: $table.actorId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get reason => $composableBuilder(
+    column: $table.reason,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get idempotencyKey => $composableBuilder(
+    column: $table.idempotencyKey,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get occurredAt => $composableBuilder(
+    column: $table.occurredAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$FinancialTransactionsTableAnnotationComposer
+    extends Composer<_$AppDatabase, $FinancialTransactionsTable> {
+  $$FinancialTransactionsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get cashEventId => $composableBuilder(
+    column: $table.cashEventId,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get paymentId =>
+      $composableBuilder(column: $table.paymentId, builder: (column) => column);
+
+  GeneratedColumn<String> get financialAccountId => $composableBuilder(
+    column: $table.financialAccountId,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get partyId =>
+      $composableBuilder(column: $table.partyId, builder: (column) => column);
+
+  GeneratedColumn<String> get partyRole =>
+      $composableBuilder(column: $table.partyRole, builder: (column) => column);
+
+  GeneratedColumn<String> get currencyCode => $composableBuilder(
+    column: $table.currencyCode,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get transactionType => $composableBuilder(
+    column: $table.transactionType,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get direction =>
+      $composableBuilder(column: $table.direction, builder: (column) => column);
+
+  GeneratedColumn<int> get amountMinor => $composableBuilder(
+    column: $table.amountMinor,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get relatedTransactionId => $composableBuilder(
+    column: $table.relatedTransactionId,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get actorId =>
+      $composableBuilder(column: $table.actorId, builder: (column) => column);
+
+  GeneratedColumn<String> get reason =>
+      $composableBuilder(column: $table.reason, builder: (column) => column);
+
+  GeneratedColumn<String> get idempotencyKey => $composableBuilder(
+    column: $table.idempotencyKey,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<DateTime> get occurredAt => $composableBuilder(
+    column: $table.occurredAt,
+    builder: (column) => column,
+  );
+}
+
+class $$FinancialTransactionsTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $FinancialTransactionsTable,
+          FinancialTransaction,
+          $$FinancialTransactionsTableFilterComposer,
+          $$FinancialTransactionsTableOrderingComposer,
+          $$FinancialTransactionsTableAnnotationComposer,
+          $$FinancialTransactionsTableCreateCompanionBuilder,
+          $$FinancialTransactionsTableUpdateCompanionBuilder,
+          (
+            FinancialTransaction,
+            BaseReferences<
+              _$AppDatabase,
+              $FinancialTransactionsTable,
+              FinancialTransaction
+            >,
+          ),
+          FinancialTransaction,
+          PrefetchHooks Function()
+        > {
+  $$FinancialTransactionsTableTableManager(
+    _$AppDatabase db,
+    $FinancialTransactionsTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$FinancialTransactionsTableFilterComposer(
+                $db: db,
+                $table: table,
+              ),
+          createOrderingComposer: () =>
+              $$FinancialTransactionsTableOrderingComposer(
+                $db: db,
+                $table: table,
+              ),
+          createComputedFieldComposer: () =>
+              $$FinancialTransactionsTableAnnotationComposer(
+                $db: db,
+                $table: table,
+              ),
+          updateCompanionCallback:
+              ({
+                Value<String> id = const Value.absent(),
+                Value<String> cashEventId = const Value.absent(),
+                Value<String> paymentId = const Value.absent(),
+                Value<String> financialAccountId = const Value.absent(),
+                Value<String> partyId = const Value.absent(),
+                Value<String> partyRole = const Value.absent(),
+                Value<String> currencyCode = const Value.absent(),
+                Value<String> transactionType = const Value.absent(),
+                Value<String> direction = const Value.absent(),
+                Value<int> amountMinor = const Value.absent(),
+                Value<String?> relatedTransactionId = const Value.absent(),
+                Value<String> actorId = const Value.absent(),
+                Value<String> reason = const Value.absent(),
+                Value<String?> idempotencyKey = const Value.absent(),
+                Value<DateTime> occurredAt = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => FinancialTransactionsCompanion(
+                id: id,
+                cashEventId: cashEventId,
+                paymentId: paymentId,
+                financialAccountId: financialAccountId,
+                partyId: partyId,
+                partyRole: partyRole,
+                currencyCode: currencyCode,
+                transactionType: transactionType,
+                direction: direction,
+                amountMinor: amountMinor,
+                relatedTransactionId: relatedTransactionId,
+                actorId: actorId,
+                reason: reason,
+                idempotencyKey: idempotencyKey,
+                occurredAt: occurredAt,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String id,
+                required String cashEventId,
+                required String paymentId,
+                required String financialAccountId,
+                required String partyId,
+                required String partyRole,
+                required String currencyCode,
+                required String transactionType,
+                required String direction,
+                required int amountMinor,
+                Value<String?> relatedTransactionId = const Value.absent(),
+                required String actorId,
+                required String reason,
+                Value<String?> idempotencyKey = const Value.absent(),
+                required DateTime occurredAt,
+                Value<int> rowid = const Value.absent(),
+              }) => FinancialTransactionsCompanion.insert(
+                id: id,
+                cashEventId: cashEventId,
+                paymentId: paymentId,
+                financialAccountId: financialAccountId,
+                partyId: partyId,
+                partyRole: partyRole,
+                currencyCode: currencyCode,
+                transactionType: transactionType,
+                direction: direction,
+                amountMinor: amountMinor,
+                relatedTransactionId: relatedTransactionId,
+                actorId: actorId,
+                reason: reason,
+                idempotencyKey: idempotencyKey,
+                occurredAt: occurredAt,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable<
+                    $FinancialTransactionsTable,
+                    FinancialTransaction
+                  >(table),
+                  BaseReferences<
+                    _$AppDatabase,
+                    $FinancialTransactionsTable,
+                    FinancialTransaction
+                  >(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$FinancialTransactionsTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $FinancialTransactionsTable,
+      FinancialTransaction,
+      $$FinancialTransactionsTableFilterComposer,
+      $$FinancialTransactionsTableOrderingComposer,
+      $$FinancialTransactionsTableAnnotationComposer,
+      $$FinancialTransactionsTableCreateCompanionBuilder,
+      $$FinancialTransactionsTableUpdateCompanionBuilder,
+      (
+        FinancialTransaction,
+        BaseReferences<
+          _$AppDatabase,
+          $FinancialTransactionsTable,
+          FinancialTransaction
+        >,
+      ),
+      FinancialTransaction,
+      PrefetchHooks Function()
+    >;
+typedef $$CashEventVersionsTableCreateCompanionBuilder =
+    CashEventVersionsCompanion Function({
+      required String id,
+      required String cashEventId,
+      required String paymentId,
+      required int sequence,
+      required String operation,
+      required String occurred,
+      required String cashDirection,
+      required int physicalAmountMinor,
+      required int effectiveRecognizedMinor,
+      Value<String?> transactionId,
+      Value<String?> previousVersionId,
+      required String idempotencyKey,
+      required String requestPayload,
+      required String actorId,
+      required String reason,
+      required DateTime recordedAt,
+      Value<int> rowid,
+    });
+typedef $$CashEventVersionsTableUpdateCompanionBuilder =
+    CashEventVersionsCompanion Function({
+      Value<String> id,
+      Value<String> cashEventId,
+      Value<String> paymentId,
+      Value<int> sequence,
+      Value<String> operation,
+      Value<String> occurred,
+      Value<String> cashDirection,
+      Value<int> physicalAmountMinor,
+      Value<int> effectiveRecognizedMinor,
+      Value<String?> transactionId,
+      Value<String?> previousVersionId,
+      Value<String> idempotencyKey,
+      Value<String> requestPayload,
+      Value<String> actorId,
+      Value<String> reason,
+      Value<DateTime> recordedAt,
+      Value<int> rowid,
+    });
+
+class $$CashEventVersionsTableFilterComposer
+    extends Composer<_$AppDatabase, $CashEventVersionsTable> {
+  $$CashEventVersionsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get cashEventId => $composableBuilder(
+    column: $table.cashEventId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get paymentId => $composableBuilder(
+    column: $table.paymentId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get sequence => $composableBuilder(
+    column: $table.sequence,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get operation => $composableBuilder(
+    column: $table.operation,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get occurred => $composableBuilder(
+    column: $table.occurred,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get cashDirection => $composableBuilder(
+    column: $table.cashDirection,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get physicalAmountMinor => $composableBuilder(
+    column: $table.physicalAmountMinor,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get effectiveRecognizedMinor => $composableBuilder(
+    column: $table.effectiveRecognizedMinor,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get transactionId => $composableBuilder(
+    column: $table.transactionId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get previousVersionId => $composableBuilder(
+    column: $table.previousVersionId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get idempotencyKey => $composableBuilder(
+    column: $table.idempotencyKey,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get requestPayload => $composableBuilder(
+    column: $table.requestPayload,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get actorId => $composableBuilder(
+    column: $table.actorId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get reason => $composableBuilder(
+    column: $table.reason,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get recordedAt => $composableBuilder(
+    column: $table.recordedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$CashEventVersionsTableOrderingComposer
+    extends Composer<_$AppDatabase, $CashEventVersionsTable> {
+  $$CashEventVersionsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get cashEventId => $composableBuilder(
+    column: $table.cashEventId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get paymentId => $composableBuilder(
+    column: $table.paymentId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get sequence => $composableBuilder(
+    column: $table.sequence,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get operation => $composableBuilder(
+    column: $table.operation,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get occurred => $composableBuilder(
+    column: $table.occurred,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get cashDirection => $composableBuilder(
+    column: $table.cashDirection,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get physicalAmountMinor => $composableBuilder(
+    column: $table.physicalAmountMinor,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get effectiveRecognizedMinor => $composableBuilder(
+    column: $table.effectiveRecognizedMinor,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get transactionId => $composableBuilder(
+    column: $table.transactionId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get previousVersionId => $composableBuilder(
+    column: $table.previousVersionId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get idempotencyKey => $composableBuilder(
+    column: $table.idempotencyKey,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get requestPayload => $composableBuilder(
+    column: $table.requestPayload,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get actorId => $composableBuilder(
+    column: $table.actorId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get reason => $composableBuilder(
+    column: $table.reason,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get recordedAt => $composableBuilder(
+    column: $table.recordedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$CashEventVersionsTableAnnotationComposer
+    extends Composer<_$AppDatabase, $CashEventVersionsTable> {
+  $$CashEventVersionsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get cashEventId => $composableBuilder(
+    column: $table.cashEventId,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get paymentId =>
+      $composableBuilder(column: $table.paymentId, builder: (column) => column);
+
+  GeneratedColumn<int> get sequence =>
+      $composableBuilder(column: $table.sequence, builder: (column) => column);
+
+  GeneratedColumn<String> get operation =>
+      $composableBuilder(column: $table.operation, builder: (column) => column);
+
+  GeneratedColumn<String> get occurred =>
+      $composableBuilder(column: $table.occurred, builder: (column) => column);
+
+  GeneratedColumn<String> get cashDirection => $composableBuilder(
+    column: $table.cashDirection,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get physicalAmountMinor => $composableBuilder(
+    column: $table.physicalAmountMinor,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get effectiveRecognizedMinor => $composableBuilder(
+    column: $table.effectiveRecognizedMinor,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get transactionId => $composableBuilder(
+    column: $table.transactionId,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get previousVersionId => $composableBuilder(
+    column: $table.previousVersionId,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get idempotencyKey => $composableBuilder(
+    column: $table.idempotencyKey,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get requestPayload => $composableBuilder(
+    column: $table.requestPayload,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get actorId =>
+      $composableBuilder(column: $table.actorId, builder: (column) => column);
+
+  GeneratedColumn<String> get reason =>
+      $composableBuilder(column: $table.reason, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get recordedAt => $composableBuilder(
+    column: $table.recordedAt,
+    builder: (column) => column,
+  );
+}
+
+class $$CashEventVersionsTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $CashEventVersionsTable,
+          CashEventVersion,
+          $$CashEventVersionsTableFilterComposer,
+          $$CashEventVersionsTableOrderingComposer,
+          $$CashEventVersionsTableAnnotationComposer,
+          $$CashEventVersionsTableCreateCompanionBuilder,
+          $$CashEventVersionsTableUpdateCompanionBuilder,
+          (
+            CashEventVersion,
+            BaseReferences<
+              _$AppDatabase,
+              $CashEventVersionsTable,
+              CashEventVersion
+            >,
+          ),
+          CashEventVersion,
+          PrefetchHooks Function()
+        > {
+  $$CashEventVersionsTableTableManager(
+    _$AppDatabase db,
+    $CashEventVersionsTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$CashEventVersionsTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$CashEventVersionsTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$CashEventVersionsTableAnnotationComposer(
+                $db: db,
+                $table: table,
+              ),
+          updateCompanionCallback:
+              ({
+                Value<String> id = const Value.absent(),
+                Value<String> cashEventId = const Value.absent(),
+                Value<String> paymentId = const Value.absent(),
+                Value<int> sequence = const Value.absent(),
+                Value<String> operation = const Value.absent(),
+                Value<String> occurred = const Value.absent(),
+                Value<String> cashDirection = const Value.absent(),
+                Value<int> physicalAmountMinor = const Value.absent(),
+                Value<int> effectiveRecognizedMinor = const Value.absent(),
+                Value<String?> transactionId = const Value.absent(),
+                Value<String?> previousVersionId = const Value.absent(),
+                Value<String> idempotencyKey = const Value.absent(),
+                Value<String> requestPayload = const Value.absent(),
+                Value<String> actorId = const Value.absent(),
+                Value<String> reason = const Value.absent(),
+                Value<DateTime> recordedAt = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => CashEventVersionsCompanion(
+                id: id,
+                cashEventId: cashEventId,
+                paymentId: paymentId,
+                sequence: sequence,
+                operation: operation,
+                occurred: occurred,
+                cashDirection: cashDirection,
+                physicalAmountMinor: physicalAmountMinor,
+                effectiveRecognizedMinor: effectiveRecognizedMinor,
+                transactionId: transactionId,
+                previousVersionId: previousVersionId,
+                idempotencyKey: idempotencyKey,
+                requestPayload: requestPayload,
+                actorId: actorId,
+                reason: reason,
+                recordedAt: recordedAt,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String id,
+                required String cashEventId,
+                required String paymentId,
+                required int sequence,
+                required String operation,
+                required String occurred,
+                required String cashDirection,
+                required int physicalAmountMinor,
+                required int effectiveRecognizedMinor,
+                Value<String?> transactionId = const Value.absent(),
+                Value<String?> previousVersionId = const Value.absent(),
+                required String idempotencyKey,
+                required String requestPayload,
+                required String actorId,
+                required String reason,
+                required DateTime recordedAt,
+                Value<int> rowid = const Value.absent(),
+              }) => CashEventVersionsCompanion.insert(
+                id: id,
+                cashEventId: cashEventId,
+                paymentId: paymentId,
+                sequence: sequence,
+                operation: operation,
+                occurred: occurred,
+                cashDirection: cashDirection,
+                physicalAmountMinor: physicalAmountMinor,
+                effectiveRecognizedMinor: effectiveRecognizedMinor,
+                transactionId: transactionId,
+                previousVersionId: previousVersionId,
+                idempotencyKey: idempotencyKey,
+                requestPayload: requestPayload,
+                actorId: actorId,
+                reason: reason,
+                recordedAt: recordedAt,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable<$CashEventVersionsTable, CashEventVersion>(table),
+                  BaseReferences<
+                    _$AppDatabase,
+                    $CashEventVersionsTable,
+                    CashEventVersion
+                  >(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$CashEventVersionsTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $CashEventVersionsTable,
+      CashEventVersion,
+      $$CashEventVersionsTableFilterComposer,
+      $$CashEventVersionsTableOrderingComposer,
+      $$CashEventVersionsTableAnnotationComposer,
+      $$CashEventVersionsTableCreateCompanionBuilder,
+      $$CashEventVersionsTableUpdateCompanionBuilder,
+      (
+        CashEventVersion,
+        BaseReferences<
+          _$AppDatabase,
+          $CashEventVersionsTable,
+          CashEventVersion
+        >,
+      ),
+      CashEventVersion,
+      PrefetchHooks Function()
+    >;
+typedef $$CashEventHeadsTableCreateCompanionBuilder =
+    CashEventHeadsCompanion Function({
+      required String cashEventId,
+      required String paymentId,
+      required String versionId,
+      required int revision,
+      required DateTime updatedAt,
+      Value<int> rowid,
+    });
+typedef $$CashEventHeadsTableUpdateCompanionBuilder =
+    CashEventHeadsCompanion Function({
+      Value<String> cashEventId,
+      Value<String> paymentId,
+      Value<String> versionId,
+      Value<int> revision,
+      Value<DateTime> updatedAt,
+      Value<int> rowid,
+    });
+
+class $$CashEventHeadsTableFilterComposer
+    extends Composer<_$AppDatabase, $CashEventHeadsTable> {
+  $$CashEventHeadsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get cashEventId => $composableBuilder(
+    column: $table.cashEventId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get paymentId => $composableBuilder(
+    column: $table.paymentId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get versionId => $composableBuilder(
+    column: $table.versionId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get revision => $composableBuilder(
+    column: $table.revision,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$CashEventHeadsTableOrderingComposer
+    extends Composer<_$AppDatabase, $CashEventHeadsTable> {
+  $$CashEventHeadsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get cashEventId => $composableBuilder(
+    column: $table.cashEventId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get paymentId => $composableBuilder(
+    column: $table.paymentId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get versionId => $composableBuilder(
+    column: $table.versionId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get revision => $composableBuilder(
+    column: $table.revision,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$CashEventHeadsTableAnnotationComposer
+    extends Composer<_$AppDatabase, $CashEventHeadsTable> {
+  $$CashEventHeadsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get cashEventId => $composableBuilder(
+    column: $table.cashEventId,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get paymentId =>
+      $composableBuilder(column: $table.paymentId, builder: (column) => column);
+
+  GeneratedColumn<String> get versionId =>
+      $composableBuilder(column: $table.versionId, builder: (column) => column);
+
+  GeneratedColumn<int> get revision =>
+      $composableBuilder(column: $table.revision, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get updatedAt =>
+      $composableBuilder(column: $table.updatedAt, builder: (column) => column);
+}
+
+class $$CashEventHeadsTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $CashEventHeadsTable,
+          CashEventHead,
+          $$CashEventHeadsTableFilterComposer,
+          $$CashEventHeadsTableOrderingComposer,
+          $$CashEventHeadsTableAnnotationComposer,
+          $$CashEventHeadsTableCreateCompanionBuilder,
+          $$CashEventHeadsTableUpdateCompanionBuilder,
+          (
+            CashEventHead,
+            BaseReferences<_$AppDatabase, $CashEventHeadsTable, CashEventHead>,
+          ),
+          CashEventHead,
+          PrefetchHooks Function()
+        > {
+  $$CashEventHeadsTableTableManager(
+    _$AppDatabase db,
+    $CashEventHeadsTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$CashEventHeadsTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$CashEventHeadsTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$CashEventHeadsTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<String> cashEventId = const Value.absent(),
+                Value<String> paymentId = const Value.absent(),
+                Value<String> versionId = const Value.absent(),
+                Value<int> revision = const Value.absent(),
+                Value<DateTime> updatedAt = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => CashEventHeadsCompanion(
+                cashEventId: cashEventId,
+                paymentId: paymentId,
+                versionId: versionId,
+                revision: revision,
+                updatedAt: updatedAt,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String cashEventId,
+                required String paymentId,
+                required String versionId,
+                required int revision,
+                required DateTime updatedAt,
+                Value<int> rowid = const Value.absent(),
+              }) => CashEventHeadsCompanion.insert(
+                cashEventId: cashEventId,
+                paymentId: paymentId,
+                versionId: versionId,
+                revision: revision,
+                updatedAt: updatedAt,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable<$CashEventHeadsTable, CashEventHead>(table),
+                  BaseReferences<
+                    _$AppDatabase,
+                    $CashEventHeadsTable,
+                    CashEventHead
+                  >(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$CashEventHeadsTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $CashEventHeadsTable,
+      CashEventHead,
+      $$CashEventHeadsTableFilterComposer,
+      $$CashEventHeadsTableOrderingComposer,
+      $$CashEventHeadsTableAnnotationComposer,
+      $$CashEventHeadsTableCreateCompanionBuilder,
+      $$CashEventHeadsTableUpdateCompanionBuilder,
+      (
+        CashEventHead,
+        BaseReferences<_$AppDatabase, $CashEventHeadsTable, CashEventHead>,
+      ),
+      CashEventHead,
+      PrefetchHooks Function()
+    >;
+typedef $$ReconciliationCasesTableCreateCompanionBuilder =
+    ReconciliationCasesCompanion Function({
+      required String id,
+      required String cashEventId,
+      required String paymentId,
+      required String financialAccountId,
+      required String partyId,
+      required String partyRole,
+      required String currencyCode,
+      required String reason,
+      required String createdByActorId,
+      required DateTime createdAt,
+      Value<int> rowid,
+    });
+typedef $$ReconciliationCasesTableUpdateCompanionBuilder =
+    ReconciliationCasesCompanion Function({
+      Value<String> id,
+      Value<String> cashEventId,
+      Value<String> paymentId,
+      Value<String> financialAccountId,
+      Value<String> partyId,
+      Value<String> partyRole,
+      Value<String> currencyCode,
+      Value<String> reason,
+      Value<String> createdByActorId,
+      Value<DateTime> createdAt,
+      Value<int> rowid,
+    });
+
+class $$ReconciliationCasesTableFilterComposer
+    extends Composer<_$AppDatabase, $ReconciliationCasesTable> {
+  $$ReconciliationCasesTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get cashEventId => $composableBuilder(
+    column: $table.cashEventId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get paymentId => $composableBuilder(
+    column: $table.paymentId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get financialAccountId => $composableBuilder(
+    column: $table.financialAccountId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get partyId => $composableBuilder(
+    column: $table.partyId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get partyRole => $composableBuilder(
+    column: $table.partyRole,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get currencyCode => $composableBuilder(
+    column: $table.currencyCode,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get reason => $composableBuilder(
+    column: $table.reason,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get createdByActorId => $composableBuilder(
+    column: $table.createdByActorId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$ReconciliationCasesTableOrderingComposer
+    extends Composer<_$AppDatabase, $ReconciliationCasesTable> {
+  $$ReconciliationCasesTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get cashEventId => $composableBuilder(
+    column: $table.cashEventId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get paymentId => $composableBuilder(
+    column: $table.paymentId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get financialAccountId => $composableBuilder(
+    column: $table.financialAccountId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get partyId => $composableBuilder(
+    column: $table.partyId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get partyRole => $composableBuilder(
+    column: $table.partyRole,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get currencyCode => $composableBuilder(
+    column: $table.currencyCode,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get reason => $composableBuilder(
+    column: $table.reason,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get createdByActorId => $composableBuilder(
+    column: $table.createdByActorId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$ReconciliationCasesTableAnnotationComposer
+    extends Composer<_$AppDatabase, $ReconciliationCasesTable> {
+  $$ReconciliationCasesTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get cashEventId => $composableBuilder(
+    column: $table.cashEventId,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get paymentId =>
+      $composableBuilder(column: $table.paymentId, builder: (column) => column);
+
+  GeneratedColumn<String> get financialAccountId => $composableBuilder(
+    column: $table.financialAccountId,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get partyId =>
+      $composableBuilder(column: $table.partyId, builder: (column) => column);
+
+  GeneratedColumn<String> get partyRole =>
+      $composableBuilder(column: $table.partyRole, builder: (column) => column);
+
+  GeneratedColumn<String> get currencyCode => $composableBuilder(
+    column: $table.currencyCode,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get reason =>
+      $composableBuilder(column: $table.reason, builder: (column) => column);
+
+  GeneratedColumn<String> get createdByActorId => $composableBuilder(
+    column: $table.createdByActorId,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+}
+
+class $$ReconciliationCasesTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $ReconciliationCasesTable,
+          ReconciliationCase,
+          $$ReconciliationCasesTableFilterComposer,
+          $$ReconciliationCasesTableOrderingComposer,
+          $$ReconciliationCasesTableAnnotationComposer,
+          $$ReconciliationCasesTableCreateCompanionBuilder,
+          $$ReconciliationCasesTableUpdateCompanionBuilder,
+          (
+            ReconciliationCase,
+            BaseReferences<
+              _$AppDatabase,
+              $ReconciliationCasesTable,
+              ReconciliationCase
+            >,
+          ),
+          ReconciliationCase,
+          PrefetchHooks Function()
+        > {
+  $$ReconciliationCasesTableTableManager(
+    _$AppDatabase db,
+    $ReconciliationCasesTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$ReconciliationCasesTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$ReconciliationCasesTableOrderingComposer(
+                $db: db,
+                $table: table,
+              ),
+          createComputedFieldComposer: () =>
+              $$ReconciliationCasesTableAnnotationComposer(
+                $db: db,
+                $table: table,
+              ),
+          updateCompanionCallback:
+              ({
+                Value<String> id = const Value.absent(),
+                Value<String> cashEventId = const Value.absent(),
+                Value<String> paymentId = const Value.absent(),
+                Value<String> financialAccountId = const Value.absent(),
+                Value<String> partyId = const Value.absent(),
+                Value<String> partyRole = const Value.absent(),
+                Value<String> currencyCode = const Value.absent(),
+                Value<String> reason = const Value.absent(),
+                Value<String> createdByActorId = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => ReconciliationCasesCompanion(
+                id: id,
+                cashEventId: cashEventId,
+                paymentId: paymentId,
+                financialAccountId: financialAccountId,
+                partyId: partyId,
+                partyRole: partyRole,
+                currencyCode: currencyCode,
+                reason: reason,
+                createdByActorId: createdByActorId,
+                createdAt: createdAt,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String id,
+                required String cashEventId,
+                required String paymentId,
+                required String financialAccountId,
+                required String partyId,
+                required String partyRole,
+                required String currencyCode,
+                required String reason,
+                required String createdByActorId,
+                required DateTime createdAt,
+                Value<int> rowid = const Value.absent(),
+              }) => ReconciliationCasesCompanion.insert(
+                id: id,
+                cashEventId: cashEventId,
+                paymentId: paymentId,
+                financialAccountId: financialAccountId,
+                partyId: partyId,
+                partyRole: partyRole,
+                currencyCode: currencyCode,
+                reason: reason,
+                createdByActorId: createdByActorId,
+                createdAt: createdAt,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable<$ReconciliationCasesTable, ReconciliationCase>(
+                    table,
+                  ),
+                  BaseReferences<
+                    _$AppDatabase,
+                    $ReconciliationCasesTable,
+                    ReconciliationCase
+                  >(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$ReconciliationCasesTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $ReconciliationCasesTable,
+      ReconciliationCase,
+      $$ReconciliationCasesTableFilterComposer,
+      $$ReconciliationCasesTableOrderingComposer,
+      $$ReconciliationCasesTableAnnotationComposer,
+      $$ReconciliationCasesTableCreateCompanionBuilder,
+      $$ReconciliationCasesTableUpdateCompanionBuilder,
+      (
+        ReconciliationCase,
+        BaseReferences<
+          _$AppDatabase,
+          $ReconciliationCasesTable,
+          ReconciliationCase
+        >,
+      ),
+      ReconciliationCase,
+      PrefetchHooks Function()
+    >;
+typedef $$SuspenseResolutionsTableCreateCompanionBuilder =
+    SuspenseResolutionsCompanion Function({
+      required String id,
+      required String caseId,
+      required String cashEventId,
+      required String paymentId,
+      required String financialAccountId,
+      required String partyId,
+      required String partyRole,
+      required String currencyCode,
+      required int amountMinor,
+      required String actorId,
+      required String authorizedByActorId,
+      required String authorizationReference,
+      required String reason,
+      required String idempotencyKey,
+      required String requestPayload,
+      required DateTime resolvedAt,
+      Value<int> rowid,
+    });
+typedef $$SuspenseResolutionsTableUpdateCompanionBuilder =
+    SuspenseResolutionsCompanion Function({
+      Value<String> id,
+      Value<String> caseId,
+      Value<String> cashEventId,
+      Value<String> paymentId,
+      Value<String> financialAccountId,
+      Value<String> partyId,
+      Value<String> partyRole,
+      Value<String> currencyCode,
+      Value<int> amountMinor,
+      Value<String> actorId,
+      Value<String> authorizedByActorId,
+      Value<String> authorizationReference,
+      Value<String> reason,
+      Value<String> idempotencyKey,
+      Value<String> requestPayload,
+      Value<DateTime> resolvedAt,
+      Value<int> rowid,
+    });
+
+class $$SuspenseResolutionsTableFilterComposer
+    extends Composer<_$AppDatabase, $SuspenseResolutionsTable> {
+  $$SuspenseResolutionsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get caseId => $composableBuilder(
+    column: $table.caseId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get cashEventId => $composableBuilder(
+    column: $table.cashEventId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get paymentId => $composableBuilder(
+    column: $table.paymentId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get financialAccountId => $composableBuilder(
+    column: $table.financialAccountId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get partyId => $composableBuilder(
+    column: $table.partyId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get partyRole => $composableBuilder(
+    column: $table.partyRole,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get currencyCode => $composableBuilder(
+    column: $table.currencyCode,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get amountMinor => $composableBuilder(
+    column: $table.amountMinor,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get actorId => $composableBuilder(
+    column: $table.actorId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get authorizedByActorId => $composableBuilder(
+    column: $table.authorizedByActorId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get authorizationReference => $composableBuilder(
+    column: $table.authorizationReference,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get reason => $composableBuilder(
+    column: $table.reason,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get idempotencyKey => $composableBuilder(
+    column: $table.idempotencyKey,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get requestPayload => $composableBuilder(
+    column: $table.requestPayload,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get resolvedAt => $composableBuilder(
+    column: $table.resolvedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$SuspenseResolutionsTableOrderingComposer
+    extends Composer<_$AppDatabase, $SuspenseResolutionsTable> {
+  $$SuspenseResolutionsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get caseId => $composableBuilder(
+    column: $table.caseId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get cashEventId => $composableBuilder(
+    column: $table.cashEventId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get paymentId => $composableBuilder(
+    column: $table.paymentId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get financialAccountId => $composableBuilder(
+    column: $table.financialAccountId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get partyId => $composableBuilder(
+    column: $table.partyId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get partyRole => $composableBuilder(
+    column: $table.partyRole,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get currencyCode => $composableBuilder(
+    column: $table.currencyCode,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get amountMinor => $composableBuilder(
+    column: $table.amountMinor,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get actorId => $composableBuilder(
+    column: $table.actorId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get authorizedByActorId => $composableBuilder(
+    column: $table.authorizedByActorId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get authorizationReference => $composableBuilder(
+    column: $table.authorizationReference,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get reason => $composableBuilder(
+    column: $table.reason,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get idempotencyKey => $composableBuilder(
+    column: $table.idempotencyKey,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get requestPayload => $composableBuilder(
+    column: $table.requestPayload,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get resolvedAt => $composableBuilder(
+    column: $table.resolvedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$SuspenseResolutionsTableAnnotationComposer
+    extends Composer<_$AppDatabase, $SuspenseResolutionsTable> {
+  $$SuspenseResolutionsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get caseId =>
+      $composableBuilder(column: $table.caseId, builder: (column) => column);
+
+  GeneratedColumn<String> get cashEventId => $composableBuilder(
+    column: $table.cashEventId,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get paymentId =>
+      $composableBuilder(column: $table.paymentId, builder: (column) => column);
+
+  GeneratedColumn<String> get financialAccountId => $composableBuilder(
+    column: $table.financialAccountId,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get partyId =>
+      $composableBuilder(column: $table.partyId, builder: (column) => column);
+
+  GeneratedColumn<String> get partyRole =>
+      $composableBuilder(column: $table.partyRole, builder: (column) => column);
+
+  GeneratedColumn<String> get currencyCode => $composableBuilder(
+    column: $table.currencyCode,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get amountMinor => $composableBuilder(
+    column: $table.amountMinor,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get actorId =>
+      $composableBuilder(column: $table.actorId, builder: (column) => column);
+
+  GeneratedColumn<String> get authorizedByActorId => $composableBuilder(
+    column: $table.authorizedByActorId,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get authorizationReference => $composableBuilder(
+    column: $table.authorizationReference,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get reason =>
+      $composableBuilder(column: $table.reason, builder: (column) => column);
+
+  GeneratedColumn<String> get idempotencyKey => $composableBuilder(
+    column: $table.idempotencyKey,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get requestPayload => $composableBuilder(
+    column: $table.requestPayload,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<DateTime> get resolvedAt => $composableBuilder(
+    column: $table.resolvedAt,
+    builder: (column) => column,
+  );
+}
+
+class $$SuspenseResolutionsTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $SuspenseResolutionsTable,
+          SuspenseResolution,
+          $$SuspenseResolutionsTableFilterComposer,
+          $$SuspenseResolutionsTableOrderingComposer,
+          $$SuspenseResolutionsTableAnnotationComposer,
+          $$SuspenseResolutionsTableCreateCompanionBuilder,
+          $$SuspenseResolutionsTableUpdateCompanionBuilder,
+          (
+            SuspenseResolution,
+            BaseReferences<
+              _$AppDatabase,
+              $SuspenseResolutionsTable,
+              SuspenseResolution
+            >,
+          ),
+          SuspenseResolution,
+          PrefetchHooks Function()
+        > {
+  $$SuspenseResolutionsTableTableManager(
+    _$AppDatabase db,
+    $SuspenseResolutionsTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$SuspenseResolutionsTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$SuspenseResolutionsTableOrderingComposer(
+                $db: db,
+                $table: table,
+              ),
+          createComputedFieldComposer: () =>
+              $$SuspenseResolutionsTableAnnotationComposer(
+                $db: db,
+                $table: table,
+              ),
+          updateCompanionCallback:
+              ({
+                Value<String> id = const Value.absent(),
+                Value<String> caseId = const Value.absent(),
+                Value<String> cashEventId = const Value.absent(),
+                Value<String> paymentId = const Value.absent(),
+                Value<String> financialAccountId = const Value.absent(),
+                Value<String> partyId = const Value.absent(),
+                Value<String> partyRole = const Value.absent(),
+                Value<String> currencyCode = const Value.absent(),
+                Value<int> amountMinor = const Value.absent(),
+                Value<String> actorId = const Value.absent(),
+                Value<String> authorizedByActorId = const Value.absent(),
+                Value<String> authorizationReference = const Value.absent(),
+                Value<String> reason = const Value.absent(),
+                Value<String> idempotencyKey = const Value.absent(),
+                Value<String> requestPayload = const Value.absent(),
+                Value<DateTime> resolvedAt = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => SuspenseResolutionsCompanion(
+                id: id,
+                caseId: caseId,
+                cashEventId: cashEventId,
+                paymentId: paymentId,
+                financialAccountId: financialAccountId,
+                partyId: partyId,
+                partyRole: partyRole,
+                currencyCode: currencyCode,
+                amountMinor: amountMinor,
+                actorId: actorId,
+                authorizedByActorId: authorizedByActorId,
+                authorizationReference: authorizationReference,
+                reason: reason,
+                idempotencyKey: idempotencyKey,
+                requestPayload: requestPayload,
+                resolvedAt: resolvedAt,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String id,
+                required String caseId,
+                required String cashEventId,
+                required String paymentId,
+                required String financialAccountId,
+                required String partyId,
+                required String partyRole,
+                required String currencyCode,
+                required int amountMinor,
+                required String actorId,
+                required String authorizedByActorId,
+                required String authorizationReference,
+                required String reason,
+                required String idempotencyKey,
+                required String requestPayload,
+                required DateTime resolvedAt,
+                Value<int> rowid = const Value.absent(),
+              }) => SuspenseResolutionsCompanion.insert(
+                id: id,
+                caseId: caseId,
+                cashEventId: cashEventId,
+                paymentId: paymentId,
+                financialAccountId: financialAccountId,
+                partyId: partyId,
+                partyRole: partyRole,
+                currencyCode: currencyCode,
+                amountMinor: amountMinor,
+                actorId: actorId,
+                authorizedByActorId: authorizedByActorId,
+                authorizationReference: authorizationReference,
+                reason: reason,
+                idempotencyKey: idempotencyKey,
+                requestPayload: requestPayload,
+                resolvedAt: resolvedAt,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable<$SuspenseResolutionsTable, SuspenseResolution>(
+                    table,
+                  ),
+                  BaseReferences<
+                    _$AppDatabase,
+                    $SuspenseResolutionsTable,
+                    SuspenseResolution
+                  >(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$SuspenseResolutionsTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $SuspenseResolutionsTable,
+      SuspenseResolution,
+      $$SuspenseResolutionsTableFilterComposer,
+      $$SuspenseResolutionsTableOrderingComposer,
+      $$SuspenseResolutionsTableAnnotationComposer,
+      $$SuspenseResolutionsTableCreateCompanionBuilder,
+      $$SuspenseResolutionsTableUpdateCompanionBuilder,
+      (
+        SuspenseResolution,
+        BaseReferences<
+          _$AppDatabase,
+          $SuspenseResolutionsTable,
+          SuspenseResolution
+        >,
+      ),
+      SuspenseResolution,
+      PrefetchHooks Function()
+    >;
+typedef $$SuspenseEntriesTableCreateCompanionBuilder =
+    SuspenseEntriesCompanion Function({
+      required String id,
+      required String caseId,
+      required String cashEventId,
+      required String paymentId,
+      required String financialAccountId,
+      required String partyId,
+      required String partyRole,
+      required String currencyCode,
+      required String movementType,
+      required int amountMinor,
+      Value<String?> resolutionId,
+      required String actorId,
+      required String reason,
+      required String idempotencyKey,
+      required String requestPayload,
+      required DateTime recordedAt,
+      Value<int> rowid,
+    });
+typedef $$SuspenseEntriesTableUpdateCompanionBuilder =
+    SuspenseEntriesCompanion Function({
+      Value<String> id,
+      Value<String> caseId,
+      Value<String> cashEventId,
+      Value<String> paymentId,
+      Value<String> financialAccountId,
+      Value<String> partyId,
+      Value<String> partyRole,
+      Value<String> currencyCode,
+      Value<String> movementType,
+      Value<int> amountMinor,
+      Value<String?> resolutionId,
+      Value<String> actorId,
+      Value<String> reason,
+      Value<String> idempotencyKey,
+      Value<String> requestPayload,
+      Value<DateTime> recordedAt,
+      Value<int> rowid,
+    });
+
+class $$SuspenseEntriesTableFilterComposer
+    extends Composer<_$AppDatabase, $SuspenseEntriesTable> {
+  $$SuspenseEntriesTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get caseId => $composableBuilder(
+    column: $table.caseId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get cashEventId => $composableBuilder(
+    column: $table.cashEventId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get paymentId => $composableBuilder(
+    column: $table.paymentId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get financialAccountId => $composableBuilder(
+    column: $table.financialAccountId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get partyId => $composableBuilder(
+    column: $table.partyId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get partyRole => $composableBuilder(
+    column: $table.partyRole,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get currencyCode => $composableBuilder(
+    column: $table.currencyCode,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get movementType => $composableBuilder(
+    column: $table.movementType,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get amountMinor => $composableBuilder(
+    column: $table.amountMinor,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get resolutionId => $composableBuilder(
+    column: $table.resolutionId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get actorId => $composableBuilder(
+    column: $table.actorId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get reason => $composableBuilder(
+    column: $table.reason,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get idempotencyKey => $composableBuilder(
+    column: $table.idempotencyKey,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get requestPayload => $composableBuilder(
+    column: $table.requestPayload,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get recordedAt => $composableBuilder(
+    column: $table.recordedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$SuspenseEntriesTableOrderingComposer
+    extends Composer<_$AppDatabase, $SuspenseEntriesTable> {
+  $$SuspenseEntriesTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get caseId => $composableBuilder(
+    column: $table.caseId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get cashEventId => $composableBuilder(
+    column: $table.cashEventId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get paymentId => $composableBuilder(
+    column: $table.paymentId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get financialAccountId => $composableBuilder(
+    column: $table.financialAccountId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get partyId => $composableBuilder(
+    column: $table.partyId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get partyRole => $composableBuilder(
+    column: $table.partyRole,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get currencyCode => $composableBuilder(
+    column: $table.currencyCode,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get movementType => $composableBuilder(
+    column: $table.movementType,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get amountMinor => $composableBuilder(
+    column: $table.amountMinor,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get resolutionId => $composableBuilder(
+    column: $table.resolutionId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get actorId => $composableBuilder(
+    column: $table.actorId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get reason => $composableBuilder(
+    column: $table.reason,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get idempotencyKey => $composableBuilder(
+    column: $table.idempotencyKey,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get requestPayload => $composableBuilder(
+    column: $table.requestPayload,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get recordedAt => $composableBuilder(
+    column: $table.recordedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$SuspenseEntriesTableAnnotationComposer
+    extends Composer<_$AppDatabase, $SuspenseEntriesTable> {
+  $$SuspenseEntriesTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get caseId =>
+      $composableBuilder(column: $table.caseId, builder: (column) => column);
+
+  GeneratedColumn<String> get cashEventId => $composableBuilder(
+    column: $table.cashEventId,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get paymentId =>
+      $composableBuilder(column: $table.paymentId, builder: (column) => column);
+
+  GeneratedColumn<String> get financialAccountId => $composableBuilder(
+    column: $table.financialAccountId,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get partyId =>
+      $composableBuilder(column: $table.partyId, builder: (column) => column);
+
+  GeneratedColumn<String> get partyRole =>
+      $composableBuilder(column: $table.partyRole, builder: (column) => column);
+
+  GeneratedColumn<String> get currencyCode => $composableBuilder(
+    column: $table.currencyCode,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get movementType => $composableBuilder(
+    column: $table.movementType,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get amountMinor => $composableBuilder(
+    column: $table.amountMinor,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get resolutionId => $composableBuilder(
+    column: $table.resolutionId,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get actorId =>
+      $composableBuilder(column: $table.actorId, builder: (column) => column);
+
+  GeneratedColumn<String> get reason =>
+      $composableBuilder(column: $table.reason, builder: (column) => column);
+
+  GeneratedColumn<String> get idempotencyKey => $composableBuilder(
+    column: $table.idempotencyKey,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get requestPayload => $composableBuilder(
+    column: $table.requestPayload,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<DateTime> get recordedAt => $composableBuilder(
+    column: $table.recordedAt,
+    builder: (column) => column,
+  );
+}
+
+class $$SuspenseEntriesTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $SuspenseEntriesTable,
+          SuspenseEntry,
+          $$SuspenseEntriesTableFilterComposer,
+          $$SuspenseEntriesTableOrderingComposer,
+          $$SuspenseEntriesTableAnnotationComposer,
+          $$SuspenseEntriesTableCreateCompanionBuilder,
+          $$SuspenseEntriesTableUpdateCompanionBuilder,
+          (
+            SuspenseEntry,
+            BaseReferences<_$AppDatabase, $SuspenseEntriesTable, SuspenseEntry>,
+          ),
+          SuspenseEntry,
+          PrefetchHooks Function()
+        > {
+  $$SuspenseEntriesTableTableManager(
+    _$AppDatabase db,
+    $SuspenseEntriesTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$SuspenseEntriesTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$SuspenseEntriesTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$SuspenseEntriesTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<String> id = const Value.absent(),
+                Value<String> caseId = const Value.absent(),
+                Value<String> cashEventId = const Value.absent(),
+                Value<String> paymentId = const Value.absent(),
+                Value<String> financialAccountId = const Value.absent(),
+                Value<String> partyId = const Value.absent(),
+                Value<String> partyRole = const Value.absent(),
+                Value<String> currencyCode = const Value.absent(),
+                Value<String> movementType = const Value.absent(),
+                Value<int> amountMinor = const Value.absent(),
+                Value<String?> resolutionId = const Value.absent(),
+                Value<String> actorId = const Value.absent(),
+                Value<String> reason = const Value.absent(),
+                Value<String> idempotencyKey = const Value.absent(),
+                Value<String> requestPayload = const Value.absent(),
+                Value<DateTime> recordedAt = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => SuspenseEntriesCompanion(
+                id: id,
+                caseId: caseId,
+                cashEventId: cashEventId,
+                paymentId: paymentId,
+                financialAccountId: financialAccountId,
+                partyId: partyId,
+                partyRole: partyRole,
+                currencyCode: currencyCode,
+                movementType: movementType,
+                amountMinor: amountMinor,
+                resolutionId: resolutionId,
+                actorId: actorId,
+                reason: reason,
+                idempotencyKey: idempotencyKey,
+                requestPayload: requestPayload,
+                recordedAt: recordedAt,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String id,
+                required String caseId,
+                required String cashEventId,
+                required String paymentId,
+                required String financialAccountId,
+                required String partyId,
+                required String partyRole,
+                required String currencyCode,
+                required String movementType,
+                required int amountMinor,
+                Value<String?> resolutionId = const Value.absent(),
+                required String actorId,
+                required String reason,
+                required String idempotencyKey,
+                required String requestPayload,
+                required DateTime recordedAt,
+                Value<int> rowid = const Value.absent(),
+              }) => SuspenseEntriesCompanion.insert(
+                id: id,
+                caseId: caseId,
+                cashEventId: cashEventId,
+                paymentId: paymentId,
+                financialAccountId: financialAccountId,
+                partyId: partyId,
+                partyRole: partyRole,
+                currencyCode: currencyCode,
+                movementType: movementType,
+                amountMinor: amountMinor,
+                resolutionId: resolutionId,
+                actorId: actorId,
+                reason: reason,
+                idempotencyKey: idempotencyKey,
+                requestPayload: requestPayload,
+                recordedAt: recordedAt,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable<$SuspenseEntriesTable, SuspenseEntry>(table),
+                  BaseReferences<
+                    _$AppDatabase,
+                    $SuspenseEntriesTable,
+                    SuspenseEntry
+                  >(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$SuspenseEntriesTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $SuspenseEntriesTable,
+      SuspenseEntry,
+      $$SuspenseEntriesTableFilterComposer,
+      $$SuspenseEntriesTableOrderingComposer,
+      $$SuspenseEntriesTableAnnotationComposer,
+      $$SuspenseEntriesTableCreateCompanionBuilder,
+      $$SuspenseEntriesTableUpdateCompanionBuilder,
+      (
+        SuspenseEntry,
+        BaseReferences<_$AppDatabase, $SuspenseEntriesTable, SuspenseEntry>,
+      ),
+      SuspenseEntry,
+      PrefetchHooks Function()
+    >;
 
 class $AppDatabaseManager {
   final _$AppDatabase _db;
@@ -4548,4 +13045,20 @@ class $AppDatabaseManager {
       $$InvoicesTableTableManager(_db, _db.invoices);
   $$InvoiceLinesTableTableManager get invoiceLines =>
       $$InvoiceLinesTableTableManager(_db, _db.invoiceLines);
+  $$PaymentIdentitiesTableTableManager get paymentIdentities =>
+      $$PaymentIdentitiesTableTableManager(_db, _db.paymentIdentities);
+  $$CashEventsTableTableManager get cashEvents =>
+      $$CashEventsTableTableManager(_db, _db.cashEvents);
+  $$FinancialTransactionsTableTableManager get financialTransactions =>
+      $$FinancialTransactionsTableTableManager(_db, _db.financialTransactions);
+  $$CashEventVersionsTableTableManager get cashEventVersions =>
+      $$CashEventVersionsTableTableManager(_db, _db.cashEventVersions);
+  $$CashEventHeadsTableTableManager get cashEventHeads =>
+      $$CashEventHeadsTableTableManager(_db, _db.cashEventHeads);
+  $$ReconciliationCasesTableTableManager get reconciliationCases =>
+      $$ReconciliationCasesTableTableManager(_db, _db.reconciliationCases);
+  $$SuspenseResolutionsTableTableManager get suspenseResolutions =>
+      $$SuspenseResolutionsTableTableManager(_db, _db.suspenseResolutions);
+  $$SuspenseEntriesTableTableManager get suspenseEntries =>
+      $$SuspenseEntriesTableTableManager(_db, _db.suspenseEntries);
 }

@@ -23,9 +23,9 @@ void main() {
     await temporaryDirectory.delete(recursive: true);
   });
 
-  test('initializes the ledger schema with version 2', () async {
-    expect(database.schemaVersion, 2);
-    expect(await database.storedSchemaVersion, 2);
+  test('initializes the ledger schema with version 3', () async {
+    expect(database.schemaVersion, 3);
+    expect(await database.storedSchemaVersion, 3);
 
     final tables = await database
         .customSelect(
@@ -35,12 +35,20 @@ void main() {
         .map((row) => row.read<String>('name'))
         .get();
     expect(tables, [
+      'cash_event_heads',
+      'cash_event_versions',
+      'cash_events',
       'currencies',
       'financial_accounts',
+      'financial_transactions',
       'invoice_lines',
       'invoices',
       'parties',
       'party_roles',
+      'payment_identities',
+      'reconciliation_cases',
+      'suspense_entries',
+      'suspense_resolutions',
     ]);
 
     final foreignKeys = await database
@@ -165,6 +173,14 @@ void main() {
   test('upgrades a version 1 database without application tables', () async {
     await database.customStatement('PRAGMA foreign_keys = OFF');
     for (final table in [
+      'suspense_entries',
+      'suspense_resolutions',
+      'reconciliation_cases',
+      'cash_event_heads',
+      'cash_event_versions',
+      'financial_transactions',
+      'cash_events',
+      'payment_identities',
       'invoice_lines',
       'invoices',
       'financial_accounts',
@@ -179,16 +195,57 @@ void main() {
 
     database = await AppDatabase.open(path: databasePath);
 
-    expect(await database.storedSchemaVersion, 2);
+    expect(await database.storedSchemaVersion, 3);
     final tables = await database
         .customSelect(
           "SELECT COUNT(*) AS count FROM sqlite_master "
           "WHERE type = 'table' AND name IN "
           "('currencies', 'parties', 'party_roles', 'financial_accounts', "
-          "'invoices', 'invoice_lines')",
+          "'invoices', 'invoice_lines', 'payment_identities', 'cash_events', "
+          "'financial_transactions', 'cash_event_versions', 'cash_event_heads', "
+          "'reconciliation_cases', 'suspense_resolutions', 'suspense_entries')",
         )
         .getSingle();
-    expect(tables.read<int>('count'), 6);
+    expect(tables.read<int>('count'), 14);
+  });
+
+  test('upgrades schema version 2 with Stage 3 tables and indexes', () async {
+    await database.customStatement('PRAGMA foreign_keys = OFF');
+    for (final table in [
+      'suspense_entries',
+      'suspense_resolutions',
+      'reconciliation_cases',
+      'cash_event_heads',
+      'cash_event_versions',
+      'financial_transactions',
+      'cash_events',
+      'payment_identities',
+    ]) {
+      await database.customStatement('DROP TABLE $table');
+    }
+    await database.customStatement('PRAGMA user_version = 2');
+    await database.close();
+
+    database = await AppDatabase.open(path: databasePath);
+
+    expect(await database.storedSchemaVersion, 3);
+    final stage3Tables = await database
+        .customSelect(
+          "SELECT COUNT(*) AS count FROM sqlite_master "
+          "WHERE type = 'table' AND name IN "
+          "('payment_identities', 'cash_events', 'financial_transactions', "
+          "'cash_event_versions', 'cash_event_heads', "
+          "'reconciliation_cases', 'suspense_resolutions', 'suspense_entries')",
+        )
+        .getSingle();
+    expect(stage3Tables.read<int>('count'), 8);
+    final trigger = await database
+        .customSelect(
+          "SELECT COUNT(*) AS count FROM sqlite_master WHERE type = 'trigger' "
+          "AND name = 'financial_transactions_immutable_update'",
+        )
+        .getSingle();
+    expect(trigger.read<int>('count'), 1);
   });
 
   test('commits and rolls back Drift transactions', () async {
