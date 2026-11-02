@@ -117,7 +117,18 @@ class LedgerInvoiceMapper {
   /// is a snapshot from its serializer rather than the original JSON bytes.
   /// Legacy amounts stay in decimal text fields and are not converted to minor
   /// units without an explicitly resolved currency.
-  LedgerInvoiceDraft fromExistingInvoice(legacy.Invoice invoice) {
+  LedgerInvoiceDraft fromExistingInvoice(
+    legacy.Invoice invoice, {
+    required String sourceRecordKey,
+  }) {
+    if (sourceRecordKey.trim().isEmpty) {
+      throw ArgumentError.value(
+        sourceRecordKey,
+        'sourceRecordKey',
+        'Must identify a specific legacy collection occurrence.',
+      );
+    }
+
     final legacyAction = invoice.invoiceAction;
     final action = switch (legacyAction) {
       'بيع' => LedgerInvoiceAction.sale,
@@ -129,6 +140,7 @@ class LedgerInvoiceMapper {
     return LedgerInvoiceDraft(
       id: _uuid.v4(),
       serial: invoice.invoiceSerial,
+      legacyRecordKey: sourceRecordKey,
       legacyInvoiceId: invoice.id,
       sourceJson: jsonEncode(invoice.toJson()),
       action: action,

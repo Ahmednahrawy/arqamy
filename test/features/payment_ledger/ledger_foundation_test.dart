@@ -116,9 +116,13 @@ void main() {
     'maps legacy values without assuming identity, date, or currency',
     () async {
       final oldInvoice = _legacyInvoice();
-      final draft = const LedgerInvoiceMapper().fromExistingInvoice(oldInvoice);
+      final draft = const LedgerInvoiceMapper().fromExistingInvoice(
+        oldInvoice,
+        sourceRecordKey: 'saved_invoices:occurrence-1',
+      );
 
       expect(draft.id, isNot(oldInvoice.id));
+      expect(draft.legacyRecordKey, 'saved_invoices:occurrence-1');
       expect(draft.legacyInvoiceId, oldInvoice.id);
       expect(draft.serial, oldInvoice.invoiceSerial);
       expect(draft.action, LedgerInvoiceAction.storage);
@@ -147,9 +151,9 @@ void main() {
         oldInvoice.customerName,
       );
 
-      await repository.saveInvoiceDraft(draft);
-      final saved = await repository.getInvoice(draft.id);
-      final savedLines = await repository.getInvoiceLines(draft.id);
+      final savedId = await repository.saveInvoiceDraft(draft);
+      final saved = await repository.getInvoice(savedId);
+      final savedLines = await repository.getInvoiceLines(savedId);
       expect(saved, isNotNull);
       expect(saved!.legacyInvoiceId, oldInvoice.id);
       expect(saved.totalMinor, isNull);
@@ -169,20 +173,77 @@ void main() {
   );
 
   test(
-    'duplicate legacy IDs and serials remain evidence, not primary keys',
+    'same source occurrence is saved once without replacing its data',
     () async {
       final oldInvoice = _legacyInvoice();
-      final first = const LedgerInvoiceMapper().fromExistingInvoice(oldInvoice);
+      const mapper = LedgerInvoiceMapper();
+      final first = mapper.fromExistingInvoice(
+        oldInvoice,
+        sourceRecordKey: 'saved_invoices:occurrence-1',
+      );
+      final repeated = mapper.fromExistingInvoice(
+        oldInvoice,
+        sourceRecordKey: 'saved_invoices:occurrence-1',
+      );
+
+      expect(first.id, isNot(repeated.id));
+      final savedId = await repository.saveInvoiceDraft(first);
+      final savedLinesBefore = await repository.getInvoiceLines(savedId);
+      final repeatedDraft = LedgerInvoiceDraft(
+        id: repeated.id,
+        serial: repeated.serial,
+        legacyRecordKey: repeated.legacyRecordKey,
+        legacyInvoiceId: repeated.legacyInvoiceId,
+        sourceJson: repeated.sourceJson,
+        action: repeated.action,
+        legacyAction: repeated.legacyAction,
+        totalMinor: 12345,
+        legacyTotalValue: 'changed total',
+        legacyPaidValue: 'changed paid',
+        legacyRemainingValue: 'changed remaining',
+        lines: repeated.lines,
+      );
+
+      final repeatedSavedId = await repository.saveInvoiceDraft(repeatedDraft);
+      final invoices = await database.select(database.invoices).get();
+      final saved = await repository.getInvoice(savedId);
+      final savedLinesAfter = await repository.getInvoiceLines(savedId);
+
+      expect(repeatedSavedId, savedId);
+      expect(invoices, hasLength(1));
+      expect(saved!.legacyTotalValue, oldInvoice.totalCost.toString());
+      expect(saved.legacyPaidValue, oldInvoice.paid.toString());
+      expect(saved.legacyRemainingValue, oldInvoice.rest.toString());
+      expect(saved.totalMinor, isNull);
+      expect(savedLinesAfter, hasLength(savedLinesBefore.length));
+      expect(
+        savedLinesAfter.map((line) => line.id),
+        savedLinesBefore.map((line) => line.id),
+      );
+    },
+  );
+
+  test(
+    'distinct source occurrences with duplicate legacy IDs and serials stay separate',
+    () async {
+      final oldInvoice = _legacyInvoice();
+      final first = const LedgerInvoiceMapper().fromExistingInvoice(
+        oldInvoice,
+        sourceRecordKey: 'saved_invoices:occurrence-1',
+      );
       final second = const LedgerInvoiceMapper().fromExistingInvoice(
         oldInvoice,
+        sourceRecordKey: 'saved_invoices:occurrence-2',
       );
 
       expect(first.id, isNot(second.id));
-      await repository.saveInvoiceDraft(first);
-      await repository.saveInvoiceDraft(second);
+      expect(first.legacyRecordKey, isNot(second.legacyRecordKey));
+      final firstId = await repository.saveInvoiceDraft(first);
+      final secondId = await repository.saveInvoiceDraft(second);
 
       final invoices = await database.select(database.invoices).get();
       expect(invoices, hasLength(2));
+      expect(firstId, isNot(secondId));
       expect(invoices.map((invoice) => invoice.legacyInvoiceId), {
         oldInvoice.id,
       });
@@ -217,11 +278,13 @@ void main() {
 
     final mapped = const LedgerInvoiceMapper().fromExistingInvoice(
       _legacyInvoice(action: 'بيع'),
+      sourceRecordKey: 'saved_invoices:account-mismatch',
     );
     final mismatchedDraft = LedgerInvoiceDraft(
       id: mapped.id,
       serial: mapped.serial,
       action: mapped.action,
+      legacyRecordKey: mapped.legacyRecordKey,
       legacyInvoiceId: mapped.legacyInvoiceId,
       sourceJson: mapped.sourceJson,
       partyId: party.id,

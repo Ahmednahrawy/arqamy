@@ -77,8 +77,23 @@ class LedgerFoundationRepository {
     return account;
   }
 
-  Future<void> saveInvoiceDraft(LedgerInvoiceDraft invoice) {
+  Future<String> saveInvoiceDraft(LedgerInvoiceDraft invoice) {
+    final sourceRecordKey = invoice.legacyRecordKey;
+    if (sourceRecordKey == null || sourceRecordKey.trim().isEmpty) {
+      throw ArgumentError.value(
+        sourceRecordKey,
+        'invoice.legacyRecordKey',
+        'A stable source-record key is required for legacy invoice drafts.',
+      );
+    }
+
     return _database.transaction(() async {
+      final existing =
+          await (_database.select(_database.invoices)
+                ..where((row) => row.legacyRecordKey.equals(sourceRecordKey)))
+              .getSingleOrNull();
+      if (existing != null) return existing.id;
+
       await _database
           .into(_database.invoices)
           .insert(
@@ -122,6 +137,7 @@ class LedgerFoundationRepository {
               ),
             );
       }
+      return invoice.id;
     });
   }
 
