@@ -10,7 +10,9 @@ import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   late Directory temporaryDirectory;
+  late String databasePath;
   late AppDatabase database;
+  AppDatabase? secondaryDatabase;
   late LedgerFoundationRepository foundation;
   late CashEventRepository repository;
   late String partyId;
@@ -20,9 +22,10 @@ void main() {
     temporaryDirectory = await Directory.systemTemp.createTemp(
       'arqamy_cash_event_test_',
     );
-    final path =
+    databasePath =
         '${temporaryDirectory.path}${Platform.pathSeparator}ledger.sqlite';
-    database = await AppDatabase.open(path: path);
+    database = await AppDatabase.open(path: databasePath);
+    secondaryDatabase = null;
     foundation = LedgerFoundationRepository(database);
     repository = CashEventRepository(database);
     await foundation.addCurrency(
@@ -47,6 +50,7 @@ void main() {
   });
 
   tearDown(() async {
+    await secondaryDatabase?.close();
     await database.close();
     await temporaryDirectory.delete(recursive: true);
   });
@@ -101,6 +105,158 @@ void main() {
       expect(
         (await repository.getEffectiveRecognitionReport()).single.amountMinor,
         80000,
+      );
+    },
+  );
+
+  test(
+    'separate handles serialize competing event updates without forking history',
+    () async {
+      final payment = await _record(
+        repository,
+        accountId: accountId,
+        partyId: partyId,
+        amount: 10000,
+        physicalAmount: 10000,
+        key: 'separate-handle-event',
+      );
+      secondaryDatabase = await AppDatabase.open(path: databasePath);
+      final secondRepository = CashEventRepository(secondaryDatabase!);
+      final firstRequest = _correctionRequest(
+        payment,
+        amount: 9000,
+        key: 'separate-handle-correction-a',
+      );
+      final secondRequest = _correctionRequest(
+        payment,
+        amount: 8000,
+        key: 'separate-handle-correction-b',
+      );
+      final outcomes = await Future.wait<Object>([
+        _captureOutcome(repository.correctPayment(firstRequest)),
+        _captureOutcome(secondRepository.correctPayment(secondRequest)),
+      ]);
+
+      expect(
+        outcomes.whereType<CashEventOperationResult>(),
+        hasLength(1),
+        reason: 'Outcomes: $outcomes',
+      );
+      final failures = outcomes.where(
+        (outcome) => outcome is! CashEventOperationResult,
+      );
+      expect(failures, hasLength(1), reason: 'Outcomes: $outcomes');
+      expect(
+        failures.single,
+        isA<StaleCashEventHead>(),
+        reason: 'The retry must surface the stale expected head: $failures',
+      );
+      expect(await _versionsFor(database, payment.cashEventId), hasLength(2));
+      final head = await _head(database, payment.cashEventId);
+      final latestVersion = await (database.select(
+        database.cashEventVersions,
+      )..where((row) => row.id.equals(head.versionId))).getSingle();
+      expect(latestVersion.sequence, 2);
+      expect(head.revision, 2);
+    },
+  );
+
+  test(
+    'separate handles cannot resolve more suspense than remains available',
+    () async {
+      final payment = await _record(
+        repository,
+        accountId: accountId,
+        partyId: partyId,
+        amount: 10000,
+        physicalAmount: 10000,
+        key: 'separate-handle-suspense-payment',
+      );
+      final caseId = await repository.createSuspenseCase(
+        SuspenseCaseRequest(
+          paymentId: payment.paymentId,
+          amountMinor: 10000,
+          actorId: 'actor-1',
+          reason: 'Concurrent resolution test',
+          idempotencyKey: 'separate-handle-suspense-create',
+        ),
+      );
+      secondaryDatabase = await AppDatabase.open(path: databasePath);
+      final secondRepository = CashEventRepository(secondaryDatabase!);
+      final outcomes = await Future.wait<Object>([
+        _captureOutcome(
+          repository.resolveSuspense(
+            _resolutionRequest(caseId, amount: 7000, key: 'resolution-a'),
+          ),
+        ),
+        _captureOutcome(
+          secondRepository.resolveSuspense(
+            _resolutionRequest(caseId, amount: 6000, key: 'resolution-b'),
+          ),
+        ),
+      ]);
+
+      final resolutions = await database
+          .select(database.suspenseResolutions)
+          .get();
+      final resolvedTotal = resolutions.fold<int>(
+        0,
+        (total, row) => total + row.amountMinor,
+      );
+      final balance = await repository.getSuspenseBalance(caseId);
+      expect(resolvedTotal, lessThanOrEqualTo(10000), reason: '$outcomes');
+      expect(balance, greaterThanOrEqualTo(0), reason: '$outcomes');
+      expect(resolvedTotal + balance, 10000);
+      expect(outcomes.whereType<String>(), hasLength(resolutions.length));
+      final failures = outcomes.where((outcome) => outcome is! String);
+      expect(failures, hasLength(1), reason: 'Outcomes: $outcomes');
+      expect(
+        failures.single,
+        isA<SuspenseLimitExceeded>(),
+        reason: 'The retry must recheck the available suspense balance.',
+      );
+      expect(resolutions, isNotEmpty);
+    },
+  );
+
+  test(
+    'separate handles return one logical result for concurrent idempotent payment requests',
+    () async {
+      secondaryDatabase = await AppDatabase.open(path: databasePath);
+      final secondRepository = CashEventRepository(secondaryDatabase!);
+      final request = _paymentRequest(
+        accountId: accountId,
+        partyId: partyId,
+        amount: 10000,
+        physicalAmount: 10000,
+        key: 'separate-handle-idempotent-payment',
+      );
+      final outcomes = await Future.wait<Object>([
+        _captureOutcome(repository.recordPayment(request)),
+        _captureOutcome(secondRepository.recordPayment(request)),
+      ]);
+
+      expect(
+        outcomes.whereType<CashEventOperationResult>(),
+        hasLength(2),
+        reason: 'Concurrent retry outcomes: $outcomes',
+      );
+      final results = outcomes.whereType<CashEventOperationResult>().toList();
+      expect(results[0].paymentId, results[1].paymentId);
+      expect(results[0].cashEventId, results[1].cashEventId);
+      expect(results[0].versionId, results[1].versionId);
+      expect(
+        await database.select(database.paymentIdentities).get(),
+        hasLength(1),
+      );
+      expect(await database.select(database.cashEvents).get(), hasLength(1));
+      expect(
+        await database.select(database.cashEventVersions).get(),
+        hasLength(1),
+      );
+      expect(
+        await database.select(database.financialTransactions).get(),
+        hasLength(1),
       );
     },
   );
@@ -787,4 +943,45 @@ Future<CashEventOperationResult> _record(
       occurred: occurred,
     ),
   );
+}
+
+CorrectPaymentRequest _correctionRequest(
+  CashEventOperationResult payment, {
+  required int amount,
+  required String key,
+}) {
+  return CorrectPaymentRequest(
+    paymentId: payment.paymentId,
+    expectedVersionId: payment.versionId,
+    replacementAmountMinor: amount,
+    physicalAmountMinor: 10000,
+    occurred: PhysicalOccurrence.yes,
+    actorId: 'actor-1',
+    reason: 'Separate-handle competing update',
+    idempotencyKey: key,
+  );
+}
+
+ResolveSuspenseRequest _resolutionRequest(
+  String caseId, {
+  required int amount,
+  required String key,
+}) {
+  return ResolveSuspenseRequest(
+    caseId: caseId,
+    amountMinor: amount,
+    actorId: 'actor-1',
+    authorizedByActorId: 'actor-approver',
+    authorizationReference: 'authorization-$key',
+    reason: 'Separate-handle resolution',
+    idempotencyKey: key,
+  );
+}
+
+Future<Object> _captureOutcome<T>(Future<T> operation) async {
+  try {
+    return (await operation) as Object;
+  } catch (error) {
+    return error;
+  }
 }

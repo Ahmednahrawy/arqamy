@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:arqamy/core/database/app_database.dart';
 import 'package:arqamy/features/payment_ledger/data/cash_event_history.dart';
 import 'package:drift/drift.dart';
+import 'package:drift/native.dart' show SqliteException;
 import 'package:uuid/uuid.dart';
 
 class CashEventRepository {
@@ -31,11 +32,25 @@ class CashEventRepository {
     }
   }
 
+  Future<T> _transaction<T>(Future<T> Function() operation) async {
+    const maxAttempts = 8;
+    for (var attempt = 0; attempt < maxAttempts; attempt++) {
+      try {
+        return await _database.transaction(operation);
+      } on SqliteException catch (error) {
+        final isBusy = error.resultCode == 5 || error.resultCode == 6;
+        if (!isBusy || attempt == maxAttempts - 1) rethrow;
+        await Future<void>.delayed(Duration(milliseconds: 10 * (1 << attempt)));
+      }
+    }
+    throw StateError('Transaction retry loop ended unexpectedly.');
+  }
+
   Future<CashEventOperationResult> recordPayment(RecordPaymentRequest request) {
     _validatePaymentRequest(request);
     final payload = _paymentPayload(request);
     return _serialize(
-      () => _database.transaction(() => _recordPayment(request, payload)),
+      () => _transaction(() => _recordPayment(request, payload)),
     );
   }
 
@@ -69,7 +84,7 @@ class CashEventRepository {
       request.reason,
     ]);
     return _serialize(
-      () => _database.transaction(() => _correctPayment(request, payload)),
+      () => _transaction(() => _correctPayment(request, payload)),
     );
   }
 
@@ -87,9 +102,7 @@ class CashEventRepository {
       request.reason,
     ]);
     return _serialize(
-      () => _database.transaction(
-        () => _reverseWithoutCashReturn(request, payload),
-      ),
+      () => _transaction(() => _reverseWithoutCashReturn(request, payload)),
     );
   }
 
@@ -107,7 +120,7 @@ class CashEventRepository {
       request.reason,
     ]);
     return _serialize(
-      () => _database.transaction(() => _voidNeverOccurred(request, payload)),
+      () => _transaction(() => _voidNeverOccurred(request, payload)),
     );
   }
 
@@ -149,7 +162,7 @@ class CashEventRepository {
       reason,
     ]);
     return _serialize(
-      () => _database.transaction(() async {
+      () => _transaction(() async {
         final duplicate = await _findVersionByKey(idempotencyKey, payload);
         if (duplicate != null) return _resultFromVersion(duplicate);
         final current = await _loadCurrent(paymentId, expectedVersionId);
@@ -227,7 +240,7 @@ class CashEventRepository {
     final paymentPayload = _paymentPayload(replacement);
 
     return _serialize(
-      () => _database.transaction(() async {
+      () => _transaction(() async {
         await _reverseWithoutCashReturn(reversal, reversalPayload);
         final result = await _recordPayment(replacement, paymentPayload);
         return result;
@@ -248,7 +261,7 @@ class CashEventRepository {
       request.reason,
     ]);
     return _serialize(
-      () => _database.transaction(() async {
+      () => _transaction(() async {
         final existing = await _findSuspenseEntry(request.idempotencyKey);
         if (existing != null) {
           _checkPayload(
@@ -327,7 +340,7 @@ class CashEventRepository {
       request.reason,
     ]);
     return _serialize(
-      () => _database.transaction(() async {
+      () => _transaction(() async {
         final prior =
             await (_database.select(_database.suspenseResolutions)..where(
                   (row) => row.idempotencyKey.equals(request.idempotencyKey),
@@ -888,7 +901,7 @@ class CashEventRepository {
       request.reason,
     ]);
     return _serialize(
-      () => _database.transaction(() async {
+      () => _transaction(() async {
         final existing = await _findSuspenseEntry(request.idempotencyKey);
         if (existing != null) {
           _checkPayload(

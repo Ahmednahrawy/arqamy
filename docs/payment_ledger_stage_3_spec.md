@@ -45,6 +45,14 @@ forking history. Request keys are unique and payload-checked: exact retries
 return the recorded result, while reuse with a different payload raises
 `IdempotencyConflict`.
 
+Independent database handles may contend at `BEGIN IMMEDIATE`. The repository
+retries SQLite `BUSY` and `LOCKED` errors up to eight attempts with bounded
+exponential backoff. After retry, competing event updates fail with
+`StaleCashEventHead`, over-cap suspense resolutions fail with
+`SuspenseLimitExceeded`, and identical idempotent requests return the existing
+logical result. Other SQLite errors, and busy/locked errors after the retry
+limit, propagate to the caller.
+
 - **Original payment:** creates one payment identity, one cash event, the
   initial financial transaction, version 1, and its head atomically.
 - **Method A correction:** retains both identities, appends a reversal
