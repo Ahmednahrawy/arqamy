@@ -268,7 +268,7 @@ class InvoiceProvider extends ChangeNotifier {
         case 'تخزين':
           return balance;
         default:
-          return balance + invoice.rest;
+          return balance - invoice.rest;
       }
     });
   }
