@@ -32,21 +32,30 @@ class _CustomerScreenStorage {
   }
 }
 
-Invoice _invoice({String action = 'شراء', double rest = 20}) {
+Invoice _invoice({
+  String id = 'legacy-id',
+  String customerName = 'Customer',
+  String action = 'شراء',
+  double rest = 20,
+  double totalCost = 20,
+  double paid = 0,
+  List<Product>? products,
+}) {
   return Invoice(
-    id: 'legacy-id',
-    customerName: 'Customer',
-    products: [
-      Product(
-        name: 'Rice',
-        weight: 2,
-        packageWeight: 0,
-        numberPackage: 0,
-        price: 10,
-      ),
-    ],
-    totalCost: 20,
-    paid: 0,
+    id: id,
+    customerName: customerName,
+    products: products ??
+        [
+          Product(
+            name: 'Rice',
+            weight: 2,
+            packageWeight: 0,
+            numberPackage: 0,
+            price: 10,
+          ),
+        ],
+    totalCost: totalCost,
+    paid: paid,
     rest: rest,
     formattedDate: 'Oct 28, 2026',
     formattedTime: '12:34',
@@ -55,14 +64,17 @@ Invoice _invoice({String action = 'شراء', double rest = 20}) {
   );
 }
 
-Widget _customerScreen(InvoiceProvider provider) {
+Widget _customerScreen(
+  InvoiceProvider provider, {
+  Locale locale = const Locale('ar'),
+}) {
   return MultiProvider(
     providers: [
       ChangeNotifierProvider.value(value: provider),
       ChangeNotifierProvider(create: (_) => InvoiceSettingsProvider()),
     ],
     child: MaterialApp(
-      locale: const Locale('ar'),
+      locale: locale,
       localizationsDelegates: const [
         S.delegate,
         GlobalMaterialLocalizations.delegate,
@@ -188,7 +200,7 @@ void main() {
     _useTallViewport(tester);
     SharedPreferences.setMockInitialValues({});
     final provider = InvoiceProvider();
-    await provider.saveInvoice(_invoice());
+    await provider.saveInvoice(_invoice(action: 'تخزين'));
 
     await tester.pumpWidget(_customerScreen(provider));
     await tester.pumpAndSettle();
@@ -219,6 +231,16 @@ void main() {
     expect(provider.invoices.single.customerName, 'Supplier A');
     expect(provider.invoices.single.invoiceAction, 'بيع');
     expect(find.text('فاتورة #legacy-serial'), findsNothing);
+    final oldCustomerStorageSummary = find.byKey(
+      const ValueKey('customer-storage-summary'),
+    );
+    expect(
+      find.descendant(
+        of: oldCustomerStorageSummary,
+        matching: find.text('0.00 ج.م'),
+      ),
+      findsOneWidget,
+    );
 
     await tester.enterText(find.byType(TextFormField), 'Supplier A');
     await tester.testTextInput.receiveAction(TextInputAction.done);
@@ -228,6 +250,177 @@ void main() {
     expect(find.text('صافي مستحق للعميل'), findsOneWidget);
     expect(find.text('مشتريات'), findsOneWidget);
     expect(find.text('مبيعات'), findsOneWidget);
+    final newCustomerStorageSummary = find.byKey(
+      const ValueKey('customer-storage-summary'),
+    );
+    expect(
+      find.descendant(
+        of: newCustomerStorageSummary,
+        matching: find.text('0.00 ج.م'),
+      ),
+      findsOneWidget,
+    );
+    expect(find.text('20.00 ج.م'), findsNWidgets(2));
+  });
+
+  testWidgets(
+      'storage summary aggregates paid and unpaid invoices without changing '
+      'purchase and sales totals', (tester) async {
+    _useTallViewport(tester);
+    SharedPreferences.setMockInitialValues({});
+    final provider = InvoiceProvider();
+    await provider.saveInvoice(
+      _invoice(
+        id: 'storage-paid',
+        action: 'تخزين',
+        totalCost: 120,
+        paid: 120,
+        rest: 0,
+        products: [
+          Product(
+            name: 'Rice',
+            weight: 10,
+            packageWeight: 1,
+            numberPackage: 2,
+            price: 5,
+          ),
+          Product(
+            name: 'Beans',
+            weight: 5,
+            packageWeight: 0,
+            numberPackage: 0,
+            price: 8,
+          ),
+        ],
+      ),
+    );
+    await provider.saveInvoice(
+      _invoice(
+        id: 'storage-unpaid',
+        action: 'تخزين',
+        totalCost: 60,
+        paid: 0,
+        rest: 60,
+        products: [
+          Product(
+            name: 'Oil',
+            weight: 20,
+            packageWeight: 2,
+            numberPackage: 3,
+            price: 6,
+          ),
+        ],
+      ),
+    );
+    await provider.saveInvoice(
+      _invoice(
+        id: 'purchase',
+        action: 'شراء',
+        totalCost: 100,
+        rest: 100,
+        products: const [],
+      ),
+    );
+    await provider.saveInvoice(
+      _invoice(
+        id: 'sale',
+        action: 'بيع',
+        totalCost: 30,
+        rest: 30,
+        products: const [],
+      ),
+    );
+    await provider.saveInvoice(
+      _invoice(
+        id: 'another-customer-storage',
+        customerName: 'Supplier',
+        action: 'تخزين',
+        totalCost: 900,
+        rest: 900,
+        products: const [],
+      ),
+    );
+
+    await tester.pumpWidget(_customerScreen(provider));
+    await tester.pumpAndSettle();
+    await tester.enterText(find.byType(TextFormField), 'Customer');
+    await tester.testTextInput.receiveAction(TextInputAction.done);
+    await tester.pumpAndSettle();
+
+    final storageSummary = find.byKey(
+      const ValueKey('customer-storage-summary'),
+    );
+    expect(
+      find.descendant(
+        of: storageSummary,
+        matching: find.text('180.00 ج.م'),
+      ),
+      findsOneWidget,
+    );
+    expect(
+      find.descendant(
+        of: storageSummary,
+        matching: find.text('27.00 كجم'),
+      ),
+      findsOneWidget,
+    );
+    expect(
+      find.descendant(
+        of: storageSummary,
+        matching: find.text('2'),
+      ),
+      findsOneWidget,
+    );
+    expect(find.text('100.00 ج.م'), findsOneWidget);
+    expect(find.text('30.00 ج.م'), findsOneWidget);
+    expect(find.text('70.00 ج.م'), findsOneWidget);
+  });
+
+  testWidgets('storage summary shows localized zero values without storage',
+      (tester) async {
+    _useTallViewport(tester);
+    SharedPreferences.setMockInitialValues({});
+    final provider = InvoiceProvider();
+    await provider.saveInvoice(
+      _invoice(id: 'purchase-only', action: 'شراء'),
+    );
+
+    await tester.pumpWidget(
+      _customerScreen(provider, locale: const Locale('en')),
+    );
+    await tester.pumpAndSettle();
+    await tester.enterText(find.byType(TextFormField), 'Customer');
+    await tester.testTextInput.receiveAction(TextInputAction.done);
+    await tester.pumpAndSettle();
+
+    final storageSummary = find.byKey(
+      const ValueKey('customer-storage-summary'),
+    );
+    expect(
+      find.descendant(
+        of: storageSummary,
+        matching: find.text('Storage value'),
+      ),
+      findsOneWidget,
+    );
+    expect(
+      find.descendant(of: storageSummary, matching: find.text('0.00 EGP')),
+      findsOneWidget,
+    );
+    expect(
+      find.descendant(
+        of: storageSummary,
+        matching: find.text('0.00 kg'),
+      ),
+      findsOneWidget,
+    );
+    expect(
+      find.descendant(
+        of: storageSummary,
+        matching: find.text('0'),
+      ),
+      findsOneWidget,
+    );
   });
 
   testWidgets('customer balance labels match positive negative and zero signs',

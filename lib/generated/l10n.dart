@@ -399,6 +399,28 @@ class S {
   String get sale => Intl.message('Sale', name: 'sale', desc: '', args: []);
   String get storage =>
       Intl.message('Storage', name: 'storage', desc: '', args: []);
+  String get storageInvoiceValue => Intl.message(
+        'Storage value',
+        name: 'storageInvoiceValue',
+        desc: '',
+        args: [],
+      );
+  String get storedNetWeight => Intl.message(
+        'Stored net weight',
+        name: 'storedNetWeight',
+        desc: '',
+        args: [],
+      );
+  String get storageInvoiceCount => Intl.message(
+        'Storage invoices',
+        name: 'storageInvoiceCount',
+        desc: '',
+        args: [],
+      );
+  String get storageCurrency =>
+      Intl.message('EGP', name: 'storageCurrency', desc: '', args: []);
+  String get kilograms =>
+      Intl.message('kg', name: 'kilograms', desc: '', args: []);
   String get couldNotSaveInvoice => Intl.message(
         'Could not save invoice changes',
         name: 'couldNotSaveInvoice',

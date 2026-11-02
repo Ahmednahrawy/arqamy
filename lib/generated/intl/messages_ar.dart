@@ -89,6 +89,14 @@ class MessageLookup extends MessageLookupByLibrary {
         "purchase": MessageLookupByLibrary.simpleMessage("شراء"),
         "sale": MessageLookupByLibrary.simpleMessage("بيع"),
         "storage": MessageLookupByLibrary.simpleMessage("تخزين"),
+        "storageCurrency": MessageLookupByLibrary.simpleMessage("ج.م"),
+        "storageInvoiceCount":
+            MessageLookupByLibrary.simpleMessage("عدد فواتير التخزين"),
+        "storageInvoiceValue":
+            MessageLookupByLibrary.simpleMessage("قيمة فواتير التخزين"),
+        "storedNetWeight":
+            MessageLookupByLibrary.simpleMessage("الوزن الصافي المخزن"),
+        "kilograms": MessageLookupByLibrary.simpleMessage("كجم"),
         "couldNotSaveInvoice": MessageLookupByLibrary.simpleMessage(
           "تعذر حفظ تعديلات الفاتورة",
         ),

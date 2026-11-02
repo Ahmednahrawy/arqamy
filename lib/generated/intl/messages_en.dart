@@ -90,6 +90,15 @@ class MessageLookup extends MessageLookupByLibrary {
         "purchase": MessageLookupByLibrary.simpleMessage("Purchase"),
         "sale": MessageLookupByLibrary.simpleMessage("Sale"),
         "storage": MessageLookupByLibrary.simpleMessage("Storage"),
+        "storageCurrency": MessageLookupByLibrary.simpleMessage("EGP"),
+        "storageInvoiceCount":
+            MessageLookupByLibrary.simpleMessage("Storage invoices"),
+        "storageInvoiceValue": MessageLookupByLibrary.simpleMessage(
+          "Storage value",
+        ),
+        "storedNetWeight":
+            MessageLookupByLibrary.simpleMessage("Stored net weight"),
+        "kilograms": MessageLookupByLibrary.simpleMessage("kg"),
         "couldNotSaveInvoice": MessageLookupByLibrary.simpleMessage(
           "Could not save invoice changes",
         ),
