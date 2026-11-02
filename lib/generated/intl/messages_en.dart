@@ -33,11 +33,15 @@ class MessageLookup extends MessageLookupByLibrary {
     "change_password": MessageLookupByLibrary.simpleMessage("Change Password"),
     "confirm": MessageLookupByLibrary.simpleMessage("Confirm"),
     "contact_us": MessageLookupByLibrary.simpleMessage("Contact Us"),
+    "clearInvoiceSearch": MessageLookupByLibrary.simpleMessage("Clear search"),
     "couldNotSaveInvoice": MessageLookupByLibrary.simpleMessage(
       "Could not save invoice changes",
     ),
     "currency": MessageLookupByLibrary.simpleMessage("EGP"),
     "customerName": MessageLookupByLibrary.simpleMessage("Customer name"),
+    "customerInvoiceSearchHint": MessageLookupByLibrary.simpleMessage(
+      "Search by serial or product name",
+    ),
     "customers": MessageLookupByLibrary.simpleMessage("Customers"),
     "dark_mode": MessageLookupByLibrary.simpleMessage("Dark Mode"),
     "date": MessageLookupByLibrary.simpleMessage("Date"),
@@ -82,6 +86,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "logout": MessageLookupByLibrary.simpleMessage("Log out"),
     "nameRequired": MessageLookupByLibrary.simpleMessage("Enter a name"),
     "no": MessageLookupByLibrary.simpleMessage("No"),
+    "noInvoicesMatchSearch": MessageLookupByLibrary.simpleMessage(
+      "No invoices match your search",
+    ),
     "no_results_found": MessageLookupByLibrary.simpleMessage(
       "No results found",
     ),

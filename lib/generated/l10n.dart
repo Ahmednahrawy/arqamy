@@ -224,6 +224,36 @@ class S {
     return Intl.message('Search', name: 'search', desc: '', args: []);
   }
 
+  /// `Search by serial or product name`
+  String get customerInvoiceSearchHint {
+    return Intl.message(
+      'Search by serial or product name',
+      name: 'customerInvoiceSearchHint',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Clear search`
+  String get clearInvoiceSearch {
+    return Intl.message(
+      'Clear search',
+      name: 'clearInvoiceSearch',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No invoices match your search`
+  String get noInvoicesMatchSearch {
+    return Intl.message(
+      'No invoices match your search',
+      name: 'noInvoicesMatchSearch',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `No results found`
   String get no_results_found {
     return Intl.message(

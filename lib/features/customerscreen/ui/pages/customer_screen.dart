@@ -25,6 +25,9 @@ class _CustomerScreenState extends State<CustomerScreen> {
   String? _customerName;
   List<Invoice> _customerInvoices = [];
   InvoiceProvider? _invoiceProvider;
+  final TextEditingController _invoiceSearchController =
+      TextEditingController();
+  String _invoiceSearchQuery = '';
 
   @override
   void initState() {
@@ -51,6 +54,7 @@ class _CustomerScreenState extends State<CustomerScreen> {
   @override
   void dispose() {
     _invoiceProvider?.removeListener(_handleInvoiceProviderChange);
+    _invoiceSearchController.dispose();
     super.dispose();
   }
 
@@ -90,8 +94,38 @@ class _CustomerScreenState extends State<CustomerScreen> {
     final provider = context.read<InvoiceProvider>();
     setState(() {
       _customerName = customerName;
+      _invoiceSearchController.clear();
+      _invoiceSearchQuery = '';
       _customerInvoices = _getCustomerInvoices(provider);
     });
+  }
+
+  List<Invoice> _filterCustomerInvoices() {
+    final query = _normalizeSearchText(_invoiceSearchQuery);
+    if (query.isEmpty) return _customerInvoices;
+
+    return _customerInvoices.where((invoice) {
+      if (_normalizeSearchText(invoice.invoiceSerial).contains(query)) {
+        return true;
+      }
+      return invoice.products.any(
+        (product) => _normalizeSearchText(product.name).contains(query),
+      );
+    }).toList();
+  }
+
+  String _normalizeSearchText(String value) =>
+      value.trim().split(RegExp(r'\s+')).join(' ').toLowerCase();
+
+  void _handleInvoiceSearchChanged(String query) {
+    setState(() {
+      _invoiceSearchQuery = query;
+    });
+  }
+
+  void _clearInvoiceSearch() {
+    _invoiceSearchController.clear();
+    _handleInvoiceSearchChanged('');
   }
 
   void _loadCustomerInvoices(String customerName) {
@@ -192,6 +226,10 @@ class _CustomerScreenState extends State<CustomerScreen> {
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
+    final strings = S.of(context);
+    final visibleInvoices = _filterCustomerInvoices();
+    final hasInvoiceSearchQuery =
+        _normalizeSearchText(_invoiceSearchQuery).isNotEmpty;
     final balance = InvoiceProvider.calculateCustomerBalance(_customerInvoices);
     final purchaseBalance = _customerInvoices
         .where((invoice) =>
@@ -267,14 +305,41 @@ class _CustomerScreenState extends State<CustomerScreen> {
                           ),
                         ),
                         Text(
-                          '${_customerInvoices.length} فاتورة',
+                          '${visibleInvoices.length} فاتورة',
                           style: TextStyle(color: colors.onSurfaceVariant),
                         ),
                       ],
                     ),
                   ),
+                if (_customerName != null && _customerName!.isNotEmpty)
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 8),
+                    child: TextField(
+                      key: const ValueKey('customer-invoice-search'),
+                      controller: _invoiceSearchController,
+                      onChanged: _handleInvoiceSearchChanged,
+                      textInputAction: TextInputAction.search,
+                      decoration: InputDecoration(
+                        hintText: strings.customerInvoiceSearchHint,
+                        prefixIcon: const Icon(Icons.search),
+                        suffixIcon: _invoiceSearchQuery.isEmpty
+                            ? null
+                            : IconButton(
+                                key: const ValueKey('clear-invoice-search'),
+                                tooltip: strings.clearInvoiceSearch,
+                                onPressed: _clearInvoiceSearch,
+                                icon: const Icon(Icons.clear),
+                              ),
+                        isDense: true,
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(14),
+                        ),
+                      ),
+                    ),
+                  ),
                 Expanded(
-                  child: _customerInvoices.isEmpty
+                  child: _customerName == null ||
+                          (_customerInvoices.isEmpty && !hasInvoiceSearchQuery)
                       ? Center(
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
@@ -305,14 +370,27 @@ class _CustomerScreenState extends State<CustomerScreen> {
                             ],
                           ),
                         )
-                      : ListView.builder(
-                          padding: const EdgeInsets.only(bottom: 12),
-                          itemCount: _customerInvoices.length,
-                          itemBuilder: (context, index) {
-                            final invoice = _customerInvoices[index];
-                            return _buildInvoiceCard(invoice);
-                          },
-                        ),
+                      : visibleInvoices.isEmpty
+                          ? Center(
+                              child: Text(
+                                strings.noInvoicesMatchSearch,
+                                textAlign: TextAlign.center,
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .titleMedium
+                                    ?.copyWith(
+                                      color: colors.onSurfaceVariant,
+                                    ),
+                              ),
+                            )
+                          : ListView.builder(
+                              padding: const EdgeInsets.only(bottom: 12),
+                              itemCount: visibleInvoices.length,
+                              itemBuilder: (context, index) {
+                                final invoice = visibleInvoices[index];
+                                return _buildInvoiceCard(invoice);
+                              },
+                            ),
                 ),
               ],
             ),

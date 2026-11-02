@@ -74,5 +74,8 @@
   "storedNetWeight": "Stored net weight",
   "storageInvoiceCount": "Storage invoices",
   "storageCurrency": "EGP",
-  "kilograms": "kg"
+  "kilograms": "kg",
+  "customerInvoiceSearchHint": "Search by serial or product name",
+  "clearInvoiceSearch": "Clear search",
+  "noInvoicesMatchSearch": "No invoices match your search"
 }

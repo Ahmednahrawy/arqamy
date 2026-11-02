@@ -35,11 +35,15 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "confirm": MessageLookupByLibrary.simpleMessage("تأكيد"),
     "contact_us": MessageLookupByLibrary.simpleMessage("اتصل بنا"),
+    "clearInvoiceSearch": MessageLookupByLibrary.simpleMessage("مسح البحث"),
     "couldNotSaveInvoice": MessageLookupByLibrary.simpleMessage(
       "تعذر حفظ تعديلات الفاتورة",
     ),
     "currency": MessageLookupByLibrary.simpleMessage("جنيه"),
     "customerName": MessageLookupByLibrary.simpleMessage("اسم العميل"),
+    "customerInvoiceSearchHint": MessageLookupByLibrary.simpleMessage(
+      "ابحث بالرقم المسلسل أو اسم المنتج",
+    ),
     "customers": MessageLookupByLibrary.simpleMessage("العملاء"),
     "dark_mode": MessageLookupByLibrary.simpleMessage("الوضع الداكن"),
     "date": MessageLookupByLibrary.simpleMessage("التاريخ"),
@@ -80,6 +84,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "logout": MessageLookupByLibrary.simpleMessage("تسجيل الخروج"),
     "nameRequired": MessageLookupByLibrary.simpleMessage("هذا الحقل مطلوب"),
     "no": MessageLookupByLibrary.simpleMessage("لا"),
+    "noInvoicesMatchSearch": MessageLookupByLibrary.simpleMessage(
+      "لا توجد فواتير تطابق البحث",
+    ),
     "no_results_found": MessageLookupByLibrary.simpleMessage(
       "لم يتم العثور على نتائج",
     ),

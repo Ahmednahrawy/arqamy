@@ -74,5 +74,8 @@
   "storedNetWeight": "الوزن الصافي المخزن",
   "storageInvoiceCount": "عدد فواتير التخزين",
   "storageCurrency": "ج.م",
-  "kilograms": "كجم"
+  "kilograms": "كجم",
+  "customerInvoiceSearchHint": "ابحث بالرقم المسلسل أو اسم المنتج",
+  "clearInvoiceSearch": "مسح البحث",
+  "noInvoicesMatchSearch": "لا توجد فواتير تطابق البحث"
 }

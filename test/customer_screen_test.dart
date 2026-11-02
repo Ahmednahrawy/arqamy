@@ -40,6 +40,7 @@ Invoice _invoice({
   double totalCost = 20,
   double paid = 0,
   List<Product>? products,
+  String invoiceSerial = 'legacy-serial',
 }) {
   return Invoice(
     id: id,
@@ -60,7 +61,7 @@ Invoice _invoice({
     formattedDate: 'Oct 28, 2026',
     formattedTime: '12:34',
     invoiceAction: action,
-    invoiceSerial: 'legacy-serial',
+    invoiceSerial: invoiceSerial,
   );
 }
 
@@ -497,6 +498,207 @@ void main() {
     expect(find.text('الحساب متوازن'), findsOneWidget);
     expect(provider.invoices.single.id, original.id);
     expect(provider.invoices.single.invoiceSerial, original.invoiceSerial);
+  });
+
+  testWidgets(
+      'invoice search matches serial and normalized product names and clears',
+      (tester) async {
+    _useTallViewport(tester);
+    SharedPreferences.setMockInitialValues({});
+    final provider = InvoiceProvider();
+    await provider.saveInvoice(
+      _invoice(
+        id: 'customer-one-1',
+        invoiceSerial: 'SER-001',
+        products: [
+          Product(
+            name: 'Brown Rice',
+            weight: 2,
+            packageWeight: 0,
+            numberPackage: 0,
+            price: 10,
+          ),
+        ],
+      ),
+    );
+    await provider.saveInvoice(
+      _invoice(
+        id: 'customer-one-2',
+        invoiceSerial: 'SER-002',
+        products: [
+          Product(
+            name: 'Oats',
+            weight: 1,
+            packageWeight: 0,
+            numberPackage: 0,
+            price: 15,
+          ),
+        ],
+      ),
+    );
+    await provider.saveInvoice(
+      _invoice(
+        id: 'customer-two',
+        customerName: 'Customer Two',
+        invoiceSerial: 'SER-003',
+        products: [
+          Product(
+            name: 'Brown Rice',
+            weight: 3,
+            packageWeight: 0,
+            numberPackage: 0,
+            price: 12,
+          ),
+        ],
+      ),
+    );
+
+    await tester.pumpWidget(_customerScreen(provider));
+    await tester.pumpAndSettle();
+    await tester.enterText(find.byType(TextFormField), 'Customer');
+    await tester.testTextInput.receiveAction(TextInputAction.done);
+    await tester.pumpAndSettle();
+
+    expect(find.text('فاتورة #SER-001'), findsOneWidget);
+    expect(find.text('فاتورة #SER-002'), findsOneWidget);
+    expect(find.text('فاتورة #SER-003'), findsNothing);
+
+    final searchField = find.byKey(const ValueKey('customer-invoice-search'));
+    await tester.enterText(searchField, '  ser-002  ');
+    await tester.pumpAndSettle();
+    expect(find.text('فاتورة #SER-002'), findsOneWidget);
+    expect(find.text('فاتورة #SER-001'), findsNothing);
+    expect(find.text('فاتورة #SER-003'), findsNothing);
+
+    await tester.tap(find.byKey(const ValueKey('clear-invoice-search')));
+    await tester.pumpAndSettle();
+    expect(find.text('فاتورة #SER-001'), findsOneWidget);
+    expect(find.text('فاتورة #SER-002'), findsOneWidget);
+
+    await tester.enterText(searchField, '  bRoWn    rice  ');
+    await tester.pumpAndSettle();
+    expect(find.text('فاتورة #SER-001'), findsOneWidget);
+    expect(find.text('فاتورة #SER-002'), findsNothing);
+    expect(find.text('فاتورة #SER-003'), findsNothing);
+
+    await tester.enterText(searchField, 'SER-003');
+    await tester.pumpAndSettle();
+    expect(find.text('لا توجد فواتير تطابق البحث'), findsOneWidget);
+    expect(find.text('فاتورة #SER-003'), findsNothing);
+
+    await tester.tap(find.byKey(const ValueKey('clear-invoice-search')));
+    await tester.pumpAndSettle();
+    expect(find.text('فاتورة #SER-001'), findsOneWidget);
+    expect(find.text('فاتورة #SER-002'), findsOneWidget);
+
+    await tester.enterText(find.byType(TextFormField), 'Customer Two');
+    await tester.testTextInput.receiveAction(TextInputAction.done);
+    await tester.pumpAndSettle();
+    expect(find.text('فاتورة #SER-003'), findsOneWidget);
+    expect(find.text('فاتورة #SER-001'), findsNothing);
+    expect(find.text('فاتورة #SER-002'), findsNothing);
+    expect(find.text('Clear search'), findsNothing);
+  });
+
+  testWidgets('invoice search empty state is localized in English',
+      (tester) async {
+    _useTallViewport(tester);
+    SharedPreferences.setMockInitialValues({});
+    final provider = InvoiceProvider();
+    await provider.saveInvoice(
+      _invoice(id: 'english-search', invoiceSerial: 'SER-EN'),
+    );
+
+    await tester.pumpWidget(
+      _customerScreen(provider, locale: const Locale('en')),
+    );
+    await tester.pumpAndSettle();
+    await tester.enterText(find.byType(TextFormField), 'Customer');
+    await tester.testTextInput.receiveAction(TextInputAction.done);
+    await tester.pumpAndSettle();
+
+    expect(
+      find.text('Search by serial or product name'),
+      findsOneWidget,
+    );
+    await tester.enterText(
+      find.byKey(const ValueKey('customer-invoice-search')),
+      'missing',
+    );
+    await tester.pumpAndSettle();
+
+    expect(find.text('No invoices match your search'), findsOneWidget);
+    await tester.tap(find.byKey(const ValueKey('clear-invoice-search')));
+    await tester.pumpAndSettle();
+    expect(find.text('فاتورة #SER-EN'), findsOneWidget);
+  });
+
+  testWidgets('invoice search results reflect provider updates',
+      (tester) async {
+    _useTallViewport(tester);
+    SharedPreferences.setMockInitialValues({});
+    final provider = InvoiceProvider();
+    final invoice = _invoice(
+      id: 'search-updated',
+      invoiceSerial: 'SER-UPDATE',
+      products: [
+        Product(
+          name: 'Brown Rice',
+          weight: 2,
+          packageWeight: 0,
+          numberPackage: 0,
+          price: 10,
+        ),
+      ],
+    );
+    await provider.saveInvoice(invoice);
+
+    await tester.pumpWidget(_customerScreen(provider));
+    await tester.pumpAndSettle();
+    await tester.enterText(find.byType(TextFormField), 'Customer');
+    await tester.testTextInput.receiveAction(TextInputAction.done);
+    await tester.pumpAndSettle();
+    final searchField = find.byKey(const ValueKey('customer-invoice-search'));
+    await tester.enterText(searchField, 'brown');
+    await tester.pumpAndSettle();
+    expect(find.text('فاتورة #SER-UPDATE'), findsOneWidget);
+
+    await provider.updateInvoice(
+      _invoice(
+        id: invoice.id,
+        invoiceSerial: invoice.invoiceSerial,
+        products: [
+          Product(
+            name: 'White Rice',
+            weight: 2,
+            packageWeight: 0,
+            numberPackage: 0,
+            price: 10,
+          ),
+        ],
+      ),
+    );
+    await tester.pumpAndSettle();
+    expect(find.text('فاتورة #SER-UPDATE'), findsNothing);
+    expect(find.text('لا توجد فواتير تطابق البحث'), findsOneWidget);
+
+    await provider.updateInvoice(
+      _invoice(
+        id: invoice.id,
+        invoiceSerial: invoice.invoiceSerial,
+        products: [
+          Product(
+            name: 'Brown Rice',
+            weight: 2,
+            packageWeight: 0,
+            numberPackage: 0,
+            price: 10,
+          ),
+        ],
+      ),
+    );
+    await tester.pumpAndSettle();
+    expect(find.text('فاتورة #SER-UPDATE'), findsOneWidget);
   });
 
   testWidgets('storage summary shows localized zero values without storage',
