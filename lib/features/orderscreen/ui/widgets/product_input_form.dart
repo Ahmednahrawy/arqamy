@@ -232,7 +232,7 @@ class _ProductInputFormState extends State<ProductInputForm> {
   }
 
   @override
-    Widget build(BuildContext context) {
+  Widget build(BuildContext context) {
     return Center(
       child: ConstrainedBox(
         constraints: const BoxConstraints(maxWidth: 760),
@@ -244,37 +244,41 @@ class _ProductInputFormState extends State<ProductInputForm> {
               _actionSelector(),
               verticalSpace(10),
               Consumer<InvoiceProvider>(
-                builder: (context, provider, _) => DropdownSearch<String>(
-                  autoValidateMode: AutovalidateMode.onUserInteraction,
-                  items: (filter, _) => provider.masterProductList,
-                  selectedItem: _selectedProduct,
-                  decoratorProps: const DropDownDecoratorProps(
-                    decoration: mui.InputDecoration(
-                      labelText: 'المنتج',
-                      suffixIcon: Icon(Icons.search),
-                      hintText: 'اختر منتج',
+                builder: (context, provider, _) => mui.Material(
+                  color: Colors.transparent,
+                  child: DropdownSearch<String>(
+                    autoValidateMode: AutovalidateMode.onUserInteraction,
+                    items: (filter, _) => provider.masterProductList,
+                    selectedItem: _selectedProduct,
+                    decoratorProps: const DropDownDecoratorProps(
+                      decoration: mui.InputDecoration(
+                        labelText: 'المنتج',
+                        suffixIcon: Icon(Icons.search),
+                        hintText: 'اختر منتج',
+                      ),
                     ),
-                  ),
-                  popupProps: PopupProps.menu(
-                    fit: FlexFit.tight,
-                    itemBuilder: (context, item, isDisabled, isSelected) {
-                      return Container(
-                        decoration: BoxDecoration(
-                          border: Border(
-                            bottom: BorderSide(
-                              color:
-                                  Theme.of(context).colorScheme.outlineVariant,
-                              width: 1.0,
+                    popupProps: PopupProps.menu(
+                      fit: FlexFit.tight,
+                      itemBuilder: (context, item, isDisabled, isSelected) {
+                        return Container(
+                          decoration: BoxDecoration(
+                            border: Border(
+                              bottom: BorderSide(
+                                color: Theme.of(context)
+                                    .colorScheme
+                                    .outlineVariant,
+                                width: 1.0,
+                              ),
                             ),
                           ),
-                        ),
-                        child: ListTile(title: Text(item)),
-                      );
-                    },
-                    showSearchBox: true,
+                          child: Material(child: ListTile(title: Text(item))),
+                        );
+                      },
+                      showSearchBox: true,
+                    ),
+                    onSelected: (value) =>
+                        setState(() => _selectedProduct = value),
                   ),
-                  onSelected: (value) =>
-                      setState(() => _selectedProduct = value),
                 ),
               ),
               verticalSpace(8),

@@ -7,9 +7,9 @@ import 'package:arqamy/core/providers/theme.dart';
 import 'package:arqamy/generated/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:material_ui/material_ui.dart' as mui;
 import 'package:provider/provider.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key, required this.appRouter});
@@ -30,10 +30,11 @@ class MyApp extends StatelessWidget {
         title: 'Arqamy',
         themeMode: themeProvider.themeMode,
         theme: lightTheme,
-        darkTheme:darkTheme,
-         // app respects the provider's locale direction (RTL for Arabic).
+        darkTheme: darkTheme,
+        // app respects the provider's locale direction (RTL for Arabic).
         builder: (BuildContext context, Widget? child) {
-          final dir = languageManager.isArabic ? TextDirection.rtl : TextDirection.ltr;
+          final dir =
+              languageManager.isArabic ? TextDirection.rtl : TextDirection.ltr;
           return Directionality(
             textDirection: dir,
             child: child ?? const SizedBox.shrink(),
@@ -43,6 +44,7 @@ class MyApp extends StatelessWidget {
         localizationsDelegates: const [
           S.delegate,
           GlobalMaterialLocalizations.delegate,
+          mui.GlobalMaterialLocalizations.delegate,
           GlobalWidgetsLocalizations.delegate,
           GlobalCupertinoLocalizations.delegate,
         ],
