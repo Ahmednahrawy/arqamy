@@ -319,116 +319,280 @@ class S {
     );
   }
 
-  String get editInvoice =>
-      Intl.message('Edit invoice', name: 'editInvoice', desc: '', args: []);
-  String get customerName =>
-      Intl.message('Customer name', name: 'customerName', desc: '', args: []);
-  String get invoiceDateTime => Intl.message(
-        'Invoice date and time',
-        name: 'invoiceDateTime',
-        desc: '',
-        args: [],
-      );
-  String get date => Intl.message('Date', name: 'date', desc: '', args: []);
-  String get time => Intl.message('Time', name: 'time', desc: '', args: []);
-  String get invoiceType =>
-      Intl.message('Invoice type', name: 'invoiceType', desc: '', args: []);
-  String get unspecified =>
-      Intl.message('Unspecified', name: 'unspecified', desc: '', args: []);
-  String get products =>
-      Intl.message('Products', name: 'products', desc: '', args: []);
-  String get addProduct =>
-      Intl.message('Add product', name: 'addProduct', desc: '', args: []);
-  String get product =>
-      Intl.message('Item', name: 'product', desc: '', args: []);
-  String get removeProduct =>
-      Intl.message('Remove item', name: 'removeProduct', desc: '', args: []);
-  String get productName =>
-      Intl.message('Product name', name: 'productName', desc: '', args: []);
-  String get weight =>
-      Intl.message('Weight', name: 'weight', desc: '', args: []);
-  String get packageWeight => Intl.message(
-        'Package weight',
-        name: 'packageWeight',
-        desc: '',
-        args: [],
-      );
-  String get packageCount =>
-      Intl.message('Package count', name: 'packageCount', desc: '', args: []);
-  String get price => Intl.message('Price', name: 'price', desc: '', args: []);
-  String get paidAmount =>
-      Intl.message('Amount paid', name: 'paidAmount', desc: '', args: []);
-  String get currency =>
-      Intl.message('EGP', name: 'currency', desc: '', args: []);
-  String get invoiceTotal =>
-      Intl.message('Invoice total', name: 'invoiceTotal', desc: '', args: []);
-  String get outstandingBalance => Intl.message(
-        'Outstanding balance',
-        name: 'outstandingBalance',
-        desc: '',
-        args: [],
-      );
-  String get nameRequired =>
-      Intl.message('Enter a name', name: 'nameRequired', desc: '', args: []);
-  String get invalidNumber => Intl.message(
-        'Enter a valid finite number',
-        name: 'invalidNumber',
-        desc: '',
-        args: [],
-      );
-  String get invalidInteger => Intl.message(
-        'Enter a whole number',
-        name: 'invalidInteger',
-        desc: '',
-        args: [],
-      );
-  String get invoiceNeedsProduct => Intl.message(
-        'Add at least one product before saving.',
-        name: 'invoiceNeedsProduct',
-        desc: '',
-        args: [],
-      );
-  String get legacyDatePickerHint => Intl.message(
-        'The stored date or time could not be parsed. Choose a replacement if needed.',
-        name: 'legacyDatePickerHint',
-        desc: '',
-        args: [],
-      );
-  String get purchase =>
-      Intl.message('Purchase', name: 'purchase', desc: '', args: []);
-  String get sale => Intl.message('Sale', name: 'sale', desc: '', args: []);
-  String get storage =>
-      Intl.message('Storage', name: 'storage', desc: '', args: []);
-  String get storageInvoiceValue => Intl.message(
-        'Storage value',
-        name: 'storageInvoiceValue',
-        desc: '',
-        args: [],
-      );
-  String get storedNetWeight => Intl.message(
-        'Stored net weight',
-        name: 'storedNetWeight',
-        desc: '',
-        args: [],
-      );
-  String get storageInvoiceCount => Intl.message(
-        'Storage invoices',
-        name: 'storageInvoiceCount',
-        desc: '',
-        args: [],
-      );
-  String get storageCurrency =>
-      Intl.message('EGP', name: 'storageCurrency', desc: '', args: []);
-  String get kilograms =>
-      Intl.message('kg', name: 'kilograms', desc: '', args: []);
-  String get couldNotSaveInvoice => Intl.message(
-        'Could not save invoice changes',
-        name: 'couldNotSaveInvoice',
-        desc: '',
-        args: [],
-      );
-  String get saveChanges =>
-      Intl.message('Save changes', name: 'saveChanges', desc: '', args: []);
+  /// `Edit invoice`
+  String get editInvoice {
+    return Intl.message(
+      'Edit invoice',
+      name: 'editInvoice',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Customer name`
+  String get customerName {
+    return Intl.message(
+      'Customer name',
+      name: 'customerName',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Invoice date and time`
+  String get invoiceDateTime {
+    return Intl.message(
+      'Invoice date and time',
+      name: 'invoiceDateTime',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Date`
+  String get date {
+    return Intl.message('Date', name: 'date', desc: '', args: []);
+  }
+
+  /// `Time`
+  String get time {
+    return Intl.message('Time', name: 'time', desc: '', args: []);
+  }
+
+  /// `Invoice type`
+  String get invoiceType {
+    return Intl.message(
+      'Invoice type',
+      name: 'invoiceType',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Unspecified`
+  String get unspecified {
+    return Intl.message('Unspecified', name: 'unspecified', desc: '', args: []);
+  }
+
+  /// `Products`
+  String get products {
+    return Intl.message('Products', name: 'products', desc: '', args: []);
+  }
+
+  /// `Add product`
+  String get addProduct {
+    return Intl.message('Add product', name: 'addProduct', desc: '', args: []);
+  }
+
+  /// `Item`
+  String get product {
+    return Intl.message('Item', name: 'product', desc: '', args: []);
+  }
+
+  /// `Remove item`
+  String get removeProduct {
+    return Intl.message(
+      'Remove item',
+      name: 'removeProduct',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Product name`
+  String get productName {
+    return Intl.message(
+      'Product name',
+      name: 'productName',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Weight`
+  String get weight {
+    return Intl.message('Weight', name: 'weight', desc: '', args: []);
+  }
+
+  /// `Package weight`
+  String get packageWeight {
+    return Intl.message(
+      'Package weight',
+      name: 'packageWeight',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Package count`
+  String get packageCount {
+    return Intl.message(
+      'Package count',
+      name: 'packageCount',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Price`
+  String get price {
+    return Intl.message('Price', name: 'price', desc: '', args: []);
+  }
+
+  /// `Amount paid`
+  String get paidAmount {
+    return Intl.message('Amount paid', name: 'paidAmount', desc: '', args: []);
+  }
+
+  /// `EGP`
+  String get currency {
+    return Intl.message('EGP', name: 'currency', desc: '', args: []);
+  }
+
+  /// `Invoice total`
+  String get invoiceTotal {
+    return Intl.message(
+      'Invoice total',
+      name: 'invoiceTotal',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Outstanding balance`
+  String get outstandingBalance {
+    return Intl.message(
+      'Outstanding balance',
+      name: 'outstandingBalance',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Enter a name`
+  String get nameRequired {
+    return Intl.message(
+      'Enter a name',
+      name: 'nameRequired',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Enter a valid finite number`
+  String get invalidNumber {
+    return Intl.message(
+      'Enter a valid finite number',
+      name: 'invalidNumber',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Enter a whole number`
+  String get invalidInteger {
+    return Intl.message(
+      'Enter a whole number',
+      name: 'invalidInteger',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Add at least one product before saving.`
+  String get invoiceNeedsProduct {
+    return Intl.message(
+      'Add at least one product before saving.',
+      name: 'invoiceNeedsProduct',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `The stored date or time could not be parsed. Choose a replacement if needed.`
+  String get legacyDatePickerHint {
+    return Intl.message(
+      'The stored date or time could not be parsed. Choose a replacement if needed.',
+      name: 'legacyDatePickerHint',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Purchase`
+  String get purchase {
+    return Intl.message('Purchase', name: 'purchase', desc: '', args: []);
+  }
+
+  /// `Sale`
+  String get sale {
+    return Intl.message('Sale', name: 'sale', desc: '', args: []);
+  }
+
+  /// `Storage`
+  String get storage {
+    return Intl.message('Storage', name: 'storage', desc: '', args: []);
+  }
+
+  /// `Could not save invoice changes`
+  String get couldNotSaveInvoice {
+    return Intl.message(
+      'Could not save invoice changes',
+      name: 'couldNotSaveInvoice',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Save changes`
+  String get saveChanges {
+    return Intl.message(
+      'Save changes',
+      name: 'saveChanges',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Storage value`
+  String get storageInvoiceValue {
+    return Intl.message(
+      'Storage value',
+      name: 'storageInvoiceValue',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Stored net weight`
+  String get storedNetWeight {
+    return Intl.message(
+      'Stored net weight',
+      name: 'storedNetWeight',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Storage invoices`
+  String get storageInvoiceCount {
+    return Intl.message(
+      'Storage invoices',
+      name: 'storageInvoiceCount',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `EGP`
+  String get storageCurrency {
+    return Intl.message('EGP', name: 'storageCurrency', desc: '', args: []);
+  }
+
+  /// `kg`
+  String get kilograms {
+    return Intl.message('kg', name: 'kilograms', desc: '', args: []);
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {
