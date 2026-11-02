@@ -6,9 +6,11 @@ import 'package:arqamy/features/orderscreen/data/models/invoice.dart';
 import 'package:arqamy/features/orderscreen/data/models/product_model.dart';
 import 'package:arqamy/features/orderscreen/providers/invoice_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:arqamy/generated/l10n.dart';
 
 Invoice _invoice({
   required String id,
@@ -160,6 +162,81 @@ void main() {
     expect(provider.totalCost, 0);
     expect(provider.hasPackageProducts, isFalse);
     expect(provider.groupedProducts, isEmpty);
+  });
+
+  test('invoice total uses each product total price', () {
+    final products = [
+      Product(
+        name: 'Rice',
+        weight: 10,
+        packageWeight: 1,
+        numberPackage: 2,
+        price: 5,
+      ),
+      Product(
+        name: 'Beans',
+        weight: 4,
+        packageWeight: 0,
+        numberPackage: 0,
+        price: 10,
+      ),
+    ];
+
+    expect(InvoiceProvider.calculateInvoiceTotal(products), 80);
+  });
+
+  test('outstanding balance preserves absolute total and accepted payments',
+      () {
+    for (final totalCost in [20.0, -20.0]) {
+      expect(
+        [
+          0.0,
+          5.0,
+          25.0,
+          -5.0,
+        ]
+            .map(
+              (paid) =>
+                  InvoiceProvider.calculateOutstandingBalance(totalCost, paid),
+            )
+            .toList(),
+        [20.0, 15.0, -5.0, 25.0],
+      );
+    }
+  });
+
+  test('products with different package weights are not combined', () {
+    final provider = InvoiceProvider()
+      ..addProduct(
+        Product(
+          name: 'Rice',
+          weight: 10,
+          packageWeight: 1,
+          numberPackage: 1,
+          price: 5,
+        ),
+      )
+      ..addProduct(
+        Product(
+          name: 'Rice',
+          weight: 10,
+          packageWeight: 2,
+          numberPackage: 1,
+          price: 5,
+        ),
+      );
+
+    final groupedProducts = provider.groupedProducts;
+
+    expect(groupedProducts, hasLength(2));
+    expect(
+      InvoiceProvider.calculateInvoiceTotal(groupedProducts),
+      provider.totalCost,
+    );
+    expect(
+      groupedProducts.map((product) => product.packageWeight).toSet(),
+      {1.0, 2.0},
+    );
   });
   test('deleting an invoice removes it from persistent storage', () async {
     SharedPreferences.setMockInitialValues({});
@@ -624,6 +701,10 @@ void main() {
 
   testWidgets('failed edit reports an error and keeps the original invoice',
       (tester) async {
+    tester.view.physicalSize = const Size(1000, 1400);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
     final original = _invoice(id: 'invoice-1', serial: '1001');
     var failWrites = false;
     final provider = InvoiceProvider.withStorageWriter((json) async {
@@ -637,6 +718,14 @@ void main() {
       ChangeNotifierProvider.value(
         value: provider,
         child: MaterialApp(
+          locale: const Locale('ar'),
+          localizationsDelegates: const [
+            S.delegate,
+            GlobalMaterialLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+            GlobalCupertinoLocalizations.delegate,
+          ],
+          supportedLocales: S.delegate.supportedLocales,
           home: Builder(
             builder: (context) => Scaffold(
               body: TextButton(
@@ -652,6 +741,8 @@ void main() {
       ),
     );
     await tester.tap(find.text('Open edit'));
+    await tester.pumpAndSettle();
+    await tester.ensureVisible(find.text('حفظ التغييرات'));
     await tester.pumpAndSettle();
     await tester.tap(find.text('حفظ التغييرات'));
     await tester.pumpAndSettle();
@@ -681,13 +772,20 @@ void main() {
       );
     }
 
-    final balance = InvoiceProvider.calculateCustomerBalance([
+    final invoices = [
       invoice(id: 'buy-1', action: 'شراء', rest: 125),
       invoice(id: 'buy-2', action: 'شراء', rest: 550),
       invoice(id: 'sale-1', action: 'بـيع', rest: 375),
+    ];
+
+    final balanceWithoutStorage =
+        InvoiceProvider.calculateCustomerBalance(invoices);
+    final balanceWithStorage = InvoiceProvider.calculateCustomerBalance([
+      ...invoices,
       invoice(id: 'storage-1', action: 'تخزين', rest: 900),
     ]);
 
-    expect(balance, 300);
+    expect(balanceWithoutStorage, 300);
+    expect(balanceWithStorage, balanceWithoutStorage);
   });
 }

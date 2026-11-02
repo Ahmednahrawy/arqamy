@@ -76,7 +76,7 @@ class _OrderscreenState extends State<Orderscreen>
   double get _paid => double.tryParse(_payController.text) ?? 0.0;
 
   double _rest(double totalCost) =>
-      ((totalCost < 0) ? (-totalCost) : totalCost) - _paid;
+      InvoiceProvider.calculateOutstandingBalance(totalCost, _paid);
 
   // Centralized error/toast handling
   void _showToast(String message, {bool isError = false}) {

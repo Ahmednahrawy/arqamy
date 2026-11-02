@@ -22,61 +22,108 @@ class MessageLookup extends MessageLookupByLibrary {
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
-    "about": MessageLookupByLibrary.simpleMessage("About"),
-    "appearance": MessageLookupByLibrary.simpleMessage("Appearance"),
-    "arabic": MessageLookupByLibrary.simpleMessage("Arabic"),
-    "are_you_sure_logout": MessageLookupByLibrary.simpleMessage(
-      "Are you sure you want to log out?",
-    ),
-    "cancel": MessageLookupByLibrary.simpleMessage("Cancel"),
-    "change_password": MessageLookupByLibrary.simpleMessage("Change Password"),
-    "confirm": MessageLookupByLibrary.simpleMessage("Confirm"),
-    "contact_us": MessageLookupByLibrary.simpleMessage("Contact Us"),
-    "customers": MessageLookupByLibrary.simpleMessage("Customers"),
-    "dark_mode": MessageLookupByLibrary.simpleMessage("Dark Mode"),
-    "english": MessageLookupByLibrary.simpleMessage("English"),
-    "help": MessageLookupByLibrary.simpleMessage("Help"),
-    "home": MessageLookupByLibrary.simpleMessage("Home"),
-    "inventory": MessageLookupByLibrary.simpleMessage("Inventory"),
-    "invoice_management": MessageLookupByLibrary.simpleMessage(
-      "Invoice Management",
-    ),
-    "invoice_sent_successfully": MessageLookupByLibrary.simpleMessage(
-      "Invoice sent successfully",
-    ),
-    "invoice_template": MessageLookupByLibrary.simpleMessage(
-      "Invoice Templates",
-    ),
-    "invoice_templated_desc": MessageLookupByLibrary.simpleMessage(
-      "Manage and customize invoice formats",
-    ),
-    "language": MessageLookupByLibrary.simpleMessage("Language"),
-    "light_mode": MessageLookupByLibrary.simpleMessage("Light Mode"),
-    "loading": MessageLookupByLibrary.simpleMessage("Loading..."),
-    "logout": MessageLookupByLibrary.simpleMessage("Log out"),
-    "no": MessageLookupByLibrary.simpleMessage("No"),
-    "no_results_found": MessageLookupByLibrary.simpleMessage(
-      "No results found",
-    ),
-    "notifications": MessageLookupByLibrary.simpleMessage("Notifications"),
-    "page_not_found": MessageLookupByLibrary.simpleMessage("Page Not Found"),
-    "please_choose_customer": MessageLookupByLibrary.simpleMessage(
-      "Please choose a customer before proceeding.",
-    ),
-    "privacy": MessageLookupByLibrary.simpleMessage("Privacy"),
-    "privacy_policy": MessageLookupByLibrary.simpleMessage("Privacy Policy"),
-    "profile": MessageLookupByLibrary.simpleMessage("Profile"),
-    "search": MessageLookupByLibrary.simpleMessage("Search"),
-    "select_language": MessageLookupByLibrary.simpleMessage("Select Language"),
-    "settings": MessageLookupByLibrary.simpleMessage("Settings"),
-    "share_app": MessageLookupByLibrary.simpleMessage("Share App"),
-    "suppliers": MessageLookupByLibrary.simpleMessage("Suppliers"),
-    "system_mode": MessageLookupByLibrary.simpleMessage("System"),
-    "terms_of_service": MessageLookupByLibrary.simpleMessage(
-      "Terms of Service",
-    ),
-    "total_cost": MessageLookupByLibrary.simpleMessage("Total Cost"),
-    "update_app": MessageLookupByLibrary.simpleMessage("Update App"),
-    "yes": MessageLookupByLibrary.simpleMessage("Yes"),
-  };
+        "about": MessageLookupByLibrary.simpleMessage("About"),
+        "appearance": MessageLookupByLibrary.simpleMessage("Appearance"),
+        "arabic": MessageLookupByLibrary.simpleMessage("Arabic"),
+        "are_you_sure_logout": MessageLookupByLibrary.simpleMessage(
+          "Are you sure you want to log out?",
+        ),
+        "cancel": MessageLookupByLibrary.simpleMessage("Cancel"),
+        "change_password":
+            MessageLookupByLibrary.simpleMessage("Change Password"),
+        "confirm": MessageLookupByLibrary.simpleMessage("Confirm"),
+        "contact_us": MessageLookupByLibrary.simpleMessage("Contact Us"),
+        "customers": MessageLookupByLibrary.simpleMessage("Customers"),
+        "dark_mode": MessageLookupByLibrary.simpleMessage("Dark Mode"),
+        "english": MessageLookupByLibrary.simpleMessage("English"),
+        "help": MessageLookupByLibrary.simpleMessage("Help"),
+        "home": MessageLookupByLibrary.simpleMessage("Home"),
+        "inventory": MessageLookupByLibrary.simpleMessage("Inventory"),
+        "invoice_management": MessageLookupByLibrary.simpleMessage(
+          "Invoice Management",
+        ),
+        "invoice_sent_successfully": MessageLookupByLibrary.simpleMessage(
+          "Invoice sent successfully",
+        ),
+        "invoice_template": MessageLookupByLibrary.simpleMessage(
+          "Invoice Templates",
+        ),
+        "invoice_templated_desc": MessageLookupByLibrary.simpleMessage(
+          "Manage and customize invoice formats",
+        ),
+        "editInvoice": MessageLookupByLibrary.simpleMessage("Edit invoice"),
+        "customerName": MessageLookupByLibrary.simpleMessage("Customer name"),
+        "invoiceDateTime": MessageLookupByLibrary.simpleMessage(
+          "Invoice date and time",
+        ),
+        "date": MessageLookupByLibrary.simpleMessage("Date"),
+        "time": MessageLookupByLibrary.simpleMessage("Time"),
+        "invoiceType": MessageLookupByLibrary.simpleMessage("Invoice type"),
+        "unspecified": MessageLookupByLibrary.simpleMessage("Unspecified"),
+        "products": MessageLookupByLibrary.simpleMessage("Products"),
+        "addProduct": MessageLookupByLibrary.simpleMessage("Add product"),
+        "product": MessageLookupByLibrary.simpleMessage("Item"),
+        "removeProduct": MessageLookupByLibrary.simpleMessage("Remove item"),
+        "productName": MessageLookupByLibrary.simpleMessage("Product name"),
+        "weight": MessageLookupByLibrary.simpleMessage("Weight"),
+        "packageWeight": MessageLookupByLibrary.simpleMessage("Package weight"),
+        "packageCount": MessageLookupByLibrary.simpleMessage("Package count"),
+        "price": MessageLookupByLibrary.simpleMessage("Price"),
+        "paidAmount": MessageLookupByLibrary.simpleMessage("Amount paid"),
+        "currency": MessageLookupByLibrary.simpleMessage("EGP"),
+        "invoiceTotal": MessageLookupByLibrary.simpleMessage("Invoice total"),
+        "outstandingBalance": MessageLookupByLibrary.simpleMessage(
+          "Outstanding balance",
+        ),
+        "nameRequired": MessageLookupByLibrary.simpleMessage("Enter a name"),
+        "invalidNumber": MessageLookupByLibrary.simpleMessage(
+          "Enter a valid finite number",
+        ),
+        "invalidInteger":
+            MessageLookupByLibrary.simpleMessage("Enter a whole number"),
+        "invoiceNeedsProduct": MessageLookupByLibrary.simpleMessage(
+          "Add at least one product before saving.",
+        ),
+        "legacyDatePickerHint": MessageLookupByLibrary.simpleMessage(
+          "The stored date or time could not be parsed. Choose a replacement if needed.",
+        ),
+        "purchase": MessageLookupByLibrary.simpleMessage("Purchase"),
+        "sale": MessageLookupByLibrary.simpleMessage("Sale"),
+        "storage": MessageLookupByLibrary.simpleMessage("Storage"),
+        "couldNotSaveInvoice": MessageLookupByLibrary.simpleMessage(
+          "Could not save invoice changes",
+        ),
+        "saveChanges": MessageLookupByLibrary.simpleMessage("Save changes"),
+        "language": MessageLookupByLibrary.simpleMessage("Language"),
+        "light_mode": MessageLookupByLibrary.simpleMessage("Light Mode"),
+        "loading": MessageLookupByLibrary.simpleMessage("Loading..."),
+        "logout": MessageLookupByLibrary.simpleMessage("Log out"),
+        "no": MessageLookupByLibrary.simpleMessage("No"),
+        "no_results_found": MessageLookupByLibrary.simpleMessage(
+          "No results found",
+        ),
+        "notifications": MessageLookupByLibrary.simpleMessage("Notifications"),
+        "page_not_found":
+            MessageLookupByLibrary.simpleMessage("Page Not Found"),
+        "please_choose_customer": MessageLookupByLibrary.simpleMessage(
+          "Please choose a customer before proceeding.",
+        ),
+        "privacy": MessageLookupByLibrary.simpleMessage("Privacy"),
+        "privacy_policy":
+            MessageLookupByLibrary.simpleMessage("Privacy Policy"),
+        "profile": MessageLookupByLibrary.simpleMessage("Profile"),
+        "search": MessageLookupByLibrary.simpleMessage("Search"),
+        "select_language":
+            MessageLookupByLibrary.simpleMessage("Select Language"),
+        "settings": MessageLookupByLibrary.simpleMessage("Settings"),
+        "share_app": MessageLookupByLibrary.simpleMessage("Share App"),
+        "suppliers": MessageLookupByLibrary.simpleMessage("Suppliers"),
+        "system_mode": MessageLookupByLibrary.simpleMessage("System"),
+        "terms_of_service": MessageLookupByLibrary.simpleMessage(
+          "Terms of Service",
+        ),
+        "total_cost": MessageLookupByLibrary.simpleMessage("Total Cost"),
+        "update_app": MessageLookupByLibrary.simpleMessage("Update App"),
+        "yes": MessageLookupByLibrary.simpleMessage("Yes"),
+      };
 }

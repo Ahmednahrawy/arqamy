@@ -56,11 +56,15 @@ class InvoiceProvider extends ChangeNotifier {
     if (cached != null) {
       return cached;
     }
-    var total = 0.0;
-    for (final product in _products) {
-      total += product.totalPrice;
-    }
-    return _totalCostCache = total;
+    return _totalCostCache = calculateInvoiceTotal(_products);
+  }
+
+  static double calculateInvoiceTotal(Iterable<Product> products) {
+    return products.fold(0.0, (total, product) => total + product.totalPrice);
+  }
+
+  static double calculateOutstandingBalance(double totalCost, double paid) {
+    return totalCost.abs() - paid;
   }
 
   bool get hasPackageProducts {
@@ -97,10 +101,10 @@ class InvoiceProvider extends ChangeNotifier {
     if (cached != null) {
       return cached;
     }
-    final Map<String, Product> grouped = {};
+    final Map<(String, double, double), Product> grouped = {};
 
     for (final p in _products) {
-      final key = '${p.name}-${p.price}';
+      final key = (p.name, p.price, p.packageWeight);
       if (grouped.containsKey(key)) {
         final existing = grouped[key]!;
         grouped[key] = Product(

@@ -318,6 +318,95 @@ class S {
       args: [],
     );
   }
+
+  String get editInvoice =>
+      Intl.message('Edit invoice', name: 'editInvoice', desc: '', args: []);
+  String get customerName =>
+      Intl.message('Customer name', name: 'customerName', desc: '', args: []);
+  String get invoiceDateTime => Intl.message(
+        'Invoice date and time',
+        name: 'invoiceDateTime',
+        desc: '',
+        args: [],
+      );
+  String get date => Intl.message('Date', name: 'date', desc: '', args: []);
+  String get time => Intl.message('Time', name: 'time', desc: '', args: []);
+  String get invoiceType =>
+      Intl.message('Invoice type', name: 'invoiceType', desc: '', args: []);
+  String get unspecified =>
+      Intl.message('Unspecified', name: 'unspecified', desc: '', args: []);
+  String get products =>
+      Intl.message('Products', name: 'products', desc: '', args: []);
+  String get addProduct =>
+      Intl.message('Add product', name: 'addProduct', desc: '', args: []);
+  String get product =>
+      Intl.message('Item', name: 'product', desc: '', args: []);
+  String get removeProduct =>
+      Intl.message('Remove item', name: 'removeProduct', desc: '', args: []);
+  String get productName =>
+      Intl.message('Product name', name: 'productName', desc: '', args: []);
+  String get weight =>
+      Intl.message('Weight', name: 'weight', desc: '', args: []);
+  String get packageWeight => Intl.message(
+        'Package weight',
+        name: 'packageWeight',
+        desc: '',
+        args: [],
+      );
+  String get packageCount =>
+      Intl.message('Package count', name: 'packageCount', desc: '', args: []);
+  String get price => Intl.message('Price', name: 'price', desc: '', args: []);
+  String get paidAmount =>
+      Intl.message('Amount paid', name: 'paidAmount', desc: '', args: []);
+  String get currency =>
+      Intl.message('EGP', name: 'currency', desc: '', args: []);
+  String get invoiceTotal =>
+      Intl.message('Invoice total', name: 'invoiceTotal', desc: '', args: []);
+  String get outstandingBalance => Intl.message(
+        'Outstanding balance',
+        name: 'outstandingBalance',
+        desc: '',
+        args: [],
+      );
+  String get nameRequired =>
+      Intl.message('Enter a name', name: 'nameRequired', desc: '', args: []);
+  String get invalidNumber => Intl.message(
+        'Enter a valid finite number',
+        name: 'invalidNumber',
+        desc: '',
+        args: [],
+      );
+  String get invalidInteger => Intl.message(
+        'Enter a whole number',
+        name: 'invalidInteger',
+        desc: '',
+        args: [],
+      );
+  String get invoiceNeedsProduct => Intl.message(
+        'Add at least one product before saving.',
+        name: 'invoiceNeedsProduct',
+        desc: '',
+        args: [],
+      );
+  String get legacyDatePickerHint => Intl.message(
+        'The stored date or time could not be parsed. Choose a replacement if needed.',
+        name: 'legacyDatePickerHint',
+        desc: '',
+        args: [],
+      );
+  String get purchase =>
+      Intl.message('Purchase', name: 'purchase', desc: '', args: []);
+  String get sale => Intl.message('Sale', name: 'sale', desc: '', args: []);
+  String get storage =>
+      Intl.message('Storage', name: 'storage', desc: '', args: []);
+  String get couldNotSaveInvoice => Intl.message(
+        'Could not save invoice changes',
+        name: 'couldNotSaveInvoice',
+        desc: '',
+        args: [],
+      );
+  String get saveChanges =>
+      Intl.message('Save changes', name: 'saveChanges', desc: '', args: []);
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {
