@@ -82,6 +82,7 @@
   "clearInvoiceSearch": "Clear search",
   "noInvoicesMatchSearch": "No invoices match your search",
   "invoiceActionFilter": "Invoice action",
+  "invoiceNumber": "Invoice #",
   "paymentStatusFilter": "Payment status",
   "allInvoicesFilter": "All",
   "paidStatus": "Paid",

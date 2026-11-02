@@ -507,7 +507,7 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('فاتورة #legacy-serial'), findsOneWidget);
-    expect(find.textContaining('الإجمالي 45.00 ج.م'), findsOneWidget);
+    expect(find.text('45.00 جنيه'), findsNWidgets(2));
     expect(
       find.descendant(of: storageSummary, matching: find.text('45.00 ج.م')),
       findsOneWidget,
@@ -569,32 +569,32 @@ void main() {
 
     expect(find.text('Recent invoices'), findsOneWidget);
     expect(find.text('Search by serial, product or customer'), findsOneWidget);
-    expect(find.text('فاتورة #REC-001'), findsOneWidget);
-    expect(find.text('فاتورة #REC-002'), findsOneWidget);
+    expect(find.text('Invoice #REC-001'), findsOneWidget);
+    expect(find.text('Invoice #REC-002'), findsOneWidget);
     expect(find.text('Customer name: Customer Alpha'), findsOneWidget);
     expect(find.text('Customer name: Supplier Beta'), findsOneWidget);
     expect(
-      tester.getTopLeft(find.text('فاتورة #REC-002')).dy,
-      lessThan(tester.getTopLeft(find.text('فاتورة #REC-001')).dy),
+      tester.getTopLeft(find.text('Invoice #REC-002')).dy,
+      lessThan(tester.getTopLeft(find.text('Invoice #REC-001')).dy),
     );
 
     final searchField = find.byKey(const ValueKey('customer-invoice-search'));
     await tester.enterText(searchField, 'supplier beta');
     await tester.pumpAndSettle();
-    expect(find.text('فاتورة #REC-002'), findsOneWidget);
-    expect(find.text('فاتورة #REC-001'), findsNothing);
+    expect(find.text('Invoice #REC-002'), findsOneWidget);
+    expect(find.text('Invoice #REC-001'), findsNothing);
 
     await tester.tap(find.byKey(const ValueKey('clear-invoice-search')));
     await tester.pumpAndSettle();
     await tester.enterText(searchField, 'brown rice');
     await tester.pumpAndSettle();
-    expect(find.text('فاتورة #REC-001'), findsOneWidget);
-    expect(find.text('فاتورة #REC-002'), findsNothing);
+    expect(find.text('Invoice #REC-001'), findsOneWidget);
+    expect(find.text('Invoice #REC-002'), findsNothing);
 
     await tester.enterText(searchField, 'Oats');
     await tester.pumpAndSettle();
-    expect(find.text('فاتورة #REC-002'), findsOneWidget);
-    expect(find.text('فاتورة #REC-001'), findsNothing);
+    expect(find.text('Invoice #REC-002'), findsOneWidget);
+    expect(find.text('Invoice #REC-001'), findsNothing);
 
     await provider.updateInvoice(
       _invoice(
@@ -617,14 +617,14 @@ void main() {
 
     await tester.enterText(searchField, 'Brown Rice');
     await tester.pumpAndSettle();
-    expect(find.text('فاتورة #REC-002'), findsOneWidget);
-    expect(find.text('فاتورة #REC-001'), findsOneWidget);
+    expect(find.text('Invoice #REC-002'), findsOneWidget);
+    expect(find.text('Invoice #REC-001'), findsOneWidget);
 
     await tester.enterText(find.byType(TextFormField), 'Customer Alpha');
     await tester.testTextInput.receiveAction(TextInputAction.done);
     await tester.pumpAndSettle();
-    expect(find.text('فاتورة #REC-001'), findsOneWidget);
-    expect(find.text('فاتورة #REC-002'), findsNothing);
+    expect(find.text('Invoice #REC-001'), findsOneWidget);
+    expect(find.text('Invoice #REC-002'), findsNothing);
     expect(
       tester.widget<TextField>(searchField).controller!.text,
       isEmpty,
@@ -802,7 +802,7 @@ void main() {
     expect(find.text('No invoices match your search'), findsOneWidget);
     await tester.tap(find.byKey(const ValueKey('clear-invoice-search')));
     await tester.pumpAndSettle();
-    expect(find.text('فاتورة #SER-EN'), findsOneWidget);
+    expect(find.text('Invoice #SER-EN'), findsOneWidget);
   });
 
   testWidgets('invoice search results reflect provider updates',
@@ -1379,5 +1379,255 @@ void main() {
     final reloadedProvider = InvoiceProvider();
     await reloadedProvider.loadInvoices();
     expect(reloadedProvider.invoices, isEmpty);
+  });
+
+  testWidgets('invoice cards show stored amounts and matching payment status',
+      (tester) async {
+    _useTallViewport(tester);
+    SharedPreferences.setMockInitialValues({});
+    final provider = InvoiceProvider();
+    await provider.saveInvoice(
+      _invoice(
+        id: 'card-zero-rest',
+        invoiceSerial: 'CARD-PAID',
+        totalCost: 50,
+        paid: 50,
+        rest: 0,
+      ),
+    );
+    await provider.saveInvoice(
+      _invoice(
+        id: 'card-overpaid',
+        invoiceSerial: 'CARD-OVERPAID',
+        totalCost: 50,
+        paid: 55,
+        rest: -5,
+      ),
+    );
+    await provider.saveInvoice(
+      _invoice(
+        id: 'card-partial',
+        invoiceSerial: 'CARD-PARTIAL',
+        totalCost: 100,
+        paid: 40,
+        rest: 60,
+      ),
+    );
+    await provider.saveInvoice(
+      _invoice(
+        id: 'card-unpaid',
+        invoiceSerial: 'CARD-UNPAID',
+        totalCost: 75,
+        paid: 0,
+        rest: 75,
+      ),
+    );
+    await provider.saveInvoice(
+      _invoice(
+        id: 'card-storage',
+        action: 'تخزين',
+        invoiceSerial: 'CARD-STORAGE',
+        totalCost: 30,
+        paid: 10,
+        rest: 20,
+      ),
+    );
+
+    await tester.pumpWidget(_customerScreen(provider));
+    await tester.pumpAndSettle();
+
+    for (final id in ['card-zero-rest', 'card-overpaid']) {
+      final card = find.byKey(ValueKey('invoice-card-$id'));
+      expect(find.descendant(of: card, matching: find.text('مدفوعة')),
+          findsOneWidget);
+    }
+
+    final partialCard = find.byKey(const ValueKey('invoice-card-card-partial'));
+    expect(
+      find.descendant(
+        of: partialCard,
+        matching: find.text('مدفوعة جزئياً'),
+      ),
+      findsOneWidget,
+    );
+    expect(
+      find.descendant(
+        of: partialCard,
+        matching: find.text('100.00 جنيه'),
+      ),
+      findsOneWidget,
+    );
+    expect(
+      find.descendant(
+        of: partialCard,
+        matching: find.text('40.00 جنيه'),
+      ),
+      findsOneWidget,
+    );
+    expect(
+      find.descendant(
+        of: partialCard,
+        matching: find.text('60.00 جنيه'),
+      ),
+      findsOneWidget,
+    );
+
+    final unpaidCard = find.byKey(const ValueKey('invoice-card-card-unpaid'));
+    expect(
+      find.descendant(of: unpaidCard, matching: find.text('غير مدفوعة')),
+      findsOneWidget,
+    );
+    final storageCard = find.byKey(const ValueKey('invoice-card-card-storage'));
+    expect(
+      find.descendant(of: storageCard, matching: find.text('تخزين')),
+      findsOneWidget,
+    );
+    expect(
+      find.descendant(
+        of: storageCard,
+        matching: find.text('مدفوعة جزئياً'),
+      ),
+      findsOneWidget,
+    );
+
+    final paidCard = find.byKey(const ValueKey('invoice-card-card-zero-rest'));
+    expect(
+      find.descendant(of: paidCard, matching: find.text('فاتورة #CARD-PAID')),
+      findsOneWidget,
+    );
+    expect(
+      find.descendant(
+        of: paidCard,
+        matching: find.textContaining('التاريخ: Oct 28, 2026'),
+      ),
+      findsOneWidget,
+    );
+    expect(
+      find.descendant(of: paidCard, matching: find.text('50.00 جنيه')),
+      findsNWidgets(2),
+    );
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('invoice card labels and direction follow the active locale',
+      (tester) async {
+    _useTallViewport(tester);
+    SharedPreferences.setMockInitialValues({});
+    final provider = InvoiceProvider();
+    await provider.saveInvoice(
+      _invoice(
+        id: 'localized-card',
+        action: 'بيع',
+        invoiceSerial: 'LOCALIZED-1',
+        totalCost: 20,
+        paid: 5,
+        rest: 15,
+      ),
+    );
+
+    await tester.pumpWidget(_customerScreen(provider));
+    await tester.pumpAndSettle();
+    final arabicCard =
+        find.byKey(const ValueKey('invoice-card-localized-card'));
+    expect(
+      tester
+          .widget<Directionality>(
+            find.descendant(
+                of: arabicCard, matching: find.byType(Directionality)),
+          )
+          .textDirection,
+      TextDirection.rtl,
+    );
+    expect(find.text('بيع'), findsOneWidget);
+    expect(find.text('مدفوعة جزئياً'), findsOneWidget);
+    expect(find.text('إجمالي الفاتورة'), findsOneWidget);
+    expect(find.text('المبلغ المدفوع'), findsOneWidget);
+    expect(find.text('المبلغ المتبقي'), findsOneWidget);
+    expect(find.textContaining('التاريخ: Oct 28, 2026'), findsOneWidget);
+
+    await tester.pumpWidget(
+      _customerScreen(provider, locale: const Locale('en')),
+    );
+    await tester.pumpAndSettle();
+    final englishCard =
+        find.byKey(const ValueKey('invoice-card-localized-card'));
+    expect(
+      tester
+          .widget<Directionality>(
+            find.descendant(
+                of: englishCard, matching: find.byType(Directionality)),
+          )
+          .textDirection,
+      TextDirection.ltr,
+    );
+    expect(find.text('Invoice #LOCALIZED-1'), findsOneWidget);
+    expect(find.text('Sale'), findsOneWidget);
+    expect(find.text('Partially paid'), findsOneWidget);
+    expect(find.text('Invoice total'), findsOneWidget);
+    expect(find.text('Amount paid'), findsOneWidget);
+    expect(find.text('Outstanding balance'), findsOneWidget);
+    expect(find.textContaining('Date: Oct 28, 2026'), findsOneWidget);
+    expect(find.text('20.00 EGP'), findsOneWidget);
+    expect(find.text('5.00 EGP'), findsOneWidget);
+    expect(find.text('15.00 EGP'), findsOneWidget);
+  });
+
+  testWidgets('invoice cards fit narrow 320px and 360px screens',
+      (tester) async {
+    tester.view.devicePixelRatio = 1;
+    tester.view.physicalSize = const Size(320, 900);
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+    SharedPreferences.setMockInitialValues({});
+    final provider = InvoiceProvider();
+    await provider.saveInvoice(
+      _invoice(
+        id: 'narrow-card',
+        invoiceSerial: 'NARROW-320-360',
+        customerName: 'A customer with a longer name',
+        totalCost: 1234.56,
+        paid: 234.56,
+        rest: 1000,
+      ),
+    );
+
+    for (final width in [320.0, 360.0]) {
+      tester.view.physicalSize = Size(width, 900);
+      await tester.pumpWidget(_customerScreen(provider));
+      await tester.pumpAndSettle();
+      final card = find.byKey(const ValueKey('invoice-card-narrow-card'));
+      await tester.ensureVisible(card);
+      await tester.pumpAndSettle();
+
+      expect(card, findsOneWidget);
+      expect(find.text('إجمالي الفاتورة'), findsOneWidget);
+      expect(find.text('المبلغ المدفوع'), findsOneWidget);
+      expect(find.text('المبلغ المتبقي'), findsOneWidget);
+      expect(tester.takeException(), isNull);
+    }
+  });
+
+  testWidgets('invoice card opens details and retains invoice actions',
+      (tester) async {
+    _useTallViewport(tester);
+    SharedPreferences.setMockInitialValues({});
+    final provider = InvoiceProvider();
+    await provider.saveInvoice(_invoice(invoiceSerial: 'CARD-ACTIONS'));
+
+    await tester.pumpWidget(_customerScreen(provider));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.text('فاتورة #CARD-ACTIONS'));
+    await tester.pumpAndSettle();
+    expect(find.text('الملخص المالي'), findsOneWidget);
+    expect(find.text('إغلاق'), findsOneWidget);
+    await tester.tap(find.text('إغلاق'));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byTooltip('خيارات الفاتورة'));
+    await tester.pumpAndSettle();
+    expect(find.text('تعديل'), findsOneWidget);
+    expect(find.text('مشاركة'), findsOneWidget);
+    expect(find.text('حذف'), findsOneWidget);
   });
 }

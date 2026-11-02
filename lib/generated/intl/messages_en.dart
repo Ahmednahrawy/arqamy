@@ -65,6 +65,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "invoiceNeedsProduct": MessageLookupByLibrary.simpleMessage(
       "Add at least one product before saving.",
     ),
+    "invoiceNumber": MessageLookupByLibrary.simpleMessage("Invoice #"),
     "invoiceTotal": MessageLookupByLibrary.simpleMessage("Invoice total"),
     "invoiceType": MessageLookupByLibrary.simpleMessage("Invoice type"),
     "invoice_management": MessageLookupByLibrary.simpleMessage(

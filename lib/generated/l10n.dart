@@ -294,6 +294,11 @@ class S {
     );
   }
 
+  /// `Invoice #`
+  String get invoiceNumber {
+    return Intl.message('Invoice #', name: 'invoiceNumber', desc: '', args: []);
+  }
+
   /// `Payment status`
   String get paymentStatusFilter {
     return Intl.message(

@@ -25,6 +25,8 @@ enum _InvoiceActionFilter { all, purchase, sale, storage }
 
 enum _PaymentStatusFilter { all, paid, partiallyPaid, unpaid }
 
+enum _InvoicePaymentStatus { paid, partiallyPaid, unpaid }
+
 class _CustomerScreenState extends State<CustomerScreen> {
   String? _customerName;
   List<Invoice> _allInvoices = [];
@@ -152,13 +154,25 @@ class _CustomerScreenState extends State<CustomerScreen> {
   }
 
   bool _matchesPaymentStatusFilter(Invoice invoice) {
+    final status = _invoicePaymentStatus(invoice);
     return switch (_paymentStatusFilter) {
       _PaymentStatusFilter.all => true,
-      _PaymentStatusFilter.paid => invoice.rest <= 0,
+      _PaymentStatusFilter.paid => status == _InvoicePaymentStatus.paid,
       _PaymentStatusFilter.partiallyPaid =>
-        invoice.rest > 0 && invoice.paid > 0,
-      _PaymentStatusFilter.unpaid => invoice.rest > 0 && invoice.paid <= 0,
+        status == _InvoicePaymentStatus.partiallyPaid,
+      _PaymentStatusFilter.unpaid => status == _InvoicePaymentStatus.unpaid,
     };
+  }
+
+  _InvoicePaymentStatus? _invoicePaymentStatus(Invoice invoice) {
+    if (invoice.rest <= 0) return _InvoicePaymentStatus.paid;
+    if (invoice.rest > 0 && invoice.paid > 0) {
+      return _InvoicePaymentStatus.partiallyPaid;
+    }
+    if (invoice.rest > 0 && invoice.paid <= 0) {
+      return _InvoicePaymentStatus.unpaid;
+    }
+    return null;
   }
 
   String? _normalizeInvoiceAction(String? action) =>
@@ -911,10 +925,36 @@ class _CustomerScreenState extends State<CustomerScreen> {
     final semanticColors = AppSemanticColors.of(context);
     final strings = S.of(context);
     final actionColor = _getActionColor(context, invoice.invoiceAction);
-    final action = invoice.invoiceAction ?? 'عملية';
-    final isPaid = invoice.rest <= 0;
+    final normalizedAction = _normalizeInvoiceAction(invoice.invoiceAction);
+    final action = switch (normalizedAction) {
+      'شراء' => strings.purchase,
+      'بيع' => strings.sale,
+      'تخزين' => strings.storage,
+      _ => invoice.invoiceAction ?? strings.unspecified,
+    };
+    final status = _invoicePaymentStatus(invoice);
+    final statusColor = switch (status) {
+      _InvoicePaymentStatus.paid => semanticColors.success,
+      _InvoicePaymentStatus.partiallyPaid => semanticColors.warning,
+      _InvoicePaymentStatus.unpaid => colors.error,
+      null => colors.onSurfaceVariant,
+    };
+    final statusLabel = switch (status) {
+      _InvoicePaymentStatus.paid => strings.paidStatus,
+      _InvoicePaymentStatus.partiallyPaid => strings.partiallyPaidStatus,
+      _InvoicePaymentStatus.unpaid => strings.unpaidStatus,
+      null => strings.unspecified,
+    };
+    final statusIcon = switch (status) {
+      _InvoicePaymentStatus.paid => Icons.check_circle_outline,
+      _InvoicePaymentStatus.partiallyPaid => Icons.pending_outlined,
+      _InvoicePaymentStatus.unpaid => Icons.error_outline,
+      null => Icons.help_outline,
+    };
+    final isArabic = Localizations.localeOf(context).languageCode == 'ar';
 
     return Card(
+      key: ValueKey('invoice-card-${invoice.id}'),
       margin: const EdgeInsets.symmetric(vertical: 6),
       elevation: 1,
       shape: RoundedRectangleBorder(
@@ -924,154 +964,241 @@ class _CustomerScreenState extends State<CustomerScreen> {
       clipBehavior: Clip.antiAlias,
       child: InkWell(
         onTap: () => _showInvoiceDetails(invoice),
-        child: Padding(
-          padding: const EdgeInsetsDirectional.fromSTEB(14, 14, 8, 14),
-          child: Row(
-            children: [
-              Container(
-                width: 48,
-                height: 48,
-                decoration: BoxDecoration(
-                  color: actionColor.withValues(alpha: 0.1),
-                  borderRadius: BorderRadius.circular(14),
-                ),
-                child: Icon(Icons.receipt_long, color: actionColor),
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+        child: Directionality(
+          textDirection: isArabic ? TextDirection.rtl : TextDirection.ltr,
+          child: Padding(
+            padding: const EdgeInsetsDirectional.fromSTEB(12, 12, 6, 12),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
                   children: [
-                    Wrap(
-                      crossAxisAlignment: WrapCrossAlignment.center,
-                      spacing: 8,
-                      runSpacing: 4,
-                      children: [
-                        Text(
-                          'فاتورة #${invoice.invoiceSerial}',
-                          style: Theme.of(context).textTheme.titleSmall,
-                        ),
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 9, vertical: 4),
-                          decoration: BoxDecoration(
-                            color: actionColor.withValues(alpha: 0.1),
-                            borderRadius: BorderRadius.circular(20),
+                    Container(
+                      width: 42,
+                      height: 42,
+                      decoration: BoxDecoration(
+                        color: actionColor.withValues(alpha: 0.1),
+                        borderRadius: BorderRadius.circular(13),
+                      ),
+                      child: Icon(
+                        Icons.receipt_long,
+                        color: actionColor,
+                        size: 22,
+                      ),
+                    ),
+                    const SizedBox(width: 10),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Wrap(
+                            crossAxisAlignment: WrapCrossAlignment.center,
+                            spacing: 6,
+                            runSpacing: 4,
+                            children: [
+                              Text(
+                                '${strings.invoiceNumber}${invoice.invoiceSerial}',
+                                style: Theme.of(context).textTheme.titleSmall,
+                              ),
+                              _buildInvoiceBadge(
+                                label: action,
+                                color: actionColor,
+                              ),
+                              _buildInvoiceBadge(
+                                label: statusLabel,
+                                color: statusColor,
+                                icon: statusIcon,
+                              ),
+                            ],
                           ),
-                          child: Text(
-                            action,
+                          const SizedBox(height: 5),
+                          Text(
+                            '${strings.date}: ${invoice.formattedDate}  •  '
+                            '${strings.time}: ${invoice.formattedTime}',
                             style: TextStyle(
-                              color: actionColor,
+                              color: colors.onSurfaceVariant,
                               fontSize: 11,
-                              fontWeight: FontWeight.bold,
                             ),
                           ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 6),
-                    Text(
-                      '${invoice.formattedDate}  •  ${invoice.formattedTime}',
-                      style: TextStyle(
-                        color: colors.onSurfaceVariant,
-                        fontSize: 12,
+                          if (_customerName == null ||
+                              _customerName!.isEmpty) ...[
+                            const SizedBox(height: 3),
+                            Text(
+                              '${strings.customerName}: ${invoice.customerName}',
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                color: colors.onSurfaceVariant,
+                                fontSize: 11,
+                              ),
+                            ),
+                          ],
+                        ],
                       ),
                     ),
-                    if (_customerName == null || _customerName!.isEmpty) ...[
-                      const SizedBox(height: 4),
-                      Text(
-                        '${strings.customerName}: ${invoice.customerName}',
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                          color: colors.onSurfaceVariant,
-                          fontSize: 12,
-                        ),
-                      ),
-                    ],
-                    const SizedBox(height: 9),
-                    Wrap(
-                      spacing: 14,
-                      runSpacing: 4,
-                      children: [
-                        Text(
-                          'الإجمالي ${invoice.totalCost.toStringAsFixed(2)} ج.م',
-                          style: const TextStyle(
-                            fontWeight: FontWeight.w600,
-                            fontSize: 12,
+                    PopupMenuButton<String>(
+                      tooltip: 'خيارات الفاتورة',
+                      onSelected: (value) {
+                        switch (value) {
+                          case 'edit':
+                            _editInvoice(invoice);
+                            break;
+                          case 'delete':
+                            _deleteInvoice(invoice.id);
+                            break;
+                          case 'share':
+                            _shareInvoice(invoice);
+                            break;
+                        }
+                      },
+                      itemBuilder: (context) => [
+                        PopupMenuItem(
+                          value: 'edit',
+                          child: ListTile(
+                            leading: Icon(
+                              Icons.edit_outlined,
+                              color: semanticColors.warning,
+                            ),
+                            title: const Text('تعديل'),
+                            contentPadding: EdgeInsets.zero,
                           ),
                         ),
-                        Text(
-                          isPaid
-                              ? 'مدفوع'
-                              : 'متبقي ${invoice.rest.toStringAsFixed(2)} ج.م',
-                          style: TextStyle(
-                            color: isPaid
-                                ? semanticColors.success
-                                : semanticColors.warning,
-                            fontWeight: FontWeight.w700,
-                            fontSize: 12,
+                        PopupMenuItem(
+                          value: 'share',
+                          child: ListTile(
+                            leading: Icon(
+                              Icons.share_outlined,
+                              color: colors.primary,
+                            ),
+                            title: const Text('مشاركة'),
+                            contentPadding: EdgeInsets.zero,
+                          ),
+                        ),
+                        PopupMenuItem(
+                          value: 'delete',
+                          child: ListTile(
+                            leading: Icon(
+                              Icons.delete_outline,
+                              color: colors.error,
+                            ),
+                            title: const Text('حذف'),
+                            contentPadding: EdgeInsets.zero,
                           ),
                         ),
                       ],
                     ),
                   ],
                 ),
-              ),
-              PopupMenuButton<String>(
-                tooltip: 'خيارات الفاتورة',
-                onSelected: (value) {
-                  switch (value) {
-                    case 'edit':
-                      _editInvoice(invoice);
-                      break;
-                    case 'delete':
-                      _deleteInvoice(invoice.id);
-                      break;
-                    case 'share':
-                      _shareInvoice(invoice);
-                      break;
-                  }
-                },
-                itemBuilder: (context) => [
-                  PopupMenuItem(
-                    value: 'edit',
-                    child: ListTile(
-                      leading: Icon(
-                        Icons.edit_outlined,
-                        color: semanticColors.warning,
-                      ),
-                      title: const Text('تعديل'),
-                      contentPadding: EdgeInsets.zero,
-                    ),
+                const SizedBox(height: 9),
+                Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.all(9),
+                  decoration: BoxDecoration(
+                    color: colors.surfaceContainerHighest,
+                    borderRadius: BorderRadius.circular(12),
                   ),
-                  PopupMenuItem(
-                    value: 'share',
-                    child: ListTile(
-                      leading: Icon(
-                        Icons.share_outlined,
-                        color: colors.primary,
-                      ),
-                      title: const Text('مشاركة'),
-                      contentPadding: EdgeInsets.zero,
-                    ),
+                  child: LayoutBuilder(
+                    builder: (context, constraints) {
+                      final itemWidth = (constraints.maxWidth - 10) / 2;
+                      return Wrap(
+                        spacing: 10,
+                        runSpacing: 7,
+                        children: [
+                          _buildInvoiceAmount(
+                            label: strings.invoiceTotal,
+                            amount: invoice.totalCost,
+                            currency: strings.currency,
+                            width: itemWidth,
+                            colors: colors,
+                          ),
+                          _buildInvoiceAmount(
+                            label: strings.paidAmount,
+                            amount: invoice.paid,
+                            currency: strings.currency,
+                            width: itemWidth,
+                            colors: colors,
+                          ),
+                          _buildInvoiceAmount(
+                            label: strings.outstandingBalance,
+                            amount: invoice.rest,
+                            currency: strings.currency,
+                            width: itemWidth,
+                            colors: colors,
+                            valueColor: statusColor,
+                          ),
+                        ],
+                      );
+                    },
                   ),
-                  PopupMenuItem(
-                    value: 'delete',
-                    child: ListTile(
-                      leading: Icon(
-                        Icons.delete_outline,
-                        color: colors.error,
-                      ),
-                      title: const Text('حذف'),
-                      contentPadding: EdgeInsets.zero,
-                    ),
-                  ),
-                ],
-              ),
-            ],
+                ),
+              ],
+            ),
           ),
         ),
+      ),
+    );
+  }
+
+  Widget _buildInvoiceBadge({
+    required String label,
+    required Color color,
+    IconData? icon,
+  }) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      decoration: BoxDecoration(
+        color: color.withValues(alpha: 0.12),
+        borderRadius: BorderRadius.circular(20),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          if (icon != null) ...[
+            Icon(icon, size: 13, color: color),
+            const SizedBox(width: 4),
+          ],
+          Text(
+            label,
+            style: TextStyle(
+              color: color,
+              fontSize: 10,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildInvoiceAmount({
+    required String label,
+    required double amount,
+    required String currency,
+    required double width,
+    required ColorScheme colors,
+    Color? valueColor,
+  }) {
+    return SizedBox(
+      width: width,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            label,
+            style: TextStyle(
+              color: colors.onSurfaceVariant,
+              fontSize: 10,
+            ),
+          ),
+          Text(
+            '${amount.toStringAsFixed(2)} $currency',
+            style: TextStyle(
+              color: valueColor ?? colors.onSurface,
+              fontSize: 12,
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+        ],
       ),
     );
   }

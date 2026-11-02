@@ -82,6 +82,7 @@
   "clearInvoiceSearch": "مسح البحث",
   "noInvoicesMatchSearch": "لا توجد فواتير تطابق البحث",
   "invoiceActionFilter": "نوع الفاتورة",
+  "invoiceNumber": "فاتورة #",
   "paymentStatusFilter": "حالة الدفع",
   "allInvoicesFilter": "الكل",
   "paidStatus": "مدفوعة",
