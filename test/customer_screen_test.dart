@@ -32,7 +32,7 @@ class _CustomerScreenStorage {
   }
 }
 
-Invoice _invoice() {
+Invoice _invoice({String action = 'شراء', double rest = 20}) {
   return Invoice(
     id: 'legacy-id',
     customerName: 'Customer',
@@ -47,10 +47,10 @@ Invoice _invoice() {
     ],
     totalCost: 20,
     paid: 0,
-    rest: 20,
+    rest: rest,
     formattedDate: 'Oct 28, 2026',
     formattedTime: '12:34',
-    invoiceAction: 'شراء',
+    invoiceAction: action,
     invoiceSerial: 'legacy-serial',
   );
 }
@@ -228,6 +228,33 @@ void main() {
     expect(find.text('صافي مستحق للعميل'), findsOneWidget);
     expect(find.text('مشتريات'), findsOneWidget);
     expect(find.text('مبيعات'), findsOneWidget);
+  });
+
+  testWidgets('customer balance labels match positive negative and zero signs',
+      (tester) async {
+    _useTallViewport(tester);
+    final scenarios = [
+      (action: 'شراء', rest: 20.0, label: 'صافي مستحق لك'),
+      (action: 'بيع', rest: 20.0, label: 'صافي مستحق للعميل'),
+      (action: 'شراء', rest: 0.0, label: 'الحساب متوازن'),
+    ];
+
+    for (final scenario in scenarios) {
+      SharedPreferences.setMockInitialValues({});
+      final provider = InvoiceProvider();
+      await provider.saveInvoice(
+        _invoice(action: scenario.action, rest: scenario.rest),
+      );
+
+      await tester.pumpWidget(_customerScreen(provider));
+      await tester.pumpAndSettle();
+      await tester.enterText(find.byType(TextFormField), 'Customer');
+      await tester.testTextInput.receiveAction(TextInputAction.done);
+      await tester.pumpAndSettle();
+
+      expect(find.text(scenario.label), findsOneWidget);
+      await tester.pumpWidget(const SizedBox.shrink());
+    }
   });
 
   testWidgets('successful delete removes invoice and closes confirmation',
