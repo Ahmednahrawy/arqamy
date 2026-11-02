@@ -343,6 +343,28 @@ class _ProductInputFormState extends State<ProductInputForm> {
                   Expanded(
                     child: AppTextFormField(
                       textDirection: TextDirection.ltr,
+                      controller: _packageNumberController,
+                      focusNode: _packageNumberFocusNode,
+                      textInputAction: TextInputAction.done,
+                      onEditingComplete: _handleAdd,
+                      labelText: 'عدد الفارغ',
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          _firstInvalidFocusNode ??= _packageNumberFocusNode;
+                          return 'أدخل عدد العبوات أولا';
+                        }
+                        if (int.tryParse(value) == null) {
+                          _firstInvalidFocusNode ??= _packageNumberFocusNode;
+                          return 'ادخل رقم صالح';
+                        }
+                        return null;
+                      },
+                    ),
+                  ),
+                  horizontalSpace(8),
+                  Expanded(
+                    child: AppTextFormField(
+                      textDirection: TextDirection.ltr,
                       controller: _packageWeightController,
                       focusNode: _packageWeightFocusNode,
                       textInputAction: TextInputAction.next,
@@ -359,28 +381,6 @@ class _ProductInputFormState extends State<ProductInputForm> {
                         }
                         if (double.tryParse(value) == null) {
                           _firstInvalidFocusNode ??= _packageWeightFocusNode;
-                          return 'ادخل رقم صالح';
-                        }
-                        return null;
-                      },
-                    ),
-                  ),
-                  horizontalSpace(8),
-                  Expanded(
-                    child: AppTextFormField(
-                      textDirection: TextDirection.ltr,
-                      controller: _packageNumberController,
-                      focusNode: _packageNumberFocusNode,
-                      textInputAction: TextInputAction.done,
-                      onEditingComplete: _handleAdd,
-                      labelText: 'عدد الفارغ',
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          _firstInvalidFocusNode ??= _packageNumberFocusNode;
-                          return 'أدخل عدد العبوات أولا';
-                        }
-                        if (int.tryParse(value) == null) {
-                          _firstInvalidFocusNode ??= _packageNumberFocusNode;
                           return 'ادخل رقم صالح';
                         }
                         return null;
