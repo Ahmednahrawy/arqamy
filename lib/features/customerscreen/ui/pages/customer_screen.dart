@@ -21,6 +21,10 @@ class CustomerScreen extends StatefulWidget {
   State<CustomerScreen> createState() => _CustomerScreenState();
 }
 
+enum _InvoiceActionFilter { all, purchase, sale, storage }
+
+enum _PaymentStatusFilter { all, paid, partiallyPaid, unpaid }
+
 class _CustomerScreenState extends State<CustomerScreen> {
   String? _customerName;
   List<Invoice> _allInvoices = [];
@@ -29,6 +33,8 @@ class _CustomerScreenState extends State<CustomerScreen> {
   final TextEditingController _invoiceSearchController =
       TextEditingController();
   String _invoiceSearchQuery = '';
+  _InvoiceActionFilter _actionFilter = _InvoiceActionFilter.all;
+  _PaymentStatusFilter _paymentStatusFilter = _PaymentStatusFilter.all;
 
   @override
   void initState() {
@@ -103,6 +109,8 @@ class _CustomerScreenState extends State<CustomerScreen> {
       _customerName = customerName;
       _invoiceSearchController.clear();
       _invoiceSearchQuery = '';
+      _actionFilter = _InvoiceActionFilter.all;
+      _paymentStatusFilter = _PaymentStatusFilter.all;
       _allInvoices = provider.invoices;
       _customerInvoices = _getCustomerInvoices(provider);
     });
@@ -110,20 +118,165 @@ class _CustomerScreenState extends State<CustomerScreen> {
 
   List<Invoice> _filterInvoices(List<Invoice> invoices) {
     final query = _normalizeSearchText(_invoiceSearchQuery);
-    if (query.isEmpty) return invoices;
-
     return invoices.where((invoice) {
-      if (_normalizeSearchText(invoice.invoiceSerial).contains(query)) {
-        return true;
+      if (query.isNotEmpty && !_matchesInvoiceSearch(invoice, query)) {
+        return false;
       }
-      if (invoice.products.any(
-        (product) => _normalizeSearchText(product.name).contains(query),
-      )) {
-        return true;
-      }
-      return (_customerName == null || _customerName!.isEmpty) &&
-          _normalizeSearchText(invoice.customerName).contains(query);
+      if (!_matchesActionFilter(invoice)) return false;
+      return _matchesPaymentStatusFilter(invoice);
     }).toList();
+  }
+
+  bool _matchesInvoiceSearch(Invoice invoice, String query) {
+    if (_normalizeSearchText(invoice.invoiceSerial).contains(query)) {
+      return true;
+    }
+    if (invoice.products.any(
+      (product) => _normalizeSearchText(product.name).contains(query),
+    )) {
+      return true;
+    }
+    return (_customerName == null || _customerName!.isEmpty) &&
+        _normalizeSearchText(invoice.customerName).contains(query);
+  }
+
+  bool _matchesActionFilter(Invoice invoice) {
+    final expectedAction = switch (_actionFilter) {
+      _InvoiceActionFilter.all => null,
+      _InvoiceActionFilter.purchase => 'شراء',
+      _InvoiceActionFilter.sale => 'بيع',
+      _InvoiceActionFilter.storage => 'تخزين',
+    };
+    if (expectedAction == null) return true;
+    return _normalizeInvoiceAction(invoice.invoiceAction) == expectedAction;
+  }
+
+  bool _matchesPaymentStatusFilter(Invoice invoice) {
+    return switch (_paymentStatusFilter) {
+      _PaymentStatusFilter.all => true,
+      _PaymentStatusFilter.paid => invoice.rest <= 0,
+      _PaymentStatusFilter.partiallyPaid =>
+        invoice.rest > 0 && invoice.paid > 0,
+      _PaymentStatusFilter.unpaid => invoice.rest > 0 && invoice.paid <= 0,
+    };
+  }
+
+  String? _normalizeInvoiceAction(String? action) =>
+      action?.replaceAll('\u0640', '').trim();
+
+  bool get _hasActiveFilters =>
+      _actionFilter != _InvoiceActionFilter.all ||
+      _paymentStatusFilter != _PaymentStatusFilter.all;
+
+  Widget _buildInvoiceFilters(S strings, double availableWidth) {
+    final actionFilter = DropdownButtonFormField<_InvoiceActionFilter>(
+      key: const ValueKey('invoice-action-filter'),
+      initialValue: _actionFilter,
+      isExpanded: true,
+      decoration: InputDecoration(
+        labelText: strings.invoiceActionFilter,
+        isDense: true,
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(14)),
+      ),
+      selectedItemBuilder: (context) => _InvoiceActionFilter.values
+          .map(
+            (filter) => Align(
+              alignment: AlignmentDirectional.centerStart,
+              child: Text(
+                _actionLabel(filter, strings),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+          )
+          .toList(),
+      items: _InvoiceActionFilter.values
+          .map(
+            (filter) => DropdownMenuItem(
+              value: filter,
+              child: Text(_actionLabel(filter, strings)),
+            ),
+          )
+          .toList(),
+      onChanged: (filter) {
+        if (filter == null) return;
+        setState(() => _actionFilter = filter);
+      },
+    );
+    final paymentFilter = DropdownButtonFormField<_PaymentStatusFilter>(
+      key: const ValueKey('invoice-payment-status-filter'),
+      initialValue: _paymentStatusFilter,
+      isExpanded: true,
+      decoration: InputDecoration(
+        labelText: strings.paymentStatusFilter,
+        isDense: true,
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(14)),
+      ),
+      selectedItemBuilder: (context) => _PaymentStatusFilter.values
+          .map(
+            (filter) => Align(
+              alignment: AlignmentDirectional.centerStart,
+              child: Text(
+                _paymentStatusLabel(filter, strings),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+          )
+          .toList(),
+      items: _PaymentStatusFilter.values
+          .map(
+            (filter) => DropdownMenuItem(
+              value: filter,
+              child: Text(_paymentStatusLabel(filter, strings)),
+            ),
+          )
+          .toList(),
+      onChanged: (filter) {
+        if (filter == null) return;
+        setState(() => _paymentStatusFilter = filter);
+      },
+    );
+
+    if (availableWidth >= 520) {
+      return Row(
+        children: [
+          Expanded(child: actionFilter),
+          const SizedBox(width: 8),
+          Expanded(child: paymentFilter),
+        ],
+      );
+    }
+    return Column(
+      children: [
+        actionFilter,
+        const SizedBox(height: 8),
+        paymentFilter,
+      ],
+    );
+  }
+
+  String _actionLabel(_InvoiceActionFilter filter, S strings) =>
+      switch (filter) {
+        _InvoiceActionFilter.all => strings.allInvoicesFilter,
+        _InvoiceActionFilter.purchase => strings.purchase,
+        _InvoiceActionFilter.sale => strings.sale,
+        _InvoiceActionFilter.storage => strings.storage,
+      };
+
+  String _paymentStatusLabel(_PaymentStatusFilter filter, S strings) =>
+      switch (filter) {
+        _PaymentStatusFilter.all => strings.allInvoicesFilter,
+        _PaymentStatusFilter.paid => strings.paidStatus,
+        _PaymentStatusFilter.partiallyPaid => strings.partiallyPaidStatus,
+        _PaymentStatusFilter.unpaid => strings.unpaidStatus,
+      };
+
+  void _resetFilters() {
+    setState(() {
+      _actionFilter = _InvoiceActionFilter.all;
+      _paymentStatusFilter = _PaymentStatusFilter.all;
+    });
   }
 
   String _normalizeSearchText(String value) =>
@@ -247,6 +400,7 @@ class _CustomerScreenState extends State<CustomerScreen> {
     final visibleInvoices = _filterInvoices(invoices);
     final hasInvoiceSearchQuery =
         _normalizeSearchText(_invoiceSearchQuery).isNotEmpty;
+    final hasActiveFilters = _hasActiveFilters;
     final balance = InvoiceProvider.calculateCustomerBalance(_customerInvoices);
     final purchaseBalance = _customerInvoices
         .where((invoice) =>
@@ -360,10 +514,29 @@ class _CustomerScreenState extends State<CustomerScreen> {
                         ),
                       ),
                     ),
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(4, 0, 4, 8),
+                      child: LayoutBuilder(
+                        builder: (context, constraints) =>
+                            _buildInvoiceFilters(strings, constraints.maxWidth),
+                      ),
+                    ),
+                    if (hasActiveFilters)
+                      Align(
+                        alignment: AlignmentDirectional.centerEnd,
+                        child: TextButton.icon(
+                          key: const ValueKey('reset-invoice-filters'),
+                          onPressed: _resetFilters,
+                          icon: const Icon(Icons.filter_alt_off_outlined),
+                          label: Text(strings.resetInvoiceFilters),
+                        ),
+                      ),
                   ]),
                 ),
               ),
-              if (invoices.isEmpty && !hasInvoiceSearchQuery)
+              if (invoices.isEmpty &&
+                  !hasInvoiceSearchQuery &&
+                  !hasActiveFilters)
                 SliverFillRemaining(
                   hasScrollBody: false,
                   child: Center(
@@ -402,7 +575,9 @@ class _CustomerScreenState extends State<CustomerScreen> {
                   hasScrollBody: false,
                   child: Center(
                     child: Text(
-                      strings.noInvoicesMatchSearch,
+                      hasActiveFilters
+                          ? strings.noInvoicesMatchFilters
+                          : strings.noInvoicesMatchSearch,
                       textAlign: TextAlign.center,
                       style: Theme.of(context)
                           .textTheme

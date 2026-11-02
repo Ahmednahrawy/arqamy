@@ -80,5 +80,13 @@
   "recentInvoices": "Recent invoices",
   "noRecentInvoices": "No invoices yet",
   "clearInvoiceSearch": "Clear search",
-  "noInvoicesMatchSearch": "No invoices match your search"
+  "noInvoicesMatchSearch": "No invoices match your search",
+  "invoiceActionFilter": "Invoice action",
+  "paymentStatusFilter": "Payment status",
+  "allInvoicesFilter": "All",
+  "paidStatus": "Paid",
+  "partiallyPaidStatus": "Partially paid",
+  "unpaidStatus": "Unpaid",
+  "resetInvoiceFilters": "Reset filters",
+  "noInvoicesMatchFilters": "No invoices match the search or filters"
 }

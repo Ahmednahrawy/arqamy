@@ -73,6 +73,16 @@ class MessageLookup extends MessageLookupByLibrary {
     "invoice_sent_successfully": MessageLookupByLibrary.simpleMessage(
       "Invoice sent successfully",
     ),
+    "invoiceActionFilter": MessageLookupByLibrary.simpleMessage("Invoice action"),
+    "paymentStatusFilter": MessageLookupByLibrary.simpleMessage("Payment status"),
+    "allInvoicesFilter": MessageLookupByLibrary.simpleMessage("All"),
+    "paidStatus": MessageLookupByLibrary.simpleMessage("Paid"),
+    "partiallyPaidStatus": MessageLookupByLibrary.simpleMessage("Partially paid"),
+    "unpaidStatus": MessageLookupByLibrary.simpleMessage("Unpaid"),
+    "resetInvoiceFilters": MessageLookupByLibrary.simpleMessage("Reset filters"),
+    "noInvoicesMatchFilters": MessageLookupByLibrary.simpleMessage(
+      "No invoices match the search or filters",
+    ),
     "invoice_template": MessageLookupByLibrary.simpleMessage(
       "Invoice Templates",
     ),

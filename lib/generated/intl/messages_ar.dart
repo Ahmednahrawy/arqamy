@@ -73,6 +73,18 @@ class MessageLookup extends MessageLookupByLibrary {
     "invoice_sent_successfully": MessageLookupByLibrary.simpleMessage(
       "تم إرسال الفاتورة بنجاح",
     ),
+    "invoiceActionFilter": MessageLookupByLibrary.simpleMessage("نوع الفاتورة"),
+    "paymentStatusFilter": MessageLookupByLibrary.simpleMessage("حالة الدفع"),
+    "allInvoicesFilter": MessageLookupByLibrary.simpleMessage("الكل"),
+    "paidStatus": MessageLookupByLibrary.simpleMessage("مدفوعة"),
+    "partiallyPaidStatus": MessageLookupByLibrary.simpleMessage("مدفوعة جزئياً"),
+    "unpaidStatus": MessageLookupByLibrary.simpleMessage("غير مدفوعة"),
+    "resetInvoiceFilters": MessageLookupByLibrary.simpleMessage(
+      "إعادة ضبط عوامل التصفية",
+    ),
+    "noInvoicesMatchFilters": MessageLookupByLibrary.simpleMessage(
+      "لا توجد فواتير تطابق البحث أو عوامل التصفية",
+    ),
     "invoice_template": MessageLookupByLibrary.simpleMessage("قوالب الفواتير"),
     "invoice_templated_desc": MessageLookupByLibrary.simpleMessage(
       "إدارة وتخصيص تنسيقات الفواتير",

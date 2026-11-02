@@ -80,5 +80,13 @@
   "recentInvoices": "أحدث الفواتير",
   "noRecentInvoices": "لا توجد فواتير بعد",
   "clearInvoiceSearch": "مسح البحث",
-  "noInvoicesMatchSearch": "لا توجد فواتير تطابق البحث"
+  "noInvoicesMatchSearch": "لا توجد فواتير تطابق البحث",
+  "invoiceActionFilter": "نوع الفاتورة",
+  "paymentStatusFilter": "حالة الدفع",
+  "allInvoicesFilter": "الكل",
+  "paidStatus": "مدفوعة",
+  "partiallyPaidStatus": "مدفوعة جزئياً",
+  "unpaidStatus": "غير مدفوعة",
+  "resetInvoiceFilters": "إعادة ضبط عوامل التصفية",
+  "noInvoicesMatchFilters": "لا توجد فواتير تطابق البحث أو عوامل التصفية"
 }

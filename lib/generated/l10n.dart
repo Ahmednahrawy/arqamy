@@ -284,6 +284,76 @@ class S {
     );
   }
 
+  /// `Invoice action`
+  String get invoiceActionFilter {
+    return Intl.message(
+      'Invoice action',
+      name: 'invoiceActionFilter',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Payment status`
+  String get paymentStatusFilter {
+    return Intl.message(
+      'Payment status',
+      name: 'paymentStatusFilter',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `All`
+  String get allInvoicesFilter {
+    return Intl.message(
+      'All',
+      name: 'allInvoicesFilter',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Paid`
+  String get paidStatus {
+    return Intl.message('Paid', name: 'paidStatus', desc: '', args: []);
+  }
+
+  /// `Partially paid`
+  String get partiallyPaidStatus {
+    return Intl.message(
+      'Partially paid',
+      name: 'partiallyPaidStatus',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Unpaid`
+  String get unpaidStatus {
+    return Intl.message('Unpaid', name: 'unpaidStatus', desc: '', args: []);
+  }
+
+  /// `Reset filters`
+  String get resetInvoiceFilters {
+    return Intl.message(
+      'Reset filters',
+      name: 'resetInvoiceFilters',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No invoices match the search or filters`
+  String get noInvoicesMatchFilters {
+    return Intl.message(
+      'No invoices match the search or filters',
+      name: 'noInvoicesMatchFilters',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `No results found`
   String get no_results_found {
     return Intl.message(

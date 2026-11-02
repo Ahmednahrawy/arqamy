@@ -35,7 +35,7 @@ class _CustomerScreenStorage {
 Invoice _invoice({
   String id = 'legacy-id',
   String customerName = 'Customer',
-  String action = 'شراء',
+  String? action = 'شراء',
   double rest = 20,
   double totalCost = 20,
   double paid = 0,
@@ -95,6 +95,19 @@ void _useTallViewport(WidgetTester tester) {
   tester.view.devicePixelRatio = 1;
   addTearDown(tester.view.resetPhysicalSize);
   addTearDown(tester.view.resetDevicePixelRatio);
+}
+
+Future<void> _selectFilterOption(
+  WidgetTester tester, {
+  required String key,
+  required String option,
+}) async {
+  final dropdown = find.byKey(ValueKey(key));
+  await tester.ensureVisible(dropdown);
+  await tester.tap(dropdown);
+  await tester.pumpAndSettle();
+  await tester.tap(find.text(option).last);
+  await tester.pumpAndSettle();
 }
 
 void main() {
@@ -248,7 +261,7 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('فاتورة #legacy-serial'), findsOneWidget);
-    expect(find.text('صافي مستحق للعميل'), findsOneWidget);
+    expect(find.text('صافي مستحق لك'), findsOneWidget);
     expect(find.text('مشتريات'), findsOneWidget);
     expect(find.text('مبيعات'), findsOneWidget);
     final newCustomerStorageSummary = find.byKey(
@@ -628,7 +641,11 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(tester.takeException(), isNull);
-    await tester.ensureVisible(find.text('فاتورة #legacy-serial'));
+    await tester.scrollUntilVisible(
+      find.text('فاتورة #legacy-serial'),
+      200,
+      scrollable: find.byType(Scrollable).first,
+    );
     await tester.pumpAndSettle();
     expect(tester.takeException(), isNull);
     expect(find.text('فاتورة #legacy-serial'), findsOneWidget);
@@ -755,6 +772,8 @@ void main() {
       find.text('Search by serial or product name'),
       findsOneWidget,
     );
+    expect(find.text('Invoice action'), findsOneWidget);
+    expect(find.text('Payment status'), findsOneWidget);
     await tester.enterText(
       find.byKey(const ValueKey('customer-invoice-search')),
       'missing',
@@ -835,6 +854,406 @@ void main() {
     expect(find.text('فاتورة #SER-UPDATE'), findsOneWidget);
   });
 
+  testWidgets('invoice action filters preserve unknown actions under All',
+      (tester) async {
+    _useTallViewport(tester);
+    SharedPreferences.setMockInitialValues({});
+    final provider = InvoiceProvider();
+    await provider.saveInvoice(
+      _invoice(id: 'action-purchase', action: 'شراء', invoiceSerial: 'ACT-1'),
+    );
+    await provider.saveInvoice(
+      _invoice(id: 'action-sale', action: 'بـيع', invoiceSerial: 'ACT-2'),
+    );
+    await provider.saveInvoice(
+      _invoice(id: 'action-storage', action: 'تخزين', invoiceSerial: 'ACT-3'),
+    );
+    await provider.saveInvoice(
+      _invoice(id: 'action-null', action: null, invoiceSerial: 'ACT-4'),
+    );
+    await provider.saveInvoice(
+      _invoice(
+        id: 'action-legacy',
+        action: 'legacy',
+        invoiceSerial: 'ACT-5',
+      ),
+    );
+
+    await tester.pumpWidget(_customerScreen(provider));
+    await tester.pumpAndSettle();
+    for (final serial in ['ACT-1', 'ACT-2', 'ACT-3', 'ACT-4', 'ACT-5']) {
+      expect(find.text('فاتورة #$serial'), findsOneWidget);
+    }
+
+    await _selectFilterOption(
+      tester,
+      key: 'invoice-action-filter',
+      option: 'شراء',
+    );
+    expect(find.text('فاتورة #ACT-1'), findsOneWidget);
+    expect(find.text('فاتورة #ACT-2'), findsNothing);
+
+    await _selectFilterOption(
+      tester,
+      key: 'invoice-action-filter',
+      option: 'بيع',
+    );
+    expect(find.text('فاتورة #ACT-2'), findsOneWidget);
+    expect(find.text('فاتورة #ACT-1'), findsNothing);
+
+    await _selectFilterOption(
+      tester,
+      key: 'invoice-action-filter',
+      option: 'تخزين',
+    );
+    expect(find.text('فاتورة #ACT-3'), findsOneWidget);
+    expect(find.text('فاتورة #ACT-2'), findsNothing);
+
+    await tester.tap(find.byKey(const ValueKey('reset-invoice-filters')));
+    await tester.pumpAndSettle();
+    for (final serial in ['ACT-1', 'ACT-2', 'ACT-3', 'ACT-4', 'ACT-5']) {
+      expect(find.text('فاتورة #$serial'), findsOneWidget);
+    }
+  });
+
+  testWidgets('payment filters follow stored paid and rest semantics',
+      (tester) async {
+    _useTallViewport(tester);
+    SharedPreferences.setMockInitialValues({});
+    final provider = InvoiceProvider();
+    await provider.saveInvoice(
+      _invoice(
+        id: 'paid',
+        invoiceSerial: 'PAY-PAID',
+        paid: 10,
+        rest: 0,
+      ),
+    );
+    await provider.saveInvoice(
+      _invoice(
+        id: 'zero-value',
+        invoiceSerial: 'PAY-ZERO',
+        paid: 0,
+        rest: 0,
+        totalCost: 0,
+      ),
+    );
+    await provider.saveInvoice(
+      _invoice(
+        id: 'overpaid',
+        invoiceSerial: 'PAY-OVERPAID',
+        paid: 25,
+        rest: -5,
+      ),
+    );
+    await provider.saveInvoice(
+      _invoice(
+        id: 'partially-paid',
+        invoiceSerial: 'PAY-PARTIAL',
+        paid: 5,
+        rest: 10,
+      ),
+    );
+    await provider.saveInvoice(
+      _invoice(
+        id: 'unpaid',
+        invoiceSerial: 'PAY-UNPAID',
+        paid: 0,
+        rest: 10,
+      ),
+    );
+    await provider.saveInvoice(
+      _invoice(
+        id: 'negative-paid',
+        invoiceSerial: 'PAY-NEGATIVE',
+        paid: -1,
+        rest: 10,
+      ),
+    );
+
+    await tester.pumpWidget(_customerScreen(provider));
+    await tester.pumpAndSettle();
+    await _selectFilterOption(
+      tester,
+      key: 'invoice-payment-status-filter',
+      option: 'مدفوعة',
+    );
+    for (final serial in ['PAY-PAID', 'PAY-ZERO', 'PAY-OVERPAID']) {
+      expect(find.text('فاتورة #$serial'), findsOneWidget);
+    }
+    expect(find.text('فاتورة #PAY-PARTIAL'), findsNothing);
+
+    await _selectFilterOption(
+      tester,
+      key: 'invoice-payment-status-filter',
+      option: 'مدفوعة جزئياً',
+    );
+    expect(find.text('فاتورة #PAY-PARTIAL'), findsOneWidget);
+    expect(find.text('فاتورة #PAY-PAID'), findsNothing);
+
+    await _selectFilterOption(
+      tester,
+      key: 'invoice-payment-status-filter',
+      option: 'غير مدفوعة',
+    );
+    expect(find.text('فاتورة #PAY-UNPAID'), findsOneWidget);
+    expect(find.text('فاتورة #PAY-NEGATIVE'), findsOneWidget);
+    expect(find.text('فاتورة #PAY-PARTIAL'), findsNothing);
+  });
+
+  testWidgets('search combines with action and payment filters and resets',
+      (tester) async {
+    _useTallViewport(tester);
+    SharedPreferences.setMockInitialValues({});
+    final provider = InvoiceProvider();
+    await provider.saveInvoice(
+      _invoice(
+        id: 'sale-brown-partial',
+        action: 'بيع',
+        paid: 5,
+        rest: 10,
+        invoiceSerial: 'COMB-1',
+        products: [
+          Product(
+            name: 'Brown Rice',
+            weight: 1,
+            packageWeight: 0,
+            numberPackage: 0,
+            price: 10,
+          ),
+        ],
+      ),
+    );
+    await provider.saveInvoice(
+      _invoice(
+        id: 'sale-brown-paid',
+        action: 'بيع',
+        paid: 15,
+        rest: 0,
+        invoiceSerial: 'COMB-2',
+        products: [
+          Product(
+            name: 'Brown Rice',
+            weight: 1,
+            packageWeight: 0,
+            numberPackage: 0,
+            price: 10,
+          ),
+        ],
+      ),
+    );
+    await provider.saveInvoice(
+      _invoice(
+        id: 'storage-brown-partial',
+        action: 'تخزين',
+        paid: 5,
+        rest: 10,
+        invoiceSerial: 'COMB-3',
+      ),
+    );
+    await provider.saveInvoice(
+      _invoice(
+        id: 'sale-oats-partial',
+        action: 'بيع',
+        paid: 5,
+        rest: 10,
+        invoiceSerial: 'COMB-4',
+        products: [
+          Product(
+            name: 'Oats',
+            weight: 1,
+            packageWeight: 0,
+            numberPackage: 0,
+            price: 10,
+          ),
+        ],
+      ),
+    );
+
+    await tester.pumpWidget(_customerScreen(provider));
+    await tester.pumpAndSettle();
+    await _selectFilterOption(
+      tester,
+      key: 'invoice-action-filter',
+      option: 'بيع',
+    );
+    await _selectFilterOption(
+      tester,
+      key: 'invoice-payment-status-filter',
+      option: 'مدفوعة جزئياً',
+    );
+    await tester.enterText(
+      find.byKey(const ValueKey('customer-invoice-search')),
+      'brown',
+    );
+    await tester.pumpAndSettle();
+    expect(find.text('فاتورة #COMB-1'), findsOneWidget);
+    expect(find.text('فاتورة #COMB-2'), findsNothing);
+    expect(find.text('فاتورة #COMB-3'), findsNothing);
+    expect(find.text('فاتورة #COMB-4'), findsNothing);
+
+    await tester.tap(find.byKey(const ValueKey('clear-invoice-search')));
+    await tester.pumpAndSettle();
+    expect(find.text('فاتورة #COMB-1'), findsOneWidget);
+    expect(find.text('فاتورة #COMB-4'), findsOneWidget);
+    expect(find.text('فاتورة #COMB-2'), findsNothing);
+
+    await tester.tap(find.byKey(const ValueKey('reset-invoice-filters')));
+    await tester.pumpAndSettle();
+    for (final serial in ['COMB-1', 'COMB-2', 'COMB-3', 'COMB-4']) {
+      expect(find.text('فاتورة #$serial'), findsOneWidget);
+    }
+  });
+
+  testWidgets('customer changes reset filters and provider updates refresh',
+      (tester) async {
+    _useTallViewport(tester);
+    SharedPreferences.setMockInitialValues({});
+    final provider = InvoiceProvider();
+    final customerAlphaInvoice = _invoice(
+      id: 'alpha-sale',
+      customerName: 'Customer Alpha',
+      action: 'بيع',
+      invoiceSerial: 'CUST-A',
+    );
+    final customerBetaSale = _invoice(
+      id: 'beta-sale',
+      customerName: 'Customer Beta',
+      action: 'بيع',
+      invoiceSerial: 'CUST-B-SALE',
+    );
+    await provider.saveInvoice(customerAlphaInvoice);
+    await provider.saveInvoice(customerBetaSale);
+    await provider.saveInvoice(
+      _invoice(
+        id: 'beta-purchase',
+        customerName: 'Customer Beta',
+        action: 'شراء',
+        invoiceSerial: 'CUST-B-PURCHASE',
+      ),
+    );
+
+    await tester.pumpWidget(_customerScreen(provider));
+    await tester.pumpAndSettle();
+    final customerField = find.byType(TextFormField);
+    await tester.enterText(customerField, 'Customer Alpha');
+    await tester.testTextInput.receiveAction(TextInputAction.done);
+    await tester.pumpAndSettle();
+    await _selectFilterOption(
+      tester,
+      key: 'invoice-action-filter',
+      option: 'بيع',
+    );
+    expect(find.text('فاتورة #CUST-A'), findsOneWidget);
+
+    await tester.enterText(customerField, 'Customer Beta');
+    await tester.testTextInput.receiveAction(TextInputAction.done);
+    await tester.pumpAndSettle();
+    expect(find.text('فاتورة #CUST-B-SALE'), findsOneWidget);
+    expect(find.text('فاتورة #CUST-B-PURCHASE'), findsOneWidget);
+    expect(find.text('فاتورة #CUST-A'), findsNothing);
+
+    await _selectFilterOption(
+      tester,
+      key: 'invoice-action-filter',
+      option: 'بيع',
+    );
+    expect(find.text('فاتورة #CUST-B-SALE'), findsOneWidget);
+    expect(find.text('فاتورة #CUST-B-PURCHASE'), findsNothing);
+
+    await provider.updateInvoice(
+      _invoice(
+        id: customerBetaSale.id,
+        customerName: customerBetaSale.customerName,
+        action: 'شراء',
+        invoiceSerial: customerBetaSale.invoiceSerial,
+      ),
+    );
+    await tester.pumpAndSettle();
+    expect(
+      find.text('لا توجد فواتير تطابق البحث أو عوامل التصفية'),
+      findsOneWidget,
+    );
+  });
+
+  testWidgets('filters do not limit customer summaries or storage balance',
+      (tester) async {
+    _useTallViewport(tester);
+    SharedPreferences.setMockInitialValues({});
+    final provider = InvoiceProvider();
+    final storageInvoice = _invoice(
+      id: 'summary-storage',
+      action: 'تخزين',
+      totalCost: 30,
+      paid: 15,
+      rest: 15,
+      invoiceSerial: 'SUM-STORAGE',
+    );
+    final purchaseInvoice = _invoice(
+      id: 'summary-purchase',
+      action: 'شراء',
+      totalCost: 40,
+      paid: 0,
+      rest: 40,
+      invoiceSerial: 'SUM-PURCHASE',
+    );
+    await provider.saveInvoice(storageInvoice);
+    await provider.saveInvoice(purchaseInvoice);
+
+    await tester.pumpWidget(_customerScreen(provider));
+    await tester.pumpAndSettle();
+    await tester.enterText(find.byType(TextFormField), 'Customer');
+    await tester.testTextInput.receiveAction(TextInputAction.done);
+    await tester.pumpAndSettle();
+    await _selectFilterOption(
+      tester,
+      key: 'invoice-action-filter',
+      option: 'تخزين',
+    );
+    await _selectFilterOption(
+      tester,
+      key: 'invoice-payment-status-filter',
+      option: 'مدفوعة جزئياً',
+    );
+
+    expect(find.text('فاتورة #SUM-STORAGE'), findsOneWidget);
+    expect(find.text('فاتورة #SUM-PURCHASE'), findsNothing);
+    expect(find.text('صافي مستحق للعميل'), findsOneWidget);
+    expect(find.text('40.00 ج.م'), findsNWidgets(2));
+    final storageSummary = find.byKey(
+      const ValueKey('customer-storage-summary'),
+    );
+    expect(
+      find.descendant(of: storageSummary, matching: find.text('30.00 ج.م')),
+      findsOneWidget,
+    );
+    expect(
+      find.descendant(of: storageSummary, matching: find.text('1')),
+      findsOneWidget,
+    );
+
+    await provider.updateInvoice(
+      _invoice(
+        id: purchaseInvoice.id,
+        customerName: purchaseInvoice.customerName,
+        action: purchaseInvoice.invoiceAction,
+        totalCost: 40,
+        paid: 0,
+        rest: 50,
+        invoiceSerial: purchaseInvoice.invoiceSerial,
+      ),
+    );
+    await tester.pumpAndSettle();
+    expect(find.text('فاتورة #SUM-STORAGE'), findsOneWidget);
+    expect(find.text('فاتورة #SUM-PURCHASE'), findsNothing);
+    expect(find.text('50.00 ج.م'), findsNWidgets(2));
+    expect(
+      find.descendant(of: storageSummary, matching: find.text('30.00 ج.م')),
+      findsOneWidget,
+    );
+    expect(find.text('الحساب متوازن'), findsNothing);
+  });
+
   testWidgets('storage summary shows localized zero values without storage',
       (tester) async {
     _useTallViewport(tester);
@@ -886,8 +1305,8 @@ void main() {
       (tester) async {
     _useTallViewport(tester);
     final scenarios = [
-      (action: 'شراء', rest: 20.0, label: 'صافي مستحق لك'),
-      (action: 'بيع', rest: 20.0, label: 'صافي مستحق للعميل'),
+      (action: 'شراء', rest: 20.0, label: 'صافي مستحق للعميل'),
+      (action: 'بيع', rest: 20.0, label: 'صافي مستحق لك'),
       (action: 'شراء', rest: 0.0, label: 'الحساب متوازن'),
     ];
 
