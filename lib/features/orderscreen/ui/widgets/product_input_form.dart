@@ -255,6 +255,7 @@ class _ProductInputFormState extends State<ProductInputForm> {
                         labelText: 'المنتج',
                         suffixIcon: Icon(Icons.search),
                         hintText: 'اختر منتج',
+                        border: OutlineInputBorder()
                       ),
                     ),
                     popupProps: PopupProps.menu(
