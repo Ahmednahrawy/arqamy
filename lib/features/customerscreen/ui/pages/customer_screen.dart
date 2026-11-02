@@ -9,6 +9,7 @@ import 'package:arqamy/features/orderscreen/providers/invoice_provider.dart';
 import 'package:arqamy/core/widgets/app_snack_bar.dart';
 import 'package:arqamy/generated/l10n.dart';
 import 'package:arqamy/features/settingscreen/providers/invoice_setting_provider.dart';
+import 'package:flutter/foundation.dart' show listEquals;
 import 'package:flutter/material.dart';
 import 'package:arqamy/features/orderscreen/ui/widgets/customer_name.dart';
 import 'package:provider/provider.dart';
@@ -23,6 +24,8 @@ class CustomerScreen extends StatefulWidget {
 class _CustomerScreenState extends State<CustomerScreen> {
   String? _customerName;
   List<Invoice> _customerInvoices = [];
+  InvoiceProvider? _invoiceProvider;
+
   @override
   void initState() {
     super.initState();
@@ -31,6 +34,42 @@ class _CustomerScreenState extends State<CustomerScreen> {
       unawaited(
         _loadInvoices(errorMessage: 'تعذر تحميل سجل الفواتير'),
       );
+    });
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final provider = context.read<InvoiceProvider>();
+    if (identical(provider, _invoiceProvider)) return;
+
+    _invoiceProvider?.removeListener(_handleInvoiceProviderChange);
+    _invoiceProvider = provider..addListener(_handleInvoiceProviderChange);
+    _customerInvoices = _getCustomerInvoices(provider);
+  }
+
+  @override
+  void dispose() {
+    _invoiceProvider?.removeListener(_handleInvoiceProviderChange);
+    super.dispose();
+  }
+
+  List<Invoice> _getCustomerInvoices(InvoiceProvider provider) {
+    final customerName = _customerName;
+    return customerName != null && customerName.isNotEmpty
+        ? provider.getInvoicesByCustomer(customerName)
+        : <Invoice>[];
+  }
+
+  void _handleInvoiceProviderChange() {
+    final provider = _invoiceProvider;
+    if (!mounted || provider == null) return;
+
+    final invoices = _getCustomerInvoices(provider);
+    if (listEquals(_customerInvoices, invoices)) return;
+
+    setState(() {
+      _customerInvoices = invoices;
     });
   }
 
@@ -48,19 +87,20 @@ class _CustomerScreenState extends State<CustomerScreen> {
   }
 
   void _handleCustomerSelection(String? customerName) {
-    final invoices = customerName != null && customerName.isNotEmpty
-        ? context.read<InvoiceProvider>().getInvoicesByCustomer(customerName)
-        : <Invoice>[];
+    final provider = context.read<InvoiceProvider>();
     setState(() {
       _customerName = customerName;
-      _customerInvoices = invoices;
+      _customerInvoices = _getCustomerInvoices(provider);
     });
   }
 
   void _loadCustomerInvoices(String customerName) {
     final provider = context.read<InvoiceProvider>();
+    final invoices = provider.getInvoicesByCustomer(customerName);
+    if (listEquals(_customerInvoices, invoices)) return;
+
     setState(() {
-      _customerInvoices = provider.getInvoicesByCustomer(customerName);
+      _customerInvoices = invoices;
     });
   }
 

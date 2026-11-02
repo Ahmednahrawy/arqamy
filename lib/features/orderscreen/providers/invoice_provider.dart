@@ -250,12 +250,18 @@ class InvoiceProvider extends ChangeNotifier {
   }
 
   List<Invoice> getInvoicesByCustomer(String customerName) {
+    final normalizedCustomerName = _normalizeCustomerName(customerName);
+    if (normalizedCustomerName.isEmpty) return [];
+
     return _invoices
-        .where((invoice) => invoice.customerName
-            .toLowerCase()
-            .contains(customerName.toLowerCase()))
+        .where((invoice) =>
+            _normalizeCustomerName(invoice.customerName) ==
+            normalizedCustomerName)
         .toList();
   }
+
+  static String _normalizeCustomerName(String customerName) =>
+      customerName.trim().split(RegExp(r'\s+')).join(' ').toLowerCase();
 
   static double calculateCustomerBalance(Iterable<Invoice> invoices) {
     return invoices.fold(0.0, (balance, invoice) {

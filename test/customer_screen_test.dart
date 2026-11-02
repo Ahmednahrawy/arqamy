@@ -376,6 +376,129 @@ void main() {
     expect(find.text('70.00 ج.م'), findsOneWidget);
   });
 
+  testWidgets(
+      'provider updates refresh selected customer history and summaries',
+      (tester) async {
+    _useTallViewport(tester);
+    SharedPreferences.setMockInitialValues({});
+    final provider = InvoiceProvider();
+    final original = _invoice(
+      id: 'tracked-invoice',
+      customerName: 'Customer',
+      action: 'تخزين',
+      totalCost: 20,
+      rest: 20,
+      products: [
+        Product(
+          name: 'Rice',
+          weight: 2,
+          packageWeight: 0,
+          numberPackage: 0,
+          price: 10,
+        ),
+      ],
+    );
+    await provider.saveInvoice(original);
+
+    await tester.pumpWidget(_customerScreen(provider));
+    await tester.pumpAndSettle();
+    await tester.enterText(find.byType(TextFormField), 'Customer');
+    await tester.testTextInput.receiveAction(TextInputAction.done);
+    await tester.pumpAndSettle();
+
+    expect(find.text('فاتورة #legacy-serial'), findsOneWidget);
+    final storageSummary = find.byKey(
+      const ValueKey('customer-storage-summary'),
+    );
+    expect(
+      find.descendant(of: storageSummary, matching: find.text('20.00 ج.م')),
+      findsOneWidget,
+    );
+    expect(
+      find.descendant(of: storageSummary, matching: find.text('2.00 كجم')),
+      findsOneWidget,
+    );
+
+    await provider.updateInvoice(
+      _invoice(
+        id: original.id,
+        customerName: 'Customer',
+        action: 'بيع',
+        totalCost: 30,
+        rest: 30,
+        products: [
+          Product(
+            name: 'Rice',
+            weight: 3,
+            packageWeight: 0,
+            numberPackage: 0,
+            price: 10,
+          ),
+        ],
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    expect(find.text('فاتورة #legacy-serial'), findsOneWidget);
+    expect(find.text('30.00 ج.م'), findsNWidgets(2));
+    expect(
+      find.descendant(of: storageSummary, matching: find.text('0.00 ج.م')),
+      findsOneWidget,
+    );
+    expect(
+      find.descendant(of: storageSummary, matching: find.text('0.00 كجم')),
+      findsOneWidget,
+    );
+
+    await provider.updateInvoice(
+      _invoice(
+        id: original.id,
+        customerName: 'Customer Two',
+        action: 'تخزين',
+        totalCost: 45,
+        rest: 45,
+        products: [
+          Product(
+            name: 'Rice',
+            weight: 5,
+            packageWeight: 0,
+            numberPackage: 0,
+            price: 9,
+          ),
+        ],
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    expect(find.text('فاتورة #legacy-serial'), findsNothing);
+    expect(
+      find.descendant(of: storageSummary, matching: find.text('0.00 ج.م')),
+      findsOneWidget,
+    );
+
+    await tester.enterText(find.byType(TextFormField), 'Customer Two');
+    await tester.testTextInput.receiveAction(TextInputAction.done);
+    await tester.pumpAndSettle();
+
+    expect(find.text('فاتورة #legacy-serial'), findsOneWidget);
+    expect(find.textContaining('الإجمالي 45.00 ج.م'), findsOneWidget);
+    expect(
+      find.descendant(of: storageSummary, matching: find.text('45.00 ج.م')),
+      findsOneWidget,
+    );
+    expect(
+      find.descendant(of: storageSummary, matching: find.text('5.00 كجم')),
+      findsOneWidget,
+    );
+    expect(
+      find.descendant(of: storageSummary, matching: find.text('1')),
+      findsOneWidget,
+    );
+    expect(find.text('الحساب متوازن'), findsOneWidget);
+    expect(provider.invoices.single.id, original.id);
+    expect(provider.invoices.single.invoiceSerial, original.invoiceSerial);
+  });
+
   testWidgets('storage summary shows localized zero values without storage',
       (tester) async {
     _useTallViewport(tester);
