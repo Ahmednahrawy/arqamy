@@ -5,15 +5,16 @@ import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   late Directory temporaryDirectory;
+  late String databasePath;
   late AppDatabase database;
 
   setUp(() async {
     temporaryDirectory = await Directory.systemTemp.createTemp(
       'arqamy_database_test_',
     );
-    database = await AppDatabase.open(
-      path: '${temporaryDirectory.path}${Platform.pathSeparator}ledger.sqlite',
-    );
+    databasePath =
+        '${temporaryDirectory.path}${Platform.pathSeparator}ledger.sqlite';
+    database = await AppDatabase.open(path: databasePath);
   });
 
   tearDown(() async {
@@ -63,6 +64,30 @@ void main() {
           .map((row) => row.read<String>('value'))
           .get(),
       ['committed'],
+    );
+  });
+
+  test('persists committed values after closing and reopening SQLite', () async {
+    await database.customStatement(
+      'CREATE TABLE transaction_probe (value TEXT NOT NULL)',
+    );
+
+    await database.transaction(() async {
+      await database.customStatement(
+        'INSERT INTO transaction_probe (value) VALUES (?)',
+        ['persisted across reopen'],
+      );
+    });
+
+    await database.close();
+    database = await AppDatabase.open(path: databasePath);
+
+    expect(
+      await database
+          .customSelect('SELECT value FROM transaction_probe')
+          .map((row) => row.read<String>('value'))
+          .get(),
+      ['persisted across reopen'],
     );
   });
 }
