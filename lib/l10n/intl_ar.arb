@@ -76,6 +76,9 @@
   "storageCurrency": "ج.م",
   "kilograms": "كجم",
   "customerInvoiceSearchHint": "ابحث بالرقم المسلسل أو اسم المنتج",
+  "allInvoicesSearchHint": "ابحث بالرقم المسلسل أو المنتج أو العميل",
+  "recentInvoices": "أحدث الفواتير",
+  "noRecentInvoices": "لا توجد فواتير بعد",
   "clearInvoiceSearch": "مسح البحث",
   "noInvoicesMatchSearch": "لا توجد فواتير تطابق البحث"
 }

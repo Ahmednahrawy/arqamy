@@ -500,6 +500,112 @@ void main() {
     expect(provider.invoices.single.invoiceSerial, original.invoiceSerial);
   });
 
+  testWidgets(
+      'recent invoices are visible and searchable before selecting a customer',
+      (tester) async {
+    _useTallViewport(tester);
+    SharedPreferences.setMockInitialValues({});
+    final provider = InvoiceProvider();
+    final firstInvoice = _invoice(
+      id: 'recent-first',
+      customerName: 'Customer Alpha',
+      invoiceSerial: 'REC-001',
+      products: [
+        Product(
+          name: 'Brown Rice',
+          weight: 2,
+          packageWeight: 0,
+          numberPackage: 0,
+          price: 10,
+        ),
+      ],
+    );
+    final secondInvoice = _invoice(
+      id: 'recent-second',
+      customerName: 'Supplier Beta',
+      invoiceSerial: 'REC-002',
+      products: [
+        Product(
+          name: 'Oats',
+          weight: 1,
+          packageWeight: 0,
+          numberPackage: 0,
+          price: 15,
+        ),
+      ],
+    );
+    await provider.saveInvoice(firstInvoice);
+    await provider.saveInvoice(secondInvoice);
+
+    await tester.pumpWidget(
+      _customerScreen(provider, locale: const Locale('en')),
+    );
+    await tester.pumpAndSettle();
+
+    expect(find.text('Recent invoices'), findsOneWidget);
+    expect(find.text('Search by serial, product or customer'), findsOneWidget);
+    expect(find.text('فاتورة #REC-001'), findsOneWidget);
+    expect(find.text('فاتورة #REC-002'), findsOneWidget);
+    expect(find.text('Customer name: Customer Alpha'), findsOneWidget);
+    expect(find.text('Customer name: Supplier Beta'), findsOneWidget);
+    expect(
+      tester.getTopLeft(find.text('فاتورة #REC-002')).dy,
+      lessThan(tester.getTopLeft(find.text('فاتورة #REC-001')).dy),
+    );
+
+    final searchField = find.byKey(const ValueKey('customer-invoice-search'));
+    await tester.enterText(searchField, 'supplier beta');
+    await tester.pumpAndSettle();
+    expect(find.text('فاتورة #REC-002'), findsOneWidget);
+    expect(find.text('فاتورة #REC-001'), findsNothing);
+
+    await tester.tap(find.byKey(const ValueKey('clear-invoice-search')));
+    await tester.pumpAndSettle();
+    await tester.enterText(searchField, 'brown rice');
+    await tester.pumpAndSettle();
+    expect(find.text('فاتورة #REC-001'), findsOneWidget);
+    expect(find.text('فاتورة #REC-002'), findsNothing);
+
+    await tester.enterText(searchField, 'Oats');
+    await tester.pumpAndSettle();
+    expect(find.text('فاتورة #REC-002'), findsOneWidget);
+    expect(find.text('فاتورة #REC-001'), findsNothing);
+
+    await provider.updateInvoice(
+      _invoice(
+        id: secondInvoice.id,
+        customerName: 'Supplier Beta',
+        invoiceSerial: secondInvoice.invoiceSerial,
+        products: [
+          Product(
+            name: 'Brown Rice',
+            weight: 3,
+            packageWeight: 0,
+            numberPackage: 0,
+            price: 12,
+          ),
+        ],
+      ),
+    );
+    await tester.pumpAndSettle();
+    expect(find.text('No invoices match your search'), findsOneWidget);
+
+    await tester.enterText(searchField, 'Brown Rice');
+    await tester.pumpAndSettle();
+    expect(find.text('فاتورة #REC-002'), findsOneWidget);
+    expect(find.text('فاتورة #REC-001'), findsOneWidget);
+
+    await tester.enterText(find.byType(TextFormField), 'Customer Alpha');
+    await tester.testTextInput.receiveAction(TextInputAction.done);
+    await tester.pumpAndSettle();
+    expect(find.text('فاتورة #REC-001'), findsOneWidget);
+    expect(find.text('فاتورة #REC-002'), findsNothing);
+    expect(
+      tester.widget<TextField>(searchField).controller!.text,
+      isEmpty,
+    );
+  });
+
   testWidgets('customer history scrolls without overflow above the keyboard',
       (tester) async {
     tester.view.physicalSize = const Size(400, 800);

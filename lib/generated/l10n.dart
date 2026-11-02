@@ -234,6 +234,36 @@ class S {
     );
   }
 
+  /// `Search by serial, product or customer`
+  String get allInvoicesSearchHint {
+    return Intl.message(
+      'Search by serial, product or customer',
+      name: 'allInvoicesSearchHint',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Recent invoices`
+  String get recentInvoices {
+    return Intl.message(
+      'Recent invoices',
+      name: 'recentInvoices',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No invoices yet`
+  String get noRecentInvoices {
+    return Intl.message(
+      'No invoices yet',
+      name: 'noRecentInvoices',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Clear search`
   String get clearInvoiceSearch {
     return Intl.message(

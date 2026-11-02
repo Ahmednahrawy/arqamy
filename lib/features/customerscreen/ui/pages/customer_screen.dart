@@ -23,6 +23,7 @@ class CustomerScreen extends StatefulWidget {
 
 class _CustomerScreenState extends State<CustomerScreen> {
   String? _customerName;
+  List<Invoice> _allInvoices = [];
   List<Invoice> _customerInvoices = [];
   InvoiceProvider? _invoiceProvider;
   final TextEditingController _invoiceSearchController =
@@ -48,6 +49,7 @@ class _CustomerScreenState extends State<CustomerScreen> {
 
     _invoiceProvider?.removeListener(_handleInvoiceProviderChange);
     _invoiceProvider = provider..addListener(_handleInvoiceProviderChange);
+    _allInvoices = provider.invoices;
     _customerInvoices = _getCustomerInvoices(provider);
   }
 
@@ -69,10 +71,15 @@ class _CustomerScreenState extends State<CustomerScreen> {
     final provider = _invoiceProvider;
     if (!mounted || provider == null) return;
 
+    final allInvoices = provider.invoices;
     final invoices = _getCustomerInvoices(provider);
-    if (listEquals(_customerInvoices, invoices)) return;
+    if (listEquals(_allInvoices, allInvoices) &&
+        listEquals(_customerInvoices, invoices)) {
+      return;
+    }
 
     setState(() {
+      _allInvoices = allInvoices;
       _customerInvoices = invoices;
     });
   }
@@ -96,21 +103,26 @@ class _CustomerScreenState extends State<CustomerScreen> {
       _customerName = customerName;
       _invoiceSearchController.clear();
       _invoiceSearchQuery = '';
+      _allInvoices = provider.invoices;
       _customerInvoices = _getCustomerInvoices(provider);
     });
   }
 
-  List<Invoice> _filterCustomerInvoices() {
+  List<Invoice> _filterInvoices(List<Invoice> invoices) {
     final query = _normalizeSearchText(_invoiceSearchQuery);
-    if (query.isEmpty) return _customerInvoices;
+    if (query.isEmpty) return invoices;
 
-    return _customerInvoices.where((invoice) {
+    return invoices.where((invoice) {
       if (_normalizeSearchText(invoice.invoiceSerial).contains(query)) {
         return true;
       }
-      return invoice.products.any(
+      if (invoice.products.any(
         (product) => _normalizeSearchText(product.name).contains(query),
-      );
+      )) {
+        return true;
+      }
+      return (_customerName == null || _customerName!.isEmpty) &&
+          _normalizeSearchText(invoice.customerName).contains(query);
     }).toList();
   }
 
@@ -227,7 +239,12 @@ class _CustomerScreenState extends State<CustomerScreen> {
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
     final strings = S.of(context);
-    final visibleInvoices = _filterCustomerInvoices();
+    final hasSelectedCustomer =
+        _customerName != null && _customerName!.isNotEmpty;
+    final invoices = hasSelectedCustomer
+        ? _customerInvoices
+        : _allInvoices.reversed.toList();
+    final visibleInvoices = _filterInvoices(invoices);
     final hasInvoiceSearchQuery =
         _normalizeSearchText(_invoiceSearchQuery).isNotEmpty;
     final balance = InvoiceProvider.calculateCustomerBalance(_customerInvoices);
@@ -286,7 +303,7 @@ class _CustomerScreenState extends State<CustomerScreen> {
                         ),
                       ),
                     ),
-                    if (_customerName != null && _customerName!.isNotEmpty)
+                    if (hasSelectedCustomer)
                       _buildCustomerSummary(
                         customerName: _customerName!,
                         invoiceCount: _customerInvoices.length,
@@ -297,55 +314,56 @@ class _CustomerScreenState extends State<CustomerScreen> {
                         storageNetWeight: storageNetWeight,
                         storageInvoiceCount: storageInvoiceCount,
                       ),
-                    if (_customerName != null && _customerName!.isNotEmpty)
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(4, 18, 4, 8),
-                        child: Row(
-                          children: [
-                            Expanded(
-                              child: Text(
-                                'سجل الفواتير',
-                                style: Theme.of(context).textTheme.titleLarge,
-                              ),
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(4, 18, 4, 8),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: Text(
+                              hasSelectedCustomer
+                                  ? 'سجل الفواتير'
+                                  : strings.recentInvoices,
+                              style: Theme.of(context).textTheme.titleLarge,
                             ),
-                            Text(
-                              '${visibleInvoices.length} فاتورة',
-                              style: TextStyle(color: colors.onSurfaceVariant),
-                            ),
-                          ],
-                        ),
+                          ),
+                          Text(
+                            '${visibleInvoices.length} فاتورة',
+                            style: TextStyle(color: colors.onSurfaceVariant),
+                          ),
+                        ],
                       ),
-                    if (_customerName != null && _customerName!.isNotEmpty)
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: 8),
-                        child: TextField(
-                          key: const ValueKey('customer-invoice-search'),
-                          controller: _invoiceSearchController,
-                          onChanged: _handleInvoiceSearchChanged,
-                          textInputAction: TextInputAction.search,
-                          decoration: InputDecoration(
-                            hintText: strings.customerInvoiceSearchHint,
-                            prefixIcon: const Icon(Icons.search),
-                            suffixIcon: _invoiceSearchQuery.isEmpty
-                                ? null
-                                : IconButton(
-                                    key: const ValueKey('clear-invoice-search'),
-                                    tooltip: strings.clearInvoiceSearch,
-                                    onPressed: _clearInvoiceSearch,
-                                    icon: const Icon(Icons.clear),
-                                  ),
-                            isDense: true,
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(14),
-                            ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 8),
+                      child: TextField(
+                        key: const ValueKey('customer-invoice-search'),
+                        controller: _invoiceSearchController,
+                        onChanged: _handleInvoiceSearchChanged,
+                        textInputAction: TextInputAction.search,
+                        decoration: InputDecoration(
+                          hintText: hasSelectedCustomer
+                              ? strings.customerInvoiceSearchHint
+                              : strings.allInvoicesSearchHint,
+                          prefixIcon: const Icon(Icons.search),
+                          suffixIcon: _invoiceSearchQuery.isEmpty
+                              ? null
+                              : IconButton(
+                                  key: const ValueKey('clear-invoice-search'),
+                                  tooltip: strings.clearInvoiceSearch,
+                                  onPressed: _clearInvoiceSearch,
+                                  icon: const Icon(Icons.clear),
+                                ),
+                          isDense: true,
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(14),
                           ),
                         ),
                       ),
+                    ),
                   ]),
                 ),
               ),
-              if (_customerName == null ||
-                  (_customerInvoices.isEmpty && !hasInvoiceSearchQuery))
+              if (invoices.isEmpty && !hasInvoiceSearchQuery)
                 SliverFillRemaining(
                   hasScrollBody: false,
                   child: Center(
@@ -366,9 +384,9 @@ class _CustomerScreenState extends State<CustomerScreen> {
                         ),
                         const SizedBox(height: 14),
                         Text(
-                          _customerName == null
-                              ? "اختر عميل لعرض الفواتير"
-                              : "لا توجد فواتير لهذا العميل",
+                          hasSelectedCustomer
+                              ? "لا توجد فواتير لهذا العميل"
+                              : strings.noRecentInvoices,
                           textAlign: TextAlign.center,
                           style: Theme.of(context)
                               .textTheme
@@ -664,6 +682,7 @@ class _CustomerScreenState extends State<CustomerScreen> {
   Widget _buildInvoiceCard(Invoice invoice) {
     final colors = Theme.of(context).colorScheme;
     final semanticColors = AppSemanticColors.of(context);
+    final strings = S.of(context);
     final actionColor = _getActionColor(context, invoice.invoiceAction);
     final action = invoice.invoiceAction ?? 'عملية';
     final isPaid = invoice.rest <= 0;
@@ -731,6 +750,18 @@ class _CustomerScreenState extends State<CustomerScreen> {
                         fontSize: 12,
                       ),
                     ),
+                    if (_customerName == null || _customerName!.isEmpty) ...[
+                      const SizedBox(height: 4),
+                      Text(
+                        '${strings.customerName}: ${invoice.customerName}',
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          color: colors.onSurfaceVariant,
+                          fontSize: 12,
+                        ),
+                      ),
+                    ],
                     const SizedBox(height: 9),
                     Wrap(
                       spacing: 14,

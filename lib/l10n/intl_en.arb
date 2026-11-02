@@ -76,6 +76,9 @@
   "storageCurrency": "EGP",
   "kilograms": "kg",
   "customerInvoiceSearchHint": "Search by serial or product name",
+  "allInvoicesSearchHint": "Search by serial, product or customer",
+  "recentInvoices": "Recent invoices",
+  "noRecentInvoices": "No invoices yet",
   "clearInvoiceSearch": "Clear search",
   "noInvoicesMatchSearch": "No invoices match your search"
 }

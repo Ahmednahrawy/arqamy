@@ -42,6 +42,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "customerInvoiceSearchHint": MessageLookupByLibrary.simpleMessage(
       "Search by serial or product name",
     ),
+    "allInvoicesSearchHint": MessageLookupByLibrary.simpleMessage(
+      "Search by serial, product or customer",
+    ),
     "customers": MessageLookupByLibrary.simpleMessage("Customers"),
     "dark_mode": MessageLookupByLibrary.simpleMessage("Dark Mode"),
     "date": MessageLookupByLibrary.simpleMessage("Date"),
@@ -89,6 +92,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "noInvoicesMatchSearch": MessageLookupByLibrary.simpleMessage(
       "No invoices match your search",
     ),
+    "noRecentInvoices": MessageLookupByLibrary.simpleMessage("No invoices yet"),
     "no_results_found": MessageLookupByLibrary.simpleMessage(
       "No results found",
     ),
@@ -111,6 +115,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "products": MessageLookupByLibrary.simpleMessage("Products"),
     "profile": MessageLookupByLibrary.simpleMessage("Profile"),
     "purchase": MessageLookupByLibrary.simpleMessage("Purchase"),
+    "recentInvoices": MessageLookupByLibrary.simpleMessage("Recent invoices"),
     "removeProduct": MessageLookupByLibrary.simpleMessage("Remove item"),
     "sale": MessageLookupByLibrary.simpleMessage("Sale"),
     "saveChanges": MessageLookupByLibrary.simpleMessage("Save changes"),

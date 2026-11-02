@@ -44,6 +44,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "customerInvoiceSearchHint": MessageLookupByLibrary.simpleMessage(
       "ابحث بالرقم المسلسل أو اسم المنتج",
     ),
+    "allInvoicesSearchHint": MessageLookupByLibrary.simpleMessage(
+      "ابحث بالرقم المسلسل أو المنتج أو العميل",
+    ),
     "customers": MessageLookupByLibrary.simpleMessage("العملاء"),
     "dark_mode": MessageLookupByLibrary.simpleMessage("الوضع الداكن"),
     "date": MessageLookupByLibrary.simpleMessage("التاريخ"),
@@ -87,6 +90,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "noInvoicesMatchSearch": MessageLookupByLibrary.simpleMessage(
       "لا توجد فواتير تطابق البحث",
     ),
+    "noRecentInvoices": MessageLookupByLibrary.simpleMessage(
+      "لا توجد فواتير بعد",
+    ),
     "no_results_found": MessageLookupByLibrary.simpleMessage(
       "لم يتم العثور على نتائج",
     ),
@@ -109,6 +115,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "products": MessageLookupByLibrary.simpleMessage("المنتجات"),
     "profile": MessageLookupByLibrary.simpleMessage("الملف الشخصي"),
     "purchase": MessageLookupByLibrary.simpleMessage("شراء"),
+    "recentInvoices": MessageLookupByLibrary.simpleMessage("أحدث الفواتير"),
     "removeProduct": MessageLookupByLibrary.simpleMessage("حذف المنتج"),
     "sale": MessageLookupByLibrary.simpleMessage("بيع"),
     "saveChanges": MessageLookupByLibrary.simpleMessage("حفظ التغييرات"),
