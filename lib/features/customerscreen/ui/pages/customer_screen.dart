@@ -300,9 +300,9 @@ class _CustomerScreenState extends State<CustomerScreen> {
             ? colors.primary
             : semanticColors.success;
     final balanceLabel = balance > 0
-        ? 'صافي مستحق لك'
+        ? 'صافي مستحق للعميل'
         : balance < 0
-            ? 'صافي مستحق للعميل'
+            ? 'صافي مستحق لك'
             : 'الحساب متوازن';
 
     return Container(
