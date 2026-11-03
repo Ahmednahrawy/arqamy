@@ -548,6 +548,7 @@ class AllocationReversals extends Table {
   TextColumn get actorId => text().named('actor_id').nullable()();
   TextColumn get reason => text().named('reason')();
   DateTimeColumn get createdAt => dateTime().named('created_at')();
+  IntColumn get sequence => integer().named('sequence')();
 
   @override
   Set<Column> get primaryKey => {id};
@@ -555,12 +556,14 @@ class AllocationReversals extends Table {
   @override
   List<Set<Column>> get uniqueKeys => [
     {id, allocationId},
+    {allocationId, sequence},
     {idempotencyKey},
   ];
 
   @override
   List<String> get customConstraints => [
     'CHECK (amount_minor > 0)',
+    'CHECK (sequence > 0)',
     'CHECK (length(trim(idempotency_key)) > 0)',
     'CHECK (length(trim(request_fingerprint)) > 0)',
     'FOREIGN KEY (allocation_id) REFERENCES invoice_allocations (allocation_id)',
@@ -806,7 +809,7 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase._(super.executor);
 
   @override
-  int get schemaVersion => 4;
+  int get schemaVersion => 5;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -833,9 +836,134 @@ class AppDatabase extends _$AppDatabase {
         await _migrateV3ToV4(m);
       } else if (from < 4) {
         await _migrateV3ToV4(m);
+      } else if (from < 5) {
+        await _migrateV4ToV5();
       }
     },
   );
+
+  Future<void> _migrateV4ToV5() async {
+    // SQLite requires foreign-key enforcement to be disabled before the
+    // transaction that rebuilds a referenced parent table.
+    await customStatement('PRAGMA foreign_keys = OFF');
+    try {
+      await transaction(() async {
+        final legacyRows = await customSelect(
+          'SELECT rowid AS migration_rowid, * FROM allocation_reversals '
+          'ORDER BY rowid ASC',
+        ).get();
+        final refundAllocationTrigger = await customSelect(
+          "SELECT sql FROM sqlite_master WHERE type = 'trigger' "
+          "AND name = 'refund_allocation_reversals_validate_insert'",
+        ).getSingleOrNull();
+
+        await customStatement('''
+          CREATE TABLE allocation_reversals_v5 (
+            allocation_reversal_id TEXT NOT NULL PRIMARY KEY,
+            allocation_id TEXT NOT NULL,
+            amount_minor INTEGER NOT NULL,
+            idempotency_key TEXT NOT NULL,
+            request_fingerprint TEXT NOT NULL,
+            actor_id TEXT,
+            reason TEXT NOT NULL,
+            created_at INTEGER NOT NULL,
+            sequence INTEGER NOT NULL,
+            UNIQUE (allocation_reversal_id, allocation_id),
+            UNIQUE (allocation_id, sequence),
+            UNIQUE (idempotency_key),
+            CHECK (amount_minor > 0),
+            CHECK (sequence > 0),
+            CHECK (length(trim(idempotency_key)) > 0),
+            CHECK (length(trim(request_fingerprint)) > 0),
+            FOREIGN KEY (allocation_id)
+              REFERENCES invoice_allocations (allocation_id)
+          )
+        ''');
+
+        final sequencesByAllocation = <String, int>{};
+        for (final row in legacyRows) {
+          final data = row.data;
+          final allocationId = data['allocation_id']! as String;
+          final sequence = (sequencesByAllocation[allocationId] ?? 0) + 1;
+          sequencesByAllocation[allocationId] = sequence;
+          await customStatement(
+            'INSERT INTO allocation_reversals_v5 ('
+            'allocation_reversal_id, allocation_id, amount_minor, '
+            'idempotency_key, request_fingerprint, actor_id, reason, '
+            'created_at, sequence) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
+            [
+              data['allocation_reversal_id'],
+              allocationId,
+              data['amount_minor'],
+              data['idempotency_key'],
+              data['request_fingerprint'],
+              data['actor_id'],
+              data['reason'],
+              data['created_at'],
+              sequence,
+            ],
+          );
+        }
+
+        if (refundAllocationTrigger != null) {
+          await customStatement(
+            'DROP TRIGGER refund_allocation_reversals_validate_insert',
+          );
+        }
+        await customStatement('DROP TABLE allocation_reversals');
+        await customStatement(
+          'ALTER TABLE allocation_reversals_v5 '
+          'RENAME TO allocation_reversals',
+        );
+        if (refundAllocationTrigger != null) {
+          await customStatement(refundAllocationTrigger.read<String>('sql'));
+        }
+        await customStatement(
+          'CREATE INDEX allocation_reversals_allocation '
+          'ON allocation_reversals (allocation_id, created_at)',
+        );
+        await customStatement('''
+          CREATE TRIGGER allocation_reversals_immutable_update
+          BEFORE UPDATE ON allocation_reversals BEGIN
+            SELECT RAISE(ABORT, 'allocation_reversals is append-only');
+          END
+        ''');
+        await customStatement('''
+          CREATE TRIGGER allocation_reversals_immutable_delete
+          BEFORE DELETE ON allocation_reversals BEGIN
+            SELECT RAISE(ABORT, 'allocation_reversals is append-only');
+          END
+        ''');
+
+        final migratedCount = (await customSelect(
+          'SELECT COUNT(*) AS count FROM allocation_reversals',
+        ).getSingle()).read<int>('count');
+        if (migratedCount != legacyRows.length) {
+          throw StateError(
+            'The v4 to v5 migration changed the allocation reversal row count.',
+          );
+        }
+
+        final violations = await customSelect('PRAGMA foreign_key_check').get();
+        if (violations.isNotEmpty) {
+          throw StateError(
+            'Foreign-key violations found during the v4 to v5 migration.',
+          );
+        }
+        final integrity = (await customSelect(
+          'PRAGMA integrity_check',
+        ).getSingle()).read<String>('integrity_check');
+        if (integrity != 'ok') {
+          throw StateError(
+            'SQLite integrity check failed during the v4 to v5 migration: '
+            '$integrity',
+          );
+        }
+      });
+    } finally {
+      await customStatement('PRAGMA foreign_keys = ON');
+    }
+  }
 
   Future<void> _migrateV3ToV4(Migrator m) async {
     await customStatement('PRAGMA foreign_keys = OFF');

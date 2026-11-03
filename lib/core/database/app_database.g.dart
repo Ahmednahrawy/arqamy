@@ -9717,6 +9717,17 @@ class $AllocationReversalsTable extends AllocationReversals
     type: DriftSqlType.dateTime,
     requiredDuringInsert: true,
   );
+  static const VerificationMeta _sequenceMeta = const VerificationMeta(
+    'sequence',
+  );
+  @override
+  late final GeneratedColumn<int> sequence = GeneratedColumn<int>(
+    'sequence',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
   @override
   List<GeneratedColumn> get $columns => [
     id,
@@ -9727,6 +9738,7 @@ class $AllocationReversalsTable extends AllocationReversals
     actorId,
     reason,
     createdAt,
+    sequence,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -9814,6 +9826,14 @@ class $AllocationReversalsTable extends AllocationReversals
     } else if (isInserting) {
       context.missing(_createdAtMeta);
     }
+    if (data.containsKey('sequence')) {
+      context.handle(
+        _sequenceMeta,
+        sequence.isAcceptableOrUnknown(data['sequence']!, _sequenceMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_sequenceMeta);
+    }
     return context;
   }
 
@@ -9822,6 +9842,7 @@ class $AllocationReversalsTable extends AllocationReversals
   @override
   List<Set<GeneratedColumn>> get uniqueKeys => [
     {id, allocationId},
+    {allocationId, sequence},
     {idempotencyKey},
   ];
   @override
@@ -9860,6 +9881,10 @@ class $AllocationReversalsTable extends AllocationReversals
         DriftSqlType.dateTime,
         data['${effectivePrefix}created_at'],
       )!,
+      sequence: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}sequence'],
+      )!,
     );
   }
 
@@ -9879,6 +9904,7 @@ class AllocationReversal extends DataClass
   final String? actorId;
   final String reason;
   final DateTime createdAt;
+  final int sequence;
   const AllocationReversal({
     required this.id,
     required this.allocationId,
@@ -9888,6 +9914,7 @@ class AllocationReversal extends DataClass
     this.actorId,
     required this.reason,
     required this.createdAt,
+    required this.sequence,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -9902,6 +9929,7 @@ class AllocationReversal extends DataClass
     }
     map['reason'] = Variable<String>(reason);
     map['created_at'] = Variable<DateTime>(createdAt);
+    map['sequence'] = Variable<int>(sequence);
     return map;
   }
 
@@ -9917,6 +9945,7 @@ class AllocationReversal extends DataClass
           : Value(actorId),
       reason: Value(reason),
       createdAt: Value(createdAt),
+      sequence: Value(sequence),
     );
   }
 
@@ -9936,6 +9965,7 @@ class AllocationReversal extends DataClass
       actorId: serializer.fromJson<String?>(json['actorId']),
       reason: serializer.fromJson<String>(json['reason']),
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+      sequence: serializer.fromJson<int>(json['sequence']),
     );
   }
   @override
@@ -9950,6 +9980,7 @@ class AllocationReversal extends DataClass
       'actorId': serializer.toJson<String?>(actorId),
       'reason': serializer.toJson<String>(reason),
       'createdAt': serializer.toJson<DateTime>(createdAt),
+      'sequence': serializer.toJson<int>(sequence),
     };
   }
 
@@ -9962,6 +9993,7 @@ class AllocationReversal extends DataClass
     Value<String?> actorId = const Value.absent(),
     String? reason,
     DateTime? createdAt,
+    int? sequence,
   }) => AllocationReversal(
     id: id ?? this.id,
     allocationId: allocationId ?? this.allocationId,
@@ -9971,6 +10003,7 @@ class AllocationReversal extends DataClass
     actorId: actorId.present ? actorId.value : this.actorId,
     reason: reason ?? this.reason,
     createdAt: createdAt ?? this.createdAt,
+    sequence: sequence ?? this.sequence,
   );
   AllocationReversal copyWithCompanion(AllocationReversalsCompanion data) {
     return AllocationReversal(
@@ -9990,6 +10023,7 @@ class AllocationReversal extends DataClass
       actorId: data.actorId.present ? data.actorId.value : this.actorId,
       reason: data.reason.present ? data.reason.value : this.reason,
       createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      sequence: data.sequence.present ? data.sequence.value : this.sequence,
     );
   }
 
@@ -10003,7 +10037,8 @@ class AllocationReversal extends DataClass
           ..write('requestFingerprint: $requestFingerprint, ')
           ..write('actorId: $actorId, ')
           ..write('reason: $reason, ')
-          ..write('createdAt: $createdAt')
+          ..write('createdAt: $createdAt, ')
+          ..write('sequence: $sequence')
           ..write(')'))
         .toString();
   }
@@ -10018,6 +10053,7 @@ class AllocationReversal extends DataClass
     actorId,
     reason,
     createdAt,
+    sequence,
   );
   @override
   bool operator ==(Object other) =>
@@ -10030,7 +10066,8 @@ class AllocationReversal extends DataClass
           other.requestFingerprint == this.requestFingerprint &&
           other.actorId == this.actorId &&
           other.reason == this.reason &&
-          other.createdAt == this.createdAt);
+          other.createdAt == this.createdAt &&
+          other.sequence == this.sequence);
 }
 
 class AllocationReversalsCompanion extends UpdateCompanion<AllocationReversal> {
@@ -10042,6 +10079,7 @@ class AllocationReversalsCompanion extends UpdateCompanion<AllocationReversal> {
   final Value<String?> actorId;
   final Value<String> reason;
   final Value<DateTime> createdAt;
+  final Value<int> sequence;
   final Value<int> rowid;
   const AllocationReversalsCompanion({
     this.id = const Value.absent(),
@@ -10052,6 +10090,7 @@ class AllocationReversalsCompanion extends UpdateCompanion<AllocationReversal> {
     this.actorId = const Value.absent(),
     this.reason = const Value.absent(),
     this.createdAt = const Value.absent(),
+    this.sequence = const Value.absent(),
     this.rowid = const Value.absent(),
   });
   AllocationReversalsCompanion.insert({
@@ -10063,6 +10102,7 @@ class AllocationReversalsCompanion extends UpdateCompanion<AllocationReversal> {
     this.actorId = const Value.absent(),
     required String reason,
     required DateTime createdAt,
+    required int sequence,
     this.rowid = const Value.absent(),
   }) : id = Value(id),
        allocationId = Value(allocationId),
@@ -10070,7 +10110,8 @@ class AllocationReversalsCompanion extends UpdateCompanion<AllocationReversal> {
        idempotencyKey = Value(idempotencyKey),
        requestFingerprint = Value(requestFingerprint),
        reason = Value(reason),
-       createdAt = Value(createdAt);
+       createdAt = Value(createdAt),
+       sequence = Value(sequence);
   static Insertable<AllocationReversal> custom({
     Expression<String>? id,
     Expression<String>? allocationId,
@@ -10080,6 +10121,7 @@ class AllocationReversalsCompanion extends UpdateCompanion<AllocationReversal> {
     Expression<String>? actorId,
     Expression<String>? reason,
     Expression<DateTime>? createdAt,
+    Expression<int>? sequence,
     Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
@@ -10091,6 +10133,7 @@ class AllocationReversalsCompanion extends UpdateCompanion<AllocationReversal> {
       if (actorId != null) 'actor_id': actorId,
       if (reason != null) 'reason': reason,
       if (createdAt != null) 'created_at': createdAt,
+      if (sequence != null) 'sequence': sequence,
       if (rowid != null) 'rowid': rowid,
     });
   }
@@ -10104,6 +10147,7 @@ class AllocationReversalsCompanion extends UpdateCompanion<AllocationReversal> {
     Value<String?>? actorId,
     Value<String>? reason,
     Value<DateTime>? createdAt,
+    Value<int>? sequence,
     Value<int>? rowid,
   }) {
     return AllocationReversalsCompanion(
@@ -10115,6 +10159,7 @@ class AllocationReversalsCompanion extends UpdateCompanion<AllocationReversal> {
       actorId: actorId ?? this.actorId,
       reason: reason ?? this.reason,
       createdAt: createdAt ?? this.createdAt,
+      sequence: sequence ?? this.sequence,
       rowid: rowid ?? this.rowid,
     );
   }
@@ -10146,6 +10191,9 @@ class AllocationReversalsCompanion extends UpdateCompanion<AllocationReversal> {
     if (createdAt.present) {
       map['created_at'] = Variable<DateTime>(createdAt.value);
     }
+    if (sequence.present) {
+      map['sequence'] = Variable<int>(sequence.value);
+    }
     if (rowid.present) {
       map['rowid'] = Variable<int>(rowid.value);
     }
@@ -10163,6 +10211,7 @@ class AllocationReversalsCompanion extends UpdateCompanion<AllocationReversal> {
           ..write('actorId: $actorId, ')
           ..write('reason: $reason, ')
           ..write('createdAt: $createdAt, ')
+          ..write('sequence: $sequence, ')
           ..write('rowid: $rowid')
           ..write(')'))
         .toString();
@@ -18474,6 +18523,7 @@ typedef $$AllocationReversalsTableCreateCompanionBuilder =
       Value<String?> actorId,
       required String reason,
       required DateTime createdAt,
+      required int sequence,
       Value<int> rowid,
     });
 typedef $$AllocationReversalsTableUpdateCompanionBuilder =
@@ -18486,6 +18536,7 @@ typedef $$AllocationReversalsTableUpdateCompanionBuilder =
       Value<String?> actorId,
       Value<String> reason,
       Value<DateTime> createdAt,
+      Value<int> sequence,
       Value<int> rowid,
     });
 
@@ -18535,6 +18586,11 @@ class $$AllocationReversalsTableFilterComposer
 
   ColumnFilters<DateTime> get createdAt => $composableBuilder(
     column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get sequence => $composableBuilder(
+    column: $table.sequence,
     builder: (column) => ColumnFilters(column),
   );
 }
@@ -18587,6 +18643,11 @@ class $$AllocationReversalsTableOrderingComposer
     column: $table.createdAt,
     builder: (column) => ColumnOrderings(column),
   );
+
+  ColumnOrderings<int> get sequence => $composableBuilder(
+    column: $table.sequence,
+    builder: (column) => ColumnOrderings(column),
+  );
 }
 
 class $$AllocationReversalsTableAnnotationComposer
@@ -18629,6 +18690,9 @@ class $$AllocationReversalsTableAnnotationComposer
 
   GeneratedColumn<DateTime> get createdAt =>
       $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  GeneratedColumn<int> get sequence =>
+      $composableBuilder(column: $table.sequence, builder: (column) => column);
 }
 
 class $$AllocationReversalsTableTableManager
@@ -18682,6 +18746,7 @@ class $$AllocationReversalsTableTableManager
                 Value<String?> actorId = const Value.absent(),
                 Value<String> reason = const Value.absent(),
                 Value<DateTime> createdAt = const Value.absent(),
+                Value<int> sequence = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => AllocationReversalsCompanion(
                 id: id,
@@ -18692,6 +18757,7 @@ class $$AllocationReversalsTableTableManager
                 actorId: actorId,
                 reason: reason,
                 createdAt: createdAt,
+                sequence: sequence,
                 rowid: rowid,
               ),
           createCompanionCallback:
@@ -18704,6 +18770,7 @@ class $$AllocationReversalsTableTableManager
                 Value<String?> actorId = const Value.absent(),
                 required String reason,
                 required DateTime createdAt,
+                required int sequence,
                 Value<int> rowid = const Value.absent(),
               }) => AllocationReversalsCompanion.insert(
                 id: id,
@@ -18714,6 +18781,7 @@ class $$AllocationReversalsTableTableManager
                 actorId: actorId,
                 reason: reason,
                 createdAt: createdAt,
+                sequence: sequence,
                 rowid: rowid,
               ),
           withReferenceMapper: (p0) => p0

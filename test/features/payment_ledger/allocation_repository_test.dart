@@ -411,6 +411,7 @@ void main() {
         second.operationId,
         third.operationId,
       ]);
+      expect(history.map((reversal) => reversal.sequence), [1, 2, 3]);
       expect(history.map((reversal) => reversal.createdAt), [
         recordedAt,
         recordedAt,
@@ -426,6 +427,152 @@ void main() {
       );
     },
   );
+
+  test(
+    'assigns reversal sequences independently for each allocation',
+    () async {
+      final firstAllocation = await allocations.createAllocation(
+        createRequest(amount: 1000, key: 'sequence-allocation-1'),
+      );
+      final secondAllocation = await allocations.createAllocation(
+        createRequest(amount: 1000, key: 'sequence-allocation-2'),
+      );
+
+      Future<domain.AllocationOperationResult> reverse(
+        String allocationId,
+        String key,
+      ) => allocations.reverseAllocation(
+        domain.ReverseAllocationRequest(
+          allocationId: allocationId,
+          amountMinor: 100,
+          reason: 'sequence test',
+          idempotencyKey: key,
+          requestFingerprint: '$key-fingerprint',
+        ),
+      );
+
+      final firstOne = await reverse(firstAllocation.allocationId, 'seq-1-a');
+      final firstTwo = await reverse(firstAllocation.allocationId, 'seq-1-b');
+      final secondOne = await reverse(secondAllocation.allocationId, 'seq-2-a');
+
+      expect([firstOne.sequence, firstTwo.sequence], [1, 2]);
+      expect(secondOne.sequence, 1);
+    },
+  );
+
+  test('failed reversal transaction does not consume its sequence', () async {
+    final created = await allocations.createAllocation(
+      createRequest(amount: 1000, key: 'rollback-allocation'),
+    );
+    final first = await allocations.reverseAllocation(
+      domain.ReverseAllocationRequest(
+        allocationId: created.allocationId,
+        amountMinor: 100,
+        reason: 'first reversal',
+        idempotencyKey: 'rollback-first',
+        requestFingerprint: 'rollback-first-fingerprint',
+      ),
+    );
+    expect(first.sequence, 1);
+
+    await database.customStatement('''
+      CREATE TRIGGER allocation_reversals_fail_test
+      AFTER INSERT ON allocation_reversals
+      WHEN NEW.idempotency_key = 'rollback-failure-key'
+      BEGIN
+        SELECT RAISE(ABORT, 'deliberate reversal transaction failure');
+      END
+    ''');
+    final retryRequest = domain.ReverseAllocationRequest(
+      allocationId: created.allocationId,
+      amountMinor: 100,
+      reason: 'retry reversal',
+      idempotencyKey: 'rollback-failure-key',
+      requestFingerprint: 'rollback-failure-fingerprint',
+    );
+    await expectLater(
+      allocations.reverseAllocation(retryRequest),
+      throwsA(anything),
+    );
+    await database.customStatement(
+      'DROP TRIGGER allocation_reversals_fail_test',
+    );
+
+    final retry = await allocations.reverseAllocation(retryRequest);
+    expect(retry.sequence, 2);
+    expect(
+      (await allocations.getReversalHistory(
+        created.allocationId,
+      )).map((reversal) => reversal.sequence),
+      [1, 2],
+    );
+  });
+
+  test(
+    'VACUUM preserves persisted reversal sequences and history order',
+    () async {
+      final created = await allocations.createAllocation(
+        createRequest(amount: 1000, key: 'vacuum-allocation'),
+      );
+      for (final key in ['vacuum-reversal-1', 'vacuum-reversal-2']) {
+        await allocations.reverseAllocation(
+          domain.ReverseAllocationRequest(
+            allocationId: created.allocationId,
+            amountMinor: 100,
+            reason: 'vacuum test',
+            idempotencyKey: key,
+            requestFingerprint: '$key-fingerprint',
+          ),
+        );
+      }
+      final before = await allocations.getReversalHistory(created.allocationId);
+
+      await database.customStatement('VACUUM');
+
+      final after = await allocations.getReversalHistory(created.allocationId);
+      expect(
+        after.map((reversal) => reversal.id),
+        before.map((reversal) => reversal.id),
+      );
+      expect(after.map((reversal) => reversal.sequence), [1, 2]);
+    },
+  );
+
+  test('separate database handles assign unique reversal sequences', () async {
+    final created = await allocations.createAllocation(
+      createRequest(amount: 1000, key: 'concurrent-reversal-allocation'),
+    );
+    secondDatabase = await AppDatabase.open(path: path);
+    final secondRepository = AllocationRepository(secondDatabase!);
+    final outcomes = await Future.wait([
+      allocations.reverseAllocation(
+        domain.ReverseAllocationRequest(
+          allocationId: created.allocationId,
+          amountMinor: 100,
+          reason: 'concurrent reversal',
+          idempotencyKey: 'concurrent-reversal-1',
+          requestFingerprint: 'concurrent-reversal-1-fingerprint',
+        ),
+      ),
+      secondRepository.reverseAllocation(
+        domain.ReverseAllocationRequest(
+          allocationId: created.allocationId,
+          amountMinor: 100,
+          reason: 'concurrent reversal',
+          idempotencyKey: 'concurrent-reversal-2',
+          requestFingerprint: 'concurrent-reversal-2-fingerprint',
+        ),
+      ),
+    ]);
+
+    expect(outcomes.map((result) => result.sequence).toList()..sort(), [1, 2]);
+    final history = await allocations.getReversalHistory(created.allocationId);
+    expect(history.map((reversal) => reversal.sequence), [1, 2]);
+    expect(history.map((reversal) => reversal.id).toSet(), {
+      outcomes[0].operationId,
+      outcomes[1].operationId,
+    });
+  });
 
   test('tracks all statuses in append-only history and projections', () async {
     final created = await allocations.createAllocation(

@@ -18,6 +18,19 @@ class _Version3FixtureDatabase extends GeneratedDatabase {
   MigrationStrategy get migration => MigrationStrategy(onCreate: (_) async {});
 }
 
+class _Version4FixtureDatabase extends GeneratedDatabase {
+  _Version4FixtureDatabase(super.executor);
+
+  @override
+  int get schemaVersion => 4;
+
+  @override
+  Iterable<TableInfo> get allTables => const [];
+
+  @override
+  MigrationStrategy get migration => MigrationStrategy(onCreate: (_) async {});
+}
+
 void main() {
   late Directory temporaryDirectory;
   late String databasePath;
@@ -53,7 +66,7 @@ void main() {
 
       database = await AppDatabase.open(path: databasePath);
 
-      expect(await database!.storedSchemaVersion, 4);
+      expect(await database!.storedSchemaVersion, 5);
       expect(await _snapshotVersion3Tables(database!), before);
       expect(
         await database!
@@ -104,7 +117,7 @@ void main() {
       final beforeReopen = await _snapshotVersion3Tables(database!);
       await database!.close();
       database = await AppDatabase.open(path: databasePath);
-      expect(await database!.storedSchemaVersion, 4);
+      expect(await database!.storedSchemaVersion, 5);
       expect(await _snapshotVersion3Tables(database!), beforeReopen);
     },
   );
@@ -157,6 +170,527 @@ void main() {
       await afterFailure.close();
     },
   );
+
+  test(
+    'migrates populated v4 reversals to durable per-allocation sequences',
+    () async {
+      await _createPopulatedV4Fixture(databasePath);
+      final fixture = _openVersion4Fixture(databasePath);
+      final legacyRows = await fixture
+          .customSelect(
+            'SELECT rowid AS migration_rowid, * FROM allocation_reversals '
+            'ORDER BY allocation_id, rowid',
+          )
+          .get();
+      final refundLinksBefore = await fixture
+          .customSelect(
+            'SELECT * FROM refund_allocation_reversals ORDER BY rowid',
+          )
+          .get();
+      final childTriggerBefore =
+          (await fixture
+                  .customSelect(
+                    "SELECT sql FROM sqlite_master WHERE type = 'trigger' "
+                    "AND name = 'refund_allocation_reversals_validate_insert'",
+                  )
+                  .getSingle())
+              .read<String>('sql');
+      await fixture.close();
+
+      database = await AppDatabase.open(path: databasePath);
+
+      expect(await database!.storedSchemaVersion, 5);
+      final migratedRows = await database!
+          .customSelect(
+            'SELECT * FROM allocation_reversals '
+            'ORDER BY allocation_id, sequence',
+          )
+          .get();
+      expect(migratedRows, hasLength(legacyRows.length));
+      final expectedSequences = <String, int>{};
+      for (var index = 0; index < legacyRows.length; index++) {
+        final legacy = Map<String, Object?>.from(legacyRows[index].data)
+          ..remove('migration_rowid');
+        final allocationId = legacy['allocation_id']! as String;
+        final sequence = (expectedSequences[allocationId] ?? 0) + 1;
+        expectedSequences[allocationId] = sequence;
+        expect(migratedRows[index].data, {...legacy, 'sequence': sequence});
+      }
+      expect(expectedSequences.values, contains(3));
+      expect(expectedSequences.values, contains(2));
+      expect(
+        migratedRows
+            .where(
+              (row) => row.read<String>('allocation_id') == 'allocation-v4',
+            )
+            .map((row) => row.read<int>('sequence')),
+        [1, 2, 3],
+      );
+      expect(
+        await database!
+            .customSelect(
+              'SELECT * FROM refund_allocation_reversals ORDER BY rowid',
+            )
+            .get()
+            .then((rows) => rows.map((row) => row.data).toList()),
+        refundLinksBefore.map((row) => row.data).toList(),
+      );
+      expect(
+        (await database!
+                .customSelect(
+                  "SELECT sql FROM sqlite_master WHERE type = 'trigger' "
+                  "AND name = 'refund_allocation_reversals_validate_insert'",
+                )
+                .getSingle())
+            .read<String>('sql'),
+        childTriggerBefore,
+      );
+
+      for (final name in [
+        'allocation_reversals_allocation',
+        'refund_allocation_reversals_refund',
+        'allocation_reversals_immutable_update',
+        'allocation_reversals_immutable_delete',
+        'refund_allocation_reversals_immutable_update',
+        'refund_allocation_reversals_immutable_delete',
+        'refund_allocation_reversals_validate_insert',
+      ]) {
+        final object = await database!
+            .customSelect(
+              "SELECT COUNT(*) AS count FROM sqlite_master "
+              "WHERE name = ?",
+              variables: [Variable.withString(name)],
+            )
+            .getSingle();
+        expect(object.read<int>('count'), 1, reason: 'Missing $name');
+      }
+      await expectLater(
+        database!.customStatement(
+          'UPDATE allocation_reversals SET sequence = sequence',
+        ),
+        throwsA(anything),
+      );
+      await expectLater(
+        database!.customStatement(
+          'DELETE FROM allocation_reversals WHERE allocation_reversal_id = ?',
+          ['allocation-reversal-v4'],
+        ),
+        throwsA(anything),
+      );
+      await expectLater(
+        database!.customStatement(
+          'INSERT INTO allocation_reversals ('
+          'allocation_reversal_id, allocation_id, amount_minor, '
+          'idempotency_key, request_fingerprint, actor_id, reason, created_at, '
+          'sequence) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
+          [
+            'invalid-sequence',
+            'allocation-v4',
+            1,
+            'invalid-sequence-key',
+            'invalid-sequence-fingerprint',
+            null,
+            'invalid sequence',
+            1710000002000,
+            0,
+          ],
+        ),
+        throwsA(anything),
+      );
+      await expectLater(
+        database!.customStatement(
+          'INSERT INTO allocation_reversals ('
+          'allocation_reversal_id, allocation_id, amount_minor, '
+          'idempotency_key, request_fingerprint, actor_id, reason, created_at, '
+          'sequence) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
+          [
+            'duplicate-sequence',
+            'allocation-v4',
+            1,
+            'duplicate-sequence-key',
+            'duplicate-sequence-fingerprint',
+            null,
+            'duplicate sequence',
+            1710000002000,
+            1,
+          ],
+        ),
+        throwsA(anything),
+      );
+      await expectLater(
+        database!.customStatement(
+          'INSERT INTO allocation_reversals ('
+          'allocation_reversal_id, allocation_id, amount_minor, '
+          'idempotency_key, request_fingerprint, actor_id, reason, created_at, '
+          'sequence) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
+          [
+            'invalid-amount',
+            'allocation-v4',
+            0,
+            'invalid-amount-key',
+            'invalid-amount-fingerprint',
+            null,
+            'invalid amount',
+            1710000002000,
+            4,
+          ],
+        ),
+        throwsA(anything),
+      );
+      await expectLater(
+        database!.customStatement(
+          'INSERT INTO allocation_reversals ('
+          'allocation_reversal_id, allocation_id, amount_minor, '
+          'idempotency_key, request_fingerprint, actor_id, reason, created_at, '
+          'sequence) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
+          [
+            'duplicate-idempotency-key',
+            'allocation-v4',
+            1,
+            'allocation-reversal-v4-key',
+            'duplicate-idempotency-fingerprint',
+            null,
+            'duplicate idempotency key',
+            1710000002000,
+            4,
+          ],
+        ),
+        throwsA(anything),
+      );
+      expect(
+        await database!.customSelect('PRAGMA foreign_key_check').get(),
+        isEmpty,
+      );
+      expect(
+        (await database!.customSelect('PRAGMA integrity_check').getSingle())
+            .read<String>('integrity_check'),
+        'ok',
+      );
+    },
+  );
+
+  test('rolls back a failed v4 to v5 reversal migration completely', () async {
+    await _createPopulatedV4Fixture(databasePath);
+    final fixture = _openVersion4Fixture(databasePath);
+    await fixture.customStatement('PRAGMA foreign_keys = OFF');
+    final validatorSql =
+        (await fixture
+                .customSelect(
+                  "SELECT sql FROM sqlite_master WHERE type = 'trigger' "
+                  "AND name = 'refund_allocation_reversals_validate_insert'",
+                )
+                .getSingle())
+            .read<String>('sql');
+    await fixture.customStatement(
+      'DROP TRIGGER refund_allocation_reversals_validate_insert',
+    );
+    await fixture.customStatement(
+      'INSERT INTO refund_allocation_reversals ('
+      'refund_allocation_reversal_id, refund_id, original_payment_id, '
+      'invoice_id, allocation_id, allocation_reversal_id, idempotency_key, '
+      'request_fingerprint, actor_id, reason, created_at) '
+      'VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+      [
+        'dangling-refund-link',
+        'missing-refund',
+        'payment-v4',
+        'invoice-v3',
+        'allocation-v4',
+        'allocation-v4-reversal-2',
+        'dangling-refund-link-key',
+        'dangling-refund-link-fingerprint',
+        null,
+        'intentional migration failure fixture',
+        1710000003000,
+      ],
+    );
+    await fixture.customStatement(validatorSql);
+    await fixture.customStatement('PRAGMA foreign_keys = ON');
+    final reversalsBefore = await fixture
+        .customSelect(
+          'SELECT rowid AS migration_rowid, * FROM allocation_reversals '
+          'ORDER BY rowid',
+        )
+        .get();
+    final linksBefore = await fixture
+        .customSelect(
+          'SELECT * FROM refund_allocation_reversals ORDER BY rowid',
+        )
+        .get();
+    final tableSqlBefore =
+        (await fixture
+                .customSelect(
+                  "SELECT sql FROM sqlite_master WHERE type = 'table' "
+                  "AND name = 'allocation_reversals'",
+                )
+                .getSingle())
+            .read<String>('sql');
+    await fixture.close();
+
+    await expectLater(AppDatabase.open(path: databasePath), throwsA(anything));
+
+    final afterFailure = _openVersion4Fixture(databasePath);
+    expect(
+      (await afterFailure.customSelect('PRAGMA user_version').getSingle())
+          .read<int>('user_version'),
+      4,
+    );
+    expect(
+      (await afterFailure
+              .customSelect(
+                "SELECT sql FROM sqlite_master WHERE type = 'table' "
+                "AND name = 'allocation_reversals'",
+              )
+              .getSingle())
+          .read<String>('sql'),
+      tableSqlBefore,
+    );
+    expect(
+      await afterFailure
+          .customSelect(
+            'SELECT rowid AS migration_rowid, * FROM allocation_reversals '
+            'ORDER BY rowid',
+          )
+          .get()
+          .then((rows) => rows.map((row) => row.data).toList()),
+      reversalsBefore.map((row) => row.data).toList(),
+    );
+    expect(
+      await afterFailure
+          .customSelect(
+            'SELECT * FROM refund_allocation_reversals ORDER BY rowid',
+          )
+          .get()
+          .then((rows) => rows.map((row) => row.data).toList()),
+      linksBefore.map((row) => row.data).toList(),
+    );
+    expect(
+      await afterFailure
+          .customSelect(
+            "SELECT name FROM sqlite_master WHERE type = 'trigger' "
+            "AND name LIKE 'allocation_reversals_immutable_%' ORDER BY name",
+          )
+          .map((row) => row.read<String>('name'))
+          .get(),
+      [
+        'allocation_reversals_immutable_delete',
+        'allocation_reversals_immutable_update',
+      ],
+    );
+    await afterFailure.close();
+  });
+}
+
+_Version4FixtureDatabase _openVersion4Fixture(String path) =>
+    _Version4FixtureDatabase(
+      NativeDatabase(
+        File(path),
+        setup: (connection) => connection.execute('PRAGMA foreign_keys = ON'),
+      ),
+    );
+
+Future<void> _createPopulatedV4Fixture(String path) async {
+  final version3 = _Version3FixtureDatabase(
+    NativeDatabase(
+      File(path),
+      setup: (connection) => connection.execute('PRAGMA foreign_keys = ON'),
+    ),
+  );
+  await version3.customStatement('PRAGMA user_version = 3');
+  await _createVersion3Schema(version3);
+  await _insertVersion3Rows(version3);
+  await version3.close();
+
+  final database = await AppDatabase.open(path: path);
+  await _verifyStage4HistoryAndRelationships(database);
+  await _insertAdditionalReversalMigrationRows(database);
+  await _convertAllocationReversalsToV4(database);
+  await database.close();
+}
+
+Future<void> _insertAdditionalReversalMigrationRows(
+  AppDatabase database,
+) async {
+  const now = 1710000001000;
+  await database.customStatement(
+    'INSERT INTO invoices (invoice_id, invoice_serial, party_id, party_role, '
+    'financial_account_id, currency_code, action, created_at, updated_at) '
+    'VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
+    [
+      'migration-invoice-2',
+      'MIGRATION-005',
+      'party-v3',
+      'customer',
+      'account-v3',
+      'EGP',
+      'sale',
+      now + 30,
+      now + 30,
+    ],
+  );
+  await database.customStatement(
+    'INSERT INTO invoice_lifecycle_events VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+    [
+      'migration-invoice-2-active',
+      'migration-invoice-2',
+      1,
+      'active',
+      null,
+      'migration-invoice-2-active-key',
+      'migration-invoice-2-active-fingerprint',
+      'migration-actor',
+      'active',
+      now + 31,
+    ],
+  );
+  await database.customStatement(
+    'INSERT INTO invoice_allocations VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+    [
+      'migration-allocation-2',
+      'payment-v4',
+      'migration-invoice-2',
+      'payment-account-v4',
+      'account-v3',
+      'party-v3',
+      'customer',
+      'EGP',
+      200,
+      'migration-allocation-2-key',
+      'migration-allocation-2-fingerprint',
+      null,
+      null,
+      'migration-actor',
+      'second allocation',
+      now + 32,
+    ],
+  );
+
+  for (final reversal in [
+    (
+      id: 'allocation-v4-reversal-2',
+      allocationId: 'allocation-v4',
+      amount: 50,
+      key: 'allocation-v4-reversal-2-key',
+      timestamp: now + 40,
+      sequence: 2,
+    ),
+    (
+      id: 'allocation-v4-reversal-3',
+      allocationId: 'allocation-v4',
+      amount: 75,
+      key: 'allocation-v4-reversal-3-key',
+      timestamp: now + 40,
+      sequence: 3,
+    ),
+    (
+      id: 'allocation-2-reversal-1',
+      allocationId: 'migration-allocation-2',
+      amount: 60,
+      key: 'allocation-2-reversal-1-key',
+      timestamp: now + 41,
+      sequence: 1,
+    ),
+    (
+      id: 'allocation-2-reversal-2',
+      allocationId: 'migration-allocation-2',
+      amount: 40,
+      key: 'allocation-2-reversal-2-key',
+      timestamp: now + 41,
+      sequence: 2,
+    ),
+  ]) {
+    await database.customStatement(
+      'INSERT INTO allocation_reversals ('
+      'allocation_reversal_id, allocation_id, amount_minor, idempotency_key, '
+      'request_fingerprint, actor_id, reason, created_at, sequence) '
+      'VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
+      [
+        reversal.id,
+        reversal.allocationId,
+        reversal.amount,
+        reversal.key,
+        '${reversal.key}-fingerprint',
+        'migration-actor',
+        'migration fixture reversal',
+        reversal.timestamp,
+        reversal.sequence,
+      ],
+    );
+  }
+}
+
+Future<void> _convertAllocationReversalsToV4(AppDatabase database) async {
+  await database.customStatement('PRAGMA foreign_keys = OFF');
+  try {
+    await database.transaction(() async {
+      final refundAllocationTrigger = await database
+          .customSelect(
+            "SELECT sql FROM sqlite_master WHERE type = 'trigger' "
+            "AND name = 'refund_allocation_reversals_validate_insert'",
+          )
+          .getSingleOrNull();
+      await database.customStatement('''
+        CREATE TABLE allocation_reversals_v4 (
+          allocation_reversal_id TEXT NOT NULL PRIMARY KEY,
+          allocation_id TEXT NOT NULL,
+          amount_minor INTEGER NOT NULL,
+          idempotency_key TEXT NOT NULL,
+          request_fingerprint TEXT NOT NULL,
+          actor_id TEXT,
+          reason TEXT NOT NULL,
+          created_at INTEGER NOT NULL,
+          UNIQUE (allocation_reversal_id, allocation_id),
+          UNIQUE (idempotency_key),
+          CHECK (amount_minor > 0),
+          CHECK (length(trim(idempotency_key)) > 0),
+          CHECK (length(trim(request_fingerprint)) > 0),
+          FOREIGN KEY (allocation_id)
+            REFERENCES invoice_allocations (allocation_id)
+        )
+      ''');
+      await database.customStatement(
+        'INSERT INTO allocation_reversals_v4 ('
+        'allocation_reversal_id, allocation_id, amount_minor, idempotency_key, '
+        'request_fingerprint, actor_id, reason, created_at) '
+        'SELECT allocation_reversal_id, allocation_id, amount_minor, '
+        'idempotency_key, request_fingerprint, actor_id, reason, created_at '
+        'FROM allocation_reversals ORDER BY allocation_id, sequence',
+      );
+      if (refundAllocationTrigger != null) {
+        await database.customStatement(
+          'DROP TRIGGER refund_allocation_reversals_validate_insert',
+        );
+      }
+      await database.customStatement('DROP TABLE allocation_reversals');
+      await database.customStatement(
+        'ALTER TABLE allocation_reversals_v4 RENAME TO allocation_reversals',
+      );
+      if (refundAllocationTrigger != null) {
+        await database.customStatement(
+          refundAllocationTrigger.read<String>('sql'),
+        );
+      }
+      await database.customStatement(
+        'CREATE INDEX allocation_reversals_allocation '
+        'ON allocation_reversals (allocation_id, created_at)',
+      );
+      await database.customStatement('''
+        CREATE TRIGGER allocation_reversals_immutable_update
+        BEFORE UPDATE ON allocation_reversals BEGIN
+          SELECT RAISE(ABORT, 'allocation_reversals is append-only');
+        END
+      ''');
+      await database.customStatement('''
+        CREATE TRIGGER allocation_reversals_immutable_delete
+        BEFORE DELETE ON allocation_reversals BEGIN
+          SELECT RAISE(ABORT, 'allocation_reversals is append-only');
+        END
+      ''');
+      await database.customStatement('PRAGMA user_version = 4');
+    });
+  } finally {
+    await database.customStatement('PRAGMA foreign_keys = ON');
+  }
 }
 
 Future<void> _createVersion3Schema(_Version3FixtureDatabase database) async {
@@ -879,7 +1413,7 @@ Future<void> _verifyStage4HistoryAndRelationships(AppDatabase database) async {
   );
 
   await database.customStatement(
-    'INSERT INTO allocation_reversals VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
+    'INSERT INTO allocation_reversals VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
     [
       'allocation-reversal-v4',
       'allocation-v4',
@@ -889,6 +1423,7 @@ Future<void> _verifyStage4HistoryAndRelationships(AppDatabase database) async {
       'actor-v4',
       'partial reversal',
       now + 11,
+      1,
     ],
   );
 

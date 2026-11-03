@@ -62,6 +62,7 @@ class AllocationReversal {
     required this.id,
     required this.allocationId,
     required this.amountMinor,
+    required this.sequence,
     required this.idempotencyKey,
     required this.requestFingerprint,
     required this.reason,
@@ -75,11 +76,15 @@ class AllocationReversal {
         'Must be positive.',
       );
     }
+    if (sequence <= 0) {
+      throw ArgumentError.value(sequence, 'sequence', 'Must be positive.');
+    }
   }
 
   final String id;
   final String allocationId;
   final int amountMinor;
+  final int sequence;
   final String idempotencyKey;
   final String requestFingerprint;
   final String? actorId;

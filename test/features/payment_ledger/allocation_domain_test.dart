@@ -24,6 +24,7 @@ void main() {
           id: 'reversal-1',
           allocationId: allocation.id,
           amountMinor: 45,
+          sequence: 1,
           idempotencyKey: 'reverse-key',
           requestFingerprint: 'fingerprint',
           reason: 'correction',
@@ -60,6 +61,20 @@ void main() {
           id: 'r',
           allocationId: 'a',
           amountMinor: -1,
+          sequence: 1,
+          idempotencyKey: 'key',
+          requestFingerprint: 'fp',
+          reason: 'reason',
+          createdAt: DateTime.utc(2026),
+        ),
+        throwsArgumentError,
+      );
+      expect(
+        () => AllocationReversal(
+          id: 'r',
+          allocationId: 'a',
+          amountMinor: 1,
+          sequence: 0,
           idempotencyKey: 'key',
           requestFingerprint: 'fp',
           reason: 'reason',

@@ -59,6 +59,12 @@ class AllocationRecognitionLimitExceeded implements Exception {
       'units while $allocatedMinor minor units remain allocated';
 }
 
+class _RetryableReversalSequenceCollision implements Exception {
+  const _RetryableReversalSequenceCollision(this.error);
+
+  final SqliteException error;
+}
+
 class AllocationRepository {
   AllocationRepository(
     this._database, {
@@ -130,6 +136,11 @@ class AllocationRepository {
       } on SqliteException catch (error) {
         final isBusy = error.resultCode == 5 || error.resultCode == 6;
         if (!isBusy || attempt == maxAttempts - 1) rethrow;
+        await Future<void>.delayed(Duration(milliseconds: 10 * (1 << attempt)));
+      } on _RetryableReversalSequenceCollision catch (collision, stackTrace) {
+        if (attempt == maxAttempts - 1) {
+          Error.throwWithStackTrace(collision.error, stackTrace);
+        }
         await Future<void>.delayed(Duration(milliseconds: 10 * (1 << attempt)));
       }
     }
@@ -215,7 +226,7 @@ class AllocationRepository {
     final rows = await _database
         .customSelect(
           'SELECT * FROM allocation_reversals '
-          'WHERE allocation_id = ? ORDER BY rowid ASC',
+          'WHERE allocation_id = ? ORDER BY sequence ASC',
           variables: [Variable.withString(allocationId)],
           readsFrom: {_database.allocationReversals},
         )
@@ -425,26 +436,35 @@ class AllocationRepository {
         availableMinor: remaining,
       );
     }
+    final sequence = await _nextReversalSequence(allocation.id);
     final reversalId = _uuid.v4();
     final createdAt = _clock();
-    await _database
-        .into(_database.allocationReversals)
-        .insert(
-          AllocationReversalsCompanion.insert(
-            id: reversalId,
-            allocationId: allocation.id,
-            amountMinor: request.amountMinor,
-            idempotencyKey: request.idempotencyKey,
-            requestFingerprint: fingerprint,
-            actorId: Value(request.actorId),
-            reason: request.reason,
-            createdAt: createdAt,
-          ),
-        );
+    try {
+      await _database
+          .into(_database.allocationReversals)
+          .insert(
+            AllocationReversalsCompanion.insert(
+              id: reversalId,
+              allocationId: allocation.id,
+              amountMinor: request.amountMinor,
+              idempotencyKey: request.idempotencyKey,
+              requestFingerprint: fingerprint,
+              actorId: Value(request.actorId),
+              reason: request.reason,
+              createdAt: createdAt,
+              sequence: sequence,
+            ),
+          );
+    } on SqliteException catch (error) {
+      if (_isReversalSequenceCollision(error)) {
+        throw _RetryableReversalSequenceCollision(error);
+      }
+      rethrow;
+    }
     return domain.AllocationOperationResult(
       allocationId: allocation.id,
       operationId: reversalId,
-      sequence: await _reversalSequence(allocation.id, reversalId),
+      sequence: sequence,
     );
   }
 
@@ -674,23 +694,22 @@ class AllocationRepository {
     return row.read<int>('total_minor');
   }
 
-  Future<int> _reversalSequence(String allocationId, String reversalId) async {
-    final rows = await _database
+  Future<int> _nextReversalSequence(String allocationId) async {
+    final row = await _database
         .customSelect(
-          'SELECT allocation_reversal_id FROM allocation_reversals '
-          'WHERE allocation_id = ? ORDER BY rowid ASC',
+          'SELECT COALESCE(MAX(sequence), 0) + 1 AS next_sequence '
+          'FROM allocation_reversals WHERE allocation_id = ?',
           variables: [Variable.withString(allocationId)],
           readsFrom: {_database.allocationReversals},
         )
-        .get();
-    final index = rows.indexWhere(
-      (row) => row.read<String>('allocation_reversal_id') == reversalId,
-    );
-    if (index < 0) {
-      throw StateError('Allocation reversal was not found after insertion.');
-    }
-    return index + 1;
+        .getSingle();
+    return row.read<int>('next_sequence');
   }
+
+  bool _isReversalSequenceCollision(SqliteException error) =>
+      error.extendedResultCode == 2067 &&
+      error.message.contains('allocation_reversals.allocation_id') &&
+      error.message.contains('allocation_reversals.sequence');
 
   Future<String?> _latestLifecycleState(String invoiceId) async {
     final row =
@@ -720,7 +739,7 @@ class AllocationRepository {
         reversal.requestFingerprint,
         allocationId: reversal.allocationId,
         reversalId: reversal.id,
-        sequence: await _reversalSequence(reversal.allocationId, reversal.id),
+        sequence: reversal.sequence,
       );
     }
     final status = await (_database.select(
@@ -852,6 +871,7 @@ class AllocationRepository {
         id: row['allocation_reversal_id']! as String,
         allocationId: row['allocation_id']! as String,
         amountMinor: row['amount_minor']! as int,
+        sequence: row['sequence']! as int,
         idempotencyKey: row['idempotency_key']! as String,
         requestFingerprint: row['request_fingerprint']! as String,
         actorId: row['actor_id'] as String?,
