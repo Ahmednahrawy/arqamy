@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:arqamy/core/database/app_database.dart';
+import 'package:arqamy/features/payment_ledger/data/allocation_repository.dart';
 import 'package:arqamy/features/payment_ledger/data/cash_event_history.dart';
 import 'package:drift/drift.dart';
 import 'package:drift/native.dart' show SqliteException;
@@ -166,6 +167,11 @@ class CashEventRepository {
         final duplicate = await _findVersionByKey(idempotencyKey, payload);
         if (duplicate != null) return _resultFromVersion(duplicate);
         final current = await _loadCurrent(paymentId, expectedVersionId);
+        await AllocationRepository.ensureRecognitionCoversLocalAllocations(
+          database: _database,
+          paymentId: paymentId,
+          recognizedMinor: current.version.effectiveRecognizedMinor,
+        );
         if (current.version.occurred !=
             PhysicalOccurrence.unknown.databaseValue) {
           throw StateError('Only an unknown physical status can be resolved.');
@@ -573,6 +579,11 @@ class CashEventRepository {
       request.paymentId,
       request.expectedVersionId,
     );
+    await AllocationRepository.ensureRecognitionCoversLocalAllocations(
+      database: _database,
+      paymentId: request.paymentId,
+      recognizedMinor: request.replacementAmountMinor,
+    );
     final identity = await _loadIdentity(request.paymentId);
     final reversalId = current.version.effectiveRecognizedMinor == 0
         ? null
@@ -676,6 +687,11 @@ class CashEventRepository {
         current.version.transactionId == null) {
       throw StateError('There is no recognized transaction to reverse.');
     }
+    await AllocationRepository.ensureRecognitionCoversLocalAllocations(
+      database: _database,
+      paymentId: request.paymentId,
+      recognizedMinor: 0,
+    );
     final identity = await _loadIdentity(request.paymentId);
     final now = _clock();
     final reversalId = _uuid.v4();
@@ -755,6 +771,11 @@ class CashEventRepository {
         current.version.transactionId == null) {
       throw StateError('There is no recognized transaction to reverse.');
     }
+    await AllocationRepository.ensureRecognitionCoversLocalAllocations(
+      database: _database,
+      paymentId: request.paymentId,
+      recognizedMinor: 0,
+    );
     final identity = await _loadIdentity(request.paymentId);
     final now = _clock();
     final reversalId = _uuid.v4();
