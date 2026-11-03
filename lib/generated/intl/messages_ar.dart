@@ -24,7 +24,12 @@ class MessageLookup extends MessageLookupByLibrary {
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
     "about": MessageLookupByLibrary.simpleMessage("حول"),
     "addProduct": MessageLookupByLibrary.simpleMessage("إضافة منتج"),
+    "allInvoicesFilter": MessageLookupByLibrary.simpleMessage("الكل"),
+    "allInvoicesSearchHint": MessageLookupByLibrary.simpleMessage(
+      "ابحث بالرقم المسلسل أو المنتج أو العميل",
+    ),
     "appearance": MessageLookupByLibrary.simpleMessage("المظهر"),
+    "applyFilters": MessageLookupByLibrary.simpleMessage("تطبيق"),
     "arabic": MessageLookupByLibrary.simpleMessage("العربية"),
     "are_you_sure_logout": MessageLookupByLibrary.simpleMessage(
       "هل أنت متأكد أنك تريد تسجيل الخروج؟",
@@ -33,23 +38,24 @@ class MessageLookup extends MessageLookupByLibrary {
     "change_password": MessageLookupByLibrary.simpleMessage(
       "تغيير كلمة المرور",
     ),
+    "clearDateFilter": MessageLookupByLibrary.simpleMessage(
+      "مسح تصفية التاريخ",
+    ),
+    "clearInvoiceSearch": MessageLookupByLibrary.simpleMessage("مسح البحث"),
     "confirm": MessageLookupByLibrary.simpleMessage("تأكيد"),
     "contact_us": MessageLookupByLibrary.simpleMessage("اتصل بنا"),
-    "clearInvoiceSearch": MessageLookupByLibrary.simpleMessage("مسح البحث"),
     "couldNotSaveInvoice": MessageLookupByLibrary.simpleMessage(
       "تعذر حفظ تعديلات الفاتورة",
     ),
     "currency": MessageLookupByLibrary.simpleMessage("جنيه"),
-    "customerName": MessageLookupByLibrary.simpleMessage("اسم العميل"),
     "customerInvoiceSearchHint": MessageLookupByLibrary.simpleMessage(
       "ابحث بالرقم المسلسل أو اسم المنتج",
     ),
-    "allInvoicesSearchHint": MessageLookupByLibrary.simpleMessage(
-      "ابحث بالرقم المسلسل أو المنتج أو العميل",
-    ),
+    "customerName": MessageLookupByLibrary.simpleMessage("اسم العميل"),
     "customers": MessageLookupByLibrary.simpleMessage("العملاء"),
     "dark_mode": MessageLookupByLibrary.simpleMessage("الوضع الداكن"),
     "date": MessageLookupByLibrary.simpleMessage("التاريخ"),
+    "dateRangeFilter": MessageLookupByLibrary.simpleMessage("النطاق الزمني"),
     "editInvoice": MessageLookupByLibrary.simpleMessage("تعديل الفاتورة"),
     "english": MessageLookupByLibrary.simpleMessage("الإنجليزية"),
     "help": MessageLookupByLibrary.simpleMessage("مساعدة"),
@@ -59,18 +65,15 @@ class MessageLookup extends MessageLookupByLibrary {
       "أدخل رقمًا صالحًا ومحدودًا",
     ),
     "inventory": MessageLookupByLibrary.simpleMessage("المخزون"),
+    "invoiceActionFilter": MessageLookupByLibrary.simpleMessage("نوع الفاتورة"),
     "invoiceDateTime": MessageLookupByLibrary.simpleMessage(
       "تاريخ ووقت الفاتورة",
     ),
+    "invoiceFilters": MessageLookupByLibrary.simpleMessage("عوامل التصفية"),
     "invoiceNeedsProduct": MessageLookupByLibrary.simpleMessage(
       "أضف منتجًا واحدًا على الأقل قبل الحفظ.",
     ),
     "invoiceNumber": MessageLookupByLibrary.simpleMessage("فاتورة #"),
-    "dateRangeFilter": MessageLookupByLibrary.simpleMessage("النطاق الزمني"),
-    "selectDateRange": MessageLookupByLibrary.simpleMessage("تحديد نطاق زمني"),
-    "clearDateFilter": MessageLookupByLibrary.simpleMessage(
-      "مسح تصفية التاريخ",
-    ),
     "invoiceTotal": MessageLookupByLibrary.simpleMessage("إجمالي الفاتورة"),
     "invoiceType": MessageLookupByLibrary.simpleMessage("نوع العملية"),
     "invoice_management": MessageLookupByLibrary.simpleMessage(
@@ -78,20 +81,6 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "invoice_sent_successfully": MessageLookupByLibrary.simpleMessage(
       "تم إرسال الفاتورة بنجاح",
-    ),
-    "invoiceActionFilter": MessageLookupByLibrary.simpleMessage("نوع الفاتورة"),
-    "paymentStatusFilter": MessageLookupByLibrary.simpleMessage("حالة الدفع"),
-    "allInvoicesFilter": MessageLookupByLibrary.simpleMessage("الكل"),
-    "paidStatus": MessageLookupByLibrary.simpleMessage("مدفوعة"),
-    "partiallyPaidStatus": MessageLookupByLibrary.simpleMessage("مدفوعة جزئياً"),
-    "unpaidStatus": MessageLookupByLibrary.simpleMessage("غير مدفوعة"),
-    "resetInvoiceFilters": MessageLookupByLibrary.simpleMessage(
-      "إعادة ضبط عوامل التصفية",
-    ),
-    "invoiceFilters": MessageLookupByLibrary.simpleMessage("عوامل التصفية"),
-    "applyFilters": MessageLookupByLibrary.simpleMessage("تطبيق"),
-    "noInvoicesMatchFilters": MessageLookupByLibrary.simpleMessage(
-      "لا توجد فواتير تطابق البحث أو عوامل التصفية",
     ),
     "invoice_template": MessageLookupByLibrary.simpleMessage("قوالب الفواتير"),
     "invoice_templated_desc": MessageLookupByLibrary.simpleMessage(
@@ -107,6 +96,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "logout": MessageLookupByLibrary.simpleMessage("تسجيل الخروج"),
     "nameRequired": MessageLookupByLibrary.simpleMessage("هذا الحقل مطلوب"),
     "no": MessageLookupByLibrary.simpleMessage("لا"),
+    "noInvoicesMatchFilters": MessageLookupByLibrary.simpleMessage(
+      "لا توجد فواتير تطابق البحث أو عوامل التصفية",
+    ),
     "noInvoicesMatchSearch": MessageLookupByLibrary.simpleMessage(
       "لا توجد فواتير تطابق البحث",
     ),
@@ -124,6 +116,11 @@ class MessageLookup extends MessageLookupByLibrary {
     "packageWeight": MessageLookupByLibrary.simpleMessage("وزن العبوة"),
     "page_not_found": MessageLookupByLibrary.simpleMessage("الصفحة غير موجودة"),
     "paidAmount": MessageLookupByLibrary.simpleMessage("المبلغ المدفوع"),
+    "paidStatus": MessageLookupByLibrary.simpleMessage("مدفوعة"),
+    "partiallyPaidStatus": MessageLookupByLibrary.simpleMessage(
+      "مدفوعة جزئياً",
+    ),
+    "paymentStatusFilter": MessageLookupByLibrary.simpleMessage("حالة الدفع"),
     "please_choose_customer": MessageLookupByLibrary.simpleMessage(
       "يرجى اختيار عميل قبل المتابعة.",
     ),
@@ -137,9 +134,13 @@ class MessageLookup extends MessageLookupByLibrary {
     "purchase": MessageLookupByLibrary.simpleMessage("شراء"),
     "recentInvoices": MessageLookupByLibrary.simpleMessage("أحدث الفواتير"),
     "removeProduct": MessageLookupByLibrary.simpleMessage("حذف المنتج"),
+    "resetInvoiceFilters": MessageLookupByLibrary.simpleMessage(
+      "إعادة ضبط عوامل التصفية",
+    ),
     "sale": MessageLookupByLibrary.simpleMessage("بيع"),
     "saveChanges": MessageLookupByLibrary.simpleMessage("حفظ التغييرات"),
     "search": MessageLookupByLibrary.simpleMessage("بحث"),
+    "selectDateRange": MessageLookupByLibrary.simpleMessage("تحديد نطاق زمني"),
     "select_language": MessageLookupByLibrary.simpleMessage("اختر اللغة"),
     "settings": MessageLookupByLibrary.simpleMessage("الإعدادات"),
     "share_app": MessageLookupByLibrary.simpleMessage("شارك التطبيق"),
@@ -159,6 +160,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "terms_of_service": MessageLookupByLibrary.simpleMessage("شروط الخدمة"),
     "time": MessageLookupByLibrary.simpleMessage("الوقت"),
     "total_cost": MessageLookupByLibrary.simpleMessage("التكلفة الإجمالية"),
+    "unpaidStatus": MessageLookupByLibrary.simpleMessage("غير مدفوعة"),
     "unspecified": MessageLookupByLibrary.simpleMessage("غير محدد"),
     "update_app": MessageLookupByLibrary.simpleMessage("تحديث التطبيق"),
     "weight": MessageLookupByLibrary.simpleMessage("الوزن"),

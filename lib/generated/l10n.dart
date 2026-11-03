@@ -224,174 +224,6 @@ class S {
     return Intl.message('Search', name: 'search', desc: '', args: []);
   }
 
-  /// `Search by serial or product name`
-  String get customerInvoiceSearchHint {
-    return Intl.message(
-      'Search by serial or product name',
-      name: 'customerInvoiceSearchHint',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Search by serial, product or customer`
-  String get allInvoicesSearchHint {
-    return Intl.message(
-      'Search by serial, product or customer',
-      name: 'allInvoicesSearchHint',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Recent invoices`
-  String get recentInvoices {
-    return Intl.message(
-      'Recent invoices',
-      name: 'recentInvoices',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `No invoices yet`
-  String get noRecentInvoices {
-    return Intl.message(
-      'No invoices yet',
-      name: 'noRecentInvoices',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Clear search`
-  String get clearInvoiceSearch {
-    return Intl.message(
-      'Clear search',
-      name: 'clearInvoiceSearch',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `No invoices match your search`
-  String get noInvoicesMatchSearch {
-    return Intl.message(
-      'No invoices match your search',
-      name: 'noInvoicesMatchSearch',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Invoice action`
-  String get invoiceActionFilter {
-    return Intl.message(
-      'Invoice action',
-      name: 'invoiceActionFilter',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Invoice #`
-  String get invoiceNumber {
-    return Intl.message('Invoice #', name: 'invoiceNumber', desc: '', args: []);
-  }
-
-  /// `Date range`
-  String get dateRangeFilter {
-    return Intl.message('Date range',
-        name: 'dateRangeFilter', desc: '', args: []);
-  }
-
-  /// `Select date range`
-  String get selectDateRange {
-    return Intl.message('Select date range',
-        name: 'selectDateRange', desc: '', args: []);
-  }
-
-  /// `Clear date filter`
-  String get clearDateFilter {
-    return Intl.message('Clear date filter',
-        name: 'clearDateFilter', desc: '', args: []);
-  }
-
-  /// `Payment status`
-  String get paymentStatusFilter {
-    return Intl.message(
-      'Payment status',
-      name: 'paymentStatusFilter',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `All`
-  String get allInvoicesFilter {
-    return Intl.message(
-      'All',
-      name: 'allInvoicesFilter',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Paid`
-  String get paidStatus {
-    return Intl.message('Paid', name: 'paidStatus', desc: '', args: []);
-  }
-
-  /// `Partially paid`
-  String get partiallyPaidStatus {
-    return Intl.message(
-      'Partially paid',
-      name: 'partiallyPaidStatus',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Unpaid`
-  String get unpaidStatus {
-    return Intl.message('Unpaid', name: 'unpaidStatus', desc: '', args: []);
-  }
-
-  /// `Reset filters`
-  String get resetInvoiceFilters {
-    return Intl.message(
-      'Reset filters',
-      name: 'resetInvoiceFilters',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Invoice filters`
-  String get invoiceFilters {
-    return Intl.message(
-      'Invoice filters',
-      name: 'invoiceFilters',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Apply`
-  String get applyFilters {
-    return Intl.message('Apply', name: 'applyFilters', desc: '', args: []);
-  }
-
-  /// `No invoices match the search or filters`
-  String get noInvoicesMatchFilters {
-    return Intl.message(
-      'No invoices match the search or filters',
-      name: 'noInvoicesMatchFilters',
-      desc: '',
-      args: [],
-    );
-  }
-
   /// `No results found`
   String get no_results_found {
     return Intl.message(
@@ -760,6 +592,181 @@ class S {
   /// `kg`
   String get kilograms {
     return Intl.message('kg', name: 'kilograms', desc: '', args: []);
+  }
+
+  /// `Search by serial or product name`
+  String get customerInvoiceSearchHint {
+    return Intl.message(
+      'Search by serial or product name',
+      name: 'customerInvoiceSearchHint',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Search by serial, product or customer`
+  String get allInvoicesSearchHint {
+    return Intl.message(
+      'Search by serial, product or customer',
+      name: 'allInvoicesSearchHint',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Recent invoices`
+  String get recentInvoices {
+    return Intl.message(
+      'Recent invoices',
+      name: 'recentInvoices',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No invoices yet`
+  String get noRecentInvoices {
+    return Intl.message(
+      'No invoices yet',
+      name: 'noRecentInvoices',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Clear search`
+  String get clearInvoiceSearch {
+    return Intl.message(
+      'Clear search',
+      name: 'clearInvoiceSearch',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No invoices match your search`
+  String get noInvoicesMatchSearch {
+    return Intl.message(
+      'No invoices match your search',
+      name: 'noInvoicesMatchSearch',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Invoice action`
+  String get invoiceActionFilter {
+    return Intl.message(
+      'Invoice action',
+      name: 'invoiceActionFilter',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Invoice #`
+  String get invoiceNumber {
+    return Intl.message('Invoice #', name: 'invoiceNumber', desc: '', args: []);
+  }
+
+  /// `Date range`
+  String get dateRangeFilter {
+    return Intl.message(
+      'Date range',
+      name: 'dateRangeFilter',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Select date range`
+  String get selectDateRange {
+    return Intl.message(
+      'Select date range',
+      name: 'selectDateRange',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Clear date filter`
+  String get clearDateFilter {
+    return Intl.message(
+      'Clear date filter',
+      name: 'clearDateFilter',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Payment status`
+  String get paymentStatusFilter {
+    return Intl.message(
+      'Payment status',
+      name: 'paymentStatusFilter',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `All`
+  String get allInvoicesFilter {
+    return Intl.message('All', name: 'allInvoicesFilter', desc: '', args: []);
+  }
+
+  /// `Paid`
+  String get paidStatus {
+    return Intl.message('Paid', name: 'paidStatus', desc: '', args: []);
+  }
+
+  /// `Partially paid`
+  String get partiallyPaidStatus {
+    return Intl.message(
+      'Partially paid',
+      name: 'partiallyPaidStatus',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Unpaid`
+  String get unpaidStatus {
+    return Intl.message('Unpaid', name: 'unpaidStatus', desc: '', args: []);
+  }
+
+  /// `Reset filters`
+  String get resetInvoiceFilters {
+    return Intl.message(
+      'Reset filters',
+      name: 'resetInvoiceFilters',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Invoice filters`
+  String get invoiceFilters {
+    return Intl.message(
+      'Invoice filters',
+      name: 'invoiceFilters',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Apply`
+  String get applyFilters {
+    return Intl.message('Apply', name: 'applyFilters', desc: '', args: []);
+  }
+
+  /// `No invoices match the search or filters`
+  String get noInvoicesMatchFilters {
+    return Intl.message(
+      'No invoices match the search or filters',
+      name: 'noInvoicesMatchFilters',
+      desc: '',
+      args: [],
+    );
   }
 }
 

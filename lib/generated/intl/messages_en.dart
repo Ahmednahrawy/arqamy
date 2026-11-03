@@ -24,30 +24,36 @@ class MessageLookup extends MessageLookupByLibrary {
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
     "about": MessageLookupByLibrary.simpleMessage("About"),
     "addProduct": MessageLookupByLibrary.simpleMessage("Add product"),
+    "allInvoicesFilter": MessageLookupByLibrary.simpleMessage("All"),
+    "allInvoicesSearchHint": MessageLookupByLibrary.simpleMessage(
+      "Search by serial, product or customer",
+    ),
     "appearance": MessageLookupByLibrary.simpleMessage("Appearance"),
+    "applyFilters": MessageLookupByLibrary.simpleMessage("Apply"),
     "arabic": MessageLookupByLibrary.simpleMessage("Arabic"),
     "are_you_sure_logout": MessageLookupByLibrary.simpleMessage(
       "Are you sure you want to log out?",
     ),
     "cancel": MessageLookupByLibrary.simpleMessage("Cancel"),
     "change_password": MessageLookupByLibrary.simpleMessage("Change Password"),
+    "clearDateFilter": MessageLookupByLibrary.simpleMessage(
+      "Clear date filter",
+    ),
+    "clearInvoiceSearch": MessageLookupByLibrary.simpleMessage("Clear search"),
     "confirm": MessageLookupByLibrary.simpleMessage("Confirm"),
     "contact_us": MessageLookupByLibrary.simpleMessage("Contact Us"),
-    "clearInvoiceSearch": MessageLookupByLibrary.simpleMessage("Clear search"),
     "couldNotSaveInvoice": MessageLookupByLibrary.simpleMessage(
       "Could not save invoice changes",
     ),
     "currency": MessageLookupByLibrary.simpleMessage("EGP"),
-    "customerName": MessageLookupByLibrary.simpleMessage("Customer name"),
     "customerInvoiceSearchHint": MessageLookupByLibrary.simpleMessage(
       "Search by serial or product name",
     ),
-    "allInvoicesSearchHint": MessageLookupByLibrary.simpleMessage(
-      "Search by serial, product or customer",
-    ),
+    "customerName": MessageLookupByLibrary.simpleMessage("Customer name"),
     "customers": MessageLookupByLibrary.simpleMessage("Customers"),
     "dark_mode": MessageLookupByLibrary.simpleMessage("Dark Mode"),
     "date": MessageLookupByLibrary.simpleMessage("Date"),
+    "dateRangeFilter": MessageLookupByLibrary.simpleMessage("Date range"),
     "editInvoice": MessageLookupByLibrary.simpleMessage("Edit invoice"),
     "english": MessageLookupByLibrary.simpleMessage("English"),
     "help": MessageLookupByLibrary.simpleMessage("Help"),
@@ -59,20 +65,17 @@ class MessageLookup extends MessageLookupByLibrary {
       "Enter a valid finite number",
     ),
     "inventory": MessageLookupByLibrary.simpleMessage("Inventory"),
+    "invoiceActionFilter": MessageLookupByLibrary.simpleMessage(
+      "Invoice action",
+    ),
     "invoiceDateTime": MessageLookupByLibrary.simpleMessage(
       "Invoice date and time",
     ),
+    "invoiceFilters": MessageLookupByLibrary.simpleMessage("Invoice filters"),
     "invoiceNeedsProduct": MessageLookupByLibrary.simpleMessage(
       "Add at least one product before saving.",
     ),
     "invoiceNumber": MessageLookupByLibrary.simpleMessage("Invoice #"),
-    "dateRangeFilter": MessageLookupByLibrary.simpleMessage("Date range"),
-    "selectDateRange": MessageLookupByLibrary.simpleMessage(
-      "Select date range",
-    ),
-    "clearDateFilter": MessageLookupByLibrary.simpleMessage(
-      "Clear date filter",
-    ),
     "invoiceTotal": MessageLookupByLibrary.simpleMessage("Invoice total"),
     "invoiceType": MessageLookupByLibrary.simpleMessage("Invoice type"),
     "invoice_management": MessageLookupByLibrary.simpleMessage(
@@ -80,18 +83,6 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "invoice_sent_successfully": MessageLookupByLibrary.simpleMessage(
       "Invoice sent successfully",
-    ),
-    "invoiceActionFilter": MessageLookupByLibrary.simpleMessage("Invoice action"),
-    "paymentStatusFilter": MessageLookupByLibrary.simpleMessage("Payment status"),
-    "allInvoicesFilter": MessageLookupByLibrary.simpleMessage("All"),
-    "paidStatus": MessageLookupByLibrary.simpleMessage("Paid"),
-    "partiallyPaidStatus": MessageLookupByLibrary.simpleMessage("Partially paid"),
-    "unpaidStatus": MessageLookupByLibrary.simpleMessage("Unpaid"),
-    "resetInvoiceFilters": MessageLookupByLibrary.simpleMessage("Reset filters"),
-    "invoiceFilters": MessageLookupByLibrary.simpleMessage("Invoice filters"),
-    "applyFilters": MessageLookupByLibrary.simpleMessage("Apply"),
-    "noInvoicesMatchFilters": MessageLookupByLibrary.simpleMessage(
-      "No invoices match the search or filters",
     ),
     "invoice_template": MessageLookupByLibrary.simpleMessage(
       "Invoice Templates",
@@ -109,6 +100,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "logout": MessageLookupByLibrary.simpleMessage("Log out"),
     "nameRequired": MessageLookupByLibrary.simpleMessage("Enter a name"),
     "no": MessageLookupByLibrary.simpleMessage("No"),
+    "noInvoicesMatchFilters": MessageLookupByLibrary.simpleMessage(
+      "No invoices match the search or filters",
+    ),
     "noInvoicesMatchSearch": MessageLookupByLibrary.simpleMessage(
       "No invoices match your search",
     ),
@@ -124,6 +118,13 @@ class MessageLookup extends MessageLookupByLibrary {
     "packageWeight": MessageLookupByLibrary.simpleMessage("Package weight"),
     "page_not_found": MessageLookupByLibrary.simpleMessage("Page Not Found"),
     "paidAmount": MessageLookupByLibrary.simpleMessage("Amount paid"),
+    "paidStatus": MessageLookupByLibrary.simpleMessage("Paid"),
+    "partiallyPaidStatus": MessageLookupByLibrary.simpleMessage(
+      "Partially paid",
+    ),
+    "paymentStatusFilter": MessageLookupByLibrary.simpleMessage(
+      "Payment status",
+    ),
     "please_choose_customer": MessageLookupByLibrary.simpleMessage(
       "Please choose a customer before proceeding.",
     ),
@@ -137,9 +138,15 @@ class MessageLookup extends MessageLookupByLibrary {
     "purchase": MessageLookupByLibrary.simpleMessage("Purchase"),
     "recentInvoices": MessageLookupByLibrary.simpleMessage("Recent invoices"),
     "removeProduct": MessageLookupByLibrary.simpleMessage("Remove item"),
+    "resetInvoiceFilters": MessageLookupByLibrary.simpleMessage(
+      "Reset filters",
+    ),
     "sale": MessageLookupByLibrary.simpleMessage("Sale"),
     "saveChanges": MessageLookupByLibrary.simpleMessage("Save changes"),
     "search": MessageLookupByLibrary.simpleMessage("Search"),
+    "selectDateRange": MessageLookupByLibrary.simpleMessage(
+      "Select date range",
+    ),
     "select_language": MessageLookupByLibrary.simpleMessage("Select Language"),
     "settings": MessageLookupByLibrary.simpleMessage("Settings"),
     "share_app": MessageLookupByLibrary.simpleMessage("Share App"),
@@ -161,6 +168,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "time": MessageLookupByLibrary.simpleMessage("Time"),
     "total_cost": MessageLookupByLibrary.simpleMessage("Total Cost"),
+    "unpaidStatus": MessageLookupByLibrary.simpleMessage("Unpaid"),
     "unspecified": MessageLookupByLibrary.simpleMessage("Unspecified"),
     "update_app": MessageLookupByLibrary.simpleMessage("Update App"),
     "weight": MessageLookupByLibrary.simpleMessage("Weight"),
