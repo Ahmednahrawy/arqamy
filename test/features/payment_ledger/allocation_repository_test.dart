@@ -373,6 +373,60 @@ void main() {
     },
   );
 
+  test(
+    'preserves reversal insertion order when creation timestamps are equal',
+    () async {
+      final created = await allocations.createAllocation(
+        createRequest(amount: 3000),
+      );
+      final recordedAt = DateTime.utc(2026, 3, 4, 5, 6, 7);
+      final reversalRepository = AllocationRepository(
+        database,
+        clock: () => recordedAt,
+      );
+
+      Future<domain.AllocationOperationResult> reverse(
+        String key,
+        int amount,
+      ) => reversalRepository.reverseAllocation(
+        domain.ReverseAllocationRequest(
+          allocationId: created.allocationId,
+          amountMinor: amount,
+          reason: 'same-time reversal',
+          idempotencyKey: key,
+          requestFingerprint: '$key-fingerprint',
+        ),
+      );
+
+      final first = await reverse('same-time-first', 400);
+      final second = await reverse('same-time-second', 500);
+      final third = await reverse('same-time-third', 600);
+
+      expect([first.sequence, second.sequence, third.sequence], [1, 2, 3]);
+      final history = await allocations.getReversalHistory(
+        created.allocationId,
+      );
+      expect(history.map((reversal) => reversal.id), [
+        first.operationId,
+        second.operationId,
+        third.operationId,
+      ]);
+      expect(history.map((reversal) => reversal.createdAt), [
+        recordedAt,
+        recordedAt,
+        recordedAt,
+      ]);
+
+      final replay = await reverse('same-time-first', 400);
+      expect(replay.operationId, first.operationId);
+      expect(replay.sequence, first.sequence);
+      await expectLater(
+        reverse('same-time-first', 401),
+        throwsA(isA<domain.AllocationIdempotencyConflict>()),
+      );
+    },
+  );
+
   test('tracks all statuses in append-only history and projections', () async {
     final created = await allocations.createAllocation(
       createRequest(amount: 1000, conflictGroupId: 'group-1'),

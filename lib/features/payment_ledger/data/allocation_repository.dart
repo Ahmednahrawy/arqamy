@@ -212,15 +212,17 @@ class AllocationRepository {
   Future<List<domain.AllocationReversal>> getReversalHistory(
     String allocationId,
   ) async {
-    final rows =
-        await (_database.select(_database.allocationReversals)
-              ..where((row) => row.allocationId.equals(allocationId))
-              ..orderBy([
-                (row) => OrderingTerm.asc(row.createdAt),
-                (row) => OrderingTerm.asc(row.id),
-              ]))
-            .get();
-    return rows.map(_reversalFromRow).toList(growable: false);
+    final rows = await _database
+        .customSelect(
+          'SELECT * FROM allocation_reversals '
+          'WHERE allocation_id = ? ORDER BY rowid ASC',
+          variables: [Variable.withString(allocationId)],
+          readsFrom: {_database.allocationReversals},
+        )
+        .get();
+    return rows
+        .map((row) => _reversalFromMap(row.data))
+        .toList(growable: false);
   }
 
   Future<List<domain.AllocationStatusEvent>> getStatusHistory(
@@ -424,7 +426,7 @@ class AllocationRepository {
       );
     }
     final reversalId = _uuid.v4();
-    final createdAt = await _nextReversalCreatedAt(allocation.id);
+    final createdAt = _clock();
     await _database
         .into(_database.allocationReversals)
         .insert(
@@ -672,34 +674,18 @@ class AllocationRepository {
     return row.read<int>('total_minor');
   }
 
-  Future<DateTime> _nextReversalCreatedAt(String allocationId) async {
-    final latest =
-        await (_database.select(_database.allocationReversals)
-              ..where((row) => row.allocationId.equals(allocationId))
-              ..orderBy([(row) => OrderingTerm.desc(row.createdAt)])
-              ..limit(1))
-            .getSingleOrNull();
-    final now = _clock();
-    final timestamp = DateTime.fromMillisecondsSinceEpoch(
-      now.millisecondsSinceEpoch ~/ 1000 * 1000,
-      isUtc: now.isUtc,
-    );
-    if (latest != null && !timestamp.isAfter(latest.createdAt)) {
-      return latest.createdAt.add(const Duration(seconds: 1));
-    }
-    return timestamp;
-  }
-
   Future<int> _reversalSequence(String allocationId, String reversalId) async {
-    final rows =
-        await (_database.select(_database.allocationReversals)
-              ..where((row) => row.allocationId.equals(allocationId))
-              ..orderBy([
-                (row) => OrderingTerm.asc(row.createdAt),
-                (row) => OrderingTerm.asc(row.id),
-              ]))
-            .get();
-    final index = rows.indexWhere((row) => row.id == reversalId);
+    final rows = await _database
+        .customSelect(
+          'SELECT allocation_reversal_id FROM allocation_reversals '
+          'WHERE allocation_id = ? ORDER BY rowid ASC',
+          variables: [Variable.withString(allocationId)],
+          readsFrom: {_database.allocationReversals},
+        )
+        .get();
+    final index = rows.indexWhere(
+      (row) => row.read<String>('allocation_reversal_id') == reversalId,
+    );
     if (index < 0) {
       throw StateError('Allocation reversal was not found after insertion.');
     }
@@ -861,16 +847,19 @@ class AllocationRepository {
         createdAt: row.createdAt,
       );
 
-  domain.AllocationReversal _reversalFromRow(AllocationReversal row) =>
+  domain.AllocationReversal _reversalFromMap(Map<String, Object?> row) =>
       domain.AllocationReversal(
-        id: row.id,
-        allocationId: row.allocationId,
-        amountMinor: row.amountMinor,
-        idempotencyKey: row.idempotencyKey,
-        requestFingerprint: row.requestFingerprint,
-        actorId: row.actorId,
-        reason: row.reason,
-        createdAt: row.createdAt,
+        id: row['allocation_reversal_id']! as String,
+        allocationId: row['allocation_id']! as String,
+        amountMinor: row['amount_minor']! as int,
+        idempotencyKey: row['idempotency_key']! as String,
+        requestFingerprint: row['request_fingerprint']! as String,
+        actorId: row['actor_id'] as String?,
+        reason: row['reason']! as String,
+        createdAt: DateTime.fromMillisecondsSinceEpoch(
+          (row['created_at']! as int) * 1000,
+          isUtc: true,
+        ),
       );
 
   domain.AllocationStatusEvent _statusFromRow(
