@@ -8652,6 +8652,4972 @@ class SuspenseEntriesCompanion extends UpdateCompanion<SuspenseEntry> {
   }
 }
 
+class $InvoiceAllocationsTable extends InvoiceAllocations
+    with TableInfo<$InvoiceAllocationsTable, InvoiceAllocation> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $InvoiceAllocationsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+    'allocation_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _paymentIdMeta = const VerificationMeta(
+    'paymentId',
+  );
+  @override
+  late final GeneratedColumn<String> paymentId = GeneratedColumn<String>(
+    'payment_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _invoiceIdMeta = const VerificationMeta(
+    'invoiceId',
+  );
+  @override
+  late final GeneratedColumn<String> invoiceId = GeneratedColumn<String>(
+    'invoice_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _paymentFinancialAccountIdMeta =
+      const VerificationMeta('paymentFinancialAccountId');
+  @override
+  late final GeneratedColumn<String> paymentFinancialAccountId =
+      GeneratedColumn<String>(
+        'payment_financial_account_id',
+        aliasedName,
+        false,
+        type: DriftSqlType.string,
+        requiredDuringInsert: true,
+      );
+  static const VerificationMeta _invoiceFinancialAccountIdMeta =
+      const VerificationMeta('invoiceFinancialAccountId');
+  @override
+  late final GeneratedColumn<String> invoiceFinancialAccountId =
+      GeneratedColumn<String>(
+        'invoice_financial_account_id',
+        aliasedName,
+        false,
+        type: DriftSqlType.string,
+        requiredDuringInsert: true,
+      );
+  static const VerificationMeta _partyIdMeta = const VerificationMeta(
+    'partyId',
+  );
+  @override
+  late final GeneratedColumn<String> partyId = GeneratedColumn<String>(
+    'party_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _partyRoleMeta = const VerificationMeta(
+    'partyRole',
+  );
+  @override
+  late final GeneratedColumn<String> partyRole = GeneratedColumn<String>(
+    'party_role',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _currencyCodeMeta = const VerificationMeta(
+    'currencyCode',
+  );
+  @override
+  late final GeneratedColumn<String> currencyCode = GeneratedColumn<String>(
+    'currency_code',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _amountMinorMeta = const VerificationMeta(
+    'amountMinor',
+  );
+  @override
+  late final GeneratedColumn<int> amountMinor = GeneratedColumn<int>(
+    'amount_minor',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _idempotencyKeyMeta = const VerificationMeta(
+    'idempotencyKey',
+  );
+  @override
+  late final GeneratedColumn<String> idempotencyKey = GeneratedColumn<String>(
+    'idempotency_key',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _requestFingerprintMeta =
+      const VerificationMeta('requestFingerprint');
+  @override
+  late final GeneratedColumn<String> requestFingerprint =
+      GeneratedColumn<String>(
+        'request_fingerprint',
+        aliasedName,
+        false,
+        type: DriftSqlType.string,
+        requiredDuringInsert: true,
+      );
+  static const VerificationMeta _originDeviceIdMeta = const VerificationMeta(
+    'originDeviceId',
+  );
+  @override
+  late final GeneratedColumn<String> originDeviceId = GeneratedColumn<String>(
+    'origin_device_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _conflictGroupIdMeta = const VerificationMeta(
+    'conflictGroupId',
+  );
+  @override
+  late final GeneratedColumn<String> conflictGroupId = GeneratedColumn<String>(
+    'conflict_group_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _actorIdMeta = const VerificationMeta(
+    'actorId',
+  );
+  @override
+  late final GeneratedColumn<String> actorId = GeneratedColumn<String>(
+    'actor_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _reasonMeta = const VerificationMeta('reason');
+  @override
+  late final GeneratedColumn<String> reason = GeneratedColumn<String>(
+    'reason',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+    'created_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    paymentId,
+    invoiceId,
+    paymentFinancialAccountId,
+    invoiceFinancialAccountId,
+    partyId,
+    partyRole,
+    currencyCode,
+    amountMinor,
+    idempotencyKey,
+    requestFingerprint,
+    originDeviceId,
+    conflictGroupId,
+    actorId,
+    reason,
+    createdAt,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'invoice_allocations';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<InvoiceAllocation> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('allocation_id')) {
+      context.handle(
+        _idMeta,
+        id.isAcceptableOrUnknown(data['allocation_id']!, _idMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_idMeta);
+    }
+    if (data.containsKey('payment_id')) {
+      context.handle(
+        _paymentIdMeta,
+        paymentId.isAcceptableOrUnknown(data['payment_id']!, _paymentIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_paymentIdMeta);
+    }
+    if (data.containsKey('invoice_id')) {
+      context.handle(
+        _invoiceIdMeta,
+        invoiceId.isAcceptableOrUnknown(data['invoice_id']!, _invoiceIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_invoiceIdMeta);
+    }
+    if (data.containsKey('payment_financial_account_id')) {
+      context.handle(
+        _paymentFinancialAccountIdMeta,
+        paymentFinancialAccountId.isAcceptableOrUnknown(
+          data['payment_financial_account_id']!,
+          _paymentFinancialAccountIdMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_paymentFinancialAccountIdMeta);
+    }
+    if (data.containsKey('invoice_financial_account_id')) {
+      context.handle(
+        _invoiceFinancialAccountIdMeta,
+        invoiceFinancialAccountId.isAcceptableOrUnknown(
+          data['invoice_financial_account_id']!,
+          _invoiceFinancialAccountIdMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_invoiceFinancialAccountIdMeta);
+    }
+    if (data.containsKey('party_id')) {
+      context.handle(
+        _partyIdMeta,
+        partyId.isAcceptableOrUnknown(data['party_id']!, _partyIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_partyIdMeta);
+    }
+    if (data.containsKey('party_role')) {
+      context.handle(
+        _partyRoleMeta,
+        partyRole.isAcceptableOrUnknown(data['party_role']!, _partyRoleMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_partyRoleMeta);
+    }
+    if (data.containsKey('currency_code')) {
+      context.handle(
+        _currencyCodeMeta,
+        currencyCode.isAcceptableOrUnknown(
+          data['currency_code']!,
+          _currencyCodeMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_currencyCodeMeta);
+    }
+    if (data.containsKey('amount_minor')) {
+      context.handle(
+        _amountMinorMeta,
+        amountMinor.isAcceptableOrUnknown(
+          data['amount_minor']!,
+          _amountMinorMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_amountMinorMeta);
+    }
+    if (data.containsKey('idempotency_key')) {
+      context.handle(
+        _idempotencyKeyMeta,
+        idempotencyKey.isAcceptableOrUnknown(
+          data['idempotency_key']!,
+          _idempotencyKeyMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_idempotencyKeyMeta);
+    }
+    if (data.containsKey('request_fingerprint')) {
+      context.handle(
+        _requestFingerprintMeta,
+        requestFingerprint.isAcceptableOrUnknown(
+          data['request_fingerprint']!,
+          _requestFingerprintMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_requestFingerprintMeta);
+    }
+    if (data.containsKey('origin_device_id')) {
+      context.handle(
+        _originDeviceIdMeta,
+        originDeviceId.isAcceptableOrUnknown(
+          data['origin_device_id']!,
+          _originDeviceIdMeta,
+        ),
+      );
+    }
+    if (data.containsKey('conflict_group_id')) {
+      context.handle(
+        _conflictGroupIdMeta,
+        conflictGroupId.isAcceptableOrUnknown(
+          data['conflict_group_id']!,
+          _conflictGroupIdMeta,
+        ),
+      );
+    }
+    if (data.containsKey('actor_id')) {
+      context.handle(
+        _actorIdMeta,
+        actorId.isAcceptableOrUnknown(data['actor_id']!, _actorIdMeta),
+      );
+    }
+    if (data.containsKey('reason')) {
+      context.handle(
+        _reasonMeta,
+        reason.isAcceptableOrUnknown(data['reason']!, _reasonMeta),
+      );
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_createdAtMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  List<Set<GeneratedColumn>> get uniqueKeys => [
+    {id, paymentId, invoiceId},
+    {idempotencyKey},
+  ];
+  @override
+  InvoiceAllocation map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return InvoiceAllocation(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}allocation_id'],
+      )!,
+      paymentId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}payment_id'],
+      )!,
+      invoiceId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}invoice_id'],
+      )!,
+      paymentFinancialAccountId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}payment_financial_account_id'],
+      )!,
+      invoiceFinancialAccountId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}invoice_financial_account_id'],
+      )!,
+      partyId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}party_id'],
+      )!,
+      partyRole: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}party_role'],
+      )!,
+      currencyCode: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}currency_code'],
+      )!,
+      amountMinor: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}amount_minor'],
+      )!,
+      idempotencyKey: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}idempotency_key'],
+      )!,
+      requestFingerprint: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}request_fingerprint'],
+      )!,
+      originDeviceId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}origin_device_id'],
+      ),
+      conflictGroupId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}conflict_group_id'],
+      ),
+      actorId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}actor_id'],
+      ),
+      reason: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}reason'],
+      ),
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}created_at'],
+      )!,
+    );
+  }
+
+  @override
+  $InvoiceAllocationsTable createAlias(String alias) {
+    return $InvoiceAllocationsTable(attachedDatabase, alias);
+  }
+}
+
+class InvoiceAllocation extends DataClass
+    implements Insertable<InvoiceAllocation> {
+  final String id;
+  final String paymentId;
+  final String invoiceId;
+  final String paymentFinancialAccountId;
+  final String invoiceFinancialAccountId;
+  final String partyId;
+  final String partyRole;
+  final String currencyCode;
+  final int amountMinor;
+  final String idempotencyKey;
+  final String requestFingerprint;
+  final String? originDeviceId;
+  final String? conflictGroupId;
+  final String? actorId;
+  final String? reason;
+  final DateTime createdAt;
+  const InvoiceAllocation({
+    required this.id,
+    required this.paymentId,
+    required this.invoiceId,
+    required this.paymentFinancialAccountId,
+    required this.invoiceFinancialAccountId,
+    required this.partyId,
+    required this.partyRole,
+    required this.currencyCode,
+    required this.amountMinor,
+    required this.idempotencyKey,
+    required this.requestFingerprint,
+    this.originDeviceId,
+    this.conflictGroupId,
+    this.actorId,
+    this.reason,
+    required this.createdAt,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['allocation_id'] = Variable<String>(id);
+    map['payment_id'] = Variable<String>(paymentId);
+    map['invoice_id'] = Variable<String>(invoiceId);
+    map['payment_financial_account_id'] = Variable<String>(
+      paymentFinancialAccountId,
+    );
+    map['invoice_financial_account_id'] = Variable<String>(
+      invoiceFinancialAccountId,
+    );
+    map['party_id'] = Variable<String>(partyId);
+    map['party_role'] = Variable<String>(partyRole);
+    map['currency_code'] = Variable<String>(currencyCode);
+    map['amount_minor'] = Variable<int>(amountMinor);
+    map['idempotency_key'] = Variable<String>(idempotencyKey);
+    map['request_fingerprint'] = Variable<String>(requestFingerprint);
+    if (!nullToAbsent || originDeviceId != null) {
+      map['origin_device_id'] = Variable<String>(originDeviceId);
+    }
+    if (!nullToAbsent || conflictGroupId != null) {
+      map['conflict_group_id'] = Variable<String>(conflictGroupId);
+    }
+    if (!nullToAbsent || actorId != null) {
+      map['actor_id'] = Variable<String>(actorId);
+    }
+    if (!nullToAbsent || reason != null) {
+      map['reason'] = Variable<String>(reason);
+    }
+    map['created_at'] = Variable<DateTime>(createdAt);
+    return map;
+  }
+
+  InvoiceAllocationsCompanion toCompanion(bool nullToAbsent) {
+    return InvoiceAllocationsCompanion(
+      id: Value(id),
+      paymentId: Value(paymentId),
+      invoiceId: Value(invoiceId),
+      paymentFinancialAccountId: Value(paymentFinancialAccountId),
+      invoiceFinancialAccountId: Value(invoiceFinancialAccountId),
+      partyId: Value(partyId),
+      partyRole: Value(partyRole),
+      currencyCode: Value(currencyCode),
+      amountMinor: Value(amountMinor),
+      idempotencyKey: Value(idempotencyKey),
+      requestFingerprint: Value(requestFingerprint),
+      originDeviceId: originDeviceId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(originDeviceId),
+      conflictGroupId: conflictGroupId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(conflictGroupId),
+      actorId: actorId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(actorId),
+      reason: reason == null && nullToAbsent
+          ? const Value.absent()
+          : Value(reason),
+      createdAt: Value(createdAt),
+    );
+  }
+
+  factory InvoiceAllocation.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return InvoiceAllocation(
+      id: serializer.fromJson<String>(json['id']),
+      paymentId: serializer.fromJson<String>(json['paymentId']),
+      invoiceId: serializer.fromJson<String>(json['invoiceId']),
+      paymentFinancialAccountId: serializer.fromJson<String>(
+        json['paymentFinancialAccountId'],
+      ),
+      invoiceFinancialAccountId: serializer.fromJson<String>(
+        json['invoiceFinancialAccountId'],
+      ),
+      partyId: serializer.fromJson<String>(json['partyId']),
+      partyRole: serializer.fromJson<String>(json['partyRole']),
+      currencyCode: serializer.fromJson<String>(json['currencyCode']),
+      amountMinor: serializer.fromJson<int>(json['amountMinor']),
+      idempotencyKey: serializer.fromJson<String>(json['idempotencyKey']),
+      requestFingerprint: serializer.fromJson<String>(
+        json['requestFingerprint'],
+      ),
+      originDeviceId: serializer.fromJson<String?>(json['originDeviceId']),
+      conflictGroupId: serializer.fromJson<String?>(json['conflictGroupId']),
+      actorId: serializer.fromJson<String?>(json['actorId']),
+      reason: serializer.fromJson<String?>(json['reason']),
+      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<String>(id),
+      'paymentId': serializer.toJson<String>(paymentId),
+      'invoiceId': serializer.toJson<String>(invoiceId),
+      'paymentFinancialAccountId': serializer.toJson<String>(
+        paymentFinancialAccountId,
+      ),
+      'invoiceFinancialAccountId': serializer.toJson<String>(
+        invoiceFinancialAccountId,
+      ),
+      'partyId': serializer.toJson<String>(partyId),
+      'partyRole': serializer.toJson<String>(partyRole),
+      'currencyCode': serializer.toJson<String>(currencyCode),
+      'amountMinor': serializer.toJson<int>(amountMinor),
+      'idempotencyKey': serializer.toJson<String>(idempotencyKey),
+      'requestFingerprint': serializer.toJson<String>(requestFingerprint),
+      'originDeviceId': serializer.toJson<String?>(originDeviceId),
+      'conflictGroupId': serializer.toJson<String?>(conflictGroupId),
+      'actorId': serializer.toJson<String?>(actorId),
+      'reason': serializer.toJson<String?>(reason),
+      'createdAt': serializer.toJson<DateTime>(createdAt),
+    };
+  }
+
+  InvoiceAllocation copyWith({
+    String? id,
+    String? paymentId,
+    String? invoiceId,
+    String? paymentFinancialAccountId,
+    String? invoiceFinancialAccountId,
+    String? partyId,
+    String? partyRole,
+    String? currencyCode,
+    int? amountMinor,
+    String? idempotencyKey,
+    String? requestFingerprint,
+    Value<String?> originDeviceId = const Value.absent(),
+    Value<String?> conflictGroupId = const Value.absent(),
+    Value<String?> actorId = const Value.absent(),
+    Value<String?> reason = const Value.absent(),
+    DateTime? createdAt,
+  }) => InvoiceAllocation(
+    id: id ?? this.id,
+    paymentId: paymentId ?? this.paymentId,
+    invoiceId: invoiceId ?? this.invoiceId,
+    paymentFinancialAccountId:
+        paymentFinancialAccountId ?? this.paymentFinancialAccountId,
+    invoiceFinancialAccountId:
+        invoiceFinancialAccountId ?? this.invoiceFinancialAccountId,
+    partyId: partyId ?? this.partyId,
+    partyRole: partyRole ?? this.partyRole,
+    currencyCode: currencyCode ?? this.currencyCode,
+    amountMinor: amountMinor ?? this.amountMinor,
+    idempotencyKey: idempotencyKey ?? this.idempotencyKey,
+    requestFingerprint: requestFingerprint ?? this.requestFingerprint,
+    originDeviceId: originDeviceId.present
+        ? originDeviceId.value
+        : this.originDeviceId,
+    conflictGroupId: conflictGroupId.present
+        ? conflictGroupId.value
+        : this.conflictGroupId,
+    actorId: actorId.present ? actorId.value : this.actorId,
+    reason: reason.present ? reason.value : this.reason,
+    createdAt: createdAt ?? this.createdAt,
+  );
+  InvoiceAllocation copyWithCompanion(InvoiceAllocationsCompanion data) {
+    return InvoiceAllocation(
+      id: data.id.present ? data.id.value : this.id,
+      paymentId: data.paymentId.present ? data.paymentId.value : this.paymentId,
+      invoiceId: data.invoiceId.present ? data.invoiceId.value : this.invoiceId,
+      paymentFinancialAccountId: data.paymentFinancialAccountId.present
+          ? data.paymentFinancialAccountId.value
+          : this.paymentFinancialAccountId,
+      invoiceFinancialAccountId: data.invoiceFinancialAccountId.present
+          ? data.invoiceFinancialAccountId.value
+          : this.invoiceFinancialAccountId,
+      partyId: data.partyId.present ? data.partyId.value : this.partyId,
+      partyRole: data.partyRole.present ? data.partyRole.value : this.partyRole,
+      currencyCode: data.currencyCode.present
+          ? data.currencyCode.value
+          : this.currencyCode,
+      amountMinor: data.amountMinor.present
+          ? data.amountMinor.value
+          : this.amountMinor,
+      idempotencyKey: data.idempotencyKey.present
+          ? data.idempotencyKey.value
+          : this.idempotencyKey,
+      requestFingerprint: data.requestFingerprint.present
+          ? data.requestFingerprint.value
+          : this.requestFingerprint,
+      originDeviceId: data.originDeviceId.present
+          ? data.originDeviceId.value
+          : this.originDeviceId,
+      conflictGroupId: data.conflictGroupId.present
+          ? data.conflictGroupId.value
+          : this.conflictGroupId,
+      actorId: data.actorId.present ? data.actorId.value : this.actorId,
+      reason: data.reason.present ? data.reason.value : this.reason,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('InvoiceAllocation(')
+          ..write('id: $id, ')
+          ..write('paymentId: $paymentId, ')
+          ..write('invoiceId: $invoiceId, ')
+          ..write('paymentFinancialAccountId: $paymentFinancialAccountId, ')
+          ..write('invoiceFinancialAccountId: $invoiceFinancialAccountId, ')
+          ..write('partyId: $partyId, ')
+          ..write('partyRole: $partyRole, ')
+          ..write('currencyCode: $currencyCode, ')
+          ..write('amountMinor: $amountMinor, ')
+          ..write('idempotencyKey: $idempotencyKey, ')
+          ..write('requestFingerprint: $requestFingerprint, ')
+          ..write('originDeviceId: $originDeviceId, ')
+          ..write('conflictGroupId: $conflictGroupId, ')
+          ..write('actorId: $actorId, ')
+          ..write('reason: $reason, ')
+          ..write('createdAt: $createdAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    id,
+    paymentId,
+    invoiceId,
+    paymentFinancialAccountId,
+    invoiceFinancialAccountId,
+    partyId,
+    partyRole,
+    currencyCode,
+    amountMinor,
+    idempotencyKey,
+    requestFingerprint,
+    originDeviceId,
+    conflictGroupId,
+    actorId,
+    reason,
+    createdAt,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is InvoiceAllocation &&
+          other.id == this.id &&
+          other.paymentId == this.paymentId &&
+          other.invoiceId == this.invoiceId &&
+          other.paymentFinancialAccountId == this.paymentFinancialAccountId &&
+          other.invoiceFinancialAccountId == this.invoiceFinancialAccountId &&
+          other.partyId == this.partyId &&
+          other.partyRole == this.partyRole &&
+          other.currencyCode == this.currencyCode &&
+          other.amountMinor == this.amountMinor &&
+          other.idempotencyKey == this.idempotencyKey &&
+          other.requestFingerprint == this.requestFingerprint &&
+          other.originDeviceId == this.originDeviceId &&
+          other.conflictGroupId == this.conflictGroupId &&
+          other.actorId == this.actorId &&
+          other.reason == this.reason &&
+          other.createdAt == this.createdAt);
+}
+
+class InvoiceAllocationsCompanion extends UpdateCompanion<InvoiceAllocation> {
+  final Value<String> id;
+  final Value<String> paymentId;
+  final Value<String> invoiceId;
+  final Value<String> paymentFinancialAccountId;
+  final Value<String> invoiceFinancialAccountId;
+  final Value<String> partyId;
+  final Value<String> partyRole;
+  final Value<String> currencyCode;
+  final Value<int> amountMinor;
+  final Value<String> idempotencyKey;
+  final Value<String> requestFingerprint;
+  final Value<String?> originDeviceId;
+  final Value<String?> conflictGroupId;
+  final Value<String?> actorId;
+  final Value<String?> reason;
+  final Value<DateTime> createdAt;
+  final Value<int> rowid;
+  const InvoiceAllocationsCompanion({
+    this.id = const Value.absent(),
+    this.paymentId = const Value.absent(),
+    this.invoiceId = const Value.absent(),
+    this.paymentFinancialAccountId = const Value.absent(),
+    this.invoiceFinancialAccountId = const Value.absent(),
+    this.partyId = const Value.absent(),
+    this.partyRole = const Value.absent(),
+    this.currencyCode = const Value.absent(),
+    this.amountMinor = const Value.absent(),
+    this.idempotencyKey = const Value.absent(),
+    this.requestFingerprint = const Value.absent(),
+    this.originDeviceId = const Value.absent(),
+    this.conflictGroupId = const Value.absent(),
+    this.actorId = const Value.absent(),
+    this.reason = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  InvoiceAllocationsCompanion.insert({
+    required String id,
+    required String paymentId,
+    required String invoiceId,
+    required String paymentFinancialAccountId,
+    required String invoiceFinancialAccountId,
+    required String partyId,
+    required String partyRole,
+    required String currencyCode,
+    required int amountMinor,
+    required String idempotencyKey,
+    required String requestFingerprint,
+    this.originDeviceId = const Value.absent(),
+    this.conflictGroupId = const Value.absent(),
+    this.actorId = const Value.absent(),
+    this.reason = const Value.absent(),
+    required DateTime createdAt,
+    this.rowid = const Value.absent(),
+  }) : id = Value(id),
+       paymentId = Value(paymentId),
+       invoiceId = Value(invoiceId),
+       paymentFinancialAccountId = Value(paymentFinancialAccountId),
+       invoiceFinancialAccountId = Value(invoiceFinancialAccountId),
+       partyId = Value(partyId),
+       partyRole = Value(partyRole),
+       currencyCode = Value(currencyCode),
+       amountMinor = Value(amountMinor),
+       idempotencyKey = Value(idempotencyKey),
+       requestFingerprint = Value(requestFingerprint),
+       createdAt = Value(createdAt);
+  static Insertable<InvoiceAllocation> custom({
+    Expression<String>? id,
+    Expression<String>? paymentId,
+    Expression<String>? invoiceId,
+    Expression<String>? paymentFinancialAccountId,
+    Expression<String>? invoiceFinancialAccountId,
+    Expression<String>? partyId,
+    Expression<String>? partyRole,
+    Expression<String>? currencyCode,
+    Expression<int>? amountMinor,
+    Expression<String>? idempotencyKey,
+    Expression<String>? requestFingerprint,
+    Expression<String>? originDeviceId,
+    Expression<String>? conflictGroupId,
+    Expression<String>? actorId,
+    Expression<String>? reason,
+    Expression<DateTime>? createdAt,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'allocation_id': id,
+      if (paymentId != null) 'payment_id': paymentId,
+      if (invoiceId != null) 'invoice_id': invoiceId,
+      if (paymentFinancialAccountId != null)
+        'payment_financial_account_id': paymentFinancialAccountId,
+      if (invoiceFinancialAccountId != null)
+        'invoice_financial_account_id': invoiceFinancialAccountId,
+      if (partyId != null) 'party_id': partyId,
+      if (partyRole != null) 'party_role': partyRole,
+      if (currencyCode != null) 'currency_code': currencyCode,
+      if (amountMinor != null) 'amount_minor': amountMinor,
+      if (idempotencyKey != null) 'idempotency_key': idempotencyKey,
+      if (requestFingerprint != null) 'request_fingerprint': requestFingerprint,
+      if (originDeviceId != null) 'origin_device_id': originDeviceId,
+      if (conflictGroupId != null) 'conflict_group_id': conflictGroupId,
+      if (actorId != null) 'actor_id': actorId,
+      if (reason != null) 'reason': reason,
+      if (createdAt != null) 'created_at': createdAt,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  InvoiceAllocationsCompanion copyWith({
+    Value<String>? id,
+    Value<String>? paymentId,
+    Value<String>? invoiceId,
+    Value<String>? paymentFinancialAccountId,
+    Value<String>? invoiceFinancialAccountId,
+    Value<String>? partyId,
+    Value<String>? partyRole,
+    Value<String>? currencyCode,
+    Value<int>? amountMinor,
+    Value<String>? idempotencyKey,
+    Value<String>? requestFingerprint,
+    Value<String?>? originDeviceId,
+    Value<String?>? conflictGroupId,
+    Value<String?>? actorId,
+    Value<String?>? reason,
+    Value<DateTime>? createdAt,
+    Value<int>? rowid,
+  }) {
+    return InvoiceAllocationsCompanion(
+      id: id ?? this.id,
+      paymentId: paymentId ?? this.paymentId,
+      invoiceId: invoiceId ?? this.invoiceId,
+      paymentFinancialAccountId:
+          paymentFinancialAccountId ?? this.paymentFinancialAccountId,
+      invoiceFinancialAccountId:
+          invoiceFinancialAccountId ?? this.invoiceFinancialAccountId,
+      partyId: partyId ?? this.partyId,
+      partyRole: partyRole ?? this.partyRole,
+      currencyCode: currencyCode ?? this.currencyCode,
+      amountMinor: amountMinor ?? this.amountMinor,
+      idempotencyKey: idempotencyKey ?? this.idempotencyKey,
+      requestFingerprint: requestFingerprint ?? this.requestFingerprint,
+      originDeviceId: originDeviceId ?? this.originDeviceId,
+      conflictGroupId: conflictGroupId ?? this.conflictGroupId,
+      actorId: actorId ?? this.actorId,
+      reason: reason ?? this.reason,
+      createdAt: createdAt ?? this.createdAt,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['allocation_id'] = Variable<String>(id.value);
+    }
+    if (paymentId.present) {
+      map['payment_id'] = Variable<String>(paymentId.value);
+    }
+    if (invoiceId.present) {
+      map['invoice_id'] = Variable<String>(invoiceId.value);
+    }
+    if (paymentFinancialAccountId.present) {
+      map['payment_financial_account_id'] = Variable<String>(
+        paymentFinancialAccountId.value,
+      );
+    }
+    if (invoiceFinancialAccountId.present) {
+      map['invoice_financial_account_id'] = Variable<String>(
+        invoiceFinancialAccountId.value,
+      );
+    }
+    if (partyId.present) {
+      map['party_id'] = Variable<String>(partyId.value);
+    }
+    if (partyRole.present) {
+      map['party_role'] = Variable<String>(partyRole.value);
+    }
+    if (currencyCode.present) {
+      map['currency_code'] = Variable<String>(currencyCode.value);
+    }
+    if (amountMinor.present) {
+      map['amount_minor'] = Variable<int>(amountMinor.value);
+    }
+    if (idempotencyKey.present) {
+      map['idempotency_key'] = Variable<String>(idempotencyKey.value);
+    }
+    if (requestFingerprint.present) {
+      map['request_fingerprint'] = Variable<String>(requestFingerprint.value);
+    }
+    if (originDeviceId.present) {
+      map['origin_device_id'] = Variable<String>(originDeviceId.value);
+    }
+    if (conflictGroupId.present) {
+      map['conflict_group_id'] = Variable<String>(conflictGroupId.value);
+    }
+    if (actorId.present) {
+      map['actor_id'] = Variable<String>(actorId.value);
+    }
+    if (reason.present) {
+      map['reason'] = Variable<String>(reason.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('InvoiceAllocationsCompanion(')
+          ..write('id: $id, ')
+          ..write('paymentId: $paymentId, ')
+          ..write('invoiceId: $invoiceId, ')
+          ..write('paymentFinancialAccountId: $paymentFinancialAccountId, ')
+          ..write('invoiceFinancialAccountId: $invoiceFinancialAccountId, ')
+          ..write('partyId: $partyId, ')
+          ..write('partyRole: $partyRole, ')
+          ..write('currencyCode: $currencyCode, ')
+          ..write('amountMinor: $amountMinor, ')
+          ..write('idempotencyKey: $idempotencyKey, ')
+          ..write('requestFingerprint: $requestFingerprint, ')
+          ..write('originDeviceId: $originDeviceId, ')
+          ..write('conflictGroupId: $conflictGroupId, ')
+          ..write('actorId: $actorId, ')
+          ..write('reason: $reason, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $AllocationReversalsTable extends AllocationReversals
+    with TableInfo<$AllocationReversalsTable, AllocationReversal> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $AllocationReversalsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+    'allocation_reversal_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _allocationIdMeta = const VerificationMeta(
+    'allocationId',
+  );
+  @override
+  late final GeneratedColumn<String> allocationId = GeneratedColumn<String>(
+    'allocation_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _amountMinorMeta = const VerificationMeta(
+    'amountMinor',
+  );
+  @override
+  late final GeneratedColumn<int> amountMinor = GeneratedColumn<int>(
+    'amount_minor',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _idempotencyKeyMeta = const VerificationMeta(
+    'idempotencyKey',
+  );
+  @override
+  late final GeneratedColumn<String> idempotencyKey = GeneratedColumn<String>(
+    'idempotency_key',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _requestFingerprintMeta =
+      const VerificationMeta('requestFingerprint');
+  @override
+  late final GeneratedColumn<String> requestFingerprint =
+      GeneratedColumn<String>(
+        'request_fingerprint',
+        aliasedName,
+        false,
+        type: DriftSqlType.string,
+        requiredDuringInsert: true,
+      );
+  static const VerificationMeta _actorIdMeta = const VerificationMeta(
+    'actorId',
+  );
+  @override
+  late final GeneratedColumn<String> actorId = GeneratedColumn<String>(
+    'actor_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _reasonMeta = const VerificationMeta('reason');
+  @override
+  late final GeneratedColumn<String> reason = GeneratedColumn<String>(
+    'reason',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+    'created_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    allocationId,
+    amountMinor,
+    idempotencyKey,
+    requestFingerprint,
+    actorId,
+    reason,
+    createdAt,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'allocation_reversals';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<AllocationReversal> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('allocation_reversal_id')) {
+      context.handle(
+        _idMeta,
+        id.isAcceptableOrUnknown(data['allocation_reversal_id']!, _idMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_idMeta);
+    }
+    if (data.containsKey('allocation_id')) {
+      context.handle(
+        _allocationIdMeta,
+        allocationId.isAcceptableOrUnknown(
+          data['allocation_id']!,
+          _allocationIdMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_allocationIdMeta);
+    }
+    if (data.containsKey('amount_minor')) {
+      context.handle(
+        _amountMinorMeta,
+        amountMinor.isAcceptableOrUnknown(
+          data['amount_minor']!,
+          _amountMinorMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_amountMinorMeta);
+    }
+    if (data.containsKey('idempotency_key')) {
+      context.handle(
+        _idempotencyKeyMeta,
+        idempotencyKey.isAcceptableOrUnknown(
+          data['idempotency_key']!,
+          _idempotencyKeyMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_idempotencyKeyMeta);
+    }
+    if (data.containsKey('request_fingerprint')) {
+      context.handle(
+        _requestFingerprintMeta,
+        requestFingerprint.isAcceptableOrUnknown(
+          data['request_fingerprint']!,
+          _requestFingerprintMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_requestFingerprintMeta);
+    }
+    if (data.containsKey('actor_id')) {
+      context.handle(
+        _actorIdMeta,
+        actorId.isAcceptableOrUnknown(data['actor_id']!, _actorIdMeta),
+      );
+    }
+    if (data.containsKey('reason')) {
+      context.handle(
+        _reasonMeta,
+        reason.isAcceptableOrUnknown(data['reason']!, _reasonMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_reasonMeta);
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_createdAtMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  List<Set<GeneratedColumn>> get uniqueKeys => [
+    {id, allocationId},
+    {idempotencyKey},
+  ];
+  @override
+  AllocationReversal map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return AllocationReversal(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}allocation_reversal_id'],
+      )!,
+      allocationId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}allocation_id'],
+      )!,
+      amountMinor: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}amount_minor'],
+      )!,
+      idempotencyKey: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}idempotency_key'],
+      )!,
+      requestFingerprint: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}request_fingerprint'],
+      )!,
+      actorId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}actor_id'],
+      ),
+      reason: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}reason'],
+      )!,
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}created_at'],
+      )!,
+    );
+  }
+
+  @override
+  $AllocationReversalsTable createAlias(String alias) {
+    return $AllocationReversalsTable(attachedDatabase, alias);
+  }
+}
+
+class AllocationReversal extends DataClass
+    implements Insertable<AllocationReversal> {
+  final String id;
+  final String allocationId;
+  final int amountMinor;
+  final String idempotencyKey;
+  final String requestFingerprint;
+  final String? actorId;
+  final String reason;
+  final DateTime createdAt;
+  const AllocationReversal({
+    required this.id,
+    required this.allocationId,
+    required this.amountMinor,
+    required this.idempotencyKey,
+    required this.requestFingerprint,
+    this.actorId,
+    required this.reason,
+    required this.createdAt,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['allocation_reversal_id'] = Variable<String>(id);
+    map['allocation_id'] = Variable<String>(allocationId);
+    map['amount_minor'] = Variable<int>(amountMinor);
+    map['idempotency_key'] = Variable<String>(idempotencyKey);
+    map['request_fingerprint'] = Variable<String>(requestFingerprint);
+    if (!nullToAbsent || actorId != null) {
+      map['actor_id'] = Variable<String>(actorId);
+    }
+    map['reason'] = Variable<String>(reason);
+    map['created_at'] = Variable<DateTime>(createdAt);
+    return map;
+  }
+
+  AllocationReversalsCompanion toCompanion(bool nullToAbsent) {
+    return AllocationReversalsCompanion(
+      id: Value(id),
+      allocationId: Value(allocationId),
+      amountMinor: Value(amountMinor),
+      idempotencyKey: Value(idempotencyKey),
+      requestFingerprint: Value(requestFingerprint),
+      actorId: actorId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(actorId),
+      reason: Value(reason),
+      createdAt: Value(createdAt),
+    );
+  }
+
+  factory AllocationReversal.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return AllocationReversal(
+      id: serializer.fromJson<String>(json['id']),
+      allocationId: serializer.fromJson<String>(json['allocationId']),
+      amountMinor: serializer.fromJson<int>(json['amountMinor']),
+      idempotencyKey: serializer.fromJson<String>(json['idempotencyKey']),
+      requestFingerprint: serializer.fromJson<String>(
+        json['requestFingerprint'],
+      ),
+      actorId: serializer.fromJson<String?>(json['actorId']),
+      reason: serializer.fromJson<String>(json['reason']),
+      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<String>(id),
+      'allocationId': serializer.toJson<String>(allocationId),
+      'amountMinor': serializer.toJson<int>(amountMinor),
+      'idempotencyKey': serializer.toJson<String>(idempotencyKey),
+      'requestFingerprint': serializer.toJson<String>(requestFingerprint),
+      'actorId': serializer.toJson<String?>(actorId),
+      'reason': serializer.toJson<String>(reason),
+      'createdAt': serializer.toJson<DateTime>(createdAt),
+    };
+  }
+
+  AllocationReversal copyWith({
+    String? id,
+    String? allocationId,
+    int? amountMinor,
+    String? idempotencyKey,
+    String? requestFingerprint,
+    Value<String?> actorId = const Value.absent(),
+    String? reason,
+    DateTime? createdAt,
+  }) => AllocationReversal(
+    id: id ?? this.id,
+    allocationId: allocationId ?? this.allocationId,
+    amountMinor: amountMinor ?? this.amountMinor,
+    idempotencyKey: idempotencyKey ?? this.idempotencyKey,
+    requestFingerprint: requestFingerprint ?? this.requestFingerprint,
+    actorId: actorId.present ? actorId.value : this.actorId,
+    reason: reason ?? this.reason,
+    createdAt: createdAt ?? this.createdAt,
+  );
+  AllocationReversal copyWithCompanion(AllocationReversalsCompanion data) {
+    return AllocationReversal(
+      id: data.id.present ? data.id.value : this.id,
+      allocationId: data.allocationId.present
+          ? data.allocationId.value
+          : this.allocationId,
+      amountMinor: data.amountMinor.present
+          ? data.amountMinor.value
+          : this.amountMinor,
+      idempotencyKey: data.idempotencyKey.present
+          ? data.idempotencyKey.value
+          : this.idempotencyKey,
+      requestFingerprint: data.requestFingerprint.present
+          ? data.requestFingerprint.value
+          : this.requestFingerprint,
+      actorId: data.actorId.present ? data.actorId.value : this.actorId,
+      reason: data.reason.present ? data.reason.value : this.reason,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('AllocationReversal(')
+          ..write('id: $id, ')
+          ..write('allocationId: $allocationId, ')
+          ..write('amountMinor: $amountMinor, ')
+          ..write('idempotencyKey: $idempotencyKey, ')
+          ..write('requestFingerprint: $requestFingerprint, ')
+          ..write('actorId: $actorId, ')
+          ..write('reason: $reason, ')
+          ..write('createdAt: $createdAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    id,
+    allocationId,
+    amountMinor,
+    idempotencyKey,
+    requestFingerprint,
+    actorId,
+    reason,
+    createdAt,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is AllocationReversal &&
+          other.id == this.id &&
+          other.allocationId == this.allocationId &&
+          other.amountMinor == this.amountMinor &&
+          other.idempotencyKey == this.idempotencyKey &&
+          other.requestFingerprint == this.requestFingerprint &&
+          other.actorId == this.actorId &&
+          other.reason == this.reason &&
+          other.createdAt == this.createdAt);
+}
+
+class AllocationReversalsCompanion extends UpdateCompanion<AllocationReversal> {
+  final Value<String> id;
+  final Value<String> allocationId;
+  final Value<int> amountMinor;
+  final Value<String> idempotencyKey;
+  final Value<String> requestFingerprint;
+  final Value<String?> actorId;
+  final Value<String> reason;
+  final Value<DateTime> createdAt;
+  final Value<int> rowid;
+  const AllocationReversalsCompanion({
+    this.id = const Value.absent(),
+    this.allocationId = const Value.absent(),
+    this.amountMinor = const Value.absent(),
+    this.idempotencyKey = const Value.absent(),
+    this.requestFingerprint = const Value.absent(),
+    this.actorId = const Value.absent(),
+    this.reason = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  AllocationReversalsCompanion.insert({
+    required String id,
+    required String allocationId,
+    required int amountMinor,
+    required String idempotencyKey,
+    required String requestFingerprint,
+    this.actorId = const Value.absent(),
+    required String reason,
+    required DateTime createdAt,
+    this.rowid = const Value.absent(),
+  }) : id = Value(id),
+       allocationId = Value(allocationId),
+       amountMinor = Value(amountMinor),
+       idempotencyKey = Value(idempotencyKey),
+       requestFingerprint = Value(requestFingerprint),
+       reason = Value(reason),
+       createdAt = Value(createdAt);
+  static Insertable<AllocationReversal> custom({
+    Expression<String>? id,
+    Expression<String>? allocationId,
+    Expression<int>? amountMinor,
+    Expression<String>? idempotencyKey,
+    Expression<String>? requestFingerprint,
+    Expression<String>? actorId,
+    Expression<String>? reason,
+    Expression<DateTime>? createdAt,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'allocation_reversal_id': id,
+      if (allocationId != null) 'allocation_id': allocationId,
+      if (amountMinor != null) 'amount_minor': amountMinor,
+      if (idempotencyKey != null) 'idempotency_key': idempotencyKey,
+      if (requestFingerprint != null) 'request_fingerprint': requestFingerprint,
+      if (actorId != null) 'actor_id': actorId,
+      if (reason != null) 'reason': reason,
+      if (createdAt != null) 'created_at': createdAt,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  AllocationReversalsCompanion copyWith({
+    Value<String>? id,
+    Value<String>? allocationId,
+    Value<int>? amountMinor,
+    Value<String>? idempotencyKey,
+    Value<String>? requestFingerprint,
+    Value<String?>? actorId,
+    Value<String>? reason,
+    Value<DateTime>? createdAt,
+    Value<int>? rowid,
+  }) {
+    return AllocationReversalsCompanion(
+      id: id ?? this.id,
+      allocationId: allocationId ?? this.allocationId,
+      amountMinor: amountMinor ?? this.amountMinor,
+      idempotencyKey: idempotencyKey ?? this.idempotencyKey,
+      requestFingerprint: requestFingerprint ?? this.requestFingerprint,
+      actorId: actorId ?? this.actorId,
+      reason: reason ?? this.reason,
+      createdAt: createdAt ?? this.createdAt,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['allocation_reversal_id'] = Variable<String>(id.value);
+    }
+    if (allocationId.present) {
+      map['allocation_id'] = Variable<String>(allocationId.value);
+    }
+    if (amountMinor.present) {
+      map['amount_minor'] = Variable<int>(amountMinor.value);
+    }
+    if (idempotencyKey.present) {
+      map['idempotency_key'] = Variable<String>(idempotencyKey.value);
+    }
+    if (requestFingerprint.present) {
+      map['request_fingerprint'] = Variable<String>(requestFingerprint.value);
+    }
+    if (actorId.present) {
+      map['actor_id'] = Variable<String>(actorId.value);
+    }
+    if (reason.present) {
+      map['reason'] = Variable<String>(reason.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('AllocationReversalsCompanion(')
+          ..write('id: $id, ')
+          ..write('allocationId: $allocationId, ')
+          ..write('amountMinor: $amountMinor, ')
+          ..write('idempotencyKey: $idempotencyKey, ')
+          ..write('requestFingerprint: $requestFingerprint, ')
+          ..write('actorId: $actorId, ')
+          ..write('reason: $reason, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $AllocationStatusHistoryTable extends AllocationStatusHistory
+    with TableInfo<$AllocationStatusHistoryTable, AllocationStatusHistoryData> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $AllocationStatusHistoryTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+    'status_version_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _allocationIdMeta = const VerificationMeta(
+    'allocationId',
+  );
+  @override
+  late final GeneratedColumn<String> allocationId = GeneratedColumn<String>(
+    'allocation_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _sequenceMeta = const VerificationMeta(
+    'sequence',
+  );
+  @override
+  late final GeneratedColumn<int> sequence = GeneratedColumn<int>(
+    'sequence',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _statusMeta = const VerificationMeta('status');
+  @override
+  late final GeneratedColumn<String> status = GeneratedColumn<String>(
+    'status',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _previousVersionIdMeta = const VerificationMeta(
+    'previousVersionId',
+  );
+  @override
+  late final GeneratedColumn<String> previousVersionId =
+      GeneratedColumn<String>(
+        'previous_version_id',
+        aliasedName,
+        true,
+        type: DriftSqlType.string,
+        requiredDuringInsert: false,
+      );
+  static const VerificationMeta _idempotencyKeyMeta = const VerificationMeta(
+    'idempotencyKey',
+  );
+  @override
+  late final GeneratedColumn<String> idempotencyKey = GeneratedColumn<String>(
+    'idempotency_key',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _requestFingerprintMeta =
+      const VerificationMeta('requestFingerprint');
+  @override
+  late final GeneratedColumn<String> requestFingerprint =
+      GeneratedColumn<String>(
+        'request_fingerprint',
+        aliasedName,
+        false,
+        type: DriftSqlType.string,
+        requiredDuringInsert: true,
+      );
+  static const VerificationMeta _actorIdMeta = const VerificationMeta(
+    'actorId',
+  );
+  @override
+  late final GeneratedColumn<String> actorId = GeneratedColumn<String>(
+    'actor_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _reasonMeta = const VerificationMeta('reason');
+  @override
+  late final GeneratedColumn<String> reason = GeneratedColumn<String>(
+    'reason',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _recordedAtMeta = const VerificationMeta(
+    'recordedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> recordedAt = GeneratedColumn<DateTime>(
+    'recorded_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    allocationId,
+    sequence,
+    status,
+    previousVersionId,
+    idempotencyKey,
+    requestFingerprint,
+    actorId,
+    reason,
+    recordedAt,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'allocation_status_history';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<AllocationStatusHistoryData> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('status_version_id')) {
+      context.handle(
+        _idMeta,
+        id.isAcceptableOrUnknown(data['status_version_id']!, _idMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_idMeta);
+    }
+    if (data.containsKey('allocation_id')) {
+      context.handle(
+        _allocationIdMeta,
+        allocationId.isAcceptableOrUnknown(
+          data['allocation_id']!,
+          _allocationIdMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_allocationIdMeta);
+    }
+    if (data.containsKey('sequence')) {
+      context.handle(
+        _sequenceMeta,
+        sequence.isAcceptableOrUnknown(data['sequence']!, _sequenceMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_sequenceMeta);
+    }
+    if (data.containsKey('status')) {
+      context.handle(
+        _statusMeta,
+        status.isAcceptableOrUnknown(data['status']!, _statusMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_statusMeta);
+    }
+    if (data.containsKey('previous_version_id')) {
+      context.handle(
+        _previousVersionIdMeta,
+        previousVersionId.isAcceptableOrUnknown(
+          data['previous_version_id']!,
+          _previousVersionIdMeta,
+        ),
+      );
+    }
+    if (data.containsKey('idempotency_key')) {
+      context.handle(
+        _idempotencyKeyMeta,
+        idempotencyKey.isAcceptableOrUnknown(
+          data['idempotency_key']!,
+          _idempotencyKeyMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_idempotencyKeyMeta);
+    }
+    if (data.containsKey('request_fingerprint')) {
+      context.handle(
+        _requestFingerprintMeta,
+        requestFingerprint.isAcceptableOrUnknown(
+          data['request_fingerprint']!,
+          _requestFingerprintMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_requestFingerprintMeta);
+    }
+    if (data.containsKey('actor_id')) {
+      context.handle(
+        _actorIdMeta,
+        actorId.isAcceptableOrUnknown(data['actor_id']!, _actorIdMeta),
+      );
+    }
+    if (data.containsKey('reason')) {
+      context.handle(
+        _reasonMeta,
+        reason.isAcceptableOrUnknown(data['reason']!, _reasonMeta),
+      );
+    }
+    if (data.containsKey('recorded_at')) {
+      context.handle(
+        _recordedAtMeta,
+        recordedAt.isAcceptableOrUnknown(data['recorded_at']!, _recordedAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_recordedAtMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  List<Set<GeneratedColumn>> get uniqueKeys => [
+    {allocationId, sequence},
+    {id, allocationId},
+    {idempotencyKey},
+  ];
+  @override
+  AllocationStatusHistoryData map(
+    Map<String, dynamic> data, {
+    String? tablePrefix,
+  }) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return AllocationStatusHistoryData(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}status_version_id'],
+      )!,
+      allocationId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}allocation_id'],
+      )!,
+      sequence: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}sequence'],
+      )!,
+      status: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}status'],
+      )!,
+      previousVersionId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}previous_version_id'],
+      ),
+      idempotencyKey: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}idempotency_key'],
+      )!,
+      requestFingerprint: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}request_fingerprint'],
+      )!,
+      actorId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}actor_id'],
+      ),
+      reason: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}reason'],
+      ),
+      recordedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}recorded_at'],
+      )!,
+    );
+  }
+
+  @override
+  $AllocationStatusHistoryTable createAlias(String alias) {
+    return $AllocationStatusHistoryTable(attachedDatabase, alias);
+  }
+}
+
+class AllocationStatusHistoryData extends DataClass
+    implements Insertable<AllocationStatusHistoryData> {
+  final String id;
+  final String allocationId;
+  final int sequence;
+  final String status;
+  final String? previousVersionId;
+  final String idempotencyKey;
+  final String requestFingerprint;
+  final String? actorId;
+  final String? reason;
+  final DateTime recordedAt;
+  const AllocationStatusHistoryData({
+    required this.id,
+    required this.allocationId,
+    required this.sequence,
+    required this.status,
+    this.previousVersionId,
+    required this.idempotencyKey,
+    required this.requestFingerprint,
+    this.actorId,
+    this.reason,
+    required this.recordedAt,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['status_version_id'] = Variable<String>(id);
+    map['allocation_id'] = Variable<String>(allocationId);
+    map['sequence'] = Variable<int>(sequence);
+    map['status'] = Variable<String>(status);
+    if (!nullToAbsent || previousVersionId != null) {
+      map['previous_version_id'] = Variable<String>(previousVersionId);
+    }
+    map['idempotency_key'] = Variable<String>(idempotencyKey);
+    map['request_fingerprint'] = Variable<String>(requestFingerprint);
+    if (!nullToAbsent || actorId != null) {
+      map['actor_id'] = Variable<String>(actorId);
+    }
+    if (!nullToAbsent || reason != null) {
+      map['reason'] = Variable<String>(reason);
+    }
+    map['recorded_at'] = Variable<DateTime>(recordedAt);
+    return map;
+  }
+
+  AllocationStatusHistoryCompanion toCompanion(bool nullToAbsent) {
+    return AllocationStatusHistoryCompanion(
+      id: Value(id),
+      allocationId: Value(allocationId),
+      sequence: Value(sequence),
+      status: Value(status),
+      previousVersionId: previousVersionId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(previousVersionId),
+      idempotencyKey: Value(idempotencyKey),
+      requestFingerprint: Value(requestFingerprint),
+      actorId: actorId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(actorId),
+      reason: reason == null && nullToAbsent
+          ? const Value.absent()
+          : Value(reason),
+      recordedAt: Value(recordedAt),
+    );
+  }
+
+  factory AllocationStatusHistoryData.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return AllocationStatusHistoryData(
+      id: serializer.fromJson<String>(json['id']),
+      allocationId: serializer.fromJson<String>(json['allocationId']),
+      sequence: serializer.fromJson<int>(json['sequence']),
+      status: serializer.fromJson<String>(json['status']),
+      previousVersionId: serializer.fromJson<String?>(
+        json['previousVersionId'],
+      ),
+      idempotencyKey: serializer.fromJson<String>(json['idempotencyKey']),
+      requestFingerprint: serializer.fromJson<String>(
+        json['requestFingerprint'],
+      ),
+      actorId: serializer.fromJson<String?>(json['actorId']),
+      reason: serializer.fromJson<String?>(json['reason']),
+      recordedAt: serializer.fromJson<DateTime>(json['recordedAt']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<String>(id),
+      'allocationId': serializer.toJson<String>(allocationId),
+      'sequence': serializer.toJson<int>(sequence),
+      'status': serializer.toJson<String>(status),
+      'previousVersionId': serializer.toJson<String?>(previousVersionId),
+      'idempotencyKey': serializer.toJson<String>(idempotencyKey),
+      'requestFingerprint': serializer.toJson<String>(requestFingerprint),
+      'actorId': serializer.toJson<String?>(actorId),
+      'reason': serializer.toJson<String?>(reason),
+      'recordedAt': serializer.toJson<DateTime>(recordedAt),
+    };
+  }
+
+  AllocationStatusHistoryData copyWith({
+    String? id,
+    String? allocationId,
+    int? sequence,
+    String? status,
+    Value<String?> previousVersionId = const Value.absent(),
+    String? idempotencyKey,
+    String? requestFingerprint,
+    Value<String?> actorId = const Value.absent(),
+    Value<String?> reason = const Value.absent(),
+    DateTime? recordedAt,
+  }) => AllocationStatusHistoryData(
+    id: id ?? this.id,
+    allocationId: allocationId ?? this.allocationId,
+    sequence: sequence ?? this.sequence,
+    status: status ?? this.status,
+    previousVersionId: previousVersionId.present
+        ? previousVersionId.value
+        : this.previousVersionId,
+    idempotencyKey: idempotencyKey ?? this.idempotencyKey,
+    requestFingerprint: requestFingerprint ?? this.requestFingerprint,
+    actorId: actorId.present ? actorId.value : this.actorId,
+    reason: reason.present ? reason.value : this.reason,
+    recordedAt: recordedAt ?? this.recordedAt,
+  );
+  AllocationStatusHistoryData copyWithCompanion(
+    AllocationStatusHistoryCompanion data,
+  ) {
+    return AllocationStatusHistoryData(
+      id: data.id.present ? data.id.value : this.id,
+      allocationId: data.allocationId.present
+          ? data.allocationId.value
+          : this.allocationId,
+      sequence: data.sequence.present ? data.sequence.value : this.sequence,
+      status: data.status.present ? data.status.value : this.status,
+      previousVersionId: data.previousVersionId.present
+          ? data.previousVersionId.value
+          : this.previousVersionId,
+      idempotencyKey: data.idempotencyKey.present
+          ? data.idempotencyKey.value
+          : this.idempotencyKey,
+      requestFingerprint: data.requestFingerprint.present
+          ? data.requestFingerprint.value
+          : this.requestFingerprint,
+      actorId: data.actorId.present ? data.actorId.value : this.actorId,
+      reason: data.reason.present ? data.reason.value : this.reason,
+      recordedAt: data.recordedAt.present
+          ? data.recordedAt.value
+          : this.recordedAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('AllocationStatusHistoryData(')
+          ..write('id: $id, ')
+          ..write('allocationId: $allocationId, ')
+          ..write('sequence: $sequence, ')
+          ..write('status: $status, ')
+          ..write('previousVersionId: $previousVersionId, ')
+          ..write('idempotencyKey: $idempotencyKey, ')
+          ..write('requestFingerprint: $requestFingerprint, ')
+          ..write('actorId: $actorId, ')
+          ..write('reason: $reason, ')
+          ..write('recordedAt: $recordedAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    id,
+    allocationId,
+    sequence,
+    status,
+    previousVersionId,
+    idempotencyKey,
+    requestFingerprint,
+    actorId,
+    reason,
+    recordedAt,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is AllocationStatusHistoryData &&
+          other.id == this.id &&
+          other.allocationId == this.allocationId &&
+          other.sequence == this.sequence &&
+          other.status == this.status &&
+          other.previousVersionId == this.previousVersionId &&
+          other.idempotencyKey == this.idempotencyKey &&
+          other.requestFingerprint == this.requestFingerprint &&
+          other.actorId == this.actorId &&
+          other.reason == this.reason &&
+          other.recordedAt == this.recordedAt);
+}
+
+class AllocationStatusHistoryCompanion
+    extends UpdateCompanion<AllocationStatusHistoryData> {
+  final Value<String> id;
+  final Value<String> allocationId;
+  final Value<int> sequence;
+  final Value<String> status;
+  final Value<String?> previousVersionId;
+  final Value<String> idempotencyKey;
+  final Value<String> requestFingerprint;
+  final Value<String?> actorId;
+  final Value<String?> reason;
+  final Value<DateTime> recordedAt;
+  final Value<int> rowid;
+  const AllocationStatusHistoryCompanion({
+    this.id = const Value.absent(),
+    this.allocationId = const Value.absent(),
+    this.sequence = const Value.absent(),
+    this.status = const Value.absent(),
+    this.previousVersionId = const Value.absent(),
+    this.idempotencyKey = const Value.absent(),
+    this.requestFingerprint = const Value.absent(),
+    this.actorId = const Value.absent(),
+    this.reason = const Value.absent(),
+    this.recordedAt = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  AllocationStatusHistoryCompanion.insert({
+    required String id,
+    required String allocationId,
+    required int sequence,
+    required String status,
+    this.previousVersionId = const Value.absent(),
+    required String idempotencyKey,
+    required String requestFingerprint,
+    this.actorId = const Value.absent(),
+    this.reason = const Value.absent(),
+    required DateTime recordedAt,
+    this.rowid = const Value.absent(),
+  }) : id = Value(id),
+       allocationId = Value(allocationId),
+       sequence = Value(sequence),
+       status = Value(status),
+       idempotencyKey = Value(idempotencyKey),
+       requestFingerprint = Value(requestFingerprint),
+       recordedAt = Value(recordedAt);
+  static Insertable<AllocationStatusHistoryData> custom({
+    Expression<String>? id,
+    Expression<String>? allocationId,
+    Expression<int>? sequence,
+    Expression<String>? status,
+    Expression<String>? previousVersionId,
+    Expression<String>? idempotencyKey,
+    Expression<String>? requestFingerprint,
+    Expression<String>? actorId,
+    Expression<String>? reason,
+    Expression<DateTime>? recordedAt,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'status_version_id': id,
+      if (allocationId != null) 'allocation_id': allocationId,
+      if (sequence != null) 'sequence': sequence,
+      if (status != null) 'status': status,
+      if (previousVersionId != null) 'previous_version_id': previousVersionId,
+      if (idempotencyKey != null) 'idempotency_key': idempotencyKey,
+      if (requestFingerprint != null) 'request_fingerprint': requestFingerprint,
+      if (actorId != null) 'actor_id': actorId,
+      if (reason != null) 'reason': reason,
+      if (recordedAt != null) 'recorded_at': recordedAt,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  AllocationStatusHistoryCompanion copyWith({
+    Value<String>? id,
+    Value<String>? allocationId,
+    Value<int>? sequence,
+    Value<String>? status,
+    Value<String?>? previousVersionId,
+    Value<String>? idempotencyKey,
+    Value<String>? requestFingerprint,
+    Value<String?>? actorId,
+    Value<String?>? reason,
+    Value<DateTime>? recordedAt,
+    Value<int>? rowid,
+  }) {
+    return AllocationStatusHistoryCompanion(
+      id: id ?? this.id,
+      allocationId: allocationId ?? this.allocationId,
+      sequence: sequence ?? this.sequence,
+      status: status ?? this.status,
+      previousVersionId: previousVersionId ?? this.previousVersionId,
+      idempotencyKey: idempotencyKey ?? this.idempotencyKey,
+      requestFingerprint: requestFingerprint ?? this.requestFingerprint,
+      actorId: actorId ?? this.actorId,
+      reason: reason ?? this.reason,
+      recordedAt: recordedAt ?? this.recordedAt,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['status_version_id'] = Variable<String>(id.value);
+    }
+    if (allocationId.present) {
+      map['allocation_id'] = Variable<String>(allocationId.value);
+    }
+    if (sequence.present) {
+      map['sequence'] = Variable<int>(sequence.value);
+    }
+    if (status.present) {
+      map['status'] = Variable<String>(status.value);
+    }
+    if (previousVersionId.present) {
+      map['previous_version_id'] = Variable<String>(previousVersionId.value);
+    }
+    if (idempotencyKey.present) {
+      map['idempotency_key'] = Variable<String>(idempotencyKey.value);
+    }
+    if (requestFingerprint.present) {
+      map['request_fingerprint'] = Variable<String>(requestFingerprint.value);
+    }
+    if (actorId.present) {
+      map['actor_id'] = Variable<String>(actorId.value);
+    }
+    if (reason.present) {
+      map['reason'] = Variable<String>(reason.value);
+    }
+    if (recordedAt.present) {
+      map['recorded_at'] = Variable<DateTime>(recordedAt.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('AllocationStatusHistoryCompanion(')
+          ..write('id: $id, ')
+          ..write('allocationId: $allocationId, ')
+          ..write('sequence: $sequence, ')
+          ..write('status: $status, ')
+          ..write('previousVersionId: $previousVersionId, ')
+          ..write('idempotencyKey: $idempotencyKey, ')
+          ..write('requestFingerprint: $requestFingerprint, ')
+          ..write('actorId: $actorId, ')
+          ..write('reason: $reason, ')
+          ..write('recordedAt: $recordedAt, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $RefundsTable extends Refunds with TableInfo<$RefundsTable, Refund> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $RefundsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+    'refund_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _originalPaymentIdMeta = const VerificationMeta(
+    'originalPaymentId',
+  );
+  @override
+  late final GeneratedColumn<String> originalPaymentId =
+      GeneratedColumn<String>(
+        'original_payment_id',
+        aliasedName,
+        false,
+        type: DriftSqlType.string,
+        requiredDuringInsert: true,
+      );
+  static const VerificationMeta _originalCashEventIdMeta =
+      const VerificationMeta('originalCashEventId');
+  @override
+  late final GeneratedColumn<String> originalCashEventId =
+      GeneratedColumn<String>(
+        'original_cash_event_id',
+        aliasedName,
+        false,
+        type: DriftSqlType.string,
+        requiredDuringInsert: true,
+      );
+  static const VerificationMeta _refundPaymentIdMeta = const VerificationMeta(
+    'refundPaymentId',
+  );
+  @override
+  late final GeneratedColumn<String> refundPaymentId = GeneratedColumn<String>(
+    'refund_payment_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _refundCashEventIdMeta = const VerificationMeta(
+    'refundCashEventId',
+  );
+  @override
+  late final GeneratedColumn<String> refundCashEventId =
+      GeneratedColumn<String>(
+        'refund_cash_event_id',
+        aliasedName,
+        false,
+        type: DriftSqlType.string,
+        requiredDuringInsert: true,
+      );
+  static const VerificationMeta _invoiceIdMeta = const VerificationMeta(
+    'invoiceId',
+  );
+  @override
+  late final GeneratedColumn<String> invoiceId = GeneratedColumn<String>(
+    'invoice_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _originalFinancialAccountIdMeta =
+      const VerificationMeta('originalFinancialAccountId');
+  @override
+  late final GeneratedColumn<String> originalFinancialAccountId =
+      GeneratedColumn<String>(
+        'original_financial_account_id',
+        aliasedName,
+        false,
+        type: DriftSqlType.string,
+        requiredDuringInsert: true,
+      );
+  static const VerificationMeta _refundFinancialAccountIdMeta =
+      const VerificationMeta('refundFinancialAccountId');
+  @override
+  late final GeneratedColumn<String> refundFinancialAccountId =
+      GeneratedColumn<String>(
+        'refund_financial_account_id',
+        aliasedName,
+        false,
+        type: DriftSqlType.string,
+        requiredDuringInsert: true,
+      );
+  static const VerificationMeta _invoiceFinancialAccountIdMeta =
+      const VerificationMeta('invoiceFinancialAccountId');
+  @override
+  late final GeneratedColumn<String> invoiceFinancialAccountId =
+      GeneratedColumn<String>(
+        'invoice_financial_account_id',
+        aliasedName,
+        true,
+        type: DriftSqlType.string,
+        requiredDuringInsert: false,
+      );
+  static const VerificationMeta _partyIdMeta = const VerificationMeta(
+    'partyId',
+  );
+  @override
+  late final GeneratedColumn<String> partyId = GeneratedColumn<String>(
+    'party_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _partyRoleMeta = const VerificationMeta(
+    'partyRole',
+  );
+  @override
+  late final GeneratedColumn<String> partyRole = GeneratedColumn<String>(
+    'party_role',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _currencyCodeMeta = const VerificationMeta(
+    'currencyCode',
+  );
+  @override
+  late final GeneratedColumn<String> currencyCode = GeneratedColumn<String>(
+    'currency_code',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _amountMinorMeta = const VerificationMeta(
+    'amountMinor',
+  );
+  @override
+  late final GeneratedColumn<int> amountMinor = GeneratedColumn<int>(
+    'amount_minor',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _idempotencyKeyMeta = const VerificationMeta(
+    'idempotencyKey',
+  );
+  @override
+  late final GeneratedColumn<String> idempotencyKey = GeneratedColumn<String>(
+    'idempotency_key',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _requestFingerprintMeta =
+      const VerificationMeta('requestFingerprint');
+  @override
+  late final GeneratedColumn<String> requestFingerprint =
+      GeneratedColumn<String>(
+        'request_fingerprint',
+        aliasedName,
+        false,
+        type: DriftSqlType.string,
+        requiredDuringInsert: true,
+      );
+  static const VerificationMeta _actorIdMeta = const VerificationMeta(
+    'actorId',
+  );
+  @override
+  late final GeneratedColumn<String> actorId = GeneratedColumn<String>(
+    'actor_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _reasonMeta = const VerificationMeta('reason');
+  @override
+  late final GeneratedColumn<String> reason = GeneratedColumn<String>(
+    'reason',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+    'created_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    originalPaymentId,
+    originalCashEventId,
+    refundPaymentId,
+    refundCashEventId,
+    invoiceId,
+    originalFinancialAccountId,
+    refundFinancialAccountId,
+    invoiceFinancialAccountId,
+    partyId,
+    partyRole,
+    currencyCode,
+    amountMinor,
+    idempotencyKey,
+    requestFingerprint,
+    actorId,
+    reason,
+    createdAt,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'payment_refunds';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<Refund> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('refund_id')) {
+      context.handle(
+        _idMeta,
+        id.isAcceptableOrUnknown(data['refund_id']!, _idMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_idMeta);
+    }
+    if (data.containsKey('original_payment_id')) {
+      context.handle(
+        _originalPaymentIdMeta,
+        originalPaymentId.isAcceptableOrUnknown(
+          data['original_payment_id']!,
+          _originalPaymentIdMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_originalPaymentIdMeta);
+    }
+    if (data.containsKey('original_cash_event_id')) {
+      context.handle(
+        _originalCashEventIdMeta,
+        originalCashEventId.isAcceptableOrUnknown(
+          data['original_cash_event_id']!,
+          _originalCashEventIdMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_originalCashEventIdMeta);
+    }
+    if (data.containsKey('refund_payment_id')) {
+      context.handle(
+        _refundPaymentIdMeta,
+        refundPaymentId.isAcceptableOrUnknown(
+          data['refund_payment_id']!,
+          _refundPaymentIdMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_refundPaymentIdMeta);
+    }
+    if (data.containsKey('refund_cash_event_id')) {
+      context.handle(
+        _refundCashEventIdMeta,
+        refundCashEventId.isAcceptableOrUnknown(
+          data['refund_cash_event_id']!,
+          _refundCashEventIdMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_refundCashEventIdMeta);
+    }
+    if (data.containsKey('invoice_id')) {
+      context.handle(
+        _invoiceIdMeta,
+        invoiceId.isAcceptableOrUnknown(data['invoice_id']!, _invoiceIdMeta),
+      );
+    }
+    if (data.containsKey('original_financial_account_id')) {
+      context.handle(
+        _originalFinancialAccountIdMeta,
+        originalFinancialAccountId.isAcceptableOrUnknown(
+          data['original_financial_account_id']!,
+          _originalFinancialAccountIdMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_originalFinancialAccountIdMeta);
+    }
+    if (data.containsKey('refund_financial_account_id')) {
+      context.handle(
+        _refundFinancialAccountIdMeta,
+        refundFinancialAccountId.isAcceptableOrUnknown(
+          data['refund_financial_account_id']!,
+          _refundFinancialAccountIdMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_refundFinancialAccountIdMeta);
+    }
+    if (data.containsKey('invoice_financial_account_id')) {
+      context.handle(
+        _invoiceFinancialAccountIdMeta,
+        invoiceFinancialAccountId.isAcceptableOrUnknown(
+          data['invoice_financial_account_id']!,
+          _invoiceFinancialAccountIdMeta,
+        ),
+      );
+    }
+    if (data.containsKey('party_id')) {
+      context.handle(
+        _partyIdMeta,
+        partyId.isAcceptableOrUnknown(data['party_id']!, _partyIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_partyIdMeta);
+    }
+    if (data.containsKey('party_role')) {
+      context.handle(
+        _partyRoleMeta,
+        partyRole.isAcceptableOrUnknown(data['party_role']!, _partyRoleMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_partyRoleMeta);
+    }
+    if (data.containsKey('currency_code')) {
+      context.handle(
+        _currencyCodeMeta,
+        currencyCode.isAcceptableOrUnknown(
+          data['currency_code']!,
+          _currencyCodeMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_currencyCodeMeta);
+    }
+    if (data.containsKey('amount_minor')) {
+      context.handle(
+        _amountMinorMeta,
+        amountMinor.isAcceptableOrUnknown(
+          data['amount_minor']!,
+          _amountMinorMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_amountMinorMeta);
+    }
+    if (data.containsKey('idempotency_key')) {
+      context.handle(
+        _idempotencyKeyMeta,
+        idempotencyKey.isAcceptableOrUnknown(
+          data['idempotency_key']!,
+          _idempotencyKeyMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_idempotencyKeyMeta);
+    }
+    if (data.containsKey('request_fingerprint')) {
+      context.handle(
+        _requestFingerprintMeta,
+        requestFingerprint.isAcceptableOrUnknown(
+          data['request_fingerprint']!,
+          _requestFingerprintMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_requestFingerprintMeta);
+    }
+    if (data.containsKey('actor_id')) {
+      context.handle(
+        _actorIdMeta,
+        actorId.isAcceptableOrUnknown(data['actor_id']!, _actorIdMeta),
+      );
+    }
+    if (data.containsKey('reason')) {
+      context.handle(
+        _reasonMeta,
+        reason.isAcceptableOrUnknown(data['reason']!, _reasonMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_reasonMeta);
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_createdAtMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  List<Set<GeneratedColumn>> get uniqueKeys => [
+    {id, originalPaymentId, invoiceId},
+    {id, originalPaymentId, refundPaymentId},
+    {id, refundPaymentId, refundCashEventId},
+    {refundPaymentId},
+    {idempotencyKey},
+  ];
+  @override
+  Refund map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return Refund(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}refund_id'],
+      )!,
+      originalPaymentId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}original_payment_id'],
+      )!,
+      originalCashEventId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}original_cash_event_id'],
+      )!,
+      refundPaymentId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}refund_payment_id'],
+      )!,
+      refundCashEventId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}refund_cash_event_id'],
+      )!,
+      invoiceId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}invoice_id'],
+      ),
+      originalFinancialAccountId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}original_financial_account_id'],
+      )!,
+      refundFinancialAccountId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}refund_financial_account_id'],
+      )!,
+      invoiceFinancialAccountId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}invoice_financial_account_id'],
+      ),
+      partyId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}party_id'],
+      )!,
+      partyRole: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}party_role'],
+      )!,
+      currencyCode: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}currency_code'],
+      )!,
+      amountMinor: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}amount_minor'],
+      )!,
+      idempotencyKey: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}idempotency_key'],
+      )!,
+      requestFingerprint: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}request_fingerprint'],
+      )!,
+      actorId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}actor_id'],
+      ),
+      reason: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}reason'],
+      )!,
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}created_at'],
+      )!,
+    );
+  }
+
+  @override
+  $RefundsTable createAlias(String alias) {
+    return $RefundsTable(attachedDatabase, alias);
+  }
+}
+
+class Refund extends DataClass implements Insertable<Refund> {
+  final String id;
+  final String originalPaymentId;
+  final String originalCashEventId;
+  final String refundPaymentId;
+  final String refundCashEventId;
+  final String? invoiceId;
+  final String originalFinancialAccountId;
+  final String refundFinancialAccountId;
+  final String? invoiceFinancialAccountId;
+  final String partyId;
+  final String partyRole;
+  final String currencyCode;
+  final int amountMinor;
+  final String idempotencyKey;
+  final String requestFingerprint;
+  final String? actorId;
+  final String reason;
+  final DateTime createdAt;
+  const Refund({
+    required this.id,
+    required this.originalPaymentId,
+    required this.originalCashEventId,
+    required this.refundPaymentId,
+    required this.refundCashEventId,
+    this.invoiceId,
+    required this.originalFinancialAccountId,
+    required this.refundFinancialAccountId,
+    this.invoiceFinancialAccountId,
+    required this.partyId,
+    required this.partyRole,
+    required this.currencyCode,
+    required this.amountMinor,
+    required this.idempotencyKey,
+    required this.requestFingerprint,
+    this.actorId,
+    required this.reason,
+    required this.createdAt,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['refund_id'] = Variable<String>(id);
+    map['original_payment_id'] = Variable<String>(originalPaymentId);
+    map['original_cash_event_id'] = Variable<String>(originalCashEventId);
+    map['refund_payment_id'] = Variable<String>(refundPaymentId);
+    map['refund_cash_event_id'] = Variable<String>(refundCashEventId);
+    if (!nullToAbsent || invoiceId != null) {
+      map['invoice_id'] = Variable<String>(invoiceId);
+    }
+    map['original_financial_account_id'] = Variable<String>(
+      originalFinancialAccountId,
+    );
+    map['refund_financial_account_id'] = Variable<String>(
+      refundFinancialAccountId,
+    );
+    if (!nullToAbsent || invoiceFinancialAccountId != null) {
+      map['invoice_financial_account_id'] = Variable<String>(
+        invoiceFinancialAccountId,
+      );
+    }
+    map['party_id'] = Variable<String>(partyId);
+    map['party_role'] = Variable<String>(partyRole);
+    map['currency_code'] = Variable<String>(currencyCode);
+    map['amount_minor'] = Variable<int>(amountMinor);
+    map['idempotency_key'] = Variable<String>(idempotencyKey);
+    map['request_fingerprint'] = Variable<String>(requestFingerprint);
+    if (!nullToAbsent || actorId != null) {
+      map['actor_id'] = Variable<String>(actorId);
+    }
+    map['reason'] = Variable<String>(reason);
+    map['created_at'] = Variable<DateTime>(createdAt);
+    return map;
+  }
+
+  RefundsCompanion toCompanion(bool nullToAbsent) {
+    return RefundsCompanion(
+      id: Value(id),
+      originalPaymentId: Value(originalPaymentId),
+      originalCashEventId: Value(originalCashEventId),
+      refundPaymentId: Value(refundPaymentId),
+      refundCashEventId: Value(refundCashEventId),
+      invoiceId: invoiceId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(invoiceId),
+      originalFinancialAccountId: Value(originalFinancialAccountId),
+      refundFinancialAccountId: Value(refundFinancialAccountId),
+      invoiceFinancialAccountId:
+          invoiceFinancialAccountId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(invoiceFinancialAccountId),
+      partyId: Value(partyId),
+      partyRole: Value(partyRole),
+      currencyCode: Value(currencyCode),
+      amountMinor: Value(amountMinor),
+      idempotencyKey: Value(idempotencyKey),
+      requestFingerprint: Value(requestFingerprint),
+      actorId: actorId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(actorId),
+      reason: Value(reason),
+      createdAt: Value(createdAt),
+    );
+  }
+
+  factory Refund.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return Refund(
+      id: serializer.fromJson<String>(json['id']),
+      originalPaymentId: serializer.fromJson<String>(json['originalPaymentId']),
+      originalCashEventId: serializer.fromJson<String>(
+        json['originalCashEventId'],
+      ),
+      refundPaymentId: serializer.fromJson<String>(json['refundPaymentId']),
+      refundCashEventId: serializer.fromJson<String>(json['refundCashEventId']),
+      invoiceId: serializer.fromJson<String?>(json['invoiceId']),
+      originalFinancialAccountId: serializer.fromJson<String>(
+        json['originalFinancialAccountId'],
+      ),
+      refundFinancialAccountId: serializer.fromJson<String>(
+        json['refundFinancialAccountId'],
+      ),
+      invoiceFinancialAccountId: serializer.fromJson<String?>(
+        json['invoiceFinancialAccountId'],
+      ),
+      partyId: serializer.fromJson<String>(json['partyId']),
+      partyRole: serializer.fromJson<String>(json['partyRole']),
+      currencyCode: serializer.fromJson<String>(json['currencyCode']),
+      amountMinor: serializer.fromJson<int>(json['amountMinor']),
+      idempotencyKey: serializer.fromJson<String>(json['idempotencyKey']),
+      requestFingerprint: serializer.fromJson<String>(
+        json['requestFingerprint'],
+      ),
+      actorId: serializer.fromJson<String?>(json['actorId']),
+      reason: serializer.fromJson<String>(json['reason']),
+      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<String>(id),
+      'originalPaymentId': serializer.toJson<String>(originalPaymentId),
+      'originalCashEventId': serializer.toJson<String>(originalCashEventId),
+      'refundPaymentId': serializer.toJson<String>(refundPaymentId),
+      'refundCashEventId': serializer.toJson<String>(refundCashEventId),
+      'invoiceId': serializer.toJson<String?>(invoiceId),
+      'originalFinancialAccountId': serializer.toJson<String>(
+        originalFinancialAccountId,
+      ),
+      'refundFinancialAccountId': serializer.toJson<String>(
+        refundFinancialAccountId,
+      ),
+      'invoiceFinancialAccountId': serializer.toJson<String?>(
+        invoiceFinancialAccountId,
+      ),
+      'partyId': serializer.toJson<String>(partyId),
+      'partyRole': serializer.toJson<String>(partyRole),
+      'currencyCode': serializer.toJson<String>(currencyCode),
+      'amountMinor': serializer.toJson<int>(amountMinor),
+      'idempotencyKey': serializer.toJson<String>(idempotencyKey),
+      'requestFingerprint': serializer.toJson<String>(requestFingerprint),
+      'actorId': serializer.toJson<String?>(actorId),
+      'reason': serializer.toJson<String>(reason),
+      'createdAt': serializer.toJson<DateTime>(createdAt),
+    };
+  }
+
+  Refund copyWith({
+    String? id,
+    String? originalPaymentId,
+    String? originalCashEventId,
+    String? refundPaymentId,
+    String? refundCashEventId,
+    Value<String?> invoiceId = const Value.absent(),
+    String? originalFinancialAccountId,
+    String? refundFinancialAccountId,
+    Value<String?> invoiceFinancialAccountId = const Value.absent(),
+    String? partyId,
+    String? partyRole,
+    String? currencyCode,
+    int? amountMinor,
+    String? idempotencyKey,
+    String? requestFingerprint,
+    Value<String?> actorId = const Value.absent(),
+    String? reason,
+    DateTime? createdAt,
+  }) => Refund(
+    id: id ?? this.id,
+    originalPaymentId: originalPaymentId ?? this.originalPaymentId,
+    originalCashEventId: originalCashEventId ?? this.originalCashEventId,
+    refundPaymentId: refundPaymentId ?? this.refundPaymentId,
+    refundCashEventId: refundCashEventId ?? this.refundCashEventId,
+    invoiceId: invoiceId.present ? invoiceId.value : this.invoiceId,
+    originalFinancialAccountId:
+        originalFinancialAccountId ?? this.originalFinancialAccountId,
+    refundFinancialAccountId:
+        refundFinancialAccountId ?? this.refundFinancialAccountId,
+    invoiceFinancialAccountId: invoiceFinancialAccountId.present
+        ? invoiceFinancialAccountId.value
+        : this.invoiceFinancialAccountId,
+    partyId: partyId ?? this.partyId,
+    partyRole: partyRole ?? this.partyRole,
+    currencyCode: currencyCode ?? this.currencyCode,
+    amountMinor: amountMinor ?? this.amountMinor,
+    idempotencyKey: idempotencyKey ?? this.idempotencyKey,
+    requestFingerprint: requestFingerprint ?? this.requestFingerprint,
+    actorId: actorId.present ? actorId.value : this.actorId,
+    reason: reason ?? this.reason,
+    createdAt: createdAt ?? this.createdAt,
+  );
+  Refund copyWithCompanion(RefundsCompanion data) {
+    return Refund(
+      id: data.id.present ? data.id.value : this.id,
+      originalPaymentId: data.originalPaymentId.present
+          ? data.originalPaymentId.value
+          : this.originalPaymentId,
+      originalCashEventId: data.originalCashEventId.present
+          ? data.originalCashEventId.value
+          : this.originalCashEventId,
+      refundPaymentId: data.refundPaymentId.present
+          ? data.refundPaymentId.value
+          : this.refundPaymentId,
+      refundCashEventId: data.refundCashEventId.present
+          ? data.refundCashEventId.value
+          : this.refundCashEventId,
+      invoiceId: data.invoiceId.present ? data.invoiceId.value : this.invoiceId,
+      originalFinancialAccountId: data.originalFinancialAccountId.present
+          ? data.originalFinancialAccountId.value
+          : this.originalFinancialAccountId,
+      refundFinancialAccountId: data.refundFinancialAccountId.present
+          ? data.refundFinancialAccountId.value
+          : this.refundFinancialAccountId,
+      invoiceFinancialAccountId: data.invoiceFinancialAccountId.present
+          ? data.invoiceFinancialAccountId.value
+          : this.invoiceFinancialAccountId,
+      partyId: data.partyId.present ? data.partyId.value : this.partyId,
+      partyRole: data.partyRole.present ? data.partyRole.value : this.partyRole,
+      currencyCode: data.currencyCode.present
+          ? data.currencyCode.value
+          : this.currencyCode,
+      amountMinor: data.amountMinor.present
+          ? data.amountMinor.value
+          : this.amountMinor,
+      idempotencyKey: data.idempotencyKey.present
+          ? data.idempotencyKey.value
+          : this.idempotencyKey,
+      requestFingerprint: data.requestFingerprint.present
+          ? data.requestFingerprint.value
+          : this.requestFingerprint,
+      actorId: data.actorId.present ? data.actorId.value : this.actorId,
+      reason: data.reason.present ? data.reason.value : this.reason,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('Refund(')
+          ..write('id: $id, ')
+          ..write('originalPaymentId: $originalPaymentId, ')
+          ..write('originalCashEventId: $originalCashEventId, ')
+          ..write('refundPaymentId: $refundPaymentId, ')
+          ..write('refundCashEventId: $refundCashEventId, ')
+          ..write('invoiceId: $invoiceId, ')
+          ..write('originalFinancialAccountId: $originalFinancialAccountId, ')
+          ..write('refundFinancialAccountId: $refundFinancialAccountId, ')
+          ..write('invoiceFinancialAccountId: $invoiceFinancialAccountId, ')
+          ..write('partyId: $partyId, ')
+          ..write('partyRole: $partyRole, ')
+          ..write('currencyCode: $currencyCode, ')
+          ..write('amountMinor: $amountMinor, ')
+          ..write('idempotencyKey: $idempotencyKey, ')
+          ..write('requestFingerprint: $requestFingerprint, ')
+          ..write('actorId: $actorId, ')
+          ..write('reason: $reason, ')
+          ..write('createdAt: $createdAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    id,
+    originalPaymentId,
+    originalCashEventId,
+    refundPaymentId,
+    refundCashEventId,
+    invoiceId,
+    originalFinancialAccountId,
+    refundFinancialAccountId,
+    invoiceFinancialAccountId,
+    partyId,
+    partyRole,
+    currencyCode,
+    amountMinor,
+    idempotencyKey,
+    requestFingerprint,
+    actorId,
+    reason,
+    createdAt,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is Refund &&
+          other.id == this.id &&
+          other.originalPaymentId == this.originalPaymentId &&
+          other.originalCashEventId == this.originalCashEventId &&
+          other.refundPaymentId == this.refundPaymentId &&
+          other.refundCashEventId == this.refundCashEventId &&
+          other.invoiceId == this.invoiceId &&
+          other.originalFinancialAccountId == this.originalFinancialAccountId &&
+          other.refundFinancialAccountId == this.refundFinancialAccountId &&
+          other.invoiceFinancialAccountId == this.invoiceFinancialAccountId &&
+          other.partyId == this.partyId &&
+          other.partyRole == this.partyRole &&
+          other.currencyCode == this.currencyCode &&
+          other.amountMinor == this.amountMinor &&
+          other.idempotencyKey == this.idempotencyKey &&
+          other.requestFingerprint == this.requestFingerprint &&
+          other.actorId == this.actorId &&
+          other.reason == this.reason &&
+          other.createdAt == this.createdAt);
+}
+
+class RefundsCompanion extends UpdateCompanion<Refund> {
+  final Value<String> id;
+  final Value<String> originalPaymentId;
+  final Value<String> originalCashEventId;
+  final Value<String> refundPaymentId;
+  final Value<String> refundCashEventId;
+  final Value<String?> invoiceId;
+  final Value<String> originalFinancialAccountId;
+  final Value<String> refundFinancialAccountId;
+  final Value<String?> invoiceFinancialAccountId;
+  final Value<String> partyId;
+  final Value<String> partyRole;
+  final Value<String> currencyCode;
+  final Value<int> amountMinor;
+  final Value<String> idempotencyKey;
+  final Value<String> requestFingerprint;
+  final Value<String?> actorId;
+  final Value<String> reason;
+  final Value<DateTime> createdAt;
+  final Value<int> rowid;
+  const RefundsCompanion({
+    this.id = const Value.absent(),
+    this.originalPaymentId = const Value.absent(),
+    this.originalCashEventId = const Value.absent(),
+    this.refundPaymentId = const Value.absent(),
+    this.refundCashEventId = const Value.absent(),
+    this.invoiceId = const Value.absent(),
+    this.originalFinancialAccountId = const Value.absent(),
+    this.refundFinancialAccountId = const Value.absent(),
+    this.invoiceFinancialAccountId = const Value.absent(),
+    this.partyId = const Value.absent(),
+    this.partyRole = const Value.absent(),
+    this.currencyCode = const Value.absent(),
+    this.amountMinor = const Value.absent(),
+    this.idempotencyKey = const Value.absent(),
+    this.requestFingerprint = const Value.absent(),
+    this.actorId = const Value.absent(),
+    this.reason = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  RefundsCompanion.insert({
+    required String id,
+    required String originalPaymentId,
+    required String originalCashEventId,
+    required String refundPaymentId,
+    required String refundCashEventId,
+    this.invoiceId = const Value.absent(),
+    required String originalFinancialAccountId,
+    required String refundFinancialAccountId,
+    this.invoiceFinancialAccountId = const Value.absent(),
+    required String partyId,
+    required String partyRole,
+    required String currencyCode,
+    required int amountMinor,
+    required String idempotencyKey,
+    required String requestFingerprint,
+    this.actorId = const Value.absent(),
+    required String reason,
+    required DateTime createdAt,
+    this.rowid = const Value.absent(),
+  }) : id = Value(id),
+       originalPaymentId = Value(originalPaymentId),
+       originalCashEventId = Value(originalCashEventId),
+       refundPaymentId = Value(refundPaymentId),
+       refundCashEventId = Value(refundCashEventId),
+       originalFinancialAccountId = Value(originalFinancialAccountId),
+       refundFinancialAccountId = Value(refundFinancialAccountId),
+       partyId = Value(partyId),
+       partyRole = Value(partyRole),
+       currencyCode = Value(currencyCode),
+       amountMinor = Value(amountMinor),
+       idempotencyKey = Value(idempotencyKey),
+       requestFingerprint = Value(requestFingerprint),
+       reason = Value(reason),
+       createdAt = Value(createdAt);
+  static Insertable<Refund> custom({
+    Expression<String>? id,
+    Expression<String>? originalPaymentId,
+    Expression<String>? originalCashEventId,
+    Expression<String>? refundPaymentId,
+    Expression<String>? refundCashEventId,
+    Expression<String>? invoiceId,
+    Expression<String>? originalFinancialAccountId,
+    Expression<String>? refundFinancialAccountId,
+    Expression<String>? invoiceFinancialAccountId,
+    Expression<String>? partyId,
+    Expression<String>? partyRole,
+    Expression<String>? currencyCode,
+    Expression<int>? amountMinor,
+    Expression<String>? idempotencyKey,
+    Expression<String>? requestFingerprint,
+    Expression<String>? actorId,
+    Expression<String>? reason,
+    Expression<DateTime>? createdAt,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'refund_id': id,
+      if (originalPaymentId != null) 'original_payment_id': originalPaymentId,
+      if (originalCashEventId != null)
+        'original_cash_event_id': originalCashEventId,
+      if (refundPaymentId != null) 'refund_payment_id': refundPaymentId,
+      if (refundCashEventId != null) 'refund_cash_event_id': refundCashEventId,
+      if (invoiceId != null) 'invoice_id': invoiceId,
+      if (originalFinancialAccountId != null)
+        'original_financial_account_id': originalFinancialAccountId,
+      if (refundFinancialAccountId != null)
+        'refund_financial_account_id': refundFinancialAccountId,
+      if (invoiceFinancialAccountId != null)
+        'invoice_financial_account_id': invoiceFinancialAccountId,
+      if (partyId != null) 'party_id': partyId,
+      if (partyRole != null) 'party_role': partyRole,
+      if (currencyCode != null) 'currency_code': currencyCode,
+      if (amountMinor != null) 'amount_minor': amountMinor,
+      if (idempotencyKey != null) 'idempotency_key': idempotencyKey,
+      if (requestFingerprint != null) 'request_fingerprint': requestFingerprint,
+      if (actorId != null) 'actor_id': actorId,
+      if (reason != null) 'reason': reason,
+      if (createdAt != null) 'created_at': createdAt,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  RefundsCompanion copyWith({
+    Value<String>? id,
+    Value<String>? originalPaymentId,
+    Value<String>? originalCashEventId,
+    Value<String>? refundPaymentId,
+    Value<String>? refundCashEventId,
+    Value<String?>? invoiceId,
+    Value<String>? originalFinancialAccountId,
+    Value<String>? refundFinancialAccountId,
+    Value<String?>? invoiceFinancialAccountId,
+    Value<String>? partyId,
+    Value<String>? partyRole,
+    Value<String>? currencyCode,
+    Value<int>? amountMinor,
+    Value<String>? idempotencyKey,
+    Value<String>? requestFingerprint,
+    Value<String?>? actorId,
+    Value<String>? reason,
+    Value<DateTime>? createdAt,
+    Value<int>? rowid,
+  }) {
+    return RefundsCompanion(
+      id: id ?? this.id,
+      originalPaymentId: originalPaymentId ?? this.originalPaymentId,
+      originalCashEventId: originalCashEventId ?? this.originalCashEventId,
+      refundPaymentId: refundPaymentId ?? this.refundPaymentId,
+      refundCashEventId: refundCashEventId ?? this.refundCashEventId,
+      invoiceId: invoiceId ?? this.invoiceId,
+      originalFinancialAccountId:
+          originalFinancialAccountId ?? this.originalFinancialAccountId,
+      refundFinancialAccountId:
+          refundFinancialAccountId ?? this.refundFinancialAccountId,
+      invoiceFinancialAccountId:
+          invoiceFinancialAccountId ?? this.invoiceFinancialAccountId,
+      partyId: partyId ?? this.partyId,
+      partyRole: partyRole ?? this.partyRole,
+      currencyCode: currencyCode ?? this.currencyCode,
+      amountMinor: amountMinor ?? this.amountMinor,
+      idempotencyKey: idempotencyKey ?? this.idempotencyKey,
+      requestFingerprint: requestFingerprint ?? this.requestFingerprint,
+      actorId: actorId ?? this.actorId,
+      reason: reason ?? this.reason,
+      createdAt: createdAt ?? this.createdAt,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['refund_id'] = Variable<String>(id.value);
+    }
+    if (originalPaymentId.present) {
+      map['original_payment_id'] = Variable<String>(originalPaymentId.value);
+    }
+    if (originalCashEventId.present) {
+      map['original_cash_event_id'] = Variable<String>(
+        originalCashEventId.value,
+      );
+    }
+    if (refundPaymentId.present) {
+      map['refund_payment_id'] = Variable<String>(refundPaymentId.value);
+    }
+    if (refundCashEventId.present) {
+      map['refund_cash_event_id'] = Variable<String>(refundCashEventId.value);
+    }
+    if (invoiceId.present) {
+      map['invoice_id'] = Variable<String>(invoiceId.value);
+    }
+    if (originalFinancialAccountId.present) {
+      map['original_financial_account_id'] = Variable<String>(
+        originalFinancialAccountId.value,
+      );
+    }
+    if (refundFinancialAccountId.present) {
+      map['refund_financial_account_id'] = Variable<String>(
+        refundFinancialAccountId.value,
+      );
+    }
+    if (invoiceFinancialAccountId.present) {
+      map['invoice_financial_account_id'] = Variable<String>(
+        invoiceFinancialAccountId.value,
+      );
+    }
+    if (partyId.present) {
+      map['party_id'] = Variable<String>(partyId.value);
+    }
+    if (partyRole.present) {
+      map['party_role'] = Variable<String>(partyRole.value);
+    }
+    if (currencyCode.present) {
+      map['currency_code'] = Variable<String>(currencyCode.value);
+    }
+    if (amountMinor.present) {
+      map['amount_minor'] = Variable<int>(amountMinor.value);
+    }
+    if (idempotencyKey.present) {
+      map['idempotency_key'] = Variable<String>(idempotencyKey.value);
+    }
+    if (requestFingerprint.present) {
+      map['request_fingerprint'] = Variable<String>(requestFingerprint.value);
+    }
+    if (actorId.present) {
+      map['actor_id'] = Variable<String>(actorId.value);
+    }
+    if (reason.present) {
+      map['reason'] = Variable<String>(reason.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('RefundsCompanion(')
+          ..write('id: $id, ')
+          ..write('originalPaymentId: $originalPaymentId, ')
+          ..write('originalCashEventId: $originalCashEventId, ')
+          ..write('refundPaymentId: $refundPaymentId, ')
+          ..write('refundCashEventId: $refundCashEventId, ')
+          ..write('invoiceId: $invoiceId, ')
+          ..write('originalFinancialAccountId: $originalFinancialAccountId, ')
+          ..write('refundFinancialAccountId: $refundFinancialAccountId, ')
+          ..write('invoiceFinancialAccountId: $invoiceFinancialAccountId, ')
+          ..write('partyId: $partyId, ')
+          ..write('partyRole: $partyRole, ')
+          ..write('currencyCode: $currencyCode, ')
+          ..write('amountMinor: $amountMinor, ')
+          ..write('idempotencyKey: $idempotencyKey, ')
+          ..write('requestFingerprint: $requestFingerprint, ')
+          ..write('actorId: $actorId, ')
+          ..write('reason: $reason, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $RefundFinancialTransactionsTable extends RefundFinancialTransactions
+    with
+        TableInfo<
+          $RefundFinancialTransactionsTable,
+          RefundFinancialTransaction
+        > {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $RefundFinancialTransactionsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _refundIdMeta = const VerificationMeta(
+    'refundId',
+  );
+  @override
+  late final GeneratedColumn<String> refundId = GeneratedColumn<String>(
+    'refund_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _transactionIdMeta = const VerificationMeta(
+    'transactionId',
+  );
+  @override
+  late final GeneratedColumn<String> transactionId = GeneratedColumn<String>(
+    'transaction_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _cashEventIdMeta = const VerificationMeta(
+    'cashEventId',
+  );
+  @override
+  late final GeneratedColumn<String> cashEventId = GeneratedColumn<String>(
+    'cash_event_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _paymentIdMeta = const VerificationMeta(
+    'paymentId',
+  );
+  @override
+  late final GeneratedColumn<String> paymentId = GeneratedColumn<String>(
+    'payment_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    refundId,
+    transactionId,
+    cashEventId,
+    paymentId,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'refund_financial_transactions';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<RefundFinancialTransaction> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('refund_id')) {
+      context.handle(
+        _refundIdMeta,
+        refundId.isAcceptableOrUnknown(data['refund_id']!, _refundIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_refundIdMeta);
+    }
+    if (data.containsKey('transaction_id')) {
+      context.handle(
+        _transactionIdMeta,
+        transactionId.isAcceptableOrUnknown(
+          data['transaction_id']!,
+          _transactionIdMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_transactionIdMeta);
+    }
+    if (data.containsKey('cash_event_id')) {
+      context.handle(
+        _cashEventIdMeta,
+        cashEventId.isAcceptableOrUnknown(
+          data['cash_event_id']!,
+          _cashEventIdMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_cashEventIdMeta);
+    }
+    if (data.containsKey('payment_id')) {
+      context.handle(
+        _paymentIdMeta,
+        paymentId.isAcceptableOrUnknown(data['payment_id']!, _paymentIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_paymentIdMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {refundId};
+  @override
+  List<Set<GeneratedColumn>> get uniqueKeys => [
+    {transactionId},
+  ];
+  @override
+  RefundFinancialTransaction map(
+    Map<String, dynamic> data, {
+    String? tablePrefix,
+  }) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return RefundFinancialTransaction(
+      refundId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}refund_id'],
+      )!,
+      transactionId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}transaction_id'],
+      )!,
+      cashEventId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}cash_event_id'],
+      )!,
+      paymentId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}payment_id'],
+      )!,
+    );
+  }
+
+  @override
+  $RefundFinancialTransactionsTable createAlias(String alias) {
+    return $RefundFinancialTransactionsTable(attachedDatabase, alias);
+  }
+}
+
+class RefundFinancialTransaction extends DataClass
+    implements Insertable<RefundFinancialTransaction> {
+  final String refundId;
+  final String transactionId;
+  final String cashEventId;
+  final String paymentId;
+  const RefundFinancialTransaction({
+    required this.refundId,
+    required this.transactionId,
+    required this.cashEventId,
+    required this.paymentId,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['refund_id'] = Variable<String>(refundId);
+    map['transaction_id'] = Variable<String>(transactionId);
+    map['cash_event_id'] = Variable<String>(cashEventId);
+    map['payment_id'] = Variable<String>(paymentId);
+    return map;
+  }
+
+  RefundFinancialTransactionsCompanion toCompanion(bool nullToAbsent) {
+    return RefundFinancialTransactionsCompanion(
+      refundId: Value(refundId),
+      transactionId: Value(transactionId),
+      cashEventId: Value(cashEventId),
+      paymentId: Value(paymentId),
+    );
+  }
+
+  factory RefundFinancialTransaction.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return RefundFinancialTransaction(
+      refundId: serializer.fromJson<String>(json['refundId']),
+      transactionId: serializer.fromJson<String>(json['transactionId']),
+      cashEventId: serializer.fromJson<String>(json['cashEventId']),
+      paymentId: serializer.fromJson<String>(json['paymentId']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'refundId': serializer.toJson<String>(refundId),
+      'transactionId': serializer.toJson<String>(transactionId),
+      'cashEventId': serializer.toJson<String>(cashEventId),
+      'paymentId': serializer.toJson<String>(paymentId),
+    };
+  }
+
+  RefundFinancialTransaction copyWith({
+    String? refundId,
+    String? transactionId,
+    String? cashEventId,
+    String? paymentId,
+  }) => RefundFinancialTransaction(
+    refundId: refundId ?? this.refundId,
+    transactionId: transactionId ?? this.transactionId,
+    cashEventId: cashEventId ?? this.cashEventId,
+    paymentId: paymentId ?? this.paymentId,
+  );
+  RefundFinancialTransaction copyWithCompanion(
+    RefundFinancialTransactionsCompanion data,
+  ) {
+    return RefundFinancialTransaction(
+      refundId: data.refundId.present ? data.refundId.value : this.refundId,
+      transactionId: data.transactionId.present
+          ? data.transactionId.value
+          : this.transactionId,
+      cashEventId: data.cashEventId.present
+          ? data.cashEventId.value
+          : this.cashEventId,
+      paymentId: data.paymentId.present ? data.paymentId.value : this.paymentId,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('RefundFinancialTransaction(')
+          ..write('refundId: $refundId, ')
+          ..write('transactionId: $transactionId, ')
+          ..write('cashEventId: $cashEventId, ')
+          ..write('paymentId: $paymentId')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode =>
+      Object.hash(refundId, transactionId, cashEventId, paymentId);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is RefundFinancialTransaction &&
+          other.refundId == this.refundId &&
+          other.transactionId == this.transactionId &&
+          other.cashEventId == this.cashEventId &&
+          other.paymentId == this.paymentId);
+}
+
+class RefundFinancialTransactionsCompanion
+    extends UpdateCompanion<RefundFinancialTransaction> {
+  final Value<String> refundId;
+  final Value<String> transactionId;
+  final Value<String> cashEventId;
+  final Value<String> paymentId;
+  final Value<int> rowid;
+  const RefundFinancialTransactionsCompanion({
+    this.refundId = const Value.absent(),
+    this.transactionId = const Value.absent(),
+    this.cashEventId = const Value.absent(),
+    this.paymentId = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  RefundFinancialTransactionsCompanion.insert({
+    required String refundId,
+    required String transactionId,
+    required String cashEventId,
+    required String paymentId,
+    this.rowid = const Value.absent(),
+  }) : refundId = Value(refundId),
+       transactionId = Value(transactionId),
+       cashEventId = Value(cashEventId),
+       paymentId = Value(paymentId);
+  static Insertable<RefundFinancialTransaction> custom({
+    Expression<String>? refundId,
+    Expression<String>? transactionId,
+    Expression<String>? cashEventId,
+    Expression<String>? paymentId,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (refundId != null) 'refund_id': refundId,
+      if (transactionId != null) 'transaction_id': transactionId,
+      if (cashEventId != null) 'cash_event_id': cashEventId,
+      if (paymentId != null) 'payment_id': paymentId,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  RefundFinancialTransactionsCompanion copyWith({
+    Value<String>? refundId,
+    Value<String>? transactionId,
+    Value<String>? cashEventId,
+    Value<String>? paymentId,
+    Value<int>? rowid,
+  }) {
+    return RefundFinancialTransactionsCompanion(
+      refundId: refundId ?? this.refundId,
+      transactionId: transactionId ?? this.transactionId,
+      cashEventId: cashEventId ?? this.cashEventId,
+      paymentId: paymentId ?? this.paymentId,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (refundId.present) {
+      map['refund_id'] = Variable<String>(refundId.value);
+    }
+    if (transactionId.present) {
+      map['transaction_id'] = Variable<String>(transactionId.value);
+    }
+    if (cashEventId.present) {
+      map['cash_event_id'] = Variable<String>(cashEventId.value);
+    }
+    if (paymentId.present) {
+      map['payment_id'] = Variable<String>(paymentId.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('RefundFinancialTransactionsCompanion(')
+          ..write('refundId: $refundId, ')
+          ..write('transactionId: $transactionId, ')
+          ..write('cashEventId: $cashEventId, ')
+          ..write('paymentId: $paymentId, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $RefundAllocationReversalsTable extends RefundAllocationReversals
+    with TableInfo<$RefundAllocationReversalsTable, RefundAllocationReversal> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $RefundAllocationReversalsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+    'refund_allocation_reversal_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _refundIdMeta = const VerificationMeta(
+    'refundId',
+  );
+  @override
+  late final GeneratedColumn<String> refundId = GeneratedColumn<String>(
+    'refund_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _originalPaymentIdMeta = const VerificationMeta(
+    'originalPaymentId',
+  );
+  @override
+  late final GeneratedColumn<String> originalPaymentId =
+      GeneratedColumn<String>(
+        'original_payment_id',
+        aliasedName,
+        false,
+        type: DriftSqlType.string,
+        requiredDuringInsert: true,
+      );
+  static const VerificationMeta _invoiceIdMeta = const VerificationMeta(
+    'invoiceId',
+  );
+  @override
+  late final GeneratedColumn<String> invoiceId = GeneratedColumn<String>(
+    'invoice_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _allocationIdMeta = const VerificationMeta(
+    'allocationId',
+  );
+  @override
+  late final GeneratedColumn<String> allocationId = GeneratedColumn<String>(
+    'allocation_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _allocationReversalIdMeta =
+      const VerificationMeta('allocationReversalId');
+  @override
+  late final GeneratedColumn<String> allocationReversalId =
+      GeneratedColumn<String>(
+        'allocation_reversal_id',
+        aliasedName,
+        false,
+        type: DriftSqlType.string,
+        requiredDuringInsert: true,
+      );
+  static const VerificationMeta _idempotencyKeyMeta = const VerificationMeta(
+    'idempotencyKey',
+  );
+  @override
+  late final GeneratedColumn<String> idempotencyKey = GeneratedColumn<String>(
+    'idempotency_key',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _requestFingerprintMeta =
+      const VerificationMeta('requestFingerprint');
+  @override
+  late final GeneratedColumn<String> requestFingerprint =
+      GeneratedColumn<String>(
+        'request_fingerprint',
+        aliasedName,
+        false,
+        type: DriftSqlType.string,
+        requiredDuringInsert: true,
+      );
+  static const VerificationMeta _actorIdMeta = const VerificationMeta(
+    'actorId',
+  );
+  @override
+  late final GeneratedColumn<String> actorId = GeneratedColumn<String>(
+    'actor_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _reasonMeta = const VerificationMeta('reason');
+  @override
+  late final GeneratedColumn<String> reason = GeneratedColumn<String>(
+    'reason',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+    'created_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    refundId,
+    originalPaymentId,
+    invoiceId,
+    allocationId,
+    allocationReversalId,
+    idempotencyKey,
+    requestFingerprint,
+    actorId,
+    reason,
+    createdAt,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'refund_allocation_reversals';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<RefundAllocationReversal> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('refund_allocation_reversal_id')) {
+      context.handle(
+        _idMeta,
+        id.isAcceptableOrUnknown(
+          data['refund_allocation_reversal_id']!,
+          _idMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_idMeta);
+    }
+    if (data.containsKey('refund_id')) {
+      context.handle(
+        _refundIdMeta,
+        refundId.isAcceptableOrUnknown(data['refund_id']!, _refundIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_refundIdMeta);
+    }
+    if (data.containsKey('original_payment_id')) {
+      context.handle(
+        _originalPaymentIdMeta,
+        originalPaymentId.isAcceptableOrUnknown(
+          data['original_payment_id']!,
+          _originalPaymentIdMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_originalPaymentIdMeta);
+    }
+    if (data.containsKey('invoice_id')) {
+      context.handle(
+        _invoiceIdMeta,
+        invoiceId.isAcceptableOrUnknown(data['invoice_id']!, _invoiceIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_invoiceIdMeta);
+    }
+    if (data.containsKey('allocation_id')) {
+      context.handle(
+        _allocationIdMeta,
+        allocationId.isAcceptableOrUnknown(
+          data['allocation_id']!,
+          _allocationIdMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_allocationIdMeta);
+    }
+    if (data.containsKey('allocation_reversal_id')) {
+      context.handle(
+        _allocationReversalIdMeta,
+        allocationReversalId.isAcceptableOrUnknown(
+          data['allocation_reversal_id']!,
+          _allocationReversalIdMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_allocationReversalIdMeta);
+    }
+    if (data.containsKey('idempotency_key')) {
+      context.handle(
+        _idempotencyKeyMeta,
+        idempotencyKey.isAcceptableOrUnknown(
+          data['idempotency_key']!,
+          _idempotencyKeyMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_idempotencyKeyMeta);
+    }
+    if (data.containsKey('request_fingerprint')) {
+      context.handle(
+        _requestFingerprintMeta,
+        requestFingerprint.isAcceptableOrUnknown(
+          data['request_fingerprint']!,
+          _requestFingerprintMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_requestFingerprintMeta);
+    }
+    if (data.containsKey('actor_id')) {
+      context.handle(
+        _actorIdMeta,
+        actorId.isAcceptableOrUnknown(data['actor_id']!, _actorIdMeta),
+      );
+    }
+    if (data.containsKey('reason')) {
+      context.handle(
+        _reasonMeta,
+        reason.isAcceptableOrUnknown(data['reason']!, _reasonMeta),
+      );
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_createdAtMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  List<Set<GeneratedColumn>> get uniqueKeys => [
+    {id, refundId},
+    {allocationReversalId},
+    {idempotencyKey},
+  ];
+  @override
+  RefundAllocationReversal map(
+    Map<String, dynamic> data, {
+    String? tablePrefix,
+  }) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return RefundAllocationReversal(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}refund_allocation_reversal_id'],
+      )!,
+      refundId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}refund_id'],
+      )!,
+      originalPaymentId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}original_payment_id'],
+      )!,
+      invoiceId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}invoice_id'],
+      )!,
+      allocationId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}allocation_id'],
+      )!,
+      allocationReversalId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}allocation_reversal_id'],
+      )!,
+      idempotencyKey: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}idempotency_key'],
+      )!,
+      requestFingerprint: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}request_fingerprint'],
+      )!,
+      actorId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}actor_id'],
+      ),
+      reason: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}reason'],
+      ),
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}created_at'],
+      )!,
+    );
+  }
+
+  @override
+  $RefundAllocationReversalsTable createAlias(String alias) {
+    return $RefundAllocationReversalsTable(attachedDatabase, alias);
+  }
+}
+
+class RefundAllocationReversal extends DataClass
+    implements Insertable<RefundAllocationReversal> {
+  final String id;
+  final String refundId;
+  final String originalPaymentId;
+  final String invoiceId;
+  final String allocationId;
+  final String allocationReversalId;
+  final String idempotencyKey;
+  final String requestFingerprint;
+  final String? actorId;
+  final String? reason;
+  final DateTime createdAt;
+  const RefundAllocationReversal({
+    required this.id,
+    required this.refundId,
+    required this.originalPaymentId,
+    required this.invoiceId,
+    required this.allocationId,
+    required this.allocationReversalId,
+    required this.idempotencyKey,
+    required this.requestFingerprint,
+    this.actorId,
+    this.reason,
+    required this.createdAt,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['refund_allocation_reversal_id'] = Variable<String>(id);
+    map['refund_id'] = Variable<String>(refundId);
+    map['original_payment_id'] = Variable<String>(originalPaymentId);
+    map['invoice_id'] = Variable<String>(invoiceId);
+    map['allocation_id'] = Variable<String>(allocationId);
+    map['allocation_reversal_id'] = Variable<String>(allocationReversalId);
+    map['idempotency_key'] = Variable<String>(idempotencyKey);
+    map['request_fingerprint'] = Variable<String>(requestFingerprint);
+    if (!nullToAbsent || actorId != null) {
+      map['actor_id'] = Variable<String>(actorId);
+    }
+    if (!nullToAbsent || reason != null) {
+      map['reason'] = Variable<String>(reason);
+    }
+    map['created_at'] = Variable<DateTime>(createdAt);
+    return map;
+  }
+
+  RefundAllocationReversalsCompanion toCompanion(bool nullToAbsent) {
+    return RefundAllocationReversalsCompanion(
+      id: Value(id),
+      refundId: Value(refundId),
+      originalPaymentId: Value(originalPaymentId),
+      invoiceId: Value(invoiceId),
+      allocationId: Value(allocationId),
+      allocationReversalId: Value(allocationReversalId),
+      idempotencyKey: Value(idempotencyKey),
+      requestFingerprint: Value(requestFingerprint),
+      actorId: actorId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(actorId),
+      reason: reason == null && nullToAbsent
+          ? const Value.absent()
+          : Value(reason),
+      createdAt: Value(createdAt),
+    );
+  }
+
+  factory RefundAllocationReversal.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return RefundAllocationReversal(
+      id: serializer.fromJson<String>(json['id']),
+      refundId: serializer.fromJson<String>(json['refundId']),
+      originalPaymentId: serializer.fromJson<String>(json['originalPaymentId']),
+      invoiceId: serializer.fromJson<String>(json['invoiceId']),
+      allocationId: serializer.fromJson<String>(json['allocationId']),
+      allocationReversalId: serializer.fromJson<String>(
+        json['allocationReversalId'],
+      ),
+      idempotencyKey: serializer.fromJson<String>(json['idempotencyKey']),
+      requestFingerprint: serializer.fromJson<String>(
+        json['requestFingerprint'],
+      ),
+      actorId: serializer.fromJson<String?>(json['actorId']),
+      reason: serializer.fromJson<String?>(json['reason']),
+      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<String>(id),
+      'refundId': serializer.toJson<String>(refundId),
+      'originalPaymentId': serializer.toJson<String>(originalPaymentId),
+      'invoiceId': serializer.toJson<String>(invoiceId),
+      'allocationId': serializer.toJson<String>(allocationId),
+      'allocationReversalId': serializer.toJson<String>(allocationReversalId),
+      'idempotencyKey': serializer.toJson<String>(idempotencyKey),
+      'requestFingerprint': serializer.toJson<String>(requestFingerprint),
+      'actorId': serializer.toJson<String?>(actorId),
+      'reason': serializer.toJson<String?>(reason),
+      'createdAt': serializer.toJson<DateTime>(createdAt),
+    };
+  }
+
+  RefundAllocationReversal copyWith({
+    String? id,
+    String? refundId,
+    String? originalPaymentId,
+    String? invoiceId,
+    String? allocationId,
+    String? allocationReversalId,
+    String? idempotencyKey,
+    String? requestFingerprint,
+    Value<String?> actorId = const Value.absent(),
+    Value<String?> reason = const Value.absent(),
+    DateTime? createdAt,
+  }) => RefundAllocationReversal(
+    id: id ?? this.id,
+    refundId: refundId ?? this.refundId,
+    originalPaymentId: originalPaymentId ?? this.originalPaymentId,
+    invoiceId: invoiceId ?? this.invoiceId,
+    allocationId: allocationId ?? this.allocationId,
+    allocationReversalId: allocationReversalId ?? this.allocationReversalId,
+    idempotencyKey: idempotencyKey ?? this.idempotencyKey,
+    requestFingerprint: requestFingerprint ?? this.requestFingerprint,
+    actorId: actorId.present ? actorId.value : this.actorId,
+    reason: reason.present ? reason.value : this.reason,
+    createdAt: createdAt ?? this.createdAt,
+  );
+  RefundAllocationReversal copyWithCompanion(
+    RefundAllocationReversalsCompanion data,
+  ) {
+    return RefundAllocationReversal(
+      id: data.id.present ? data.id.value : this.id,
+      refundId: data.refundId.present ? data.refundId.value : this.refundId,
+      originalPaymentId: data.originalPaymentId.present
+          ? data.originalPaymentId.value
+          : this.originalPaymentId,
+      invoiceId: data.invoiceId.present ? data.invoiceId.value : this.invoiceId,
+      allocationId: data.allocationId.present
+          ? data.allocationId.value
+          : this.allocationId,
+      allocationReversalId: data.allocationReversalId.present
+          ? data.allocationReversalId.value
+          : this.allocationReversalId,
+      idempotencyKey: data.idempotencyKey.present
+          ? data.idempotencyKey.value
+          : this.idempotencyKey,
+      requestFingerprint: data.requestFingerprint.present
+          ? data.requestFingerprint.value
+          : this.requestFingerprint,
+      actorId: data.actorId.present ? data.actorId.value : this.actorId,
+      reason: data.reason.present ? data.reason.value : this.reason,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('RefundAllocationReversal(')
+          ..write('id: $id, ')
+          ..write('refundId: $refundId, ')
+          ..write('originalPaymentId: $originalPaymentId, ')
+          ..write('invoiceId: $invoiceId, ')
+          ..write('allocationId: $allocationId, ')
+          ..write('allocationReversalId: $allocationReversalId, ')
+          ..write('idempotencyKey: $idempotencyKey, ')
+          ..write('requestFingerprint: $requestFingerprint, ')
+          ..write('actorId: $actorId, ')
+          ..write('reason: $reason, ')
+          ..write('createdAt: $createdAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    id,
+    refundId,
+    originalPaymentId,
+    invoiceId,
+    allocationId,
+    allocationReversalId,
+    idempotencyKey,
+    requestFingerprint,
+    actorId,
+    reason,
+    createdAt,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is RefundAllocationReversal &&
+          other.id == this.id &&
+          other.refundId == this.refundId &&
+          other.originalPaymentId == this.originalPaymentId &&
+          other.invoiceId == this.invoiceId &&
+          other.allocationId == this.allocationId &&
+          other.allocationReversalId == this.allocationReversalId &&
+          other.idempotencyKey == this.idempotencyKey &&
+          other.requestFingerprint == this.requestFingerprint &&
+          other.actorId == this.actorId &&
+          other.reason == this.reason &&
+          other.createdAt == this.createdAt);
+}
+
+class RefundAllocationReversalsCompanion
+    extends UpdateCompanion<RefundAllocationReversal> {
+  final Value<String> id;
+  final Value<String> refundId;
+  final Value<String> originalPaymentId;
+  final Value<String> invoiceId;
+  final Value<String> allocationId;
+  final Value<String> allocationReversalId;
+  final Value<String> idempotencyKey;
+  final Value<String> requestFingerprint;
+  final Value<String?> actorId;
+  final Value<String?> reason;
+  final Value<DateTime> createdAt;
+  final Value<int> rowid;
+  const RefundAllocationReversalsCompanion({
+    this.id = const Value.absent(),
+    this.refundId = const Value.absent(),
+    this.originalPaymentId = const Value.absent(),
+    this.invoiceId = const Value.absent(),
+    this.allocationId = const Value.absent(),
+    this.allocationReversalId = const Value.absent(),
+    this.idempotencyKey = const Value.absent(),
+    this.requestFingerprint = const Value.absent(),
+    this.actorId = const Value.absent(),
+    this.reason = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  RefundAllocationReversalsCompanion.insert({
+    required String id,
+    required String refundId,
+    required String originalPaymentId,
+    required String invoiceId,
+    required String allocationId,
+    required String allocationReversalId,
+    required String idempotencyKey,
+    required String requestFingerprint,
+    this.actorId = const Value.absent(),
+    this.reason = const Value.absent(),
+    required DateTime createdAt,
+    this.rowid = const Value.absent(),
+  }) : id = Value(id),
+       refundId = Value(refundId),
+       originalPaymentId = Value(originalPaymentId),
+       invoiceId = Value(invoiceId),
+       allocationId = Value(allocationId),
+       allocationReversalId = Value(allocationReversalId),
+       idempotencyKey = Value(idempotencyKey),
+       requestFingerprint = Value(requestFingerprint),
+       createdAt = Value(createdAt);
+  static Insertable<RefundAllocationReversal> custom({
+    Expression<String>? id,
+    Expression<String>? refundId,
+    Expression<String>? originalPaymentId,
+    Expression<String>? invoiceId,
+    Expression<String>? allocationId,
+    Expression<String>? allocationReversalId,
+    Expression<String>? idempotencyKey,
+    Expression<String>? requestFingerprint,
+    Expression<String>? actorId,
+    Expression<String>? reason,
+    Expression<DateTime>? createdAt,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'refund_allocation_reversal_id': id,
+      if (refundId != null) 'refund_id': refundId,
+      if (originalPaymentId != null) 'original_payment_id': originalPaymentId,
+      if (invoiceId != null) 'invoice_id': invoiceId,
+      if (allocationId != null) 'allocation_id': allocationId,
+      if (allocationReversalId != null)
+        'allocation_reversal_id': allocationReversalId,
+      if (idempotencyKey != null) 'idempotency_key': idempotencyKey,
+      if (requestFingerprint != null) 'request_fingerprint': requestFingerprint,
+      if (actorId != null) 'actor_id': actorId,
+      if (reason != null) 'reason': reason,
+      if (createdAt != null) 'created_at': createdAt,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  RefundAllocationReversalsCompanion copyWith({
+    Value<String>? id,
+    Value<String>? refundId,
+    Value<String>? originalPaymentId,
+    Value<String>? invoiceId,
+    Value<String>? allocationId,
+    Value<String>? allocationReversalId,
+    Value<String>? idempotencyKey,
+    Value<String>? requestFingerprint,
+    Value<String?>? actorId,
+    Value<String?>? reason,
+    Value<DateTime>? createdAt,
+    Value<int>? rowid,
+  }) {
+    return RefundAllocationReversalsCompanion(
+      id: id ?? this.id,
+      refundId: refundId ?? this.refundId,
+      originalPaymentId: originalPaymentId ?? this.originalPaymentId,
+      invoiceId: invoiceId ?? this.invoiceId,
+      allocationId: allocationId ?? this.allocationId,
+      allocationReversalId: allocationReversalId ?? this.allocationReversalId,
+      idempotencyKey: idempotencyKey ?? this.idempotencyKey,
+      requestFingerprint: requestFingerprint ?? this.requestFingerprint,
+      actorId: actorId ?? this.actorId,
+      reason: reason ?? this.reason,
+      createdAt: createdAt ?? this.createdAt,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['refund_allocation_reversal_id'] = Variable<String>(id.value);
+    }
+    if (refundId.present) {
+      map['refund_id'] = Variable<String>(refundId.value);
+    }
+    if (originalPaymentId.present) {
+      map['original_payment_id'] = Variable<String>(originalPaymentId.value);
+    }
+    if (invoiceId.present) {
+      map['invoice_id'] = Variable<String>(invoiceId.value);
+    }
+    if (allocationId.present) {
+      map['allocation_id'] = Variable<String>(allocationId.value);
+    }
+    if (allocationReversalId.present) {
+      map['allocation_reversal_id'] = Variable<String>(
+        allocationReversalId.value,
+      );
+    }
+    if (idempotencyKey.present) {
+      map['idempotency_key'] = Variable<String>(idempotencyKey.value);
+    }
+    if (requestFingerprint.present) {
+      map['request_fingerprint'] = Variable<String>(requestFingerprint.value);
+    }
+    if (actorId.present) {
+      map['actor_id'] = Variable<String>(actorId.value);
+    }
+    if (reason.present) {
+      map['reason'] = Variable<String>(reason.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('RefundAllocationReversalsCompanion(')
+          ..write('id: $id, ')
+          ..write('refundId: $refundId, ')
+          ..write('originalPaymentId: $originalPaymentId, ')
+          ..write('invoiceId: $invoiceId, ')
+          ..write('allocationId: $allocationId, ')
+          ..write('allocationReversalId: $allocationReversalId, ')
+          ..write('idempotencyKey: $idempotencyKey, ')
+          ..write('requestFingerprint: $requestFingerprint, ')
+          ..write('actorId: $actorId, ')
+          ..write('reason: $reason, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $InvoiceLifecycleEventsTable extends InvoiceLifecycleEvents
+    with TableInfo<$InvoiceLifecycleEventsTable, InvoiceLifecycleEvent> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $InvoiceLifecycleEventsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+    'lifecycle_event_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _invoiceIdMeta = const VerificationMeta(
+    'invoiceId',
+  );
+  @override
+  late final GeneratedColumn<String> invoiceId = GeneratedColumn<String>(
+    'invoice_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _sequenceMeta = const VerificationMeta(
+    'sequence',
+  );
+  @override
+  late final GeneratedColumn<int> sequence = GeneratedColumn<int>(
+    'sequence',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _stateMeta = const VerificationMeta('state');
+  @override
+  late final GeneratedColumn<String> state = GeneratedColumn<String>(
+    'state',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _previousEventIdMeta = const VerificationMeta(
+    'previousEventId',
+  );
+  @override
+  late final GeneratedColumn<String> previousEventId = GeneratedColumn<String>(
+    'previous_event_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _idempotencyKeyMeta = const VerificationMeta(
+    'idempotencyKey',
+  );
+  @override
+  late final GeneratedColumn<String> idempotencyKey = GeneratedColumn<String>(
+    'idempotency_key',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _requestFingerprintMeta =
+      const VerificationMeta('requestFingerprint');
+  @override
+  late final GeneratedColumn<String> requestFingerprint =
+      GeneratedColumn<String>(
+        'request_fingerprint',
+        aliasedName,
+        false,
+        type: DriftSqlType.string,
+        requiredDuringInsert: true,
+      );
+  static const VerificationMeta _actorIdMeta = const VerificationMeta(
+    'actorId',
+  );
+  @override
+  late final GeneratedColumn<String> actorId = GeneratedColumn<String>(
+    'actor_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _reasonMeta = const VerificationMeta('reason');
+  @override
+  late final GeneratedColumn<String> reason = GeneratedColumn<String>(
+    'reason',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _recordedAtMeta = const VerificationMeta(
+    'recordedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> recordedAt = GeneratedColumn<DateTime>(
+    'recorded_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    invoiceId,
+    sequence,
+    state,
+    previousEventId,
+    idempotencyKey,
+    requestFingerprint,
+    actorId,
+    reason,
+    recordedAt,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'invoice_lifecycle_events';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<InvoiceLifecycleEvent> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('lifecycle_event_id')) {
+      context.handle(
+        _idMeta,
+        id.isAcceptableOrUnknown(data['lifecycle_event_id']!, _idMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_idMeta);
+    }
+    if (data.containsKey('invoice_id')) {
+      context.handle(
+        _invoiceIdMeta,
+        invoiceId.isAcceptableOrUnknown(data['invoice_id']!, _invoiceIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_invoiceIdMeta);
+    }
+    if (data.containsKey('sequence')) {
+      context.handle(
+        _sequenceMeta,
+        sequence.isAcceptableOrUnknown(data['sequence']!, _sequenceMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_sequenceMeta);
+    }
+    if (data.containsKey('state')) {
+      context.handle(
+        _stateMeta,
+        state.isAcceptableOrUnknown(data['state']!, _stateMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_stateMeta);
+    }
+    if (data.containsKey('previous_event_id')) {
+      context.handle(
+        _previousEventIdMeta,
+        previousEventId.isAcceptableOrUnknown(
+          data['previous_event_id']!,
+          _previousEventIdMeta,
+        ),
+      );
+    }
+    if (data.containsKey('idempotency_key')) {
+      context.handle(
+        _idempotencyKeyMeta,
+        idempotencyKey.isAcceptableOrUnknown(
+          data['idempotency_key']!,
+          _idempotencyKeyMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_idempotencyKeyMeta);
+    }
+    if (data.containsKey('request_fingerprint')) {
+      context.handle(
+        _requestFingerprintMeta,
+        requestFingerprint.isAcceptableOrUnknown(
+          data['request_fingerprint']!,
+          _requestFingerprintMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_requestFingerprintMeta);
+    }
+    if (data.containsKey('actor_id')) {
+      context.handle(
+        _actorIdMeta,
+        actorId.isAcceptableOrUnknown(data['actor_id']!, _actorIdMeta),
+      );
+    }
+    if (data.containsKey('reason')) {
+      context.handle(
+        _reasonMeta,
+        reason.isAcceptableOrUnknown(data['reason']!, _reasonMeta),
+      );
+    }
+    if (data.containsKey('recorded_at')) {
+      context.handle(
+        _recordedAtMeta,
+        recordedAt.isAcceptableOrUnknown(data['recorded_at']!, _recordedAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_recordedAtMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  List<Set<GeneratedColumn>> get uniqueKeys => [
+    {invoiceId, sequence},
+    {id, invoiceId},
+    {idempotencyKey},
+  ];
+  @override
+  InvoiceLifecycleEvent map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return InvoiceLifecycleEvent(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}lifecycle_event_id'],
+      )!,
+      invoiceId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}invoice_id'],
+      )!,
+      sequence: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}sequence'],
+      )!,
+      state: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}state'],
+      )!,
+      previousEventId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}previous_event_id'],
+      ),
+      idempotencyKey: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}idempotency_key'],
+      )!,
+      requestFingerprint: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}request_fingerprint'],
+      )!,
+      actorId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}actor_id'],
+      ),
+      reason: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}reason'],
+      ),
+      recordedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}recorded_at'],
+      )!,
+    );
+  }
+
+  @override
+  $InvoiceLifecycleEventsTable createAlias(String alias) {
+    return $InvoiceLifecycleEventsTable(attachedDatabase, alias);
+  }
+}
+
+class InvoiceLifecycleEvent extends DataClass
+    implements Insertable<InvoiceLifecycleEvent> {
+  final String id;
+  final String invoiceId;
+  final int sequence;
+  final String state;
+  final String? previousEventId;
+  final String idempotencyKey;
+  final String requestFingerprint;
+  final String? actorId;
+  final String? reason;
+  final DateTime recordedAt;
+  const InvoiceLifecycleEvent({
+    required this.id,
+    required this.invoiceId,
+    required this.sequence,
+    required this.state,
+    this.previousEventId,
+    required this.idempotencyKey,
+    required this.requestFingerprint,
+    this.actorId,
+    this.reason,
+    required this.recordedAt,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['lifecycle_event_id'] = Variable<String>(id);
+    map['invoice_id'] = Variable<String>(invoiceId);
+    map['sequence'] = Variable<int>(sequence);
+    map['state'] = Variable<String>(state);
+    if (!nullToAbsent || previousEventId != null) {
+      map['previous_event_id'] = Variable<String>(previousEventId);
+    }
+    map['idempotency_key'] = Variable<String>(idempotencyKey);
+    map['request_fingerprint'] = Variable<String>(requestFingerprint);
+    if (!nullToAbsent || actorId != null) {
+      map['actor_id'] = Variable<String>(actorId);
+    }
+    if (!nullToAbsent || reason != null) {
+      map['reason'] = Variable<String>(reason);
+    }
+    map['recorded_at'] = Variable<DateTime>(recordedAt);
+    return map;
+  }
+
+  InvoiceLifecycleEventsCompanion toCompanion(bool nullToAbsent) {
+    return InvoiceLifecycleEventsCompanion(
+      id: Value(id),
+      invoiceId: Value(invoiceId),
+      sequence: Value(sequence),
+      state: Value(state),
+      previousEventId: previousEventId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(previousEventId),
+      idempotencyKey: Value(idempotencyKey),
+      requestFingerprint: Value(requestFingerprint),
+      actorId: actorId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(actorId),
+      reason: reason == null && nullToAbsent
+          ? const Value.absent()
+          : Value(reason),
+      recordedAt: Value(recordedAt),
+    );
+  }
+
+  factory InvoiceLifecycleEvent.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return InvoiceLifecycleEvent(
+      id: serializer.fromJson<String>(json['id']),
+      invoiceId: serializer.fromJson<String>(json['invoiceId']),
+      sequence: serializer.fromJson<int>(json['sequence']),
+      state: serializer.fromJson<String>(json['state']),
+      previousEventId: serializer.fromJson<String?>(json['previousEventId']),
+      idempotencyKey: serializer.fromJson<String>(json['idempotencyKey']),
+      requestFingerprint: serializer.fromJson<String>(
+        json['requestFingerprint'],
+      ),
+      actorId: serializer.fromJson<String?>(json['actorId']),
+      reason: serializer.fromJson<String?>(json['reason']),
+      recordedAt: serializer.fromJson<DateTime>(json['recordedAt']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<String>(id),
+      'invoiceId': serializer.toJson<String>(invoiceId),
+      'sequence': serializer.toJson<int>(sequence),
+      'state': serializer.toJson<String>(state),
+      'previousEventId': serializer.toJson<String?>(previousEventId),
+      'idempotencyKey': serializer.toJson<String>(idempotencyKey),
+      'requestFingerprint': serializer.toJson<String>(requestFingerprint),
+      'actorId': serializer.toJson<String?>(actorId),
+      'reason': serializer.toJson<String?>(reason),
+      'recordedAt': serializer.toJson<DateTime>(recordedAt),
+    };
+  }
+
+  InvoiceLifecycleEvent copyWith({
+    String? id,
+    String? invoiceId,
+    int? sequence,
+    String? state,
+    Value<String?> previousEventId = const Value.absent(),
+    String? idempotencyKey,
+    String? requestFingerprint,
+    Value<String?> actorId = const Value.absent(),
+    Value<String?> reason = const Value.absent(),
+    DateTime? recordedAt,
+  }) => InvoiceLifecycleEvent(
+    id: id ?? this.id,
+    invoiceId: invoiceId ?? this.invoiceId,
+    sequence: sequence ?? this.sequence,
+    state: state ?? this.state,
+    previousEventId: previousEventId.present
+        ? previousEventId.value
+        : this.previousEventId,
+    idempotencyKey: idempotencyKey ?? this.idempotencyKey,
+    requestFingerprint: requestFingerprint ?? this.requestFingerprint,
+    actorId: actorId.present ? actorId.value : this.actorId,
+    reason: reason.present ? reason.value : this.reason,
+    recordedAt: recordedAt ?? this.recordedAt,
+  );
+  InvoiceLifecycleEvent copyWithCompanion(
+    InvoiceLifecycleEventsCompanion data,
+  ) {
+    return InvoiceLifecycleEvent(
+      id: data.id.present ? data.id.value : this.id,
+      invoiceId: data.invoiceId.present ? data.invoiceId.value : this.invoiceId,
+      sequence: data.sequence.present ? data.sequence.value : this.sequence,
+      state: data.state.present ? data.state.value : this.state,
+      previousEventId: data.previousEventId.present
+          ? data.previousEventId.value
+          : this.previousEventId,
+      idempotencyKey: data.idempotencyKey.present
+          ? data.idempotencyKey.value
+          : this.idempotencyKey,
+      requestFingerprint: data.requestFingerprint.present
+          ? data.requestFingerprint.value
+          : this.requestFingerprint,
+      actorId: data.actorId.present ? data.actorId.value : this.actorId,
+      reason: data.reason.present ? data.reason.value : this.reason,
+      recordedAt: data.recordedAt.present
+          ? data.recordedAt.value
+          : this.recordedAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('InvoiceLifecycleEvent(')
+          ..write('id: $id, ')
+          ..write('invoiceId: $invoiceId, ')
+          ..write('sequence: $sequence, ')
+          ..write('state: $state, ')
+          ..write('previousEventId: $previousEventId, ')
+          ..write('idempotencyKey: $idempotencyKey, ')
+          ..write('requestFingerprint: $requestFingerprint, ')
+          ..write('actorId: $actorId, ')
+          ..write('reason: $reason, ')
+          ..write('recordedAt: $recordedAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    id,
+    invoiceId,
+    sequence,
+    state,
+    previousEventId,
+    idempotencyKey,
+    requestFingerprint,
+    actorId,
+    reason,
+    recordedAt,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is InvoiceLifecycleEvent &&
+          other.id == this.id &&
+          other.invoiceId == this.invoiceId &&
+          other.sequence == this.sequence &&
+          other.state == this.state &&
+          other.previousEventId == this.previousEventId &&
+          other.idempotencyKey == this.idempotencyKey &&
+          other.requestFingerprint == this.requestFingerprint &&
+          other.actorId == this.actorId &&
+          other.reason == this.reason &&
+          other.recordedAt == this.recordedAt);
+}
+
+class InvoiceLifecycleEventsCompanion
+    extends UpdateCompanion<InvoiceLifecycleEvent> {
+  final Value<String> id;
+  final Value<String> invoiceId;
+  final Value<int> sequence;
+  final Value<String> state;
+  final Value<String?> previousEventId;
+  final Value<String> idempotencyKey;
+  final Value<String> requestFingerprint;
+  final Value<String?> actorId;
+  final Value<String?> reason;
+  final Value<DateTime> recordedAt;
+  final Value<int> rowid;
+  const InvoiceLifecycleEventsCompanion({
+    this.id = const Value.absent(),
+    this.invoiceId = const Value.absent(),
+    this.sequence = const Value.absent(),
+    this.state = const Value.absent(),
+    this.previousEventId = const Value.absent(),
+    this.idempotencyKey = const Value.absent(),
+    this.requestFingerprint = const Value.absent(),
+    this.actorId = const Value.absent(),
+    this.reason = const Value.absent(),
+    this.recordedAt = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  InvoiceLifecycleEventsCompanion.insert({
+    required String id,
+    required String invoiceId,
+    required int sequence,
+    required String state,
+    this.previousEventId = const Value.absent(),
+    required String idempotencyKey,
+    required String requestFingerprint,
+    this.actorId = const Value.absent(),
+    this.reason = const Value.absent(),
+    required DateTime recordedAt,
+    this.rowid = const Value.absent(),
+  }) : id = Value(id),
+       invoiceId = Value(invoiceId),
+       sequence = Value(sequence),
+       state = Value(state),
+       idempotencyKey = Value(idempotencyKey),
+       requestFingerprint = Value(requestFingerprint),
+       recordedAt = Value(recordedAt);
+  static Insertable<InvoiceLifecycleEvent> custom({
+    Expression<String>? id,
+    Expression<String>? invoiceId,
+    Expression<int>? sequence,
+    Expression<String>? state,
+    Expression<String>? previousEventId,
+    Expression<String>? idempotencyKey,
+    Expression<String>? requestFingerprint,
+    Expression<String>? actorId,
+    Expression<String>? reason,
+    Expression<DateTime>? recordedAt,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'lifecycle_event_id': id,
+      if (invoiceId != null) 'invoice_id': invoiceId,
+      if (sequence != null) 'sequence': sequence,
+      if (state != null) 'state': state,
+      if (previousEventId != null) 'previous_event_id': previousEventId,
+      if (idempotencyKey != null) 'idempotency_key': idempotencyKey,
+      if (requestFingerprint != null) 'request_fingerprint': requestFingerprint,
+      if (actorId != null) 'actor_id': actorId,
+      if (reason != null) 'reason': reason,
+      if (recordedAt != null) 'recorded_at': recordedAt,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  InvoiceLifecycleEventsCompanion copyWith({
+    Value<String>? id,
+    Value<String>? invoiceId,
+    Value<int>? sequence,
+    Value<String>? state,
+    Value<String?>? previousEventId,
+    Value<String>? idempotencyKey,
+    Value<String>? requestFingerprint,
+    Value<String?>? actorId,
+    Value<String?>? reason,
+    Value<DateTime>? recordedAt,
+    Value<int>? rowid,
+  }) {
+    return InvoiceLifecycleEventsCompanion(
+      id: id ?? this.id,
+      invoiceId: invoiceId ?? this.invoiceId,
+      sequence: sequence ?? this.sequence,
+      state: state ?? this.state,
+      previousEventId: previousEventId ?? this.previousEventId,
+      idempotencyKey: idempotencyKey ?? this.idempotencyKey,
+      requestFingerprint: requestFingerprint ?? this.requestFingerprint,
+      actorId: actorId ?? this.actorId,
+      reason: reason ?? this.reason,
+      recordedAt: recordedAt ?? this.recordedAt,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['lifecycle_event_id'] = Variable<String>(id.value);
+    }
+    if (invoiceId.present) {
+      map['invoice_id'] = Variable<String>(invoiceId.value);
+    }
+    if (sequence.present) {
+      map['sequence'] = Variable<int>(sequence.value);
+    }
+    if (state.present) {
+      map['state'] = Variable<String>(state.value);
+    }
+    if (previousEventId.present) {
+      map['previous_event_id'] = Variable<String>(previousEventId.value);
+    }
+    if (idempotencyKey.present) {
+      map['idempotency_key'] = Variable<String>(idempotencyKey.value);
+    }
+    if (requestFingerprint.present) {
+      map['request_fingerprint'] = Variable<String>(requestFingerprint.value);
+    }
+    if (actorId.present) {
+      map['actor_id'] = Variable<String>(actorId.value);
+    }
+    if (reason.present) {
+      map['reason'] = Variable<String>(reason.value);
+    }
+    if (recordedAt.present) {
+      map['recorded_at'] = Variable<DateTime>(recordedAt.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('InvoiceLifecycleEventsCompanion(')
+          ..write('id: $id, ')
+          ..write('invoiceId: $invoiceId, ')
+          ..write('sequence: $sequence, ')
+          ..write('state: $state, ')
+          ..write('previousEventId: $previousEventId, ')
+          ..write('idempotencyKey: $idempotencyKey, ')
+          ..write('requestFingerprint: $requestFingerprint, ')
+          ..write('actorId: $actorId, ')
+          ..write('reason: $reason, ')
+          ..write('recordedAt: $recordedAt, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(e);
   $AppDatabaseManager get managers => $AppDatabaseManager(this);
@@ -8677,6 +13643,19 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   late final $SuspenseEntriesTable suspenseEntries = $SuspenseEntriesTable(
     this,
   );
+  late final $InvoiceAllocationsTable invoiceAllocations =
+      $InvoiceAllocationsTable(this);
+  late final $AllocationReversalsTable allocationReversals =
+      $AllocationReversalsTable(this);
+  late final $AllocationStatusHistoryTable allocationStatusHistory =
+      $AllocationStatusHistoryTable(this);
+  late final $RefundsTable refunds = $RefundsTable(this);
+  late final $RefundFinancialTransactionsTable refundFinancialTransactions =
+      $RefundFinancialTransactionsTable(this);
+  late final $RefundAllocationReversalsTable refundAllocationReversals =
+      $RefundAllocationReversalsTable(this);
+  late final $InvoiceLifecycleEventsTable invoiceLifecycleEvents =
+      $InvoiceLifecycleEventsTable(this);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
@@ -8696,6 +13675,13 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     reconciliationCases,
     suspenseResolutions,
     suspenseEntries,
+    invoiceAllocations,
+    allocationReversals,
+    allocationStatusHistory,
+    refunds,
+    refundFinancialTransactions,
+    refundAllocationReversals,
+    invoiceLifecycleEvents,
   ];
 }
 
@@ -13029,6 +18015,2460 @@ typedef $$SuspenseEntriesTableProcessedTableManager =
       SuspenseEntry,
       PrefetchHooks Function()
     >;
+typedef $$InvoiceAllocationsTableCreateCompanionBuilder =
+    InvoiceAllocationsCompanion Function({
+      required String id,
+      required String paymentId,
+      required String invoiceId,
+      required String paymentFinancialAccountId,
+      required String invoiceFinancialAccountId,
+      required String partyId,
+      required String partyRole,
+      required String currencyCode,
+      required int amountMinor,
+      required String idempotencyKey,
+      required String requestFingerprint,
+      Value<String?> originDeviceId,
+      Value<String?> conflictGroupId,
+      Value<String?> actorId,
+      Value<String?> reason,
+      required DateTime createdAt,
+      Value<int> rowid,
+    });
+typedef $$InvoiceAllocationsTableUpdateCompanionBuilder =
+    InvoiceAllocationsCompanion Function({
+      Value<String> id,
+      Value<String> paymentId,
+      Value<String> invoiceId,
+      Value<String> paymentFinancialAccountId,
+      Value<String> invoiceFinancialAccountId,
+      Value<String> partyId,
+      Value<String> partyRole,
+      Value<String> currencyCode,
+      Value<int> amountMinor,
+      Value<String> idempotencyKey,
+      Value<String> requestFingerprint,
+      Value<String?> originDeviceId,
+      Value<String?> conflictGroupId,
+      Value<String?> actorId,
+      Value<String?> reason,
+      Value<DateTime> createdAt,
+      Value<int> rowid,
+    });
+
+class $$InvoiceAllocationsTableFilterComposer
+    extends Composer<_$AppDatabase, $InvoiceAllocationsTable> {
+  $$InvoiceAllocationsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get paymentId => $composableBuilder(
+    column: $table.paymentId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get invoiceId => $composableBuilder(
+    column: $table.invoiceId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get paymentFinancialAccountId => $composableBuilder(
+    column: $table.paymentFinancialAccountId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get invoiceFinancialAccountId => $composableBuilder(
+    column: $table.invoiceFinancialAccountId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get partyId => $composableBuilder(
+    column: $table.partyId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get partyRole => $composableBuilder(
+    column: $table.partyRole,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get currencyCode => $composableBuilder(
+    column: $table.currencyCode,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get amountMinor => $composableBuilder(
+    column: $table.amountMinor,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get idempotencyKey => $composableBuilder(
+    column: $table.idempotencyKey,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get requestFingerprint => $composableBuilder(
+    column: $table.requestFingerprint,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get originDeviceId => $composableBuilder(
+    column: $table.originDeviceId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get conflictGroupId => $composableBuilder(
+    column: $table.conflictGroupId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get actorId => $composableBuilder(
+    column: $table.actorId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get reason => $composableBuilder(
+    column: $table.reason,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$InvoiceAllocationsTableOrderingComposer
+    extends Composer<_$AppDatabase, $InvoiceAllocationsTable> {
+  $$InvoiceAllocationsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get paymentId => $composableBuilder(
+    column: $table.paymentId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get invoiceId => $composableBuilder(
+    column: $table.invoiceId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get paymentFinancialAccountId => $composableBuilder(
+    column: $table.paymentFinancialAccountId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get invoiceFinancialAccountId => $composableBuilder(
+    column: $table.invoiceFinancialAccountId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get partyId => $composableBuilder(
+    column: $table.partyId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get partyRole => $composableBuilder(
+    column: $table.partyRole,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get currencyCode => $composableBuilder(
+    column: $table.currencyCode,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get amountMinor => $composableBuilder(
+    column: $table.amountMinor,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get idempotencyKey => $composableBuilder(
+    column: $table.idempotencyKey,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get requestFingerprint => $composableBuilder(
+    column: $table.requestFingerprint,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get originDeviceId => $composableBuilder(
+    column: $table.originDeviceId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get conflictGroupId => $composableBuilder(
+    column: $table.conflictGroupId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get actorId => $composableBuilder(
+    column: $table.actorId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get reason => $composableBuilder(
+    column: $table.reason,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$InvoiceAllocationsTableAnnotationComposer
+    extends Composer<_$AppDatabase, $InvoiceAllocationsTable> {
+  $$InvoiceAllocationsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get paymentId =>
+      $composableBuilder(column: $table.paymentId, builder: (column) => column);
+
+  GeneratedColumn<String> get invoiceId =>
+      $composableBuilder(column: $table.invoiceId, builder: (column) => column);
+
+  GeneratedColumn<String> get paymentFinancialAccountId => $composableBuilder(
+    column: $table.paymentFinancialAccountId,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get invoiceFinancialAccountId => $composableBuilder(
+    column: $table.invoiceFinancialAccountId,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get partyId =>
+      $composableBuilder(column: $table.partyId, builder: (column) => column);
+
+  GeneratedColumn<String> get partyRole =>
+      $composableBuilder(column: $table.partyRole, builder: (column) => column);
+
+  GeneratedColumn<String> get currencyCode => $composableBuilder(
+    column: $table.currencyCode,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get amountMinor => $composableBuilder(
+    column: $table.amountMinor,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get idempotencyKey => $composableBuilder(
+    column: $table.idempotencyKey,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get requestFingerprint => $composableBuilder(
+    column: $table.requestFingerprint,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get originDeviceId => $composableBuilder(
+    column: $table.originDeviceId,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get conflictGroupId => $composableBuilder(
+    column: $table.conflictGroupId,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get actorId =>
+      $composableBuilder(column: $table.actorId, builder: (column) => column);
+
+  GeneratedColumn<String> get reason =>
+      $composableBuilder(column: $table.reason, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+}
+
+class $$InvoiceAllocationsTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $InvoiceAllocationsTable,
+          InvoiceAllocation,
+          $$InvoiceAllocationsTableFilterComposer,
+          $$InvoiceAllocationsTableOrderingComposer,
+          $$InvoiceAllocationsTableAnnotationComposer,
+          $$InvoiceAllocationsTableCreateCompanionBuilder,
+          $$InvoiceAllocationsTableUpdateCompanionBuilder,
+          (
+            InvoiceAllocation,
+            BaseReferences<
+              _$AppDatabase,
+              $InvoiceAllocationsTable,
+              InvoiceAllocation
+            >,
+          ),
+          InvoiceAllocation,
+          PrefetchHooks Function()
+        > {
+  $$InvoiceAllocationsTableTableManager(
+    _$AppDatabase db,
+    $InvoiceAllocationsTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$InvoiceAllocationsTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$InvoiceAllocationsTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$InvoiceAllocationsTableAnnotationComposer(
+                $db: db,
+                $table: table,
+              ),
+          updateCompanionCallback:
+              ({
+                Value<String> id = const Value.absent(),
+                Value<String> paymentId = const Value.absent(),
+                Value<String> invoiceId = const Value.absent(),
+                Value<String> paymentFinancialAccountId = const Value.absent(),
+                Value<String> invoiceFinancialAccountId = const Value.absent(),
+                Value<String> partyId = const Value.absent(),
+                Value<String> partyRole = const Value.absent(),
+                Value<String> currencyCode = const Value.absent(),
+                Value<int> amountMinor = const Value.absent(),
+                Value<String> idempotencyKey = const Value.absent(),
+                Value<String> requestFingerprint = const Value.absent(),
+                Value<String?> originDeviceId = const Value.absent(),
+                Value<String?> conflictGroupId = const Value.absent(),
+                Value<String?> actorId = const Value.absent(),
+                Value<String?> reason = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => InvoiceAllocationsCompanion(
+                id: id,
+                paymentId: paymentId,
+                invoiceId: invoiceId,
+                paymentFinancialAccountId: paymentFinancialAccountId,
+                invoiceFinancialAccountId: invoiceFinancialAccountId,
+                partyId: partyId,
+                partyRole: partyRole,
+                currencyCode: currencyCode,
+                amountMinor: amountMinor,
+                idempotencyKey: idempotencyKey,
+                requestFingerprint: requestFingerprint,
+                originDeviceId: originDeviceId,
+                conflictGroupId: conflictGroupId,
+                actorId: actorId,
+                reason: reason,
+                createdAt: createdAt,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String id,
+                required String paymentId,
+                required String invoiceId,
+                required String paymentFinancialAccountId,
+                required String invoiceFinancialAccountId,
+                required String partyId,
+                required String partyRole,
+                required String currencyCode,
+                required int amountMinor,
+                required String idempotencyKey,
+                required String requestFingerprint,
+                Value<String?> originDeviceId = const Value.absent(),
+                Value<String?> conflictGroupId = const Value.absent(),
+                Value<String?> actorId = const Value.absent(),
+                Value<String?> reason = const Value.absent(),
+                required DateTime createdAt,
+                Value<int> rowid = const Value.absent(),
+              }) => InvoiceAllocationsCompanion.insert(
+                id: id,
+                paymentId: paymentId,
+                invoiceId: invoiceId,
+                paymentFinancialAccountId: paymentFinancialAccountId,
+                invoiceFinancialAccountId: invoiceFinancialAccountId,
+                partyId: partyId,
+                partyRole: partyRole,
+                currencyCode: currencyCode,
+                amountMinor: amountMinor,
+                idempotencyKey: idempotencyKey,
+                requestFingerprint: requestFingerprint,
+                originDeviceId: originDeviceId,
+                conflictGroupId: conflictGroupId,
+                actorId: actorId,
+                reason: reason,
+                createdAt: createdAt,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable<$InvoiceAllocationsTable, InvoiceAllocation>(
+                    table,
+                  ),
+                  BaseReferences<
+                    _$AppDatabase,
+                    $InvoiceAllocationsTable,
+                    InvoiceAllocation
+                  >(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$InvoiceAllocationsTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $InvoiceAllocationsTable,
+      InvoiceAllocation,
+      $$InvoiceAllocationsTableFilterComposer,
+      $$InvoiceAllocationsTableOrderingComposer,
+      $$InvoiceAllocationsTableAnnotationComposer,
+      $$InvoiceAllocationsTableCreateCompanionBuilder,
+      $$InvoiceAllocationsTableUpdateCompanionBuilder,
+      (
+        InvoiceAllocation,
+        BaseReferences<
+          _$AppDatabase,
+          $InvoiceAllocationsTable,
+          InvoiceAllocation
+        >,
+      ),
+      InvoiceAllocation,
+      PrefetchHooks Function()
+    >;
+typedef $$AllocationReversalsTableCreateCompanionBuilder =
+    AllocationReversalsCompanion Function({
+      required String id,
+      required String allocationId,
+      required int amountMinor,
+      required String idempotencyKey,
+      required String requestFingerprint,
+      Value<String?> actorId,
+      required String reason,
+      required DateTime createdAt,
+      Value<int> rowid,
+    });
+typedef $$AllocationReversalsTableUpdateCompanionBuilder =
+    AllocationReversalsCompanion Function({
+      Value<String> id,
+      Value<String> allocationId,
+      Value<int> amountMinor,
+      Value<String> idempotencyKey,
+      Value<String> requestFingerprint,
+      Value<String?> actorId,
+      Value<String> reason,
+      Value<DateTime> createdAt,
+      Value<int> rowid,
+    });
+
+class $$AllocationReversalsTableFilterComposer
+    extends Composer<_$AppDatabase, $AllocationReversalsTable> {
+  $$AllocationReversalsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get allocationId => $composableBuilder(
+    column: $table.allocationId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get amountMinor => $composableBuilder(
+    column: $table.amountMinor,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get idempotencyKey => $composableBuilder(
+    column: $table.idempotencyKey,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get requestFingerprint => $composableBuilder(
+    column: $table.requestFingerprint,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get actorId => $composableBuilder(
+    column: $table.actorId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get reason => $composableBuilder(
+    column: $table.reason,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$AllocationReversalsTableOrderingComposer
+    extends Composer<_$AppDatabase, $AllocationReversalsTable> {
+  $$AllocationReversalsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get allocationId => $composableBuilder(
+    column: $table.allocationId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get amountMinor => $composableBuilder(
+    column: $table.amountMinor,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get idempotencyKey => $composableBuilder(
+    column: $table.idempotencyKey,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get requestFingerprint => $composableBuilder(
+    column: $table.requestFingerprint,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get actorId => $composableBuilder(
+    column: $table.actorId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get reason => $composableBuilder(
+    column: $table.reason,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$AllocationReversalsTableAnnotationComposer
+    extends Composer<_$AppDatabase, $AllocationReversalsTable> {
+  $$AllocationReversalsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get allocationId => $composableBuilder(
+    column: $table.allocationId,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get amountMinor => $composableBuilder(
+    column: $table.amountMinor,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get idempotencyKey => $composableBuilder(
+    column: $table.idempotencyKey,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get requestFingerprint => $composableBuilder(
+    column: $table.requestFingerprint,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get actorId =>
+      $composableBuilder(column: $table.actorId, builder: (column) => column);
+
+  GeneratedColumn<String> get reason =>
+      $composableBuilder(column: $table.reason, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+}
+
+class $$AllocationReversalsTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $AllocationReversalsTable,
+          AllocationReversal,
+          $$AllocationReversalsTableFilterComposer,
+          $$AllocationReversalsTableOrderingComposer,
+          $$AllocationReversalsTableAnnotationComposer,
+          $$AllocationReversalsTableCreateCompanionBuilder,
+          $$AllocationReversalsTableUpdateCompanionBuilder,
+          (
+            AllocationReversal,
+            BaseReferences<
+              _$AppDatabase,
+              $AllocationReversalsTable,
+              AllocationReversal
+            >,
+          ),
+          AllocationReversal,
+          PrefetchHooks Function()
+        > {
+  $$AllocationReversalsTableTableManager(
+    _$AppDatabase db,
+    $AllocationReversalsTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$AllocationReversalsTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$AllocationReversalsTableOrderingComposer(
+                $db: db,
+                $table: table,
+              ),
+          createComputedFieldComposer: () =>
+              $$AllocationReversalsTableAnnotationComposer(
+                $db: db,
+                $table: table,
+              ),
+          updateCompanionCallback:
+              ({
+                Value<String> id = const Value.absent(),
+                Value<String> allocationId = const Value.absent(),
+                Value<int> amountMinor = const Value.absent(),
+                Value<String> idempotencyKey = const Value.absent(),
+                Value<String> requestFingerprint = const Value.absent(),
+                Value<String?> actorId = const Value.absent(),
+                Value<String> reason = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => AllocationReversalsCompanion(
+                id: id,
+                allocationId: allocationId,
+                amountMinor: amountMinor,
+                idempotencyKey: idempotencyKey,
+                requestFingerprint: requestFingerprint,
+                actorId: actorId,
+                reason: reason,
+                createdAt: createdAt,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String id,
+                required String allocationId,
+                required int amountMinor,
+                required String idempotencyKey,
+                required String requestFingerprint,
+                Value<String?> actorId = const Value.absent(),
+                required String reason,
+                required DateTime createdAt,
+                Value<int> rowid = const Value.absent(),
+              }) => AllocationReversalsCompanion.insert(
+                id: id,
+                allocationId: allocationId,
+                amountMinor: amountMinor,
+                idempotencyKey: idempotencyKey,
+                requestFingerprint: requestFingerprint,
+                actorId: actorId,
+                reason: reason,
+                createdAt: createdAt,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable<$AllocationReversalsTable, AllocationReversal>(
+                    table,
+                  ),
+                  BaseReferences<
+                    _$AppDatabase,
+                    $AllocationReversalsTable,
+                    AllocationReversal
+                  >(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$AllocationReversalsTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $AllocationReversalsTable,
+      AllocationReversal,
+      $$AllocationReversalsTableFilterComposer,
+      $$AllocationReversalsTableOrderingComposer,
+      $$AllocationReversalsTableAnnotationComposer,
+      $$AllocationReversalsTableCreateCompanionBuilder,
+      $$AllocationReversalsTableUpdateCompanionBuilder,
+      (
+        AllocationReversal,
+        BaseReferences<
+          _$AppDatabase,
+          $AllocationReversalsTable,
+          AllocationReversal
+        >,
+      ),
+      AllocationReversal,
+      PrefetchHooks Function()
+    >;
+typedef $$AllocationStatusHistoryTableCreateCompanionBuilder =
+    AllocationStatusHistoryCompanion Function({
+      required String id,
+      required String allocationId,
+      required int sequence,
+      required String status,
+      Value<String?> previousVersionId,
+      required String idempotencyKey,
+      required String requestFingerprint,
+      Value<String?> actorId,
+      Value<String?> reason,
+      required DateTime recordedAt,
+      Value<int> rowid,
+    });
+typedef $$AllocationStatusHistoryTableUpdateCompanionBuilder =
+    AllocationStatusHistoryCompanion Function({
+      Value<String> id,
+      Value<String> allocationId,
+      Value<int> sequence,
+      Value<String> status,
+      Value<String?> previousVersionId,
+      Value<String> idempotencyKey,
+      Value<String> requestFingerprint,
+      Value<String?> actorId,
+      Value<String?> reason,
+      Value<DateTime> recordedAt,
+      Value<int> rowid,
+    });
+
+class $$AllocationStatusHistoryTableFilterComposer
+    extends Composer<_$AppDatabase, $AllocationStatusHistoryTable> {
+  $$AllocationStatusHistoryTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get allocationId => $composableBuilder(
+    column: $table.allocationId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get sequence => $composableBuilder(
+    column: $table.sequence,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get status => $composableBuilder(
+    column: $table.status,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get previousVersionId => $composableBuilder(
+    column: $table.previousVersionId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get idempotencyKey => $composableBuilder(
+    column: $table.idempotencyKey,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get requestFingerprint => $composableBuilder(
+    column: $table.requestFingerprint,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get actorId => $composableBuilder(
+    column: $table.actorId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get reason => $composableBuilder(
+    column: $table.reason,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get recordedAt => $composableBuilder(
+    column: $table.recordedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$AllocationStatusHistoryTableOrderingComposer
+    extends Composer<_$AppDatabase, $AllocationStatusHistoryTable> {
+  $$AllocationStatusHistoryTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get allocationId => $composableBuilder(
+    column: $table.allocationId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get sequence => $composableBuilder(
+    column: $table.sequence,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get status => $composableBuilder(
+    column: $table.status,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get previousVersionId => $composableBuilder(
+    column: $table.previousVersionId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get idempotencyKey => $composableBuilder(
+    column: $table.idempotencyKey,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get requestFingerprint => $composableBuilder(
+    column: $table.requestFingerprint,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get actorId => $composableBuilder(
+    column: $table.actorId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get reason => $composableBuilder(
+    column: $table.reason,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get recordedAt => $composableBuilder(
+    column: $table.recordedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$AllocationStatusHistoryTableAnnotationComposer
+    extends Composer<_$AppDatabase, $AllocationStatusHistoryTable> {
+  $$AllocationStatusHistoryTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get allocationId => $composableBuilder(
+    column: $table.allocationId,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get sequence =>
+      $composableBuilder(column: $table.sequence, builder: (column) => column);
+
+  GeneratedColumn<String> get status =>
+      $composableBuilder(column: $table.status, builder: (column) => column);
+
+  GeneratedColumn<String> get previousVersionId => $composableBuilder(
+    column: $table.previousVersionId,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get idempotencyKey => $composableBuilder(
+    column: $table.idempotencyKey,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get requestFingerprint => $composableBuilder(
+    column: $table.requestFingerprint,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get actorId =>
+      $composableBuilder(column: $table.actorId, builder: (column) => column);
+
+  GeneratedColumn<String> get reason =>
+      $composableBuilder(column: $table.reason, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get recordedAt => $composableBuilder(
+    column: $table.recordedAt,
+    builder: (column) => column,
+  );
+}
+
+class $$AllocationStatusHistoryTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $AllocationStatusHistoryTable,
+          AllocationStatusHistoryData,
+          $$AllocationStatusHistoryTableFilterComposer,
+          $$AllocationStatusHistoryTableOrderingComposer,
+          $$AllocationStatusHistoryTableAnnotationComposer,
+          $$AllocationStatusHistoryTableCreateCompanionBuilder,
+          $$AllocationStatusHistoryTableUpdateCompanionBuilder,
+          (
+            AllocationStatusHistoryData,
+            BaseReferences<
+              _$AppDatabase,
+              $AllocationStatusHistoryTable,
+              AllocationStatusHistoryData
+            >,
+          ),
+          AllocationStatusHistoryData,
+          PrefetchHooks Function()
+        > {
+  $$AllocationStatusHistoryTableTableManager(
+    _$AppDatabase db,
+    $AllocationStatusHistoryTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$AllocationStatusHistoryTableFilterComposer(
+                $db: db,
+                $table: table,
+              ),
+          createOrderingComposer: () =>
+              $$AllocationStatusHistoryTableOrderingComposer(
+                $db: db,
+                $table: table,
+              ),
+          createComputedFieldComposer: () =>
+              $$AllocationStatusHistoryTableAnnotationComposer(
+                $db: db,
+                $table: table,
+              ),
+          updateCompanionCallback:
+              ({
+                Value<String> id = const Value.absent(),
+                Value<String> allocationId = const Value.absent(),
+                Value<int> sequence = const Value.absent(),
+                Value<String> status = const Value.absent(),
+                Value<String?> previousVersionId = const Value.absent(),
+                Value<String> idempotencyKey = const Value.absent(),
+                Value<String> requestFingerprint = const Value.absent(),
+                Value<String?> actorId = const Value.absent(),
+                Value<String?> reason = const Value.absent(),
+                Value<DateTime> recordedAt = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => AllocationStatusHistoryCompanion(
+                id: id,
+                allocationId: allocationId,
+                sequence: sequence,
+                status: status,
+                previousVersionId: previousVersionId,
+                idempotencyKey: idempotencyKey,
+                requestFingerprint: requestFingerprint,
+                actorId: actorId,
+                reason: reason,
+                recordedAt: recordedAt,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String id,
+                required String allocationId,
+                required int sequence,
+                required String status,
+                Value<String?> previousVersionId = const Value.absent(),
+                required String idempotencyKey,
+                required String requestFingerprint,
+                Value<String?> actorId = const Value.absent(),
+                Value<String?> reason = const Value.absent(),
+                required DateTime recordedAt,
+                Value<int> rowid = const Value.absent(),
+              }) => AllocationStatusHistoryCompanion.insert(
+                id: id,
+                allocationId: allocationId,
+                sequence: sequence,
+                status: status,
+                previousVersionId: previousVersionId,
+                idempotencyKey: idempotencyKey,
+                requestFingerprint: requestFingerprint,
+                actorId: actorId,
+                reason: reason,
+                recordedAt: recordedAt,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable<
+                    $AllocationStatusHistoryTable,
+                    AllocationStatusHistoryData
+                  >(table),
+                  BaseReferences<
+                    _$AppDatabase,
+                    $AllocationStatusHistoryTable,
+                    AllocationStatusHistoryData
+                  >(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$AllocationStatusHistoryTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $AllocationStatusHistoryTable,
+      AllocationStatusHistoryData,
+      $$AllocationStatusHistoryTableFilterComposer,
+      $$AllocationStatusHistoryTableOrderingComposer,
+      $$AllocationStatusHistoryTableAnnotationComposer,
+      $$AllocationStatusHistoryTableCreateCompanionBuilder,
+      $$AllocationStatusHistoryTableUpdateCompanionBuilder,
+      (
+        AllocationStatusHistoryData,
+        BaseReferences<
+          _$AppDatabase,
+          $AllocationStatusHistoryTable,
+          AllocationStatusHistoryData
+        >,
+      ),
+      AllocationStatusHistoryData,
+      PrefetchHooks Function()
+    >;
+typedef $$RefundsTableCreateCompanionBuilder =
+    RefundsCompanion Function({
+      required String id,
+      required String originalPaymentId,
+      required String originalCashEventId,
+      required String refundPaymentId,
+      required String refundCashEventId,
+      Value<String?> invoiceId,
+      required String originalFinancialAccountId,
+      required String refundFinancialAccountId,
+      Value<String?> invoiceFinancialAccountId,
+      required String partyId,
+      required String partyRole,
+      required String currencyCode,
+      required int amountMinor,
+      required String idempotencyKey,
+      required String requestFingerprint,
+      Value<String?> actorId,
+      required String reason,
+      required DateTime createdAt,
+      Value<int> rowid,
+    });
+typedef $$RefundsTableUpdateCompanionBuilder =
+    RefundsCompanion Function({
+      Value<String> id,
+      Value<String> originalPaymentId,
+      Value<String> originalCashEventId,
+      Value<String> refundPaymentId,
+      Value<String> refundCashEventId,
+      Value<String?> invoiceId,
+      Value<String> originalFinancialAccountId,
+      Value<String> refundFinancialAccountId,
+      Value<String?> invoiceFinancialAccountId,
+      Value<String> partyId,
+      Value<String> partyRole,
+      Value<String> currencyCode,
+      Value<int> amountMinor,
+      Value<String> idempotencyKey,
+      Value<String> requestFingerprint,
+      Value<String?> actorId,
+      Value<String> reason,
+      Value<DateTime> createdAt,
+      Value<int> rowid,
+    });
+
+class $$RefundsTableFilterComposer
+    extends Composer<_$AppDatabase, $RefundsTable> {
+  $$RefundsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get originalPaymentId => $composableBuilder(
+    column: $table.originalPaymentId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get originalCashEventId => $composableBuilder(
+    column: $table.originalCashEventId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get refundPaymentId => $composableBuilder(
+    column: $table.refundPaymentId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get refundCashEventId => $composableBuilder(
+    column: $table.refundCashEventId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get invoiceId => $composableBuilder(
+    column: $table.invoiceId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get originalFinancialAccountId => $composableBuilder(
+    column: $table.originalFinancialAccountId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get refundFinancialAccountId => $composableBuilder(
+    column: $table.refundFinancialAccountId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get invoiceFinancialAccountId => $composableBuilder(
+    column: $table.invoiceFinancialAccountId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get partyId => $composableBuilder(
+    column: $table.partyId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get partyRole => $composableBuilder(
+    column: $table.partyRole,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get currencyCode => $composableBuilder(
+    column: $table.currencyCode,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get amountMinor => $composableBuilder(
+    column: $table.amountMinor,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get idempotencyKey => $composableBuilder(
+    column: $table.idempotencyKey,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get requestFingerprint => $composableBuilder(
+    column: $table.requestFingerprint,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get actorId => $composableBuilder(
+    column: $table.actorId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get reason => $composableBuilder(
+    column: $table.reason,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$RefundsTableOrderingComposer
+    extends Composer<_$AppDatabase, $RefundsTable> {
+  $$RefundsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get originalPaymentId => $composableBuilder(
+    column: $table.originalPaymentId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get originalCashEventId => $composableBuilder(
+    column: $table.originalCashEventId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get refundPaymentId => $composableBuilder(
+    column: $table.refundPaymentId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get refundCashEventId => $composableBuilder(
+    column: $table.refundCashEventId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get invoiceId => $composableBuilder(
+    column: $table.invoiceId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get originalFinancialAccountId => $composableBuilder(
+    column: $table.originalFinancialAccountId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get refundFinancialAccountId => $composableBuilder(
+    column: $table.refundFinancialAccountId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get invoiceFinancialAccountId => $composableBuilder(
+    column: $table.invoiceFinancialAccountId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get partyId => $composableBuilder(
+    column: $table.partyId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get partyRole => $composableBuilder(
+    column: $table.partyRole,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get currencyCode => $composableBuilder(
+    column: $table.currencyCode,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get amountMinor => $composableBuilder(
+    column: $table.amountMinor,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get idempotencyKey => $composableBuilder(
+    column: $table.idempotencyKey,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get requestFingerprint => $composableBuilder(
+    column: $table.requestFingerprint,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get actorId => $composableBuilder(
+    column: $table.actorId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get reason => $composableBuilder(
+    column: $table.reason,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$RefundsTableAnnotationComposer
+    extends Composer<_$AppDatabase, $RefundsTable> {
+  $$RefundsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get originalPaymentId => $composableBuilder(
+    column: $table.originalPaymentId,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get originalCashEventId => $composableBuilder(
+    column: $table.originalCashEventId,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get refundPaymentId => $composableBuilder(
+    column: $table.refundPaymentId,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get refundCashEventId => $composableBuilder(
+    column: $table.refundCashEventId,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get invoiceId =>
+      $composableBuilder(column: $table.invoiceId, builder: (column) => column);
+
+  GeneratedColumn<String> get originalFinancialAccountId => $composableBuilder(
+    column: $table.originalFinancialAccountId,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get refundFinancialAccountId => $composableBuilder(
+    column: $table.refundFinancialAccountId,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get invoiceFinancialAccountId => $composableBuilder(
+    column: $table.invoiceFinancialAccountId,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get partyId =>
+      $composableBuilder(column: $table.partyId, builder: (column) => column);
+
+  GeneratedColumn<String> get partyRole =>
+      $composableBuilder(column: $table.partyRole, builder: (column) => column);
+
+  GeneratedColumn<String> get currencyCode => $composableBuilder(
+    column: $table.currencyCode,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get amountMinor => $composableBuilder(
+    column: $table.amountMinor,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get idempotencyKey => $composableBuilder(
+    column: $table.idempotencyKey,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get requestFingerprint => $composableBuilder(
+    column: $table.requestFingerprint,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get actorId =>
+      $composableBuilder(column: $table.actorId, builder: (column) => column);
+
+  GeneratedColumn<String> get reason =>
+      $composableBuilder(column: $table.reason, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+}
+
+class $$RefundsTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $RefundsTable,
+          Refund,
+          $$RefundsTableFilterComposer,
+          $$RefundsTableOrderingComposer,
+          $$RefundsTableAnnotationComposer,
+          $$RefundsTableCreateCompanionBuilder,
+          $$RefundsTableUpdateCompanionBuilder,
+          (Refund, BaseReferences<_$AppDatabase, $RefundsTable, Refund>),
+          Refund,
+          PrefetchHooks Function()
+        > {
+  $$RefundsTableTableManager(_$AppDatabase db, $RefundsTable table)
+    : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$RefundsTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$RefundsTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$RefundsTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<String> id = const Value.absent(),
+                Value<String> originalPaymentId = const Value.absent(),
+                Value<String> originalCashEventId = const Value.absent(),
+                Value<String> refundPaymentId = const Value.absent(),
+                Value<String> refundCashEventId = const Value.absent(),
+                Value<String?> invoiceId = const Value.absent(),
+                Value<String> originalFinancialAccountId = const Value.absent(),
+                Value<String> refundFinancialAccountId = const Value.absent(),
+                Value<String?> invoiceFinancialAccountId = const Value.absent(),
+                Value<String> partyId = const Value.absent(),
+                Value<String> partyRole = const Value.absent(),
+                Value<String> currencyCode = const Value.absent(),
+                Value<int> amountMinor = const Value.absent(),
+                Value<String> idempotencyKey = const Value.absent(),
+                Value<String> requestFingerprint = const Value.absent(),
+                Value<String?> actorId = const Value.absent(),
+                Value<String> reason = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => RefundsCompanion(
+                id: id,
+                originalPaymentId: originalPaymentId,
+                originalCashEventId: originalCashEventId,
+                refundPaymentId: refundPaymentId,
+                refundCashEventId: refundCashEventId,
+                invoiceId: invoiceId,
+                originalFinancialAccountId: originalFinancialAccountId,
+                refundFinancialAccountId: refundFinancialAccountId,
+                invoiceFinancialAccountId: invoiceFinancialAccountId,
+                partyId: partyId,
+                partyRole: partyRole,
+                currencyCode: currencyCode,
+                amountMinor: amountMinor,
+                idempotencyKey: idempotencyKey,
+                requestFingerprint: requestFingerprint,
+                actorId: actorId,
+                reason: reason,
+                createdAt: createdAt,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String id,
+                required String originalPaymentId,
+                required String originalCashEventId,
+                required String refundPaymentId,
+                required String refundCashEventId,
+                Value<String?> invoiceId = const Value.absent(),
+                required String originalFinancialAccountId,
+                required String refundFinancialAccountId,
+                Value<String?> invoiceFinancialAccountId = const Value.absent(),
+                required String partyId,
+                required String partyRole,
+                required String currencyCode,
+                required int amountMinor,
+                required String idempotencyKey,
+                required String requestFingerprint,
+                Value<String?> actorId = const Value.absent(),
+                required String reason,
+                required DateTime createdAt,
+                Value<int> rowid = const Value.absent(),
+              }) => RefundsCompanion.insert(
+                id: id,
+                originalPaymentId: originalPaymentId,
+                originalCashEventId: originalCashEventId,
+                refundPaymentId: refundPaymentId,
+                refundCashEventId: refundCashEventId,
+                invoiceId: invoiceId,
+                originalFinancialAccountId: originalFinancialAccountId,
+                refundFinancialAccountId: refundFinancialAccountId,
+                invoiceFinancialAccountId: invoiceFinancialAccountId,
+                partyId: partyId,
+                partyRole: partyRole,
+                currencyCode: currencyCode,
+                amountMinor: amountMinor,
+                idempotencyKey: idempotencyKey,
+                requestFingerprint: requestFingerprint,
+                actorId: actorId,
+                reason: reason,
+                createdAt: createdAt,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable<$RefundsTable, Refund>(table),
+                  BaseReferences<_$AppDatabase, $RefundsTable, Refund>(
+                    db,
+                    table,
+                    e,
+                  ),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$RefundsTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $RefundsTable,
+      Refund,
+      $$RefundsTableFilterComposer,
+      $$RefundsTableOrderingComposer,
+      $$RefundsTableAnnotationComposer,
+      $$RefundsTableCreateCompanionBuilder,
+      $$RefundsTableUpdateCompanionBuilder,
+      (Refund, BaseReferences<_$AppDatabase, $RefundsTable, Refund>),
+      Refund,
+      PrefetchHooks Function()
+    >;
+typedef $$RefundFinancialTransactionsTableCreateCompanionBuilder =
+    RefundFinancialTransactionsCompanion Function({
+      required String refundId,
+      required String transactionId,
+      required String cashEventId,
+      required String paymentId,
+      Value<int> rowid,
+    });
+typedef $$RefundFinancialTransactionsTableUpdateCompanionBuilder =
+    RefundFinancialTransactionsCompanion Function({
+      Value<String> refundId,
+      Value<String> transactionId,
+      Value<String> cashEventId,
+      Value<String> paymentId,
+      Value<int> rowid,
+    });
+
+class $$RefundFinancialTransactionsTableFilterComposer
+    extends Composer<_$AppDatabase, $RefundFinancialTransactionsTable> {
+  $$RefundFinancialTransactionsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get refundId => $composableBuilder(
+    column: $table.refundId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get transactionId => $composableBuilder(
+    column: $table.transactionId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get cashEventId => $composableBuilder(
+    column: $table.cashEventId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get paymentId => $composableBuilder(
+    column: $table.paymentId,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$RefundFinancialTransactionsTableOrderingComposer
+    extends Composer<_$AppDatabase, $RefundFinancialTransactionsTable> {
+  $$RefundFinancialTransactionsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get refundId => $composableBuilder(
+    column: $table.refundId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get transactionId => $composableBuilder(
+    column: $table.transactionId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get cashEventId => $composableBuilder(
+    column: $table.cashEventId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get paymentId => $composableBuilder(
+    column: $table.paymentId,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$RefundFinancialTransactionsTableAnnotationComposer
+    extends Composer<_$AppDatabase, $RefundFinancialTransactionsTable> {
+  $$RefundFinancialTransactionsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get refundId =>
+      $composableBuilder(column: $table.refundId, builder: (column) => column);
+
+  GeneratedColumn<String> get transactionId => $composableBuilder(
+    column: $table.transactionId,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get cashEventId => $composableBuilder(
+    column: $table.cashEventId,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get paymentId =>
+      $composableBuilder(column: $table.paymentId, builder: (column) => column);
+}
+
+class $$RefundFinancialTransactionsTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $RefundFinancialTransactionsTable,
+          RefundFinancialTransaction,
+          $$RefundFinancialTransactionsTableFilterComposer,
+          $$RefundFinancialTransactionsTableOrderingComposer,
+          $$RefundFinancialTransactionsTableAnnotationComposer,
+          $$RefundFinancialTransactionsTableCreateCompanionBuilder,
+          $$RefundFinancialTransactionsTableUpdateCompanionBuilder,
+          (
+            RefundFinancialTransaction,
+            BaseReferences<
+              _$AppDatabase,
+              $RefundFinancialTransactionsTable,
+              RefundFinancialTransaction
+            >,
+          ),
+          RefundFinancialTransaction,
+          PrefetchHooks Function()
+        > {
+  $$RefundFinancialTransactionsTableTableManager(
+    _$AppDatabase db,
+    $RefundFinancialTransactionsTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$RefundFinancialTransactionsTableFilterComposer(
+                $db: db,
+                $table: table,
+              ),
+          createOrderingComposer: () =>
+              $$RefundFinancialTransactionsTableOrderingComposer(
+                $db: db,
+                $table: table,
+              ),
+          createComputedFieldComposer: () =>
+              $$RefundFinancialTransactionsTableAnnotationComposer(
+                $db: db,
+                $table: table,
+              ),
+          updateCompanionCallback:
+              ({
+                Value<String> refundId = const Value.absent(),
+                Value<String> transactionId = const Value.absent(),
+                Value<String> cashEventId = const Value.absent(),
+                Value<String> paymentId = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => RefundFinancialTransactionsCompanion(
+                refundId: refundId,
+                transactionId: transactionId,
+                cashEventId: cashEventId,
+                paymentId: paymentId,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String refundId,
+                required String transactionId,
+                required String cashEventId,
+                required String paymentId,
+                Value<int> rowid = const Value.absent(),
+              }) => RefundFinancialTransactionsCompanion.insert(
+                refundId: refundId,
+                transactionId: transactionId,
+                cashEventId: cashEventId,
+                paymentId: paymentId,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable<
+                    $RefundFinancialTransactionsTable,
+                    RefundFinancialTransaction
+                  >(table),
+                  BaseReferences<
+                    _$AppDatabase,
+                    $RefundFinancialTransactionsTable,
+                    RefundFinancialTransaction
+                  >(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$RefundFinancialTransactionsTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $RefundFinancialTransactionsTable,
+      RefundFinancialTransaction,
+      $$RefundFinancialTransactionsTableFilterComposer,
+      $$RefundFinancialTransactionsTableOrderingComposer,
+      $$RefundFinancialTransactionsTableAnnotationComposer,
+      $$RefundFinancialTransactionsTableCreateCompanionBuilder,
+      $$RefundFinancialTransactionsTableUpdateCompanionBuilder,
+      (
+        RefundFinancialTransaction,
+        BaseReferences<
+          _$AppDatabase,
+          $RefundFinancialTransactionsTable,
+          RefundFinancialTransaction
+        >,
+      ),
+      RefundFinancialTransaction,
+      PrefetchHooks Function()
+    >;
+typedef $$RefundAllocationReversalsTableCreateCompanionBuilder =
+    RefundAllocationReversalsCompanion Function({
+      required String id,
+      required String refundId,
+      required String originalPaymentId,
+      required String invoiceId,
+      required String allocationId,
+      required String allocationReversalId,
+      required String idempotencyKey,
+      required String requestFingerprint,
+      Value<String?> actorId,
+      Value<String?> reason,
+      required DateTime createdAt,
+      Value<int> rowid,
+    });
+typedef $$RefundAllocationReversalsTableUpdateCompanionBuilder =
+    RefundAllocationReversalsCompanion Function({
+      Value<String> id,
+      Value<String> refundId,
+      Value<String> originalPaymentId,
+      Value<String> invoiceId,
+      Value<String> allocationId,
+      Value<String> allocationReversalId,
+      Value<String> idempotencyKey,
+      Value<String> requestFingerprint,
+      Value<String?> actorId,
+      Value<String?> reason,
+      Value<DateTime> createdAt,
+      Value<int> rowid,
+    });
+
+class $$RefundAllocationReversalsTableFilterComposer
+    extends Composer<_$AppDatabase, $RefundAllocationReversalsTable> {
+  $$RefundAllocationReversalsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get refundId => $composableBuilder(
+    column: $table.refundId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get originalPaymentId => $composableBuilder(
+    column: $table.originalPaymentId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get invoiceId => $composableBuilder(
+    column: $table.invoiceId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get allocationId => $composableBuilder(
+    column: $table.allocationId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get allocationReversalId => $composableBuilder(
+    column: $table.allocationReversalId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get idempotencyKey => $composableBuilder(
+    column: $table.idempotencyKey,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get requestFingerprint => $composableBuilder(
+    column: $table.requestFingerprint,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get actorId => $composableBuilder(
+    column: $table.actorId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get reason => $composableBuilder(
+    column: $table.reason,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$RefundAllocationReversalsTableOrderingComposer
+    extends Composer<_$AppDatabase, $RefundAllocationReversalsTable> {
+  $$RefundAllocationReversalsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get refundId => $composableBuilder(
+    column: $table.refundId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get originalPaymentId => $composableBuilder(
+    column: $table.originalPaymentId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get invoiceId => $composableBuilder(
+    column: $table.invoiceId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get allocationId => $composableBuilder(
+    column: $table.allocationId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get allocationReversalId => $composableBuilder(
+    column: $table.allocationReversalId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get idempotencyKey => $composableBuilder(
+    column: $table.idempotencyKey,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get requestFingerprint => $composableBuilder(
+    column: $table.requestFingerprint,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get actorId => $composableBuilder(
+    column: $table.actorId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get reason => $composableBuilder(
+    column: $table.reason,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$RefundAllocationReversalsTableAnnotationComposer
+    extends Composer<_$AppDatabase, $RefundAllocationReversalsTable> {
+  $$RefundAllocationReversalsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get refundId =>
+      $composableBuilder(column: $table.refundId, builder: (column) => column);
+
+  GeneratedColumn<String> get originalPaymentId => $composableBuilder(
+    column: $table.originalPaymentId,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get invoiceId =>
+      $composableBuilder(column: $table.invoiceId, builder: (column) => column);
+
+  GeneratedColumn<String> get allocationId => $composableBuilder(
+    column: $table.allocationId,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get allocationReversalId => $composableBuilder(
+    column: $table.allocationReversalId,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get idempotencyKey => $composableBuilder(
+    column: $table.idempotencyKey,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get requestFingerprint => $composableBuilder(
+    column: $table.requestFingerprint,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get actorId =>
+      $composableBuilder(column: $table.actorId, builder: (column) => column);
+
+  GeneratedColumn<String> get reason =>
+      $composableBuilder(column: $table.reason, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+}
+
+class $$RefundAllocationReversalsTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $RefundAllocationReversalsTable,
+          RefundAllocationReversal,
+          $$RefundAllocationReversalsTableFilterComposer,
+          $$RefundAllocationReversalsTableOrderingComposer,
+          $$RefundAllocationReversalsTableAnnotationComposer,
+          $$RefundAllocationReversalsTableCreateCompanionBuilder,
+          $$RefundAllocationReversalsTableUpdateCompanionBuilder,
+          (
+            RefundAllocationReversal,
+            BaseReferences<
+              _$AppDatabase,
+              $RefundAllocationReversalsTable,
+              RefundAllocationReversal
+            >,
+          ),
+          RefundAllocationReversal,
+          PrefetchHooks Function()
+        > {
+  $$RefundAllocationReversalsTableTableManager(
+    _$AppDatabase db,
+    $RefundAllocationReversalsTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$RefundAllocationReversalsTableFilterComposer(
+                $db: db,
+                $table: table,
+              ),
+          createOrderingComposer: () =>
+              $$RefundAllocationReversalsTableOrderingComposer(
+                $db: db,
+                $table: table,
+              ),
+          createComputedFieldComposer: () =>
+              $$RefundAllocationReversalsTableAnnotationComposer(
+                $db: db,
+                $table: table,
+              ),
+          updateCompanionCallback:
+              ({
+                Value<String> id = const Value.absent(),
+                Value<String> refundId = const Value.absent(),
+                Value<String> originalPaymentId = const Value.absent(),
+                Value<String> invoiceId = const Value.absent(),
+                Value<String> allocationId = const Value.absent(),
+                Value<String> allocationReversalId = const Value.absent(),
+                Value<String> idempotencyKey = const Value.absent(),
+                Value<String> requestFingerprint = const Value.absent(),
+                Value<String?> actorId = const Value.absent(),
+                Value<String?> reason = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => RefundAllocationReversalsCompanion(
+                id: id,
+                refundId: refundId,
+                originalPaymentId: originalPaymentId,
+                invoiceId: invoiceId,
+                allocationId: allocationId,
+                allocationReversalId: allocationReversalId,
+                idempotencyKey: idempotencyKey,
+                requestFingerprint: requestFingerprint,
+                actorId: actorId,
+                reason: reason,
+                createdAt: createdAt,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String id,
+                required String refundId,
+                required String originalPaymentId,
+                required String invoiceId,
+                required String allocationId,
+                required String allocationReversalId,
+                required String idempotencyKey,
+                required String requestFingerprint,
+                Value<String?> actorId = const Value.absent(),
+                Value<String?> reason = const Value.absent(),
+                required DateTime createdAt,
+                Value<int> rowid = const Value.absent(),
+              }) => RefundAllocationReversalsCompanion.insert(
+                id: id,
+                refundId: refundId,
+                originalPaymentId: originalPaymentId,
+                invoiceId: invoiceId,
+                allocationId: allocationId,
+                allocationReversalId: allocationReversalId,
+                idempotencyKey: idempotencyKey,
+                requestFingerprint: requestFingerprint,
+                actorId: actorId,
+                reason: reason,
+                createdAt: createdAt,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable<
+                    $RefundAllocationReversalsTable,
+                    RefundAllocationReversal
+                  >(table),
+                  BaseReferences<
+                    _$AppDatabase,
+                    $RefundAllocationReversalsTable,
+                    RefundAllocationReversal
+                  >(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$RefundAllocationReversalsTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $RefundAllocationReversalsTable,
+      RefundAllocationReversal,
+      $$RefundAllocationReversalsTableFilterComposer,
+      $$RefundAllocationReversalsTableOrderingComposer,
+      $$RefundAllocationReversalsTableAnnotationComposer,
+      $$RefundAllocationReversalsTableCreateCompanionBuilder,
+      $$RefundAllocationReversalsTableUpdateCompanionBuilder,
+      (
+        RefundAllocationReversal,
+        BaseReferences<
+          _$AppDatabase,
+          $RefundAllocationReversalsTable,
+          RefundAllocationReversal
+        >,
+      ),
+      RefundAllocationReversal,
+      PrefetchHooks Function()
+    >;
+typedef $$InvoiceLifecycleEventsTableCreateCompanionBuilder =
+    InvoiceLifecycleEventsCompanion Function({
+      required String id,
+      required String invoiceId,
+      required int sequence,
+      required String state,
+      Value<String?> previousEventId,
+      required String idempotencyKey,
+      required String requestFingerprint,
+      Value<String?> actorId,
+      Value<String?> reason,
+      required DateTime recordedAt,
+      Value<int> rowid,
+    });
+typedef $$InvoiceLifecycleEventsTableUpdateCompanionBuilder =
+    InvoiceLifecycleEventsCompanion Function({
+      Value<String> id,
+      Value<String> invoiceId,
+      Value<int> sequence,
+      Value<String> state,
+      Value<String?> previousEventId,
+      Value<String> idempotencyKey,
+      Value<String> requestFingerprint,
+      Value<String?> actorId,
+      Value<String?> reason,
+      Value<DateTime> recordedAt,
+      Value<int> rowid,
+    });
+
+class $$InvoiceLifecycleEventsTableFilterComposer
+    extends Composer<_$AppDatabase, $InvoiceLifecycleEventsTable> {
+  $$InvoiceLifecycleEventsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get invoiceId => $composableBuilder(
+    column: $table.invoiceId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get sequence => $composableBuilder(
+    column: $table.sequence,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get state => $composableBuilder(
+    column: $table.state,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get previousEventId => $composableBuilder(
+    column: $table.previousEventId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get idempotencyKey => $composableBuilder(
+    column: $table.idempotencyKey,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get requestFingerprint => $composableBuilder(
+    column: $table.requestFingerprint,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get actorId => $composableBuilder(
+    column: $table.actorId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get reason => $composableBuilder(
+    column: $table.reason,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get recordedAt => $composableBuilder(
+    column: $table.recordedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$InvoiceLifecycleEventsTableOrderingComposer
+    extends Composer<_$AppDatabase, $InvoiceLifecycleEventsTable> {
+  $$InvoiceLifecycleEventsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get invoiceId => $composableBuilder(
+    column: $table.invoiceId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get sequence => $composableBuilder(
+    column: $table.sequence,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get state => $composableBuilder(
+    column: $table.state,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get previousEventId => $composableBuilder(
+    column: $table.previousEventId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get idempotencyKey => $composableBuilder(
+    column: $table.idempotencyKey,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get requestFingerprint => $composableBuilder(
+    column: $table.requestFingerprint,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get actorId => $composableBuilder(
+    column: $table.actorId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get reason => $composableBuilder(
+    column: $table.reason,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get recordedAt => $composableBuilder(
+    column: $table.recordedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$InvoiceLifecycleEventsTableAnnotationComposer
+    extends Composer<_$AppDatabase, $InvoiceLifecycleEventsTable> {
+  $$InvoiceLifecycleEventsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get invoiceId =>
+      $composableBuilder(column: $table.invoiceId, builder: (column) => column);
+
+  GeneratedColumn<int> get sequence =>
+      $composableBuilder(column: $table.sequence, builder: (column) => column);
+
+  GeneratedColumn<String> get state =>
+      $composableBuilder(column: $table.state, builder: (column) => column);
+
+  GeneratedColumn<String> get previousEventId => $composableBuilder(
+    column: $table.previousEventId,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get idempotencyKey => $composableBuilder(
+    column: $table.idempotencyKey,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get requestFingerprint => $composableBuilder(
+    column: $table.requestFingerprint,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get actorId =>
+      $composableBuilder(column: $table.actorId, builder: (column) => column);
+
+  GeneratedColumn<String> get reason =>
+      $composableBuilder(column: $table.reason, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get recordedAt => $composableBuilder(
+    column: $table.recordedAt,
+    builder: (column) => column,
+  );
+}
+
+class $$InvoiceLifecycleEventsTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $InvoiceLifecycleEventsTable,
+          InvoiceLifecycleEvent,
+          $$InvoiceLifecycleEventsTableFilterComposer,
+          $$InvoiceLifecycleEventsTableOrderingComposer,
+          $$InvoiceLifecycleEventsTableAnnotationComposer,
+          $$InvoiceLifecycleEventsTableCreateCompanionBuilder,
+          $$InvoiceLifecycleEventsTableUpdateCompanionBuilder,
+          (
+            InvoiceLifecycleEvent,
+            BaseReferences<
+              _$AppDatabase,
+              $InvoiceLifecycleEventsTable,
+              InvoiceLifecycleEvent
+            >,
+          ),
+          InvoiceLifecycleEvent,
+          PrefetchHooks Function()
+        > {
+  $$InvoiceLifecycleEventsTableTableManager(
+    _$AppDatabase db,
+    $InvoiceLifecycleEventsTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$InvoiceLifecycleEventsTableFilterComposer(
+                $db: db,
+                $table: table,
+              ),
+          createOrderingComposer: () =>
+              $$InvoiceLifecycleEventsTableOrderingComposer(
+                $db: db,
+                $table: table,
+              ),
+          createComputedFieldComposer: () =>
+              $$InvoiceLifecycleEventsTableAnnotationComposer(
+                $db: db,
+                $table: table,
+              ),
+          updateCompanionCallback:
+              ({
+                Value<String> id = const Value.absent(),
+                Value<String> invoiceId = const Value.absent(),
+                Value<int> sequence = const Value.absent(),
+                Value<String> state = const Value.absent(),
+                Value<String?> previousEventId = const Value.absent(),
+                Value<String> idempotencyKey = const Value.absent(),
+                Value<String> requestFingerprint = const Value.absent(),
+                Value<String?> actorId = const Value.absent(),
+                Value<String?> reason = const Value.absent(),
+                Value<DateTime> recordedAt = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => InvoiceLifecycleEventsCompanion(
+                id: id,
+                invoiceId: invoiceId,
+                sequence: sequence,
+                state: state,
+                previousEventId: previousEventId,
+                idempotencyKey: idempotencyKey,
+                requestFingerprint: requestFingerprint,
+                actorId: actorId,
+                reason: reason,
+                recordedAt: recordedAt,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String id,
+                required String invoiceId,
+                required int sequence,
+                required String state,
+                Value<String?> previousEventId = const Value.absent(),
+                required String idempotencyKey,
+                required String requestFingerprint,
+                Value<String?> actorId = const Value.absent(),
+                Value<String?> reason = const Value.absent(),
+                required DateTime recordedAt,
+                Value<int> rowid = const Value.absent(),
+              }) => InvoiceLifecycleEventsCompanion.insert(
+                id: id,
+                invoiceId: invoiceId,
+                sequence: sequence,
+                state: state,
+                previousEventId: previousEventId,
+                idempotencyKey: idempotencyKey,
+                requestFingerprint: requestFingerprint,
+                actorId: actorId,
+                reason: reason,
+                recordedAt: recordedAt,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable<
+                    $InvoiceLifecycleEventsTable,
+                    InvoiceLifecycleEvent
+                  >(table),
+                  BaseReferences<
+                    _$AppDatabase,
+                    $InvoiceLifecycleEventsTable,
+                    InvoiceLifecycleEvent
+                  >(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$InvoiceLifecycleEventsTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $InvoiceLifecycleEventsTable,
+      InvoiceLifecycleEvent,
+      $$InvoiceLifecycleEventsTableFilterComposer,
+      $$InvoiceLifecycleEventsTableOrderingComposer,
+      $$InvoiceLifecycleEventsTableAnnotationComposer,
+      $$InvoiceLifecycleEventsTableCreateCompanionBuilder,
+      $$InvoiceLifecycleEventsTableUpdateCompanionBuilder,
+      (
+        InvoiceLifecycleEvent,
+        BaseReferences<
+          _$AppDatabase,
+          $InvoiceLifecycleEventsTable,
+          InvoiceLifecycleEvent
+        >,
+      ),
+      InvoiceLifecycleEvent,
+      PrefetchHooks Function()
+    >;
 
 class $AppDatabaseManager {
   final _$AppDatabase _db;
@@ -13061,4 +20501,31 @@ class $AppDatabaseManager {
       $$SuspenseResolutionsTableTableManager(_db, _db.suspenseResolutions);
   $$SuspenseEntriesTableTableManager get suspenseEntries =>
       $$SuspenseEntriesTableTableManager(_db, _db.suspenseEntries);
+  $$InvoiceAllocationsTableTableManager get invoiceAllocations =>
+      $$InvoiceAllocationsTableTableManager(_db, _db.invoiceAllocations);
+  $$AllocationReversalsTableTableManager get allocationReversals =>
+      $$AllocationReversalsTableTableManager(_db, _db.allocationReversals);
+  $$AllocationStatusHistoryTableTableManager get allocationStatusHistory =>
+      $$AllocationStatusHistoryTableTableManager(
+        _db,
+        _db.allocationStatusHistory,
+      );
+  $$RefundsTableTableManager get refunds =>
+      $$RefundsTableTableManager(_db, _db.refunds);
+  $$RefundFinancialTransactionsTableTableManager
+  get refundFinancialTransactions =>
+      $$RefundFinancialTransactionsTableTableManager(
+        _db,
+        _db.refundFinancialTransactions,
+      );
+  $$RefundAllocationReversalsTableTableManager get refundAllocationReversals =>
+      $$RefundAllocationReversalsTableTableManager(
+        _db,
+        _db.refundAllocationReversals,
+      );
+  $$InvoiceLifecycleEventsTableTableManager get invoiceLifecycleEvents =>
+      $$InvoiceLifecycleEventsTableTableManager(
+        _db,
+        _db.invoiceLifecycleEvents,
+      );
 }

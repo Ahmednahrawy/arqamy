@@ -51,9 +51,9 @@ void main() {
     await temporaryDirectory.delete(recursive: true);
   });
 
-  test('initializes the ledger schema with version 3', () async {
-    expect(database.schemaVersion, 3);
-    expect(await database.storedSchemaVersion, 3);
+  test('initializes the ledger schema with version 4', () async {
+    expect(database.schemaVersion, 4);
+    expect(await database.storedSchemaVersion, 4);
 
     final tables = await database
         .customSelect(
@@ -63,18 +63,25 @@ void main() {
         .map((row) => row.read<String>('name'))
         .get();
     expect(tables, [
+      'allocation_reversals',
+      'allocation_status_history',
       'cash_event_heads',
       'cash_event_versions',
       'cash_events',
       'currencies',
       'financial_accounts',
       'financial_transactions',
+      'invoice_allocations',
+      'invoice_lifecycle_events',
       'invoice_lines',
       'invoices',
       'parties',
       'party_roles',
       'payment_identities',
+      'payment_refunds',
       'reconciliation_cases',
+      'refund_allocation_reversals',
+      'refund_financial_transactions',
       'suspense_entries',
       'suspense_resolutions',
     ]);
@@ -201,6 +208,12 @@ void main() {
   test('upgrades a version 1 database without application tables', () async {
     await database.customStatement('PRAGMA foreign_keys = OFF');
     for (final table in [
+      'refund_allocation_reversals',
+      'payment_refunds',
+      'invoice_lifecycle_events',
+      'allocation_status_history',
+      'allocation_reversals',
+      'invoice_allocations',
       'suspense_entries',
       'suspense_resolutions',
       'reconciliation_cases',
@@ -223,7 +236,7 @@ void main() {
 
     database = await AppDatabase.open(path: databasePath);
 
-    expect(await database.storedSchemaVersion, 3);
+    expect(await database.storedSchemaVersion, 4);
     final tables = await database
         .customSelect(
           "SELECT COUNT(*) AS count FROM sqlite_master "
@@ -231,10 +244,14 @@ void main() {
           "('currencies', 'parties', 'party_roles', 'financial_accounts', "
           "'invoices', 'invoice_lines', 'payment_identities', 'cash_events', "
           "'financial_transactions', 'cash_event_versions', 'cash_event_heads', "
-          "'reconciliation_cases', 'suspense_resolutions', 'suspense_entries')",
+          "'reconciliation_cases', 'suspense_resolutions', 'suspense_entries', "
+          "'invoice_allocations', 'allocation_reversals', "
+          "'allocation_status_history', 'payment_refunds', "
+          "'refund_allocation_reversals', 'refund_financial_transactions', "
+          "'invoice_lifecycle_events')",
         )
         .getSingle();
-    expect(tables.read<int>('count'), 14);
+    expect(tables.read<int>('count'), 21);
   });
 
   test('migrates a genuine Stage 2 database without losing records', () async {
@@ -324,7 +341,7 @@ void main() {
 
     database = await AppDatabase.open(path: databasePath);
 
-    expect(await database.storedSchemaVersion, 3);
+    expect(await database.storedSchemaVersion, 4);
     expect(
       await database
           .customSelect('SELECT * FROM currencies')
@@ -435,6 +452,25 @@ void main() {
       expect(found.read<int>('count'), 1, reason: 'Missing table $table');
     }
 
+    for (final table in [
+      'invoice_allocations',
+      'allocation_reversals',
+      'allocation_status_history',
+      'payment_refunds',
+      'refund_allocation_reversals',
+      'refund_financial_transactions',
+      'invoice_lifecycle_events',
+    ]) {
+      final found = await database
+          .customSelect(
+            "SELECT COUNT(*) AS count FROM sqlite_master "
+            "WHERE type = 'table' AND name = ?",
+            variables: [Variable.withString(table)],
+          )
+          .getSingle();
+      expect(found.read<int>('count'), 1, reason: 'Missing table $table');
+    }
+
     const stage3Indexes = [
       'financial_transactions_event_time',
       'financial_transactions_account_time',
@@ -470,11 +506,18 @@ void main() {
       triggers,
       unorderedEquals([
         for (final table in [
+          'allocation_reversals',
+          'allocation_status_history',
           'cash_events',
           'cash_event_versions',
           'financial_transactions',
+          'invoice_allocations',
+          'invoice_lifecycle_events',
           'payment_identities',
+          'payment_refunds',
+          'refund_financial_transactions',
           'reconciliation_cases',
+          'refund_allocation_reversals',
           'suspense_entries',
           'suspense_resolutions',
         ]) ...['${table}_immutable_delete', '${table}_immutable_update'],
