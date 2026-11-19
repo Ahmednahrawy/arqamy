@@ -26,6 +26,7 @@ class InvoiceService {
     required String? formattedTime,
     required String? invoiceAction,
     required String invoiceSerial,
+    String locale = 'ar',
   }) async {
     // Create PDF bytes
     final pdfDoc = await generatePDF(
@@ -40,6 +41,7 @@ class InvoiceService {
       formattedTime,
       invoiceAction,
       invoiceSerial,
+      locale: locale,
     );
 
     // Save to temp folder
@@ -83,6 +85,7 @@ class InvoiceService {
     required String? formattedTime,
     required String? invoiceAction,
     required String invoiceSerial,
+    String locale = 'ar',
   }) async {
     final filePath = await generateAndSaveInvoice(
       provider: provider,
@@ -96,6 +99,7 @@ class InvoiceService {
       formattedTime: formattedTime,
       invoiceAction: invoiceAction,
       invoiceSerial: invoiceSerial,
+      locale: locale,
     );
     await SharePlus.instance.share(ShareParams(files: [XFile(filePath)]));
   }
@@ -113,6 +117,7 @@ class InvoiceService {
     required String? formattedTime,
     required String? invoiceAction,
     required String invoiceSerial,
+    String locale = 'ar',
   }) async {
     final filePath = await generateAndSaveInvoice(
       provider: provider,
@@ -126,6 +131,7 @@ class InvoiceService {
       formattedTime: formattedTime,
       invoiceAction: invoiceAction,
       invoiceSerial: invoiceSerial,
+      locale: locale,
     );
     if (defaultTargetPlatform == TargetPlatform.android) {
       await _whatsappChannel.invokeMethod<void>(

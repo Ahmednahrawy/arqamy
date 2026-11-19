@@ -147,8 +147,8 @@ void main() {
     expect(isFocused('وزن العبوة'), isTrue);
     await tester.testTextInput.receiveAction(TextInputAction.next);
     await tester.pump();
-    expect(isFocused('عدد الفارغ'), isTrue);
-    await tester.enterText(fieldWithLabel('عدد الفارغ'), '0');
+    expect(isFocused('عدد العبوات'), isTrue);
+    await tester.enterText(fieldWithLabel('عدد العبوات'), '0');
     await tester.testTextInput.receiveAction(TextInputAction.done);
     await tester.pumpAndSettle();
     expect(invoiceProvider.products, hasLength(1));
@@ -326,9 +326,9 @@ void main() {
     await tester.tap(previewButton);
     await tester.pumpAndSettle();
 
-    expect(find.text('إجمالي المبلغ: 50.00 L.E'), findsOneWidget);
-    expect(find.text('التحصيل : 25.00 L.E'), findsOneWidget);
-    expect(find.text('الباقي: 25.00 L.E'), findsOneWidget);
+    expect(find.text('إجمالي المبلغ: 50.00 ج.م'), findsOneWidget);
+    expect(find.text('تحصيل: 25.00 ج.م'), findsOneWidget);
+    expect(find.text('الباقي: 25.00 ج.م'), findsOneWidget);
 
     final saveButton = find.ancestor(
       of: find.text('حفظ'),

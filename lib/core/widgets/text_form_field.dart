@@ -21,6 +21,7 @@ class AppTextFormField extends StatelessWidget {
   final FocusNode? focusNode;
   final Function()? onEditingComplete;
   final TextDirection? textDirection;
+  final bool digitsOnly;
 
   const AppTextFormField({
     super.key,
@@ -42,6 +43,7 @@ class AppTextFormField extends StatelessWidget {
     this.focusNode,
     this.onEditingComplete,
     this.textDirection,
+    this.digitsOnly = false,
   });
 
   @override
@@ -92,9 +94,8 @@ class AppTextFormField extends StatelessWidget {
       obscureText: isObscureText ?? false,
       style: inputTextStyle ?? theme.textTheme.bodyMedium,
       keyboardType: keyboardType ?? TextInputType.number,
-      inputFormatters: labelText == 'عدد العبوات'
-          ? [FilteringTextInputFormatter.digitsOnly]
-          : [],
+      inputFormatters:
+          digitsOnly ? [FilteringTextInputFormatter.digitsOnly] : [],
       validator: (value) {
         return validator(value);
       },

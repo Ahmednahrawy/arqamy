@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:arqamy/core/widgets/app_snack_bar.dart';
 import 'package:arqamy/features/orderscreen/ui/widgets/customer_list_constants.dart';
+import 'package:arqamy/generated/l10n.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class CustomerNameAutoComplete extends StatefulWidget {
@@ -54,7 +55,11 @@ class _CustomerNameAutoCompleteState extends State<CustomerNameAutoComplete> {
       });
     } catch (e) {
       if (!mounted) return;
-      showAppSnackBar(context, 'Error loading suggestions: $e', isError: true);
+      showAppSnackBar(
+        context,
+        '${S.of(context).error_loading_suggestions}: $e',
+        isError: true,
+      );
     }
     if (kDebugMode) {
       print('load done #########################');
@@ -69,7 +74,11 @@ class _CustomerNameAutoCompleteState extends State<CustomerNameAutoComplete> {
       await _prefs.setStringList('suggestions', _customers);
     } catch (e) {
       if (!mounted) return;
-      showAppSnackBar(context, 'Error saving suggestions: $e', isError: true);
+      showAppSnackBar(
+        context,
+        '${S.of(context).error_saving_suggestions}: $e',
+        isError: true,
+      );
     }
     if (kDebugMode) {
       print('save done ##############################');
@@ -89,7 +98,11 @@ class _CustomerNameAutoCompleteState extends State<CustomerNameAutoComplete> {
         print('add done ###################################################');
       }
     } catch (e) {
-      showAppSnackBar(context, 'Error adding suggestions: $e', isError: true);
+      showAppSnackBar(
+        context,
+        '${S.of(context).error_adding_suggestions}: $e',
+        isError: true,
+      );
     }
   }
 
@@ -144,7 +157,7 @@ class _CustomerNameAutoCompleteState extends State<CustomerNameAutoComplete> {
             } catch (e) {
               showAppSnackBar(
                 context,
-                'Error submitting suggestions: $e',
+                '${S.of(context).error_submitting_suggestions}: $e',
                 isError: true,
               );
             }
@@ -187,12 +200,12 @@ class _CustomerNameAutoCompleteState extends State<CustomerNameAutoComplete> {
               ),
               borderRadius: BorderRadius.circular(15.0),
             ),
-            labelText: 'إسم العميل',
+            labelText: S.of(context).customerName,
           ),
           obscureText: false,
           validator: (value) {
             if (value == null || value.isEmpty || value.length < 4) {
-              return 'اكتب على الأقل 4 حروف';
+              return S.of(context).customer_name_min_length;
             }
             return null;
           },
@@ -209,14 +222,17 @@ class _CustomerNameAutoCompleteState extends State<CustomerNameAutoComplete> {
                 direction: DismissDirection.endToStart,
                 background: Container(
                   color: colors.error,
-                  alignment: Alignment.centerRight,
+                  alignment: AlignmentDirectional.centerEnd,
                   padding: const EdgeInsets.symmetric(horizontal: 20),
                   child: Icon(Icons.delete, color: colors.onError),
                 ),
                 onDismissed: (direction) {
                   // Handle what happens when an item is dismissed
                   _removeSuggestion(option);
-                  showAppSnackBar(context, '$option has been dismissed');
+                  showAppSnackBar(
+                    context,
+                    '${S.of(context).suggestion_removed}: $option',
+                  );
                 },
                 child: ListTile(
                   title: Text(option),

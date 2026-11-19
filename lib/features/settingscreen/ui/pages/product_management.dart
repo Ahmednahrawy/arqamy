@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:arqamy/core/widgets/app_snack_bar.dart';
 import 'package:arqamy/features/orderscreen/providers/invoice_provider.dart';
+import 'package:arqamy/generated/l10n.dart';
 
 class ProductManagementScreen extends StatefulWidget {
   const ProductManagementScreen({super.key});
@@ -34,22 +35,23 @@ class _ProductManagementScreenState extends State<ProductManagementScreen> {
   void _showAddDialog() {
     _addController.clear();
     final messenger = ScaffoldMessenger.of(context);
+    final strings = S.of(context);
     showDialog(
       context: context,
       builder: (dialogContext) => AlertDialog(
-        title: const Text('إضافة منتج جديد'),
+        title: Text(strings.add_new_product),
         content: TextField(
           controller: _addController,
-          decoration: const InputDecoration(
-            hintText: 'اسم المنتج',
-            border: OutlineInputBorder(),
+          decoration: InputDecoration(
+            hintText: strings.productName,
+            border: const OutlineInputBorder(),
           ),
           autofocus: true,
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('إلغاء'),
+            child: Text(strings.cancel),
           ),
           ElevatedButton(
             onPressed: () async {
@@ -60,18 +62,21 @@ class _ProductManagementScreenState extends State<ProductManagementScreen> {
                       .addMasterProduct(_addController.text);
                   if (!mounted || !dialogContext.mounted) return;
                   Navigator.pop(dialogContext);
-                  showAppSnackBarOn(messenger, 'تم إضافة المنتج بنجاح');
+                  showAppSnackBarOn(
+                    messenger,
+                    strings.product_added_successfully,
+                  );
                 } catch (error) {
                   if (!mounted || !messenger.mounted) return;
                   showAppSnackBarOn(
                     messenger,
-                    'تعذر إضافة المنتج: $error',
+                    '${strings.could_not_add_product}: $error',
                     isError: true,
                   );
                 }
               }
             },
-            child: const Text('إضافة'),
+            child: Text(strings.addProduct),
           ),
         ],
       ),
@@ -81,22 +86,23 @@ class _ProductManagementScreenState extends State<ProductManagementScreen> {
   void _showEditDialog(int index, String currentName) {
     _editController.text = currentName;
     final messenger = ScaffoldMessenger.of(context);
+    final strings = S.of(context);
     showDialog(
       context: context,
       builder: (dialogContext) => AlertDialog(
-        title: const Text('تعديل المنتج'),
+        title: Text(strings.edit_product),
         content: TextField(
           controller: _editController,
-          decoration: const InputDecoration(
-            hintText: 'اسم المنتج',
-            border: OutlineInputBorder(),
+          decoration: InputDecoration(
+            hintText: strings.productName,
+            border: const OutlineInputBorder(),
           ),
           autofocus: true,
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('إلغاء'),
+            child: Text(strings.cancel),
           ),
           ElevatedButton(
             onPressed: () async {
@@ -107,18 +113,21 @@ class _ProductManagementScreenState extends State<ProductManagementScreen> {
                       .editMasterProduct(index, _editController.text);
                   if (!mounted || !dialogContext.mounted) return;
                   Navigator.pop(dialogContext);
-                  showAppSnackBarOn(messenger, 'تم تعديل المنتج بنجاح');
+                  showAppSnackBarOn(
+                    messenger,
+                    strings.product_updated_successfully,
+                  );
                 } catch (error) {
                   if (!mounted || !messenger.mounted) return;
                   showAppSnackBarOn(
                     messenger,
-                    'تعذر تعديل المنتج: $error',
+                    '${strings.could_not_update_product}: $error',
                     isError: true,
                   );
                 }
               }
             },
-            child: const Text('حفظ'),
+            child: Text(strings.save),
           ),
         ],
       ),
@@ -128,15 +137,16 @@ class _ProductManagementScreenState extends State<ProductManagementScreen> {
   void _showDeleteConfirmation(int index, String productName) {
     final messenger = ScaffoldMessenger.of(context);
     final colors = Theme.of(context).colorScheme;
+    final strings = S.of(context);
     showDialog(
       context: context,
       builder: (dialogContext) => AlertDialog(
-        title: const Text('حذف المنتج'),
-        content: Text('هل أنت متأكد من حذف "$productName"؟'),
+        title: Text(strings.delete_product),
+        content: Text('${strings.confirm_delete_product}\n"$productName"'),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('إلغاء'),
+            child: Text(strings.cancel),
           ),
           ElevatedButton(
             onPressed: () async {
@@ -146,12 +156,15 @@ class _ProductManagementScreenState extends State<ProductManagementScreen> {
                     .deleteMasterProduct(index);
                 if (!mounted || !dialogContext.mounted) return;
                 Navigator.pop(dialogContext);
-                showAppSnackBarOn(messenger, 'تم حذف المنتج');
+                showAppSnackBarOn(
+                  messenger,
+                  strings.product_deleted_successfully,
+                );
               } catch (error) {
                 if (!mounted || !messenger.mounted) return;
                 showAppSnackBarOn(
                   messenger,
-                  'تعذر حذف المنتج: $error',
+                  '${strings.could_not_delete_product}: $error',
                   isError: true,
                 );
               }
@@ -160,7 +173,7 @@ class _ProductManagementScreenState extends State<ProductManagementScreen> {
               backgroundColor: colors.error,
               foregroundColor: colors.onError,
             ),
-            child: const Text('حذف'),
+            child: Text(strings.delete),
           ),
         ],
       ),
@@ -170,14 +183,15 @@ class _ProductManagementScreenState extends State<ProductManagementScreen> {
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
+    final strings = S.of(context);
     return Scaffold(
       appBar: AppBar(
-        title: const Text('إدارة المنتجات'),
+        title: Text(strings.product_management),
         actions: [
           IconButton(
             onPressed: _showAddDialog,
             icon: const Icon(Icons.add),
-            tooltip: 'إضافة منتج',
+            tooltip: strings.addProduct,
           ),
         ],
       ),
@@ -197,14 +211,14 @@ class _ProductManagementScreenState extends State<ProductManagementScreen> {
                   ),
                   const SizedBox(height: 16),
                   Text(
-                    'لا توجد منتجات',
+                    strings.no_products,
                     style: Theme.of(context).textTheme.titleMedium?.copyWith(
                           color: colors.onSurfaceVariant,
                         ),
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    'اضغط على + لإضافة منتج جديد',
+                    strings.tap_to_add_product,
                     style: TextStyle(color: colors.onSurfaceVariant),
                   ),
                 ],
@@ -234,13 +248,13 @@ class _ProductManagementScreenState extends State<ProductManagementScreen> {
                       IconButton(
                         onPressed: () => _showEditDialog(index, product),
                         icon: Icon(Icons.edit, color: colors.primary),
-                        tooltip: 'تعديل',
+                        tooltip: strings.edit,
                       ),
                       IconButton(
                         onPressed: () =>
                             _showDeleteConfirmation(index, product),
                         icon: Icon(Icons.delete, color: colors.error),
-                        tooltip: 'حذف',
+                        tooltip: strings.delete,
                       ),
                     ],
                   ),
@@ -252,7 +266,7 @@ class _ProductManagementScreenState extends State<ProductManagementScreen> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: _showAddDialog,
-        tooltip: 'إضافة منتج',
+        tooltip: strings.addProduct,
         child: const Icon(Icons.add),
       ),
     );

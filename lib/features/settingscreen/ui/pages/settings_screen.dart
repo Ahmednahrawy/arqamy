@@ -52,8 +52,8 @@ class SettingsScreen extends StatelessWidget {
           const Divider(),
           ListTile(
             leading: const Icon(Icons.inventory_2),
-            title: const Text('إدارة المنتجات'),
-            subtitle: const Text('إضافة وتعديل وحذف المنتجات'),
+            title: Text(S.of(context).product_management),
+            subtitle: Text(S.of(context).product_management_desc),
             onTap: () {
               Navigator.push(
                 context,
@@ -112,9 +112,7 @@ class SettingsScreen extends StatelessWidget {
                   if (!context.mounted) return;
                   showAppSnackBar(
                     context,
-                    languageProvider.isArabic
-                        ? 'تعذر حفظ إعداد المظهر: $error'
-                        : 'Could not save appearance setting: $error',
+                    '${S.of(context).could_not_save_appearance}: $error',
                     isError: true,
                   );
                 }
@@ -140,7 +138,11 @@ class SettingsScreen extends StatelessWidget {
               items: languageProvider.languageOptions.map((lang) {
                 return DropdownMenuItem<String>(
                   value: lang['code'],
-                  child: Text(lang['text']!),
+                  child: Text(
+                    lang['code'] == 'ar'
+                        ? S.of(context).arabic
+                        : S.of(context).english,
+                  ),
                 );
               }).toList(),
             ),

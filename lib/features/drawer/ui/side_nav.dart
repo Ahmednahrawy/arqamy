@@ -83,6 +83,8 @@ class _SideNavState extends State<SideNav> {
     final drawer = DrawersController(context, hasUpdate: _hasUpdate);
     final colors = Theme.of(context).colorScheme;
     final semanticColors = AppSemanticColors.of(context);
+    final strings = S.of(context);
+    final isRtl = Directionality.of(context) == TextDirection.rtl;
     return Drawer(
       width: isCollapse ? 90 : 180,
       child: Material(
@@ -126,7 +128,10 @@ class _SideNavState extends State<SideNav> {
                         final sharePositionOrigin =
                             Rect.fromLTWH(0, 0, size.width, size.height);
                         Navigator.pop(context);
-                        shareApp(sharePositionOrigin);
+                        shareApp(
+                          sharePositionOrigin,
+                          '${strings.share_app_message}: $_playStoreUrl',
+                        );
                         return;
                       }
                       Navigator.pop(context);
@@ -175,8 +180,16 @@ class _SideNavState extends State<SideNav> {
               IconButton(
                   onPressed: collapseDrawer,
                   icon: isCollapse
-                      ? const Icon(Icons.arrow_forward_ios)
-                      : const Icon(Icons.arrow_back_ios))
+                      ? Icon(
+                          isRtl
+                              ? Icons.arrow_back_ios
+                              : Icons.arrow_forward_ios,
+                        )
+                      : Icon(
+                          isRtl
+                              ? Icons.arrow_forward_ios
+                              : Icons.arrow_back_ios,
+                        ))
             ],
           ),
         )),
@@ -204,11 +217,10 @@ void _navigateToRoute(BuildContext context, int index) {
   Navigator.pushNamed(context, routeName);
 }
 
-Future<void> shareApp(Rect sharePositionOrigin) async {
+Future<void> shareApp(Rect sharePositionOrigin, String message) async {
   await SharePlus.instance.share(
     ShareParams(
-        text:
-            'Check out my app: https://play.google.com/store/apps/details?id=com.nahro.arqamy',
+        text: message,
         sharePositionOrigin: sharePositionOrigin),
   );
 }
@@ -221,7 +233,7 @@ class DrawersController {
 
   List<DrawerModel> get sideDrawer => [
         DrawerModel(S.of(context).home, Icons.home),
-        DrawerModel(S.of(context).suppliers, Icons.receipt_long),
+        DrawerModel(S.of(context).customers_and_suppliers, Icons.receipt_long),
         DrawerModel(S.of(context).inventory, Icons.person),
         DrawerModel(S.of(context).settings, Icons.settings),
         DrawerModel(S.of(context).share_app, Icons.share),

@@ -1,8 +1,10 @@
 import 'package:arqamy/features/orderscreen/providers/invoice_provider.dart';
 import 'package:flutter/material.dart';
 
+import 'package:arqamy/core/helpers/formatters.dart';
 import 'package:arqamy/core/helpers/spacing.dart';
 import 'package:arqamy/features/orderscreen/ui/widgets/my_data_table.dart';
+import 'package:arqamy/generated/l10n.dart';
 import 'package:provider/provider.dart';
 
 class InvoiceSummaryBottomSheet extends StatelessWidget {
@@ -25,6 +27,7 @@ class InvoiceSummaryBottomSheet extends StatelessWidget {
       child: Consumer<InvoiceProvider>(
         builder: (context, provider, _) {
           final totalCost = provider.totalCost;
+          final strings = S.of(context);
           return SingleChildScrollView(
             scrollDirection: Axis.vertical,
             child: Column(
@@ -41,9 +44,18 @@ class InvoiceSummaryBottomSheet extends StatelessWidget {
                 Column(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    Text('إجمالي المبلغ: ${totalCost.toStringAsFixed(2)} L.E'),
-                    Text('التحصيل : ${paid.toStringAsFixed(2)} L.E'),
-                    Text('الباقي: ${rest.toStringAsFixed(2)} L.E'),
+                    Text(
+                      '${strings.total_amount}: '
+                      '${AppFormatters.currency(totalCost, strings)}',
+                    ),
+                    Text(
+                      '${strings.collected_amount_label}: '
+                      '${AppFormatters.currency(paid, strings)}',
+                    ),
+                    Text(
+                      '${strings.remaining}: '
+                      '${AppFormatters.currency(rest, strings)}',
+                    ),
                   ],
                 ),
               ],

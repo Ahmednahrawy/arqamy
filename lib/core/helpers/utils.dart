@@ -1,5 +1,8 @@
 import 'dart:io';
 
+import 'package:arqamy/core/helpers/formatters.dart';
+import 'package:arqamy/core/helpers/invoice_action_l10n.dart';
+import 'package:arqamy/core/helpers/pdf_labels.dart';
 import 'package:arqamy/features/orderscreen/providers/invoice_provider.dart';
 import 'package:arqamy/features/orderscreen/ui/widgets/pw_grouped_table.dart';
 import 'package:arqamy/features/settingscreen/providers/invoice_setting_provider.dart';
@@ -21,15 +24,17 @@ Future<Uint8List> generatePDF(
   final String? formattedDate,
   final String? formattedTime,
   final String? invoiceAction,
-  final String invoiceSerial,
-) async {
+  final String invoiceSerial, {
+  String locale = 'ar',
+}) async {
+  final labels = PdfLabels.forLocale(locale);
   final doc = pw.Document(
-    title: 'فاتورة العميل',
+    title: labels.documentTitle,
     compress: true,
   );
   final logoPath = settings.logoPath;
 
-  /// ✅ Load logo (from gallery or fallback to default asset)
+  /// Load logo (from gallery or fallback to default asset)
   pw.MemoryImage? logoImage;
   try {
     if (logoPath.isNotEmpty) {
@@ -50,22 +55,14 @@ Future<Uint8List> generatePDF(
   final arabicFont = await rootBundle.load("assets/fonts/Amiri-Regular.ttf");
   final ttf = pw.Font.ttf(arabicFont);
 
-  // final DateTime now = DateTime.now();
-  // String invoiceSerial =
-  //     "${now.year}${now.month.toString().padLeft(2, '0')}${now.day.toString().padLeft(2, '0')}"
-  //     "${now.hour.toString().padLeft(2, '0')}${now.minute.toString().padLeft(2, '0')}${now.second.toString().padLeft(2, '0')}";
-
-  final pageTheme = _myPageTheme(format, ttf);
+  final pageTheme = _myPageTheme(format, ttf, labels.isRtl);
   final products = provider.products;
   final grouped = provider.groupedProducts;
   final bool hasIdenticalProducts = provider.hasIdenticalProducts;
   final bool shouldShowPackageColumns = provider.shouldShowPackageColumns;
 
-  String invoiceName = invoiceAction == "شراء"
-      ? "فاتورة مشتريات"
-      : invoiceAction == "بيع"
-          ? "فاتورة بيع"
-          : "فاتورة تخزين";
+  final invoiceName = _invoiceTitle(invoiceAction, labels);
+
   doc.addPage(
     pw.MultiPage(
       pageTheme: pageTheme,
@@ -75,10 +72,10 @@ Future<Uint8List> generatePDF(
           pw.SizedBox(width: 70),
           pw.Column(crossAxisAlignment: pw.CrossAxisAlignment.end, children: [
             pw.Text(
-              'إدارة : ${settings.managerName}',
+              '${labels.management} : ${settings.managerName}',
             ),
             pw.Text(
-              'ت : ${settings.managerPhone}',
+              '${labels.phone} : ${settings.managerPhone}',
             ),
           ]),
           pw.SizedBox(width: 30),
@@ -106,7 +103,7 @@ Future<Uint8List> generatePDF(
             child: pw.Column(
               children: [
                 pw.Text(
-                  '  فاتورة: $invoiceSerial \n $invoiceName ',
+                  '${labels.invoice}: $invoiceSerial\n$invoiceName',
                   textAlign: pw.TextAlign.center,
                   style: pw.TextStyle(
                       fontSize: 20,
@@ -114,13 +111,13 @@ Future<Uint8List> generatePDF(
                       font: ttf),
                 ),
                 pw.Text(
-                  ' السيد: $customerName ',
+                  '${labels.mr}: $customerName',
                   textAlign: pw.TextAlign.center,
                   style: pw.TextStyle(
                       fontSize: 30, fontWeight: pw.FontWeight.bold, font: ttf),
                 ),
                 pw.Text(
-                  '  إصدار : $formattedDate- $formattedTime ',
+                  '${labels.issued}: $formattedDate - $formattedTime',
                   textAlign: pw.TextAlign.center,
                   style: pw.TextStyle(
                       fontSize: 20,
@@ -132,13 +129,13 @@ Future<Uint8List> generatePDF(
           ),
           // table
           pw.Align(
-            alignment: pw.Alignment.centerLeft,
+            alignment: pw.AlignmentDirectional.centerStart,
             child: pw.Container(
               alignment: pw.Alignment.center,
               child: PdfMyDataTable(
                 products: products,
-                // totalCost: totalCost,
                 shouldShowPackageColumns: shouldShowPackageColumns,
+                labels: labels,
               ),
             ),
           ),
@@ -148,18 +145,19 @@ Future<Uint8List> generatePDF(
         if (hasIdenticalProducts) {
           widgets.addAll([
             pw.Center(
-              child: pw.Text("ملخص المنتجات",
+              child: pw.Text(labels.productSummary,
                   style: pw.TextStyle(
                       fontSize: 18, fontWeight: pw.FontWeight.bold, font: ttf)),
             ),
             pw.SizedBox(height: 10),
             pw.Align(
-              alignment: pw.Alignment.centerLeft,
+              alignment: pw.AlignmentDirectional.centerStart,
               child: pw.Container(
                 alignment: pw.Alignment.center,
                 child: PdfGroupedDataTable(
                   groupedProducts: grouped,
                   shouldShowPackageColumns: shouldShowPackageColumns,
+                  labels: labels,
                 ),
               ),
             ),
@@ -170,14 +168,19 @@ Future<Uint8List> generatePDF(
           pw.Row(
             mainAxisAlignment: pw.MainAxisAlignment.start,
             children: [
-              pw.Text('إجمالي الفاتورة : \n $totalCost L.E',
-                  style: const pw.TextStyle(fontSize: 20)),
               pw.Text(
-                'تحصيل : \n $paid',
+                '${labels.invoiceTotal} :\n'
+                '${AppFormatters.number(totalCost)} ${labels.currency}',
                 style: const pw.TextStyle(fontSize: 20),
               ),
               pw.Text(
-                'الباقي : \n $rest',
+                '${labels.collected} :\n'
+                '${AppFormatters.number(paid)} ${labels.currency}',
+                style: const pw.TextStyle(fontSize: 20),
+              ),
+              pw.Text(
+                '${labels.remaining} :\n'
+                '${AppFormatters.number(rest)} ${labels.currency}',
                 style: const pw.TextStyle(fontSize: 20),
               )
             ],
@@ -190,13 +193,27 @@ Future<Uint8List> generatePDF(
   return doc.save();
 }
 
-pw.PageTheme _myPageTheme(PdfPageFormat format, pw.Font font) {
+String _invoiceTitle(String? invoiceAction, PdfLabels labels) {
+  switch (InvoiceActionL10n.normalize(invoiceAction)) {
+    case InvoiceActionL10n.purchase:
+      return labels.purchaseTitle;
+    case InvoiceActionL10n.sale:
+      return labels.saleTitle;
+    case InvoiceActionL10n.storage:
+      return labels.storageTitle;
+    default:
+      return labels.storageTitle;
+  }
+}
+
+pw.PageTheme _myPageTheme(PdfPageFormat format, pw.Font font, bool isRtl) {
   return pw.PageTheme(
     pageFormat: PdfPageFormat.a4,
     theme: pw.ThemeData.withFont(base: font),
     margin: const pw.EdgeInsets.symmetric(
         horizontal: 1 * PdfPageFormat.cm, vertical: 0.5 * PdfPageFormat.cm),
-    textDirection: pw.TextDirection.rtl,
+    textDirection: isRtl ? pw.TextDirection.rtl : pw.TextDirection.ltr,
     orientation: pw.PageOrientation.portrait,
   );
 }
+

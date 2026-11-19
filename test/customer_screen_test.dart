@@ -336,7 +336,7 @@ void main() {
       ),
       findsOneWidget,
     );
-    expect(find.text('20.00 ج.م'), findsNWidgets(2));
+    expect(find.text('20.00 ج.م'), findsNWidgets(4));
   });
 
   testWidgets(
@@ -447,8 +447,8 @@ void main() {
       ),
       findsOneWidget,
     );
-    expect(find.text('100.00 ج.م'), findsOneWidget);
-    expect(find.text('30.00 ج.م'), findsOneWidget);
+    expect(find.text('100.00 ج.م'), findsNWidgets(3));
+    expect(find.text('30.00 ج.م'), findsNWidgets(3));
     expect(find.text('70.00 ج.م'), findsOneWidget);
   });
 
@@ -516,7 +516,7 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('فاتورة #legacy-serial'), findsOneWidget);
-    expect(find.text('30.00 ج.م'), findsNWidgets(2));
+    expect(find.text('30.00 ج.م'), findsNWidgets(4));
     expect(
       find.descendant(of: storageSummary, matching: find.text('0.00 ج.م')),
       findsOneWidget,
@@ -557,7 +557,7 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('فاتورة #legacy-serial'), findsOneWidget);
-    expect(find.text('45.00 جنيه'), findsNWidgets(2));
+    expect(find.text('45.00 ج.م'), findsNWidgets(3));
     expect(
       find.descendant(of: storageSummary, matching: find.text('45.00 ج.م')),
       findsOneWidget,
@@ -834,12 +834,12 @@ void main() {
       find.text('Search by serial or product name'),
       findsOneWidget,
     );
-    expect(find.text('Invoice action'), findsNothing);
+    expect(find.text('Invoice type'), findsNothing);
     expect(find.text('Payment status'), findsNothing);
     await tester.tap(find.byKey(const ValueKey('show-invoice-filters')));
     await tester.pumpAndSettle();
     expect(find.text('Invoice filters'), findsOneWidget);
-    expect(find.text('Invoice action'), findsOneWidget);
+    expect(find.text('Invoice type'), findsOneWidget);
     expect(find.text('Payment status'), findsOneWidget);
     await tester.tap(find.text('Cancel'));
     await tester.pumpAndSettle();
@@ -1503,21 +1503,21 @@ void main() {
     expect(
       find.descendant(
         of: partialCard,
-        matching: find.text('100.00 جنيه'),
+        matching: find.text('100.00 ج.م'),
       ),
       findsOneWidget,
     );
     expect(
       find.descendant(
         of: partialCard,
-        matching: find.text('40.00 جنيه'),
+        matching: find.text('40.00 ج.م'),
       ),
       findsOneWidget,
     );
     expect(
       find.descendant(
         of: partialCard,
-        matching: find.text('60.00 جنيه'),
+        matching: find.text('60.00 ج.م'),
       ),
       findsOneWidget,
     );
@@ -1553,7 +1553,7 @@ void main() {
       findsOneWidget,
     );
     expect(
-      find.descendant(of: paidCard, matching: find.text('50.00 جنيه')),
+      find.descendant(of: paidCard, matching: find.text('50.00 ج.م')),
       findsNWidgets(2),
     );
     expect(tester.takeException(), isNull);

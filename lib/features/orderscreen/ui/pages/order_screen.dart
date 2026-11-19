@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 
 import 'package:arqamy/config/theme/colors.dart';
 import 'package:arqamy/config/theme/styles.dart';
+import 'package:arqamy/core/helpers/formatters.dart';
 import 'package:arqamy/core/helpers/helper_date_price.dart';
 import 'package:arqamy/core/helpers/spacing.dart';
 import 'package:arqamy/core/widgets/text_button.dart';
@@ -69,8 +70,9 @@ class _OrderscreenState extends State<Orderscreen>
   }
 
   void _selectDate(BuildContext context) {
-    formattedDate = Utils.formatDate(selectedDate);
-    formattedTime = Utils.formateTimeNow(selectedDate);
+    final locale = Localizations.localeOf(context).languageCode;
+    formattedDate = Utils.formatDate(selectedDate, locale: locale);
+    formattedTime = Utils.formateTimeNow(selectedDate, locale: locale);
   }
 
   double get _paid => double.tryParse(_payController.text) ?? 0.0;
@@ -86,7 +88,8 @@ class _OrderscreenState extends State<Orderscreen>
 // Called by ProductInputForm
   void _onAddProduct(Product product) {
     context.read<InvoiceProvider>().addProduct(product);
-    _showToast('تمت إضافة ${product.name} بنجاح');
+    final strings = S.of(context);
+    _showToast('${strings.product_added}: ${product.name}');
   }
 
   String _generateInvoiceSerial() {
@@ -128,6 +131,7 @@ class _OrderscreenState extends State<Orderscreen>
 
   Future<void> _saveInvoice({_InvoiceShareTarget? shareTarget}) async {
     final provider = context.read<InvoiceProvider>();
+    final locale = Localizations.localeOf(context).languageCode;
     if (!_validateInvoice(provider)) return;
 
     showDialog(
@@ -150,7 +154,10 @@ class _OrderscreenState extends State<Orderscreen>
     } catch (error) {
       if (!mounted) return;
       Navigator.of(context).pop();
-      _showToast('فشل حفظ الفاتورة: $error', isError: true);
+      _showToast(
+        '${S.of(context).save_invoice_failed}: $error',
+        isError: true,
+      );
       return;
     }
 
@@ -171,11 +178,15 @@ class _OrderscreenState extends State<Orderscreen>
           formattedTime: invoice.formattedTime,
           invoiceAction: invoice.invoiceAction,
           invoiceSerial: invoice.invoiceSerial,
+          locale: locale,
         );
       } catch (error) {
         if (!mounted) return;
         Navigator.of(context).pop();
-        _showToast('تم حفظ الفاتورة ولكن فشلت المشاركة: $error', isError: true);
+        _showToast(
+          '${S.of(context).share_invoice_failed}: $error',
+          isError: true,
+        );
         return;
       }
     }
@@ -184,7 +195,7 @@ class _OrderscreenState extends State<Orderscreen>
     if (shareTarget != null) {
       _showToast(S.of(context).invoice_sent_successfully);
     } else {
-      _showToast('تم حفظ الفاتورة بنجاح');
+      _showToast(S.of(context).invoice_saved_successfully);
     }
   }
 
@@ -198,6 +209,7 @@ class _OrderscreenState extends State<Orderscreen>
   // Clear invoice button handler
   void _startNewInvoice() {
     final provider = context.read<InvoiceProvider>();
+    final strings = S.of(context);
     final hasDraft = provider.products.isNotEmpty ||
         provider.customerName != null ||
         provider.invoiceAction != null;
@@ -213,7 +225,7 @@ class _OrderscreenState extends State<Orderscreen>
 
     if (!hasDraft) {
       resetDraft();
-      _showToast('فاتورة جديدة جاهزة');
+      _showToast(strings.new_invoice_ready);
       return;
     }
 
@@ -228,24 +240,22 @@ class _OrderscreenState extends State<Orderscreen>
               color: Theme.of(context).colorScheme.primary,
             ),
             const SizedBox(width: 8),
-            const Text('فاتورة جديدة'),
+            Text(strings.new_invoice),
           ],
         ),
-        content: const Text(
-          'سيتم مسح بيانات الفاتورة الحالية فقط. لن يتم حذف الفواتير المحفوظة.',
-        ),
+        content: Text(strings.clear_draft_message),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text("إلغاء"),
+            child: Text(strings.cancel),
           ),
           ElevatedButton(
             onPressed: () {
               Navigator.pop(context);
               resetDraft();
-              _showToast('فاتورة جديدة جاهزة');
+              _showToast(strings.new_invoice_ready);
             },
-            child: const Text('جديد'),
+            child: Text(strings.new_label),
           ),
         ],
       ),
@@ -253,9 +263,10 @@ class _OrderscreenState extends State<Orderscreen>
   }
 
   void _deleteSavedInvoice() {
+    final strings = S.of(context);
     final invoiceId = _savedInvoiceId;
     if (invoiceId == null) {
-      _showToast('لا توجد فاتورة محفوظة مفتوحة للحذف', isError: true);
+      _showToast(strings.no_saved_invoice_to_delete, isError: true);
       return;
     }
 
@@ -269,16 +280,14 @@ class _OrderscreenState extends State<Orderscreen>
           children: [
             Icon(Icons.warning, color: semanticColors.warning),
             const SizedBox(width: 8),
-            const Text('حذف الفاتورة المحفوظة'),
+            Text(strings.delete_saved_invoice),
           ],
         ),
-        content: const Text(
-          'هل أنت متأكد من حذف الفاتورة المحفوظة؟ لا يمكن التراجع عن هذا الإجراء.',
-        ),
+        content: Text(strings.delete_saved_invoice_confirm),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(dialogContext),
-            child: const Text("إلغاء"),
+            child: Text(strings.cancel),
           ),
           ElevatedButton(
             onPressed: () async {
@@ -295,12 +304,15 @@ class _OrderscreenState extends State<Orderscreen>
                   _savedInvoice = null;
                   _productFormVersion++;
                 });
-                _showToast('تم حذف الفاتورة وتهيئة فاتورة جديدة');
+                _showToast(strings.invoice_deleted_new_ready);
               } catch (error) {
                 if (!dialogContext.mounted) return;
                 Navigator.pop(dialogContext);
                 if (!mounted) return;
-                _showToast('فشل حذف الفاتورة: $error', isError: true);
+                _showToast(
+                  '${strings.could_not_delete_invoice}: $error',
+                  isError: true,
+                );
               }
             },
             style: ElevatedButton.styleFrom(
@@ -308,7 +320,7 @@ class _OrderscreenState extends State<Orderscreen>
               backgroundColor: colors.error,
               foregroundColor: colors.onError,
             ),
-            child: const Text('حذف'),
+            child: Text(strings.delete),
           ),
         ],
       ),
@@ -348,7 +360,7 @@ class _OrderscreenState extends State<Orderscreen>
                   );
                 },
           label: Text(
-            'معاينة',
+            S.of(context).preview,
             style: Theme.of(context).textTheme.labelLarge,
           ),
           icon: const Icon(Icons.preview),
@@ -369,16 +381,13 @@ class _OrderscreenState extends State<Orderscreen>
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
-    return Directionality(
-      textDirection: TextDirection.rtl,
-      child: Scaffold(
-        floatingActionButtonLocation: FloatingActionButtonLocation.startFloat,
-        appBar: AppBar(
-          elevation: 0,
-          title: const Text(
-            "إصدار فاتورة",
-          ),
-          actions: [
+    final strings = S.of(context);
+    return Scaffold(
+      floatingActionButtonLocation: FloatingActionButtonLocation.startFloat,
+      appBar: AppBar(
+        elevation: 0,
+        title: Text(strings.invoice_screen_title),
+        actions: [
             Padding(
               padding: const EdgeInsetsDirectional.only(end: 8),
               child: Row(
@@ -387,14 +396,14 @@ class _OrderscreenState extends State<Orderscreen>
                   if (MediaQuery.sizeOf(context).width < 420) ...[
                     IconButton(
                       onPressed: _startNewInvoice,
-                      tooltip: 'جديد',
+                      tooltip: strings.new_label,
                       color: colors.onPrimary,
                       icon: const Icon(Icons.add),
                     ),
                     IconButton(
                       onPressed:
                           _savedInvoiceId == null ? null : _deleteSavedInvoice,
-                      tooltip: 'مسح',
+                      tooltip: strings.delete,
                       color: colors.onPrimary,
                       disabledColor: colors.onPrimary.withValues(alpha: 0.6),
                       icon: const Icon(Icons.delete_forever),
@@ -403,7 +412,7 @@ class _OrderscreenState extends State<Orderscreen>
                     OutlinedButton.icon(
                       onPressed: _startNewInvoice,
                       icon: const Icon(Icons.add, size: 18),
-                      label: const Text('جديد'),
+                      label: Text(strings.new_label),
                       style: OutlinedButton.styleFrom(
                         foregroundColor: colors.onPrimary,
                         side: BorderSide(
@@ -415,7 +424,7 @@ class _OrderscreenState extends State<Orderscreen>
                       onPressed:
                           _savedInvoiceId == null ? null : _deleteSavedInvoice,
                       icon: const Icon(Icons.delete_forever, size: 18),
-                      label: const Text('مسح'),
+                      label: Text(strings.delete),
                       style: ElevatedButton.styleFrom(
                         foregroundColor: _savedInvoiceId == null
                             ? colors.onSurface.withValues(alpha: 0.38)
@@ -444,7 +453,7 @@ class _OrderscreenState extends State<Orderscreen>
             child: SingleChildScrollView(
               scrollDirection: Axis.vertical,
               keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
-              padding: const EdgeInsets.fromLTRB(10, 8, 10, 16),
+              padding: const EdgeInsetsDirectional.fromSTEB(10, 8, 10, 16),
               child: Center(
                 child: ConstrainedBox(
                   constraints: const BoxConstraints(maxWidth: 1100),
@@ -500,7 +509,7 @@ class _OrderscreenState extends State<Orderscreen>
                                       size: 60, color: colors.onSurfaceVariant),
                                   const SizedBox(height: 16),
                                   Text(
-                                    'لا توجد منتجات مضافة',
+                                    strings.no_products_added,
                                     style: TextStyle(
                                       fontSize: 16,
                                       color: colors.onSurfaceVariant,
@@ -508,7 +517,7 @@ class _OrderscreenState extends State<Orderscreen>
                                   ),
                                   const SizedBox(height: 8),
                                   Text(
-                                    'ابدأ بإضافة منتجات للفاتورة',
+                                    strings.start_adding_products,
                                     style: TextStyle(
                                       fontSize: 14,
                                       color: colors.onSurfaceVariant,
@@ -533,14 +542,14 @@ class _OrderscreenState extends State<Orderscreen>
           ),
         ),
         // resizeToAvoidBottomInset: false,
-        resizeToAvoidBottomInset: true,
-      ),
+      resizeToAvoidBottomInset: true,
     );
   }
 
   Widget _buildPaymentControls() {
     var width = MediaQuery.of(context).size.width;
     final colors = Theme.of(context).colorScheme;
+    final strings = S.of(context);
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 12),
       child: Column(
@@ -551,8 +560,8 @@ class _OrderscreenState extends State<Orderscreen>
               focusNode: _payFocusNode,
               textDirection: TextDirection.ltr,
               controller: _payController,
-              labelText: 'تحصيل',
-              suffixText: 'جنيه',
+              labelText: strings.collected_amount_label,
+              suffixText: strings.currency,
               suffixIcon: _payController.text.isEmpty
                   ? const SizedBox.shrink()
                   : IconButton(
@@ -561,10 +570,10 @@ class _OrderscreenState extends State<Orderscreen>
                     ),
               validator: (value) {
                 if (value == null || value.isEmpty) {
-                  return 'رجاء أدخل قيمة التحصيل';
+                  return strings.enter_collected_amount;
                 }
                 if (double.tryParse(value) == null) {
-                  return 'ادخل رقم صالح';
+                  return strings.invalidNumber;
                 }
                 return null;
               },
@@ -576,7 +585,7 @@ class _OrderscreenState extends State<Orderscreen>
               Expanded(
                 child: AppTextButton(
                   onPressed: _saveInvoiceOnly,
-                  buttonText: 'حفظ',
+                  buttonText: strings.save,
                   textStyle: TextStyles.font18WhiteMedium.copyWith(
                     color: colors.onSecondary,
                   ),
@@ -590,7 +599,7 @@ class _OrderscreenState extends State<Orderscreen>
               Expanded(
                 child: AppTextButton(
                   onPressed: _shareInvoice,
-                  buttonText: 'إرسال',
+                  buttonText: strings.send,
                   textStyle: TextStyles.font18WhiteMedium.copyWith(
                     color: colors.onPrimary,
                   ),
@@ -601,7 +610,7 @@ class _OrderscreenState extends State<Orderscreen>
               ),
               SizedBox(width: width < 400 ? 14 : 22),
               IconButton.filled(
-                tooltip: 'مشاركة عبر واتساب',
+                tooltip: strings.share_via_whatsapp,
                 onPressed: _sendInvoiceToWhatsApp,
                 style: IconButton.styleFrom(
                   backgroundColor: const Color(0xFF25D366),
@@ -623,6 +632,7 @@ class _OrderscreenState extends State<Orderscreen>
   Widget _buildTotalCostCard(double totalCost) {
     final colors = Theme.of(context).colorScheme;
     final semanticColors = AppSemanticColors.of(context);
+    final strings = S.of(context);
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -632,7 +642,7 @@ class _OrderscreenState extends State<Orderscreen>
       child: LayoutBuilder(
         builder: (context, constraints) {
           final total = Text(
-            '${totalCost.toStringAsFixed(2)} جنيه',
+            AppFormatters.currency(totalCost, strings),
             style: TextStyle(
               color: colors.onSecondary,
               fontSize: 20,
@@ -640,7 +650,7 @@ class _OrderscreenState extends State<Orderscreen>
             ),
           );
           final label = Text(
-            'الإجمالي الكلي',
+            strings.grand_total,
             style: TextStyle(
               color: colors.onSecondary,
               fontSize: 16,

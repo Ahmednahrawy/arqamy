@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:arqamy/core/widgets/app_snack_bar.dart';
 import 'package:arqamy/features/settingscreen/providers/invoice_setting_provider.dart';
+import 'package:arqamy/generated/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
@@ -50,12 +51,12 @@ class _InvoiceSettingsScreenState extends State<InvoiceSettingsScreen> {
         );
 
         if (!mounted) return;
-        showAppSnackBar(context, 'تم حفظ إعدادات الفاتورة');
+        showAppSnackBar(context, S.of(context).invoice_settings_saved);
       } catch (error) {
         if (!mounted) return;
         showAppSnackBar(
           context,
-          'تعذر حفظ إعدادات الفاتورة: $error',
+          '${S.of(context).could_not_save_settings}: $error',
           isError: true,
         );
       }
@@ -66,6 +67,7 @@ class _InvoiceSettingsScreenState extends State<InvoiceSettingsScreen> {
     final picker = ImagePicker();
     final picked = await picker.pickImage(source: ImageSource.gallery);
     if (picked != null) {
+      if (!mounted) return;
       final settingsProvider = context.read<InvoiceSettingsProvider>();
       await settingsProvider.updateSettings(logoPath: picked.path);
     }
@@ -80,6 +82,7 @@ class _InvoiceSettingsScreenState extends State<InvoiceSettingsScreen> {
   Widget build(BuildContext context) {
     final size = MediaQuery.sizeOf(context);
     final colors = Theme.of(context).colorScheme;
+    final strings = S.of(context);
     final settingsProvider = context.watch<InvoiceSettingsProvider>();
     // Check if the path is a file path (not starting with 'assets/')
     final isFilePath = !settingsProvider.logoPath.startsWith('assets/');
@@ -122,7 +125,7 @@ class _InvoiceSettingsScreenState extends State<InvoiceSettingsScreen> {
     }
 
     return Scaffold(
-      appBar: AppBar(title: const Text("إعدادات الفاتورة")),
+      appBar: AppBar(title: Text(strings.invoice_settings)),
       body: Form(
         key: _formKey,
         child: ListView(
@@ -133,7 +136,7 @@ class _InvoiceSettingsScreenState extends State<InvoiceSettingsScreen> {
               child: Column(
                 children: [
                   Stack(
-                    alignment: Alignment.topRight,
+                    alignment: AlignmentDirectional.topEnd,
                     children: [
                       Container(
                         width: 120,
@@ -166,7 +169,7 @@ class _InvoiceSettingsScreenState extends State<InvoiceSettingsScreen> {
                   ElevatedButton.icon(
                     onPressed: _pickLogo,
                     icon: const Icon(Icons.upload, size: 18),
-                    label: const Text("اختر الشعار"),
+                    label: Text(strings.choose_logo),
                     style: ElevatedButton.styleFrom(
                       padding: const EdgeInsets.symmetric(
                           horizontal: 16, vertical: 12),
@@ -179,37 +182,40 @@ class _InvoiceSettingsScreenState extends State<InvoiceSettingsScreen> {
 
             TextFormField(
               controller: _managerNameController,
-              decoration: const InputDecoration(labelText: "اسم المدير"),
-              validator: (val) =>
-                  val == null || val.isEmpty ? "ادخل اسم المدير" : null,
+              decoration: InputDecoration(labelText: strings.manager_name),
+              validator: (val) => val == null || val.isEmpty
+                  ? strings.enter_manager_name
+                  : null,
             ),
             const SizedBox(height: 12),
 
             TextFormField(
               controller: _managerPhoneController,
-              decoration: const InputDecoration(labelText: "رقم المدير"),
+              decoration: InputDecoration(labelText: strings.manager_phone),
               keyboardType: TextInputType.phone,
-              validator: (val) =>
-                  val == null || val.isEmpty ? "ادخل رقم الهاتف" : null,
+              validator: (val) => val == null || val.isEmpty
+                  ? strings.enter_phone
+                  : null,
             ),
             const SizedBox(height: 12),
 
             TextFormField(
               controller: _companyNameController,
-              decoration: const InputDecoration(labelText: "اسم الشركة"),
+              decoration: InputDecoration(labelText: strings.company_name),
             ),
             const SizedBox(height: 12),
 
             TextFormField(
               controller: _companyDescController,
-              decoration: const InputDecoration(labelText: "وصف الشركة"),
+              decoration:
+                  InputDecoration(labelText: strings.company_description),
               maxLines: 2,
             ),
             const SizedBox(height: 12),
 
             TextFormField(
               controller: _qrDataController,
-              decoration: const InputDecoration(labelText: "بيانات QR"),
+              decoration: InputDecoration(labelText: strings.qr_data),
             ),
             const SizedBox(height: 24),
 
@@ -217,7 +223,7 @@ class _InvoiceSettingsScreenState extends State<InvoiceSettingsScreen> {
               width: size.width,
               child: ElevatedButton(
                 onPressed: _saveSettings,
-                child: const Text("حفظ"),
+                child: Text(strings.save),
               ),
             ),
           ],

@@ -29,16 +29,8 @@ class Language extends ChangeNotifier {
   bool get isArabic => _currentLocale.languageCode == 'ar';
 
   List<Map<String, String>> get languageOptions => [
-        {
-          'code': 'en',
-          // 'assetPath': 'assets/images/english_flag.png',
-          'text': 'English'
-        },
-        {
-          'code': 'ar',
-          // 'assetPath': 'assets/imageps/saudi_flag.png',
-          'text': 'العربية'
-        },
+        {'code': 'en'},
+        {'code': 'ar'},
       ];
   Future<void> _loadSavedLanguage() async {
     final prefs = await SharedPreferences.getInstance();

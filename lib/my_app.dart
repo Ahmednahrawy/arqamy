@@ -52,10 +52,10 @@ class MyApp extends StatelessWidget {
         initialRoute: Routes.orderScreen,
         onGenerateRoute: appRouter.generateRoute,
         onUnknownRoute: (settings) => MaterialPageRoute(
-          builder: (_) => Scaffold(
+          builder: (routeContext) => Scaffold(
             body: Center(
               child: Text(
-                S.of(context).page_not_found,
+                S.of(routeContext).page_not_found,
                 style: const TextStyle(fontSize: 18),
               ),
             ),

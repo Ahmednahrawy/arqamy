@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:arqamy/config/theme/colors.dart';
+import 'package:arqamy/core/helpers/formatters.dart';
 import 'package:arqamy/core/helpers/invoice_date_parser.dart';
 import 'package:arqamy/core/services/invoice_service.dart';
 import 'package:arqamy/features/customerscreen/ui/widgets/edit_invoice_dialog.dart';
@@ -46,7 +47,9 @@ class _CustomerScreenState extends State<CustomerScreen> {
     // تحميل الفواتير عند بدء التشغيل
     WidgetsBinding.instance.addPostFrameCallback((_) {
       unawaited(
-        _loadInvoices(errorMessage: 'تعذر تحميل سجل الفواتير'),
+        _loadInvoices(
+          errorMessage: S.of(context).could_not_load_invoices,
+        ),
       );
     });
   }
@@ -486,6 +489,7 @@ class _CustomerScreenState extends State<CustomerScreen> {
   }
 
   void _editInvoice(Invoice invoice) async {
+    final strings = S.of(context);
     final result = await showDialog<bool>(
       context: context,
       builder: (context) => EditInvoiceDialog(invoice: invoice),
@@ -494,7 +498,7 @@ class _CustomerScreenState extends State<CustomerScreen> {
     if (result == true && _customerName != null) {
       // Reload invoices after edit
       await _loadInvoices(
-        errorMessage: 'تم حفظ التعديل، لكن تعذر تحديث سجل الفواتير',
+        errorMessage: strings.invoice_saved_reload_failed,
       );
       if (!mounted) return;
       _loadCustomerInvoices(_customerName!);
@@ -506,6 +510,7 @@ class _CustomerScreenState extends State<CustomerScreen> {
     final messenger = ScaffoldMessenger.of(context);
     final colors = Theme.of(context).colorScheme;
     final semanticColors = AppSemanticColors.of(context);
+    final strings = S.of(context);
     showDialog(
       context: context,
       builder: (dialogContext) => AlertDialog(
@@ -516,16 +521,14 @@ class _CustomerScreenState extends State<CustomerScreen> {
           children: [
             Icon(Icons.warning, color: semanticColors.warning),
             const SizedBox(width: 8),
-            const Text("تأكيد الحذف"),
+            Text(strings.confirm_delete),
           ],
         ),
-        content: const Text(
-          "هل أنت متأكد من حذف هذه الفاتورة؟\nلا يمكن التراجع عن هذا الإجراء.",
-        ),
+        content: Text(strings.confirm_delete_invoice),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(dialogContext),
-            child: const Text("إلغاء"),
+            child: Text(strings.cancel),
           ),
           ElevatedButton(
             onPressed: () async {
@@ -534,7 +537,7 @@ class _CustomerScreenState extends State<CustomerScreen> {
               } catch (error) {
                 showAppSnackBarOn(
                   messenger,
-                  'تعذر حذف الفاتورة: $error',
+                  '${strings.could_not_delete_invoice}: $error',
                   isError: true,
                 );
                 return;
@@ -546,7 +549,7 @@ class _CustomerScreenState extends State<CustomerScreen> {
               }
               Navigator.pop(dialogContext);
             },
-            child: Text("حذف", style: TextStyle(color: colors.error)),
+            child: Text(strings.delete, style: TextStyle(color: colors.error)),
           ),
         ],
       ),
@@ -557,6 +560,7 @@ class _CustomerScreenState extends State<CustomerScreen> {
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
     final strings = S.of(context);
+    final locale = Localizations.localeOf(context).languageCode;
     final hasSelectedCustomer =
         _customerName != null && _customerName!.isNotEmpty;
     final invoices = hasSelectedCustomer
@@ -593,17 +597,17 @@ class _CustomerScreenState extends State<CustomerScreen> {
     final storageInvoiceCount = storageInvoices.length;
 
     return Directionality(
-      textDirection: TextDirection.rtl,
+      textDirection: Directionality.of(context),
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('موردين و عملاء'),
+          title: Text(strings.customers_and_suppliers),
         ),
         body: SafeArea(
           child: CustomScrollView(
             keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
             slivers: [
               SliverPadding(
-                padding: const EdgeInsets.fromLTRB(16, 12, 16, 8),
+                padding: const EdgeInsetsDirectional.fromSTEB(16, 12, 16, 8),
                 sliver: SliverList(
                   delegate: SliverChildListDelegate([
                     Card(
@@ -634,19 +638,23 @@ class _CustomerScreenState extends State<CustomerScreen> {
                         storageInvoiceCount: storageInvoiceCount,
                       ),
                     Padding(
-                      padding: const EdgeInsets.fromLTRB(4, 18, 4, 8),
+                      padding: const EdgeInsetsDirectional.fromSTEB(4, 18, 4, 8),
                       child: Row(
                         children: [
                           Expanded(
                             child: Text(
                               hasSelectedCustomer
-                                  ? 'سجل الفواتير'
+                                  ? strings.invoice_history
                                   : strings.recentInvoices,
                               style: Theme.of(context).textTheme.titleLarge,
                             ),
                           ),
                           Text(
-                            '${visibleInvoices.length} فاتورة',
+                            AppFormatters.invoiceCount(
+                              visibleInvoices.length,
+                              strings,
+                              locale,
+                            ),
                             style: TextStyle(color: colors.onSurfaceVariant),
                           ),
                         ],
@@ -728,7 +736,7 @@ class _CustomerScreenState extends State<CustomerScreen> {
                         const SizedBox(height: 14),
                         Text(
                           hasSelectedCustomer
-                              ? "لا توجد فواتير لهذا العميل"
+                              ? strings.no_customer_invoices
                               : strings.noRecentInvoices,
                           textAlign: TextAlign.center,
                           style: Theme.of(context)
@@ -758,7 +766,7 @@ class _CustomerScreenState extends State<CustomerScreen> {
                 )
               else
                 SliverPadding(
-                  padding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
+                  padding: const EdgeInsetsDirectional.fromSTEB(16, 0, 16, 12),
                   sliver: SliverList(
                     delegate: SliverChildBuilderDelegate(
                       (context, index) =>
@@ -786,16 +794,18 @@ class _CustomerScreenState extends State<CustomerScreen> {
   }) {
     final colors = Theme.of(context).colorScheme;
     final semanticColors = AppSemanticColors.of(context);
+    final strings = S.of(context);
+    final locale = Localizations.localeOf(context).languageCode;
     final balanceColor = balance > 0
         ? semanticColors.warning
         : balance < 0
             ? colors.primary
             : semanticColors.success;
     final balanceLabel = balance > 0
-        ? 'صافي مستحق للعميل'
+        ? strings.net_due_to_customer
         : balance < 0
-            ? 'صافي مستحق لك'
-            : 'الحساب متوازن';
+            ? strings.net_due_to_you
+            : strings.account_balanced;
 
     return Container(
       margin: const EdgeInsets.only(top: 14),
@@ -832,7 +842,7 @@ class _CustomerScreenState extends State<CustomerScreen> {
                   borderRadius: BorderRadius.circular(20),
                 ),
                 child: Text(
-                  '$invoiceCount فاتورة',
+                  AppFormatters.invoiceCount(invoiceCount, strings, locale),
                   style: TextStyle(
                     color: colors.onSurfaceVariant,
                     fontWeight: FontWeight.w600,
@@ -850,7 +860,7 @@ class _CustomerScreenState extends State<CustomerScreen> {
           ),
           const SizedBox(height: 2),
           Text(
-            '${balance.abs().toStringAsFixed(2)} ج.م',
+            AppFormatters.currency(balance.abs(), strings),
             style: TextStyle(
               color: balanceColor,
               fontSize: 27,
@@ -863,7 +873,7 @@ class _CustomerScreenState extends State<CustomerScreen> {
             children: [
               Expanded(
                 child: _buildBalanceBreakdown(
-                  label: 'مشتريات',
+                  label: strings.purchases,
                   amount: purchaseBalance,
                   color: colors.primary,
                   icon: Icons.south_west,
@@ -872,7 +882,7 @@ class _CustomerScreenState extends State<CustomerScreen> {
               const SizedBox(width: 12),
               Expanded(
                 child: _buildBalanceBreakdown(
-                  label: 'مبيعات',
+                  label: strings.sales,
                   amount: salesBalance,
                   color: semanticColors.success,
                   icon: Icons.north_east,
@@ -925,15 +935,14 @@ class _CustomerScreenState extends State<CustomerScreen> {
               Expanded(
                 child: _buildStorageMetric(
                   label: strings.storageInvoiceValue,
-                  value:
-                      '${value.toStringAsFixed(2)} ${strings.storageCurrency}',
+                  value: AppFormatters.currency(value, strings),
                 ),
               ),
               const SizedBox(width: 8),
               Expanded(
                 child: _buildStorageMetric(
                   label: strings.storedNetWeight,
-                  value: '${netWeight.toStringAsFixed(2)} ${strings.kilograms}',
+                  value: AppFormatters.weight(netWeight, strings),
                 ),
               ),
               const SizedBox(width: 8),
@@ -984,6 +993,7 @@ class _CustomerScreenState extends State<CustomerScreen> {
     required Color color,
     required IconData icon,
   }) {
+    final strings = S.of(context);
     return Container(
       padding: const EdgeInsets.all(11),
       decoration: BoxDecoration(
@@ -1007,7 +1017,7 @@ class _CustomerScreenState extends State<CustomerScreen> {
                 ),
                 const SizedBox(height: 2),
                 Text(
-                  '${amount.toStringAsFixed(2)} ج.م',
+                  AppFormatters.currency(amount, strings),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(
@@ -1141,7 +1151,7 @@ class _CustomerScreenState extends State<CustomerScreen> {
                       ),
                     ),
                     PopupMenuButton<String>(
-                      tooltip: 'خيارات الفاتورة',
+                      tooltip: strings.invoice_options,
                       onSelected: (value) {
                         switch (value) {
                           case 'edit':
@@ -1163,7 +1173,7 @@ class _CustomerScreenState extends State<CustomerScreen> {
                               Icons.edit_outlined,
                               color: semanticColors.warning,
                             ),
-                            title: const Text('تعديل'),
+                            title: Text(strings.edit),
                             contentPadding: EdgeInsets.zero,
                           ),
                         ),
@@ -1174,7 +1184,7 @@ class _CustomerScreenState extends State<CustomerScreen> {
                               Icons.share_outlined,
                               color: colors.primary,
                             ),
-                            title: const Text('مشاركة'),
+                            title: Text(strings.share),
                             contentPadding: EdgeInsets.zero,
                           ),
                         ),
@@ -1185,7 +1195,7 @@ class _CustomerScreenState extends State<CustomerScreen> {
                               Icons.delete_outline,
                               color: colors.error,
                             ),
-                            title: const Text('حذف'),
+                            title: Text(strings.delete),
                             contentPadding: EdgeInsets.zero,
                           ),
                         ),
@@ -1211,21 +1221,21 @@ class _CustomerScreenState extends State<CustomerScreen> {
                           _buildInvoiceAmount(
                             label: strings.invoiceTotal,
                             amount: invoice.totalCost,
-                            currency: strings.currency,
+                            strings: strings,
                             width: itemWidth,
                             colors: colors,
                           ),
                           _buildInvoiceAmount(
                             label: strings.paidAmount,
                             amount: invoice.paid,
-                            currency: strings.currency,
+                            strings: strings,
                             width: itemWidth,
                             colors: colors,
                           ),
                           _buildInvoiceAmount(
                             label: strings.outstandingBalance,
                             amount: invoice.rest,
-                            currency: strings.currency,
+                            strings: strings,
                             width: itemWidth,
                             colors: colors,
                             valueColor: statusColor,
@@ -1277,7 +1287,7 @@ class _CustomerScreenState extends State<CustomerScreen> {
   Widget _buildInvoiceAmount({
     required String label,
     required double amount,
-    required String currency,
+    required S strings,
     required double width,
     required ColorScheme colors,
     Color? valueColor,
@@ -1295,7 +1305,7 @@ class _CustomerScreenState extends State<CustomerScreen> {
             ),
           ),
           Text(
-            '${amount.toStringAsFixed(2)} $currency',
+            AppFormatters.currency(amount, strings),
             style: TextStyle(
               color: valueColor ?? colors.onSurface,
               fontSize: 12,
@@ -1323,6 +1333,7 @@ class _CustomerScreenState extends State<CustomerScreen> {
 
   Future<void> _shareInvoice(Invoice invoice) async {
     final settings = context.read<InvoiceSettingsProvider>();
+    final locale = Localizations.localeOf(context).languageCode;
     final tempProvider = InvoiceProvider();
 
     for (var product in invoice.products) {
@@ -1342,12 +1353,13 @@ class _CustomerScreenState extends State<CustomerScreen> {
         formattedTime: invoice.formattedTime,
         invoiceAction: invoice.invoiceAction,
         invoiceSerial: invoice.invoiceSerial,
+        locale: locale,
       );
     } catch (error) {
       if (!mounted) return;
       showAppSnackBar(
         context,
-        'تعذر مشاركة الفاتورة: $error',
+        '${S.of(context).could_not_share_invoice}: $error',
         isError: true,
       );
     }

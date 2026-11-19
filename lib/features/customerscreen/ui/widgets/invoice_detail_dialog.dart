@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:arqamy/config/theme/colors.dart';
+import 'package:arqamy/core/helpers/formatters.dart';
+import 'package:arqamy/core/helpers/invoice_action_l10n.dart';
 import 'package:arqamy/features/orderscreen/data/models/invoice.dart';
 import 'package:arqamy/features/orderscreen/providers/invoice_provider.dart';
 import 'package:arqamy/features/settingscreen/providers/invoice_setting_provider.dart';
 import 'package:arqamy/core/services/invoice_service.dart';
 import 'package:arqamy/core/widgets/app_snack_bar.dart';
+import 'package:arqamy/generated/l10n.dart';
 import 'package:provider/provider.dart';
 
 class InvoiceDetailDialog extends StatelessWidget {
@@ -24,6 +27,7 @@ class InvoiceDetailDialog extends StatelessWidget {
     final settings = context.read<InvoiceSettingsProvider>();
     final colors = Theme.of(context).colorScheme;
     final semanticColors = AppSemanticColors.of(context);
+    final strings = S.of(context);
 
     return Dialog(
       shape: RoundedRectangleBorder(
@@ -51,7 +55,7 @@ class InvoiceDetailDialog extends StatelessWidget {
               child: Column(
                 children: [
                   Text(
-                    'فاتورة #${invoice.invoiceSerial}',
+                    '${strings.invoiceNumber}${invoice.invoiceSerial}',
                     style: TextStyle(
                       color: colors.onPrimary,
                       fontSize: 24,
@@ -69,7 +73,7 @@ class InvoiceDetailDialog extends StatelessWidget {
                       borderRadius: BorderRadius.circular(20),
                     ),
                     child: Text(
-                      invoice.invoiceAction ?? 'عملية',
+                      InvoiceActionL10n.label(invoice.invoiceAction, strings),
                       style: TextStyle(
                         color: colors.onPrimary,
                         fontWeight: FontWeight.w600,
@@ -90,13 +94,13 @@ class InvoiceDetailDialog extends StatelessWidget {
                     // Customer Info Card
                     _buildInfoCard(
                       context: context,
-                      title: 'معلومات العميل',
+                      title: strings.customer_info,
                       icon: Icons.person,
                       children: [
-                        _buildInfoRow(context, 'الاسم', invoice.customerName),
+                        _buildInfoRow(context, strings.name, invoice.customerName),
                         _buildInfoRow(
-                            context, 'التاريخ', invoice.formattedDate),
-                        _buildInfoRow(context, 'الوقت', invoice.formattedTime),
+                            context, strings.date, invoice.formattedDate),
+                        _buildInfoRow(context, strings.time, invoice.formattedTime),
                       ],
                     ),
 
@@ -105,25 +109,25 @@ class InvoiceDetailDialog extends StatelessWidget {
                     // Financial Summary Card
                     _buildInfoCard(
                       context: context,
-                      title: 'الملخص المالي',
+                      title: strings.financial_summary,
                       icon: Icons.attach_money,
                       children: [
                         _buildInfoRow(
                           context,
-                          'الإجمالي',
-                          '${invoice.totalCost.toStringAsFixed(2)} جنيه',
+                          strings.total_amount,
+                          AppFormatters.currency(invoice.totalCost, strings),
                           isHighlighted: true,
                         ),
                         _buildInfoRow(
                           context,
-                          'المدفوع',
-                          '${invoice.paid.toStringAsFixed(2)} جنيه',
+                          strings.paid,
+                          AppFormatters.currency(invoice.paid, strings),
                           color: semanticColors.success,
                         ),
                         _buildInfoRow(
                           context,
-                          'الباقي',
-                          '${invoice.rest.toStringAsFixed(2)} جنيه',
+                          strings.remaining,
+                          AppFormatters.currency(invoice.rest, strings),
                           color: invoice.rest > 0
                               ? semanticColors.warning
                               : semanticColors.success,
@@ -154,27 +158,29 @@ class InvoiceDetailDialog extends StatelessWidget {
                 children: [
                   _buildActionButton(
                     icon: Icons.close,
-                    label: 'إغلاق',
+                    label: strings.close,
                     onPressed: () => Navigator.pop(context),
                     color: colors.onSurfaceVariant,
                   ),
                   _buildActionButton(
                     icon: Icons.delete,
-                    label: 'حذف',
+                    label: strings.delete,
                     onPressed: onDelete,
                     color: colors.error,
                   ),
                   _buildActionButton(
                     icon: Icons.edit,
-                    label: 'تعديل',
+                    label: strings.edit,
                     onPressed: onEdit,
                     color: semanticColors.warning,
                   ),
                   _buildActionButton(
                     icon: Icons.share,
-                    label: 'مشاركة',
+                    label: strings.share,
                     onPressed: () async {
                       final scaffoldMessenger = ScaffoldMessenger.of(context);
+                      final locale =
+                          Localizations.localeOf(context).languageCode;
                       final tempProvider = InvoiceProvider();
                       for (var product in invoice.products) {
                         tempProvider.addProduct(product);
@@ -192,12 +198,13 @@ class InvoiceDetailDialog extends StatelessWidget {
                           formattedTime: invoice.formattedTime,
                           invoiceAction: invoice.invoiceAction,
                           invoiceSerial: invoice.invoiceSerial,
+                          locale: locale,
                         );
                       } catch (error) {
                         if (!scaffoldMessenger.mounted) return;
                         showAppSnackBarOn(
                           scaffoldMessenger,
-                          'تعذر مشاركة الفاتورة: $error',
+                          '${strings.could_not_share_invoice}: $error',
                           isError: true,
                         );
                       }
@@ -290,6 +297,7 @@ class InvoiceDetailDialog extends StatelessWidget {
     }
 
     final colors = Theme.of(context).colorScheme;
+    final strings = S.of(context);
     return Card(
       elevation: 2,
       shape: RoundedRectangleBorder(
@@ -304,9 +312,9 @@ class InvoiceDetailDialog extends StatelessWidget {
               children: [
                 Icon(Icons.shopping_cart, color: colors.primary, size: 20),
                 const SizedBox(width: 8),
-                const Text(
-                  'المنتجات',
-                  style: TextStyle(
+                Text(
+                  strings.products,
+                  style: const TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
                   ),
@@ -341,7 +349,8 @@ class InvoiceDetailDialog extends StatelessWidget {
                         if (product.numberPackage > 0) ...[
                           const SizedBox(width: 4),
                           Text(
-                            'الوزن: ${product.weight} كجم',
+                            '${strings.weight}: '
+                            '${AppFormatters.weight(product.weight, strings)}',
                             style: TextStyle(
                               color: colors.onSurfaceVariant,
                               fontSize: 13,
@@ -352,7 +361,9 @@ class InvoiceDetailDialog extends StatelessWidget {
                           const SizedBox(width: 4)
                         else
                           Text(
-                            'السعر: ${product.price} جنيه/كجم',
+                            '${strings.price}: '
+                            '${AppFormatters.currency(product.price, strings)}'
+                            '/${strings.kilograms}',
                             style: TextStyle(
                               color: colors.onSurfaceVariant,
                               fontSize: 13,
@@ -363,7 +374,9 @@ class InvoiceDetailDialog extends StatelessWidget {
                     if (product.numberPackage > 0) ...[
                       const SizedBox(width: 4),
                       Text(
-                        'الفارغ: ${product.numberPackage} × ${product.packageWeight} كجم',
+                        '${strings.empty_packages}: '
+                        '${product.numberPackage} × '
+                        '${AppFormatters.weight(product.packageWeight, strings)}',
                         style: TextStyle(
                           color: colors.onSurfaceVariant,
                           fontSize: 12,
@@ -374,7 +387,8 @@ class InvoiceDetailDialog extends StatelessWidget {
                     Wrap(
                       children: [
                         Text(
-                          'صافي: ${netWeight.toStringAsFixed(2)} كجم',
+                          '${strings.net_weight}: '
+                          '${AppFormatters.weight(netWeight, strings)}',
                           style: const TextStyle(
                             fontSize: 13,
                           ),
@@ -383,7 +397,8 @@ class InvoiceDetailDialog extends StatelessWidget {
                           const SizedBox.shrink()
                         else
                           Text(
-                            'الإجمالي: ${total.toStringAsFixed(2)} جنيه',
+                            '${strings.total_amount}: '
+                            '${AppFormatters.currency(total, strings)}',
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
                               color: colors.primary,

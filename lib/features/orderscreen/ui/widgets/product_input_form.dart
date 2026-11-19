@@ -4,12 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:material_ui/material_ui.dart' as mui;
 
+import 'package:arqamy/core/helpers/invoice_action_l10n.dart';
 import 'package:arqamy/core/helpers/spacing.dart';
 import 'package:arqamy/core/widgets/app_snack_bar.dart';
 import 'package:arqamy/core/widgets/text_button.dart';
 import 'package:arqamy/core/widgets/text_form_field.dart';
 import 'package:arqamy/config/theme/styles.dart';
 import 'package:arqamy/features/orderscreen/data/models/product_model.dart';
+import 'package:arqamy/generated/l10n.dart';
 
 class ProductInputForm extends StatefulWidget {
   // final List<String> productList;
@@ -27,7 +29,7 @@ class ProductInputForm extends StatefulWidget {
 
 class _ProductInputFormState extends State<ProductInputForm> {
   final _formKey = GlobalKey<FormState>();
-  final List<String> actions = ['شراء', 'بيع', 'تخزين'];
+  final List<String> actions = InvoiceActionL10n.actions;
 
   String? _selectedProduct;
 
@@ -69,15 +71,16 @@ class _ProductInputFormState extends State<ProductInputForm> {
 
   void _handleAdd() {
     final provider = context.read<InvoiceProvider>();
+    final strings = S.of(context);
 
     // Ensure invoice action chosen at provider level
     if (provider.invoiceAction == null) {
-      _showErrorSnackBar('رجاء اختر نوع الفاتورة أولاً');
+      _showErrorSnackBar(strings.select_invoice_type_first);
       return;
     }
 
     if (_selectedProduct == null) {
-      _showErrorSnackBar('رجاء اختر منتج');
+      _showErrorSnackBar(strings.select_product);
       // remove after work well the following line, it is for debugging only
       debugPrint('Selected Product: $_selectedProduct');
 
@@ -110,7 +113,7 @@ class _ProductInputFormState extends State<ProductInputForm> {
       try {
         provider.addProduct(product);
       } catch (e) {
-        _showErrorSnackBar('Provider not found');
+        _showErrorSnackBar(strings.data_unavailable);
       }
     }
     _clearFields();
@@ -137,16 +140,20 @@ class _ProductInputFormState extends State<ProductInputForm> {
     return Consumer<InvoiceProvider>(
       builder: (context, provider, _) {
         final colors = Theme.of(context).colorScheme;
+        final strings = S.of(context);
         if (provider.invoiceAction != null) {
           return Center(
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
                 Chip(
-                  label: Text(' فاتورة: ${provider.invoiceAction}'),
+                  label: Text(
+                    '${strings.invoice}: '
+                    '${InvoiceActionL10n.label(provider.invoiceAction, strings)}',
+                  ),
                 ),
                 PopupMenuButton<String>(
-                  tooltip: 'تغيير نوع الفاتورة',
+                  tooltip: strings.change_invoice_type,
                   icon: const Icon(Icons.edit_outlined, size: 20),
                   onSelected: provider.setInvoiceAction,
                   itemBuilder: (context) => actions
@@ -154,7 +161,9 @@ class _ProductInputFormState extends State<ProductInputForm> {
                       .map(
                         (action) => PopupMenuItem<String>(
                           value: action,
-                          child: Text(action),
+                          child: Text(
+                            InvoiceActionL10n.label(action, strings),
+                          ),
                         ),
                       )
                       .toList(),
@@ -196,7 +205,7 @@ class _ProductInputFormState extends State<ProductInputForm> {
                             ),
                           ),
                           child: Text(
-                            action,
+                            InvoiceActionL10n.label(action, strings),
                             textAlign: TextAlign.center,
                             style: TextStyle(
                               color: isSelected
@@ -233,6 +242,7 @@ class _ProductInputFormState extends State<ProductInputForm> {
 
   @override
   Widget build(BuildContext context) {
+    final strings = S.of(context);
     return Center(
       child: ConstrainedBox(
         constraints: const BoxConstraints(maxWidth: 760),
@@ -250,12 +260,12 @@ class _ProductInputFormState extends State<ProductInputForm> {
                     autoValidateMode: AutovalidateMode.onUserInteraction,
                     items: (filter, _) => provider.masterProductList,
                     selectedItem: _selectedProduct,
-                    decoratorProps: const DropDownDecoratorProps(
+                    decoratorProps: DropDownDecoratorProps(
                       decoration: mui.InputDecoration(
-                        labelText: 'المنتج',
-                        suffixIcon: Icon(Icons.search),
-                        hintText: 'اختر منتج',
-                        border: mui.OutlineInputBorder(),
+                        labelText: strings.product,
+                        suffixIcon: const Icon(Icons.search),
+                        hintText: strings.select_product_hint,
+                        border: const mui.OutlineInputBorder(),
                       ),
                     ),
                     popupProps: PopupProps.menu(
@@ -292,18 +302,18 @@ class _ProductInputFormState extends State<ProductInputForm> {
                       focusNode: _weightFocusNode,
                       textInputAction: TextInputAction.next,
                       onEditingComplete: () => _focusField(_priceFocusNode),
-                      labelText: 'الوزن أو العدد',
-                      hintText: 'كجم',
+                      labelText: strings.weight_or_count,
+                      hintText: strings.kilograms,
                       keyboardType:
                           const TextInputType.numberWithOptions(decimal: true),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           _firstInvalidFocusNode ??= _weightFocusNode;
-                          return 'رجاء أدخل الوزن';
+                          return strings.weight_required;
                         }
                         if (double.tryParse(value) == null) {
                           _firstInvalidFocusNode ??= _weightFocusNode;
-                          return 'ادخل رقم صالح';
+                          return strings.invalidNumber;
                         }
                         return null;
                       },
@@ -318,18 +328,18 @@ class _ProductInputFormState extends State<ProductInputForm> {
                       textInputAction: TextInputAction.next,
                       onEditingComplete: () =>
                           _focusField(_packageWeightFocusNode),
-                      labelText: 'السعر',
-                      hintText: 'جنيه',
+                      labelText: strings.price,
+                      hintText: strings.currency,
                       keyboardType:
                           const TextInputType.numberWithOptions(decimal: true),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           _firstInvalidFocusNode ??= _priceFocusNode;
-                          return 'رجاء أدخل السعر';
+                          return strings.price_required;
                         }
                         if (double.tryParse(value) == null) {
                           _firstInvalidFocusNode ??= _priceFocusNode;
-                          return 'ادخل رقم صالح';
+                          return strings.invalidNumber;
                         }
                         return null;
                       },
@@ -347,15 +357,16 @@ class _ProductInputFormState extends State<ProductInputForm> {
                       focusNode: _packageNumberFocusNode,
                       textInputAction: TextInputAction.done,
                       onEditingComplete: _handleAdd,
-                      labelText: 'عدد الفارغ',
+                      labelText: strings.packageCount,
+                      digitsOnly: true,
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           _firstInvalidFocusNode ??= _packageNumberFocusNode;
-                          return 'أدخل عدد العبوات أولا';
+                          return strings.package_count_required;
                         }
                         if (int.tryParse(value) == null) {
                           _firstInvalidFocusNode ??= _packageNumberFocusNode;
-                          return 'ادخل رقم صالح';
+                          return strings.invalidNumber;
                         }
                         return null;
                       },
@@ -370,18 +381,18 @@ class _ProductInputFormState extends State<ProductInputForm> {
                       textInputAction: TextInputAction.next,
                       onEditingComplete: () =>
                           _focusField(_packageNumberFocusNode),
-                      labelText: 'وزن العبوة',
-                      suffixText: 'كجم',
+                      labelText: strings.packageWeight,
+                      suffixText: strings.kilograms,
                       keyboardType:
                           const TextInputType.numberWithOptions(decimal: true),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           _firstInvalidFocusNode ??= _packageWeightFocusNode;
-                          return 'أدخل وزن العبوة الفارغة';
+                          return strings.package_weight_required;
                         }
                         if (double.tryParse(value) == null) {
                           _firstInvalidFocusNode ??= _packageWeightFocusNode;
-                          return 'ادخل رقم صالح';
+                          return strings.invalidNumber;
                         }
                         return null;
                       },
@@ -397,7 +408,7 @@ class _ProductInputFormState extends State<ProductInputForm> {
                     width: double.infinity,
                     child: AppTextButton(
                       onPressed: _handleAdd,
-                      buttonText: 'أضف منتج',
+                      buttonText: strings.addProduct,
                       textStyle: TextStyles.font16WhiteSemiBold.copyWith(
                         color: Theme.of(context).colorScheme.onPrimary,
                       ),
