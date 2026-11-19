@@ -4,7 +4,7 @@ import 'package:arqamy/core/widgets/app_snack_bar.dart';
 import 'package:arqamy/features/settingscreen/ui/pages/invoice_setting.dart';
 import 'package:arqamy/features/settingscreen/ui/pages/product_management.dart';
 import 'package:arqamy/generated/l10n.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:provider/provider.dart';
 
 class SettingsScreen extends StatelessWidget {

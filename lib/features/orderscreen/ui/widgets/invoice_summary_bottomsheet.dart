@@ -1,5 +1,5 @@
 import 'package:arqamy/features/orderscreen/providers/invoice_provider.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 import 'package:arqamy/core/helpers/formatters.dart';
 import 'package:arqamy/core/helpers/spacing.dart';

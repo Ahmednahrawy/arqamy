@@ -11,7 +11,7 @@ import 'package:arqamy/features/orderscreen/providers/invoice_provider.dart';
 import 'package:arqamy/features/orderscreen/data/models/product_model.dart';
 import 'package:arqamy/features/orderscreen/ui/pages/order_screen.dart';
 import 'package:arqamy/features/settingscreen/providers/invoice_setting_provider.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:arqamy/config/routes/app_router.dart';
 import 'package:arqamy/my_app.dart';
