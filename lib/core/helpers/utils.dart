@@ -28,10 +28,7 @@ Future<Uint8List> generatePDF(
   String locale = 'ar',
 }) async {
   final labels = PdfLabels.forLocale(locale);
-  final doc = pw.Document(
-    title: labels.documentTitle,
-    compress: true,
-  );
+  final doc = pw.Document(title: labels.documentTitle, compress: true);
   final logoPath = settings.logoPath;
 
   /// Load logo (from gallery or fallback to default asset)
@@ -67,35 +64,42 @@ Future<Uint8List> generatePDF(
     pw.MultiPage(
       pageTheme: pageTheme,
       header: (final context) => pw.Center(
-        child: pw.Row(children: [
-          pw.Image(logoImage!, fit: pw.BoxFit.contain, width: 100),
-          pw.SizedBox(width: 70),
-          pw.Column(crossAxisAlignment: pw.CrossAxisAlignment.end, children: [
-            pw.Text(
-              '${labels.management} : ${settings.managerName}',
+        child: pw.Row(
+          children: [
+            pw.Image(logoImage!, fit: pw.BoxFit.contain, width: 100),
+            pw.SizedBox(width: 70),
+            pw.Column(
+              crossAxisAlignment: pw.CrossAxisAlignment.end,
+              children: [
+                pw.Text('${labels.management} : ${settings.managerName}'),
+                pw.Text('${labels.phone} : ${settings.managerPhone}'),
+              ],
             ),
-            pw.Text(
-              '${labels.phone} : ${settings.managerPhone}',
-            ),
-          ]),
-          pw.SizedBox(width: 30),
-          pw.Column(
-            crossAxisAlignment: pw.CrossAxisAlignment.start,
-            children: [
-              pw.Text(settings.companyName,
+            pw.SizedBox(width: 30),
+            pw.Column(
+              crossAxisAlignment: pw.CrossAxisAlignment.start,
+              children: [
+                pw.Text(
+                  settings.companyName,
                   style: pw.TextStyle(
-                      fontSize: 16, fontWeight: pw.FontWeight.bold, font: ttf)),
-              pw.Text(settings.companyDescription),
-            ],
-          ),
-          pw.SizedBox(width: 70),
-          pw.BarcodeWidget(
+                    fontSize: 16,
+                    fontWeight: pw.FontWeight.bold,
+                    font: ttf,
+                  ),
+                ),
+                pw.Text(settings.companyDescription),
+              ],
+            ),
+            pw.SizedBox(width: 70),
+            pw.BarcodeWidget(
               data: settings.qrData,
               width: 50,
               height: 50,
               barcode: pw.Barcode.qrCode(),
-              drawText: false),
-        ]),
+              drawText: false,
+            ),
+          ],
+        ),
       ),
       build: (final context) {
         List<pw.Widget> widgets = [
@@ -106,23 +110,28 @@ Future<Uint8List> generatePDF(
                   '${labels.invoice}: $invoiceSerial\n$invoiceName',
                   textAlign: pw.TextAlign.center,
                   style: pw.TextStyle(
-                      fontSize: 20,
-                      fontWeight: pw.FontWeight.normal,
-                      font: ttf),
+                    fontSize: 20,
+                    fontWeight: pw.FontWeight.normal,
+                    font: ttf,
+                  ),
                 ),
                 pw.Text(
                   '${labels.mr}: $customerName',
                   textAlign: pw.TextAlign.center,
                   style: pw.TextStyle(
-                      fontSize: 30, fontWeight: pw.FontWeight.bold, font: ttf),
+                    fontSize: 30,
+                    fontWeight: pw.FontWeight.bold,
+                    font: ttf,
+                  ),
                 ),
                 pw.Text(
                   '${labels.issued}: $formattedDate - $formattedTime',
                   textAlign: pw.TextAlign.center,
                   style: pw.TextStyle(
-                      fontSize: 20,
-                      fontWeight: pw.FontWeight.normal,
-                      font: ttf),
+                    fontSize: 20,
+                    fontWeight: pw.FontWeight.normal,
+                    font: ttf,
+                  ),
                 ),
               ],
             ),
@@ -145,9 +154,14 @@ Future<Uint8List> generatePDF(
         if (hasIdenticalProducts) {
           widgets.addAll([
             pw.Center(
-              child: pw.Text(labels.productSummary,
-                  style: pw.TextStyle(
-                      fontSize: 18, fontWeight: pw.FontWeight.bold, font: ttf)),
+              child: pw.Text(
+                labels.productSummary,
+                style: pw.TextStyle(
+                  fontSize: 18,
+                  fontWeight: pw.FontWeight.bold,
+                  font: ttf,
+                ),
+              ),
             ),
             pw.SizedBox(height: 10),
             pw.Align(
@@ -173,16 +187,18 @@ Future<Uint8List> generatePDF(
                 '${AppFormatters.number(totalCost)} ${labels.currency}',
                 style: const pw.TextStyle(fontSize: 20),
               ),
+              pw.SizedBox(width: 20),
               pw.Text(
                 '${labels.collected} :\n'
                 '${AppFormatters.number(paid)} ${labels.currency}',
                 style: const pw.TextStyle(fontSize: 20),
               ),
+              pw.SizedBox(width: 20),
               pw.Text(
                 '${labels.remaining} :\n'
                 '${AppFormatters.number(rest)} ${labels.currency}',
                 style: const pw.TextStyle(fontSize: 20),
-              )
+              ),
             ],
           ),
         ]);
@@ -211,9 +227,10 @@ pw.PageTheme _myPageTheme(PdfPageFormat format, pw.Font font, bool isRtl) {
     pageFormat: PdfPageFormat.a4,
     theme: pw.ThemeData.withFont(base: font),
     margin: const pw.EdgeInsets.symmetric(
-        horizontal: 1 * PdfPageFormat.cm, vertical: 0.5 * PdfPageFormat.cm),
+      horizontal: 1 * PdfPageFormat.cm,
+      vertical: 0.5 * PdfPageFormat.cm,
+    ),
     textDirection: isRtl ? pw.TextDirection.rtl : pw.TextDirection.ltr,
     orientation: pw.PageOrientation.portrait,
   );
 }
-
