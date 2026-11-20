@@ -3,8 +3,8 @@ import 'package:arqamy/features/orderscreen/data/models/invoice.dart';
 import 'package:arqamy/features/orderscreen/data/models/product_model.dart';
 import 'package:arqamy/features/orderscreen/providers/invoice_provider.dart';
 import 'package:arqamy/features/settingscreen/providers/invoice_setting_provider.dart';
-import 'package:cupertino_ui/cupertino_ui.dart';
-import 'package:material_ui/material_ui.dart';
+import 'package:cupertino_ui/cupertino_ui.dart' hide GlobalCupertinoLocalizations;
+import 'package:material_ui/material_ui.dart' hide GlobalMaterialLocalizations; 
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:intl/intl.dart' as intl;
@@ -80,7 +80,7 @@ Widget _customerScreen(
     ],
     child: MaterialApp(
       locale: locale,
-      localizationsDelegates: const [
+      localizationsDelegates:  const [
         S.delegate,
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
