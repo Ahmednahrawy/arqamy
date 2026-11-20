@@ -60,6 +60,7 @@ dependencies:
   path: ^1.9.1
   # open_file: ^3.3.2
 
+  cupertino_ui: any
 dev_dependencies:
   flutter_launcher_icons: ^0.14.1
   build_runner: ^2.14.0
@@ -67,7 +68,6 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^6.0.0
-
 flutter_launcher_icons:
   android: "laucher_icon"
   ios: true

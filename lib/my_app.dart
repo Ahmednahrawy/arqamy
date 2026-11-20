@@ -5,6 +5,7 @@ import 'package:arqamy/config/theme/light_theme.dart';
 import 'package:arqamy/core/providers/language.dart';
 import 'package:arqamy/core/providers/theme.dart';
 import 'package:arqamy/generated/l10n.dart';
+import 'package:cupertino_ui/cupertino_ui.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:material_ui/material_ui.dart' as mui;
@@ -41,7 +42,7 @@ class MyApp extends StatelessWidget {
           );
         },
         locale: languageManager.currentLocale,
-        localizationsDelegates: const [
+        localizationsDelegates: [
           S.delegate,
           GlobalMaterialLocalizations.delegate,
           mui.GlobalMaterialLocalizations.delegate,

@@ -1,3 +1,9 @@
+# Android release signing secrets
+/android/app/upload-keystore.jks
+/android/app/upload-keystore.p12
+/android/app/keytool.txt
+/android/app/key.properties
+
 # Miscellaneous
 *.class
 *.log
