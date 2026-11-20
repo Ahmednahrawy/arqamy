@@ -6,10 +6,8 @@ import 'package:arqamy/core/providers/language.dart';
 import 'package:arqamy/core/providers/theme.dart';
 import 'package:arqamy/generated/l10n.dart';
 import 'package:cupertino_ui/cupertino_ui.dart';
-import 'package:cupertino_ui/cupertino_ui.dart' as mui; 
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:material_ui/material_ui.dart' as mui;
 import 'package:provider/provider.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
@@ -45,9 +43,9 @@ class MyApp extends StatelessWidget {
         locale: languageManager.currentLocale,
         localizationsDelegates: const [
           S.delegate,
-          mui.GlobalMaterialLocalizations.delegate,
+         GlobalMaterialLocalizations.delegate,
           GlobalWidgetsLocalizations.delegate,
-          mui.GlobalCupertinoLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
         ],
         supportedLocales: S.delegate.supportedLocales,
         initialRoute: Routes.orderScreen,
