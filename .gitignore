@@ -9,6 +9,7 @@
 *.keystore
 key.properties
 build_log.txt
+android/build/
 # Miscellaneous
 *.class
 *.log

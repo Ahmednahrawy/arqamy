@@ -1,5 +1,5 @@
+import 'package:arqamy/features/data/models/inventory_item.dart';
 import 'package:arqamy/features/data/models/supply/client.dart';
-import 'package:arqamy/features/data/models/inventory-item.dart';
 
 class Supply {
   final Client client;
