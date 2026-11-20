@@ -52,7 +52,7 @@ Widget _app(InvoiceProvider provider, {String languageCode = 'en'}) {
     value: provider,
     child: MaterialApp(
       locale: Locale(languageCode),
-      localizationsDelegates: [
+      localizationsDelegates: const [
         S.delegate,
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,

@@ -721,7 +721,7 @@ void main() {
         value: provider,
         child: MaterialApp(
           locale: const Locale('ar'),
-          localizationsDelegates: [
+          localizationsDelegates: const [
             S.delegate,
             GlobalMaterialLocalizations.delegate,
             GlobalWidgetsLocalizations.delegate,

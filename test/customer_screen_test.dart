@@ -81,7 +81,7 @@ Widget _customerScreen(
     ],
     child: MaterialApp(
       locale: locale,
-      localizationsDelegates: [
+      localizationsDelegates: const [
         S.delegate,
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,

@@ -42,7 +42,7 @@ class MyApp extends StatelessWidget {
           );
         },
         locale: languageManager.currentLocale,
-        localizationsDelegates: [
+        localizationsDelegates: const [
           S.delegate,
          GlobalMaterialLocalizations.delegate,
           GlobalWidgetsLocalizations.delegate,
