@@ -9,7 +9,8 @@ import 'package:cupertino_ui/cupertino_ui.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_localizations/flutter_localizations.dart'
+    hide GlobalMaterialLocalizations, GlobalCupertinoLocalizations;
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key, required this.appRouter});
@@ -41,7 +42,7 @@ class MyApp extends StatelessWidget {
           );
         },
         locale: languageManager.currentLocale,
-        localizationsDelegates: const [
+        localizationsDelegates: [
           S.delegate,
          GlobalMaterialLocalizations.delegate,
           GlobalWidgetsLocalizations.delegate,
