@@ -1,14 +1,14 @@
 import java.util.Properties
 
-val keystoreProperties = Properties()
-val keystoreFile = rootProject.file("key.properties")
-if (keystoreFile.exists()) {
-    keystoreFile.inputStream().use { keystoreProperties.load(it) }
-}
 plugins {
     id("com.android.application")
     // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
     id("dev.flutter.flutter-gradle-plugin")
+}
+val keystoreProperties = Properties()
+val keystoreFile = rootProject.file("key.properties")
+if (keystoreFile.exists()) {
+    keystoreFile.inputStream().use { keystoreProperties.load(it) }
 }
 
 android {
