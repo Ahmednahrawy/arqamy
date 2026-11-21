@@ -3,7 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   group('Money.fromDouble rounds half away from zero at 0.01', () {
-    const cases = <double, int>{
+    final cases = <double, int>{
       1.005: 101, // naive (1.005 * 100).round() gives 100
       2.675: 268,
       0.285: 29,
