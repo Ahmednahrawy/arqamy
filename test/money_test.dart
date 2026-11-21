@@ -81,4 +81,10 @@ void main() {
     expect(Money.tryParse('Infinity'), isNull);
     expect(Money.tryParse('1e12'), isNull);
   });
+    test('tryFromDouble rejects unusable values', () {
+    expect(Money.tryFromDouble(double.nan), isNull);
+    expect(Money.tryFromDouble(double.infinity), isNull);
+    expect(Money.tryFromDouble(1e12), isNull);
+    expect(Money.tryFromDouble(1.005), const Money.fromMinorUnits(101));
+  });
 }

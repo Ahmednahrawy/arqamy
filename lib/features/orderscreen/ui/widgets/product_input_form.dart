@@ -1,3 +1,4 @@
+import 'package:arqamy/core/helpers/money.dart';
 import 'package:arqamy/features/orderscreen/providers/invoice_provider.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:material_ui/material_ui.dart';
@@ -107,8 +108,11 @@ class _ProductInputFormState extends State<ProductInputForm> {
       numberPackage: numberPackage,
       // action: _action!,
     );
-    if (widget.onAdd != null) {
-      widget.onAdd!(product);
+    if (Money.tryFromDouble(product.netWeight * product.price) == null) {
+      _showErrorSnackBar(strings.invalidNumber);
+      return;
+    }
+    if (widget.onAdd != null) {      widget.onAdd!(product);
     } else {
       try {
         provider.addProduct(product);

@@ -39,15 +39,17 @@ class Money implements Comparable<Money> {
   static Money sum(Iterable<Money> amounts) =>
       amounts.fold(zero, (total, amount) => total + amount);
   
-    /// Parses user-typed text. Returns null when it is not a usable amount.
-  static Money? tryParse(String text) {
-    final parsed = double.tryParse(text.trim());
-    if (parsed == null || !parsed.isFinite || parsed.abs() >= _maxAbsValue) {
-      return null;
-    }
-    return Money.fromDouble(parsed);
+  /// Returns null when [value] is not finite or is too large for Money.
+  static Money? tryFromDouble(double value) {
+    if (!value.isFinite || value.abs() >= _maxAbsValue) return null;
+    return Money.fromDouble(value);
   }
 
+  /// Parses user-typed text. Returns null when it is not a usable amount.
+  static Money? tryParse(String text) {
+    final parsed = double.tryParse(text.trim());
+    return parsed == null ? null : tryFromDouble(parsed);
+  }
   double toDouble() => minorUnits / 100;
 
   bool get isZero => minorUnits == 0;

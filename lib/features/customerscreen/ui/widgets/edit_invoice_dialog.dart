@@ -1,5 +1,6 @@
 import 'package:arqamy/config/theme/colors.dart';
 import 'package:arqamy/core/helpers/invoice_date_parser.dart';
+import 'package:arqamy/core/helpers/money.dart';
 import 'package:arqamy/core/widgets/app_snack_bar.dart';
 import 'package:arqamy/features/orderscreen/data/models/invoice.dart';
 import 'package:arqamy/features/orderscreen/data/models/product_model.dart';
@@ -12,10 +13,7 @@ import 'package:provider/provider.dart';
 class EditInvoiceDialog extends StatefulWidget {
   final Invoice invoice;
 
-  const EditInvoiceDialog({
-    super.key,
-    required this.invoice,
-  });
+  const EditInvoiceDialog({super.key, required this.invoice});
 
   @override
   State<EditInvoiceDialog> createState() => _EditInvoiceDialogState();
@@ -87,22 +85,24 @@ class _EditInvoiceDialogState extends State<EditInvoiceDialog> {
           draft.name.text.trim().isEmpty) {
         return null;
       }
-      products.add(
-        Product(
-          name: draft.name.text.trim(),
-          weight: weight,
-          packageWeight: packageWeight,
-          numberPackage: numberPackage,
-          price: price,
-        ),
+      final product = Product(
+        name: draft.name.text.trim(),
+        weight: weight,
+        packageWeight: packageWeight,
+        numberPackage: numberPackage,
+        price: price,
       );
+      if (Money.tryFromDouble(product.netWeight * product.price) == null) {
+        return null;
+      }
+      products.add(product);
     }
     return products;
   }
 
   void _refreshPreview() {
     final products = _readProducts();
-    final paid = _parseFiniteDouble(_paidController.text);
+    final paid = Money.tryParse(_paidController.text)?.toDouble();
     setState(() {
       _previewTotal = products == null
           ? null
@@ -143,9 +143,9 @@ class _EditInvoiceDialogState extends State<EditInvoiceDialog> {
     if (!mounted || selectedTime == null) return;
     setState(() {
       _selectedTime = selectedTime;
-      _formattedTime = intl.DateFormat.Hm(_locale).format(
-        DateTime(2000, 1, 1, selectedTime.hour, selectedTime.minute),
-      );
+      _formattedTime = intl.DateFormat.Hm(
+        _locale,
+      ).format(DateTime(2000, 1, 1, selectedTime.hour, selectedTime.minute));
     });
   }
 
@@ -158,7 +158,7 @@ class _EditInvoiceDialogState extends State<EditInvoiceDialog> {
       return;
     }
 
-    final paid = _parseFiniteDouble(_paidController.text)!;
+    final paid = Money.tryParse(_paidController.text)!.toDouble();
     final totalCost = InvoiceProvider.calculateInvoiceTotal(products);
     final updatedInvoice = Invoice(
       id: widget.invoice.id,
@@ -229,8 +229,8 @@ class _EditInvoiceDialogState extends State<EditInvoiceDialog> {
                       ),
                       validator: (value) =>
                           value == null || value.trim().isEmpty
-                              ? strings.nameRequired
-                              : null,
+                          ? strings.nameRequired
+                          : null,
                     ),
                     const SizedBox(height: 16),
                     _buildDateTimeControls(strings, colors),
@@ -278,7 +278,8 @@ class _EditInvoiceDialogState extends State<EditInvoiceDialog> {
                           key: const ValueKey('add-product'),
                           onPressed: () {
                             setState(
-                                () => _products.add(_ProductDraft.empty()));
+                              () => _products.add(_ProductDraft.empty()),
+                            );
                             _refreshPreview();
                           },
                           icon: const Icon(Icons.add),
@@ -296,19 +297,20 @@ class _EditInvoiceDialogState extends State<EditInvoiceDialog> {
                         ),
                       ),
                     ..._products.asMap().entries.map(
-                          (entry) => _buildProductEditor(
-                            entry.value,
-                            entry.key,
-                            strings,
-                            colors,
-                          ),
-                        ),
+                      (entry) => _buildProductEditor(
+                        entry.value,
+                        entry.key,
+                        strings,
+                        colors,
+                      ),
+                    ),
                     const SizedBox(height: 16),
                     TextFormField(
                       key: const ValueKey('paid-amount'),
                       controller: _paidController,
-                      keyboardType:
-                          const TextInputType.numberWithOptions(decimal: true),
+                      keyboardType: const TextInputType.numberWithOptions(
+                        decimal: true,
+                      ),
                       textDirection: TextDirection.ltr,
                       onChanged: (_) => _refreshPreview(),
                       decoration: InputDecoration(
@@ -316,10 +318,9 @@ class _EditInvoiceDialogState extends State<EditInvoiceDialog> {
                         suffixText: strings.currency,
                         prefixIcon: const Icon(Icons.payments_outlined),
                       ),
-                      validator: (value) =>
-                          _parseFiniteDouble(value ?? '') == null
-                              ? strings.invalidNumber
-                              : null,
+                      validator: (value) => Money.tryParse(value ?? '') == null
+                          ? strings.invalidNumber
+                          : null,
                     ),
                     const SizedBox(height: 16),
                     _buildFinancialPreview(strings, colors, semanticColors),
@@ -328,8 +329,9 @@ class _EditInvoiceDialogState extends State<EditInvoiceDialog> {
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
                         TextButton(
-                          onPressed:
-                              _saving ? null : () => Navigator.pop(context),
+                          onPressed: _saving
+                              ? null
+                              : () => Navigator.pop(context),
                           child: Text(strings.cancel),
                         ),
                         const SizedBox(width: 8),
@@ -358,18 +360,20 @@ class _EditInvoiceDialogState extends State<EditInvoiceDialog> {
   }
 
   String _localizedAction(String action, S strings) => switch (action) {
-        'شراء' => strings.purchase,
-        'بيع' => strings.sale,
-        'تخزين' => strings.storage,
-        _ => action,
-      };
+    'شراء' => strings.purchase,
+    'بيع' => strings.sale,
+    'تخزين' => strings.storage,
+    _ => action,
+  };
 
   Widget _buildDateTimeControls(S strings, ColorScheme colors) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Text(strings.invoiceDateTime,
-            style: Theme.of(context).textTheme.titleMedium),
+        Text(
+          strings.invoiceDateTime,
+          style: Theme.of(context).textTheme.titleMedium,
+        ),
         const SizedBox(height: 8),
         Wrap(
           spacing: 8,
@@ -379,17 +383,13 @@ class _EditInvoiceDialogState extends State<EditInvoiceDialog> {
               key: const ValueKey('select-invoice-date'),
               onPressed: _selectDate,
               icon: const Icon(Icons.calendar_today),
-              label: Text(
-                '${strings.date}: $_formattedDate',
-              ),
+              label: Text('${strings.date}: $_formattedDate'),
             ),
             OutlinedButton.icon(
               key: const ValueKey('select-invoice-time'),
               onPressed: _selectTime,
               icon: const Icon(Icons.schedule),
-              label: Text(
-                '${strings.time}: $_formattedTime',
-              ),
+              label: Text('${strings.time}: $_formattedTime'),
             ),
           ],
         ),
@@ -483,12 +483,13 @@ class _EditInvoiceDialogState extends State<EditInvoiceDialog> {
                         keyboardType: TextInputType.number,
                         textDirection: TextDirection.ltr,
                         onChanged: (_) => _refreshPreview(),
-                        decoration:
-                            InputDecoration(labelText: strings.packageCount),
+                        decoration: InputDecoration(
+                          labelText: strings.packageCount,
+                        ),
                         validator: (value) =>
                             int.tryParse((value ?? '').trim()) == null
-                                ? strings.invalidInteger
-                                : null,
+                            ? strings.invalidInteger
+                            : null,
                       ),
                     ),
                     SizedBox(
@@ -589,22 +590,24 @@ class _ProductDraft {
   });
 
   factory _ProductDraft.fromProduct(Product product) => _ProductDraft(
-        name: TextEditingController(text: product.name),
-        weight: TextEditingController(text: product.weight.toString()),
-        packageWeight:
-            TextEditingController(text: product.packageWeight.toString()),
-        numberPackage:
-            TextEditingController(text: product.numberPackage.toString()),
-        price: TextEditingController(text: product.price.toString()),
-      );
+    name: TextEditingController(text: product.name),
+    weight: TextEditingController(text: product.weight.toString()),
+    packageWeight: TextEditingController(
+      text: product.packageWeight.toString(),
+    ),
+    numberPackage: TextEditingController(
+      text: product.numberPackage.toString(),
+    ),
+    price: TextEditingController(text: product.price.toString()),
+  );
 
   factory _ProductDraft.empty() => _ProductDraft(
-        name: TextEditingController(),
-        weight: TextEditingController(),
-        packageWeight: TextEditingController(text: '0'),
-        numberPackage: TextEditingController(text: '0'),
-        price: TextEditingController(text: '0'),
-      );
+    name: TextEditingController(),
+    weight: TextEditingController(),
+    packageWeight: TextEditingController(text: '0'),
+    numberPackage: TextEditingController(text: '0'),
+    price: TextEditingController(text: '0'),
+  );
 
   final TextEditingController name;
   final TextEditingController weight;
