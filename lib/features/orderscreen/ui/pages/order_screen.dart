@@ -12,6 +12,7 @@ import 'package:arqamy/config/theme/styles.dart';
 import 'package:arqamy/core/helpers/formatters.dart';
 import 'package:arqamy/core/helpers/helper_date_price.dart';
 import 'package:arqamy/core/helpers/spacing.dart';
+import 'package:arqamy/core/helpers/money.dart';
 import 'package:arqamy/core/widgets/text_button.dart';
 import 'package:arqamy/core/widgets/text_form_field.dart';
 import 'package:arqamy/core/widgets/app_snack_bar.dart';
@@ -75,7 +76,7 @@ class _OrderscreenState extends State<Orderscreen>
     formattedTime = Utils.formateTimeNow(selectedDate, locale: locale);
   }
 
-  double get _paid => double.tryParse(_payController.text) ?? 0.0;
+  double get _paid => Money.tryParse(_payController.text)?.toDouble() ?? 0.0;
 
   double _rest(double totalCost) =>
       InvoiceProvider.calculateOutstandingBalance(totalCost, _paid);
@@ -85,7 +86,7 @@ class _OrderscreenState extends State<Orderscreen>
     showAppSnackBar(context, message, isError: isError);
   }
 
-// Called by ProductInputForm
+  // Called by ProductInputForm
   void _onAddProduct(Product product) {
     context.read<InvoiceProvider>().addProduct(product);
     final strings = S.of(context);
@@ -137,9 +138,7 @@ class _OrderscreenState extends State<Orderscreen>
     showDialog(
       context: context,
       barrierDismissible: false,
-      builder: (context) => const Center(
-        child: CircularProgressIndicator(),
-      ),
+      builder: (context) => const Center(child: CircularProgressIndicator()),
     );
 
     late final Invoice invoice;
@@ -154,10 +153,7 @@ class _OrderscreenState extends State<Orderscreen>
     } catch (error) {
       if (!mounted) return;
       Navigator.of(context).pop();
-      _showToast(
-        '${S.of(context).save_invoice_failed}: $error',
-        isError: true,
-      );
+      _showToast('${S.of(context).save_invoice_failed}: $error', isError: true);
       return;
     }
 
@@ -210,7 +206,8 @@ class _OrderscreenState extends State<Orderscreen>
   void _startNewInvoice() {
     final provider = context.read<InvoiceProvider>();
     final strings = S.of(context);
-    final hasDraft = provider.products.isNotEmpty ||
+    final hasDraft =
+        provider.products.isNotEmpty ||
         provider.customerName != null ||
         provider.invoiceAction != null;
     void resetDraft() {
@@ -388,160 +385,167 @@ class _OrderscreenState extends State<Orderscreen>
         elevation: 0,
         title: Text(strings.invoice_screen_title),
         actions: [
-            Padding(
-              padding: const EdgeInsetsDirectional.only(end: 8),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  if (MediaQuery.sizeOf(context).width < 420) ...[
-                    IconButton(
-                      onPressed: _startNewInvoice,
-                      tooltip: strings.new_label,
-                      color: colors.onPrimary,
-                      icon: const Icon(Icons.add),
-                    ),
-                    IconButton(
-                      onPressed:
-                          _savedInvoiceId == null ? null : _deleteSavedInvoice,
-                      tooltip: strings.delete,
-                      color: colors.onPrimary,
-                      disabledColor: colors.onPrimary.withValues(alpha: 0.6),
-                      icon: const Icon(Icons.delete_forever),
-                    ),
-                  ] else ...[
-                    OutlinedButton.icon(
-                      onPressed: _startNewInvoice,
-                      icon: const Icon(Icons.add, size: 18),
-                      label: Text(strings.new_label),
-                      style: OutlinedButton.styleFrom(
-                        foregroundColor: colors.onPrimary,
-                        side: BorderSide(
-                            color: colors.onPrimary.withValues(alpha: 0.7)),
+          Padding(
+            padding: const EdgeInsetsDirectional.only(end: 8),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                if (MediaQuery.sizeOf(context).width < 420) ...[
+                  IconButton(
+                    onPressed: _startNewInvoice,
+                    tooltip: strings.new_label,
+                    color: colors.onPrimary,
+                    icon: const Icon(Icons.add),
+                  ),
+                  IconButton(
+                    onPressed: _savedInvoiceId == null
+                        ? null
+                        : _deleteSavedInvoice,
+                    tooltip: strings.delete,
+                    color: colors.onPrimary,
+                    disabledColor: colors.onPrimary.withValues(alpha: 0.6),
+                    icon: const Icon(Icons.delete_forever),
+                  ),
+                ] else ...[
+                  OutlinedButton.icon(
+                    onPressed: _startNewInvoice,
+                    icon: const Icon(Icons.add, size: 18),
+                    label: Text(strings.new_label),
+                    style: OutlinedButton.styleFrom(
+                      foregroundColor: colors.onPrimary,
+                      side: BorderSide(
+                        color: colors.onPrimary.withValues(alpha: 0.7),
                       ),
                     ),
-                    const SizedBox(width: 8),
-                    ElevatedButton.icon(
-                      onPressed:
-                          _savedInvoiceId == null ? null : _deleteSavedInvoice,
-                      icon: const Icon(Icons.delete_forever, size: 18),
-                      label: Text(strings.delete),
-                      style: ElevatedButton.styleFrom(
-                        foregroundColor: _savedInvoiceId == null
-                            ? colors.onSurface.withValues(alpha: 0.38)
-                            : colors.error,
-                        backgroundColor: colors.surface,
-                        disabledForegroundColor:
-                            colors.onSurface.withValues(alpha: 0.38),
-                        disabledBackgroundColor: colors.surfaceContainerHighest,
+                  ),
+                  const SizedBox(width: 8),
+                  ElevatedButton.icon(
+                    onPressed: _savedInvoiceId == null
+                        ? null
+                        : _deleteSavedInvoice,
+                    icon: const Icon(Icons.delete_forever, size: 18),
+                    label: Text(strings.delete),
+                    style: ElevatedButton.styleFrom(
+                      foregroundColor: _savedInvoiceId == null
+                          ? colors.onSurface.withValues(alpha: 0.38)
+                          : colors.error,
+                      backgroundColor: colors.surface,
+                      disabledForegroundColor: colors.onSurface.withValues(
+                        alpha: 0.38,
                       ),
+                      disabledBackgroundColor: colors.surfaceContainerHighest,
                     ),
-                  ],
+                  ),
                 ],
-              ),
+              ],
             ),
-          ],
-        ),
+          ),
+        ],
+      ),
 
-        drawer: const SideNav(),
-        extendBody: true,
-        // Send data button
-        floatingActionButton: _showModalForInvoiceSummary(),
-        body: FadeTransition(
-          opacity: _fadeAnimation,
-          child: GestureDetector(
-            onTap: () => FocusScope.of(context).unfocus(),
-            child: SingleChildScrollView(
-              scrollDirection: Axis.vertical,
-              keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
-              padding: const EdgeInsetsDirectional.fromSTEB(10, 8, 10, 16),
-              child: Center(
-                child: ConstrainedBox(
-                  constraints: const BoxConstraints(maxWidth: 1100),
-                  child: Column(
-                    children: [
-                      // Name entering field
-                      Card(
-                        child: Consumer<InvoiceProvider>(
-                          builder: (context, provider, _) =>
-                              CustomerNameAutoComplete(
-                            key: ValueKey(provider.customerName ?? 'empty'),
-                            initialValue: provider.customerName,
-                            onCustomerSelected: (name) {
-                              provider.setCustomerName(name ?? '');
-                            },
-                          ),
-                        ),
-                      ),
-                      verticalSpace(5),
-                      ProductInputForm(
-                        key: ValueKey(_productFormVersion),
-                        onAdd: _onAddProduct,
-                      ),
-                      verticalSpace(10),
-                      Consumer<InvoiceProvider>(
-                        builder: (context, provider, _) {
-                          if (provider.products.isNotEmpty) {
-                            return SizedBox(
-                              width: double.infinity,
-                              child: Column(
-                                children: [
-                                  const MyDataTable(),
-                                  const Divider(height: 32),
-                                  _buildTotalCostCard(provider.totalCost),
-                                  verticalSpace(12),
-                                  _buildPaymentControls(),
-                                ],
-                              ),
-                            );
-                          }
-                          return Container(
-                            height: 200,
-                            decoration: BoxDecoration(
-                              color: colors.surface,
-                              borderRadius: BorderRadius.circular(15),
-                              border: Border.all(color: colors.outlineVariant),
+      drawer: const SideNav(),
+      extendBody: true,
+      // Send data button
+      floatingActionButton: _showModalForInvoiceSummary(),
+      body: FadeTransition(
+        opacity: _fadeAnimation,
+        child: GestureDetector(
+          onTap: () => FocusScope.of(context).unfocus(),
+          child: SingleChildScrollView(
+            scrollDirection: Axis.vertical,
+            keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+            padding: const EdgeInsetsDirectional.fromSTEB(10, 8, 10, 16),
+            child: Center(
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 1100),
+                child: Column(
+                  children: [
+                    // Name entering field
+                    Card(
+                      child: Consumer<InvoiceProvider>(
+                        builder: (context, provider, _) =>
+                            CustomerNameAutoComplete(
+                              key: ValueKey(provider.customerName ?? 'empty'),
+                              initialValue: provider.customerName,
+                              onCustomerSelected: (name) {
+                                provider.setCustomerName(name ?? '');
+                              },
                             ),
-                            child: Center(
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Icon(Icons.shopping_cart_outlined,
-                                      size: 60, color: colors.onSurfaceVariant),
-                                  const SizedBox(height: 16),
-                                  Text(
-                                    strings.no_products_added,
-                                    style: TextStyle(
-                                      fontSize: 16,
-                                      color: colors.onSurfaceVariant,
-                                    ),
-                                  ),
-                                  const SizedBox(height: 8),
-                                  Text(
-                                    strings.start_adding_products,
-                                    style: TextStyle(
-                                      fontSize: 14,
-                                      color: colors.onSurfaceVariant,
-                                    ),
-                                  ),
-                                ],
-                              ),
+                      ),
+                    ),
+                    verticalSpace(5),
+                    ProductInputForm(
+                      key: ValueKey(_productFormVersion),
+                      onAdd: _onAddProduct,
+                    ),
+                    verticalSpace(10),
+                    Consumer<InvoiceProvider>(
+                      builder: (context, provider, _) {
+                        if (provider.products.isNotEmpty) {
+                          return SizedBox(
+                            width: double.infinity,
+                            child: Column(
+                              children: [
+                                const MyDataTable(),
+                                const Divider(height: 32),
+                                _buildTotalCostCard(provider.totalCost),
+                                verticalSpace(12),
+                                _buildPaymentControls(),
+                              ],
                             ),
                           );
-                        },
-                      ),
-                      // verticalSpace(100),
-                      Consumer<InvoiceProvider>(
-                        builder: (context, provider, _) => SizedBox(
-                            height: provider.products.isEmpty ? 16 : 88),
-                      ),
-                    ],
-                  ),
+                        }
+                        return Container(
+                          height: 200,
+                          decoration: BoxDecoration(
+                            color: colors.surface,
+                            borderRadius: BorderRadius.circular(15),
+                            border: Border.all(color: colors.outlineVariant),
+                          ),
+                          child: Center(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(
+                                  Icons.shopping_cart_outlined,
+                                  size: 60,
+                                  color: colors.onSurfaceVariant,
+                                ),
+                                const SizedBox(height: 16),
+                                Text(
+                                  strings.no_products_added,
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    color: colors.onSurfaceVariant,
+                                  ),
+                                ),
+                                const SizedBox(height: 8),
+                                Text(
+                                  strings.start_adding_products,
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    color: colors.onSurfaceVariant,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                    // verticalSpace(100),
+                    Consumer<InvoiceProvider>(
+                      builder: (context, provider, _) =>
+                          SizedBox(height: provider.products.isEmpty ? 16 : 88),
+                    ),
+                  ],
                 ),
               ),
             ),
           ),
         ),
-        // resizeToAvoidBottomInset: false,
+      ),
+      // resizeToAvoidBottomInset: false,
       resizeToAvoidBottomInset: true,
     );
   }
@@ -572,7 +576,7 @@ class _OrderscreenState extends State<Orderscreen>
                 if (value == null || value.isEmpty) {
                   return strings.enter_collected_amount;
                 }
-                if (double.tryParse(value) == null) {
+                if (Money.tryParse(value) == null) {
                   return strings.invalidNumber;
                 }
                 return null;
@@ -659,13 +663,7 @@ class _OrderscreenState extends State<Orderscreen>
           );
 
           if (constraints.maxWidth < 380) {
-            return Column(
-              children: [
-                label,
-                const SizedBox(height: 4),
-                total,
-              ],
-            );
+            return Column(children: [label, const SizedBox(height: 4), total]);
           }
 
           return Row(

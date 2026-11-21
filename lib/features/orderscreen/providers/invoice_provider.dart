@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:arqamy/core/helpers/product_list_constants.dart';
+import 'package:arqamy/core/helpers/money.dart';
 import 'package:arqamy/features/orderscreen/data/models/invoice.dart';
 import 'package:flutter/foundation.dart';
 import 'package:arqamy/features/orderscreen/data/models/product_model.dart';
@@ -60,11 +61,13 @@ class InvoiceProvider extends ChangeNotifier {
   }
 
   static double calculateInvoiceTotal(Iterable<Product> products) {
-    return products.fold(0.0, (total, product) => total + product.totalPrice);
+    return Money.sum(products.map((product) => product.lineTotal)).toDouble();
   }
 
   static double calculateOutstandingBalance(double totalCost, double paid) {
-    return totalCost.abs() - paid;
+    final remaining =
+        Money.fromDouble(totalCost).abs() - Money.fromDouble(paid);
+    return remaining.toDouble();
   }
 
   bool get hasPackageProducts {
@@ -113,6 +116,7 @@ class InvoiceProvider extends ChangeNotifier {
           packageWeight: existing.packageWeight,
           numberPackage: existing.numberPackage + p.numberPackage,
           price: existing.price,
+          lineTotalOverride: existing.lineTotal + p.lineTotal,
         );
       } else {
         grouped[key] = p;

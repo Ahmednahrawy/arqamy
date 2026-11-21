@@ -32,7 +32,7 @@ void main() {
     );
 
     expect(product.netWeight, closeTo(11.345, 1e-9));
-    expect(product.totalPrice, closeTo(82.25125, 1e-9));
+    expect(product.totalPrice, closeTo(82.25, 1e-9));
   });
 
   test('many small lines add up to the exact decimal total', () {
@@ -63,7 +63,15 @@ void main() {
   test('outstanding balance with fractional totals and payments', () {
     expect(
       InvoiceProvider.calculateOutstandingBalance(82.25125, 50.1),
-      closeTo(32.15125, 1e-9),
+      closeTo(32.15, 1e-9),
     );
+  });
+    test('merged summary lines add up to the invoice total', () {
+    final provider = InvoiceProvider()
+      ..addProduct(_product(weight: 0.5, price: 0.99))
+      ..addProduct(_product(weight: 0.5, price: 0.99));
+
+    expect(provider.totalCost, closeTo(1.00, 1e-9));
+    expect(provider.groupedProducts.single.totalPrice, closeTo(1.00, 1e-9));
   });
 }

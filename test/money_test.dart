@@ -71,4 +71,14 @@ void main() {
     expect(() => Money.fromDouble(double.infinity), throwsArgumentError);
     expect(() => Money.fromDouble(1e12), throwsRangeError);
   });
+
+    test('tryParse accepts normal amounts and rejects unusable text', () {
+    expect(Money.tryParse('82.256'), const Money.fromMinorUnits(8226));
+    expect(Money.tryParse(' 50 '), const Money.fromMinorUnits(5000));
+    expect(Money.tryParse(''), isNull);
+    expect(Money.tryParse('abc'), isNull);
+    expect(Money.tryParse('NaN'), isNull);
+    expect(Money.tryParse('Infinity'), isNull);
+    expect(Money.tryParse('1e12'), isNull);
+  });
 }
