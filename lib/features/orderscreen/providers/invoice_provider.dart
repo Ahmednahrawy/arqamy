@@ -11,8 +11,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class InvoiceProvider extends ChangeNotifier {
   InvoiceProvider()
-      : _invoiceStorageWriter = null,
-        _invoiceStorageReader = null;
+    : _invoiceStorageWriter = null,
+      _invoiceStorageReader = null;
 
   @visibleForTesting
   InvoiceProvider.withStorageWriter(
@@ -72,8 +72,9 @@ class InvoiceProvider extends ChangeNotifier {
   }
 
   bool get hasPackageProducts {
-    return _hasPackageProductsCache ??=
-        _products.any((product) => product.numberPackage > 0);
+    return _hasPackageProductsCache ??= _products.any(
+      (product) => product.numberPackage > 0,
+    );
   }
 
   bool get shouldShowPackageColumns {
@@ -187,9 +188,7 @@ class InvoiceProvider extends ChangeNotifier {
     });
   }
 
-  Future<T> _withInvoiceMutationLock<T>(
-    Future<T> Function() mutation,
-  ) async {
+  Future<T> _withInvoiceMutationLock<T>(Future<T> Function() mutation) async {
     final previousMutation = _invoiceMutationQueue;
     final release = Completer<void>();
     _invoiceMutationQueue = release.future;
@@ -206,8 +205,9 @@ class InvoiceProvider extends ChangeNotifier {
       try {
         final String? invoicesJson = _invoiceStorageReader != null
             ? await _invoiceStorageReader()
-            : (await SharedPreferences.getInstance())
-                .getString('saved_invoices');
+            : (await SharedPreferences.getInstance()).getString(
+                'saved_invoices',
+              );
 
         if (invoicesJson != null) {
           final List<dynamic> invoicesList = json.decode(invoicesJson);
@@ -225,12 +225,15 @@ class InvoiceProvider extends ChangeNotifier {
   }
 
   Future<void> _saveInvoicesToStorage(List<Invoice> invoices) async {
-    final invoicesJson =
-        json.encode(invoices.map((invoice) => invoice.toJson()).toList());
+    final invoicesJson = json.encode(
+      invoices.map((invoice) => invoice.toJson()).toList(),
+    );
     final saved = _invoiceStorageWriter != null
         ? await _invoiceStorageWriter(invoicesJson)
-        : await (await SharedPreferences.getInstance())
-            .setString('saved_invoices', invoicesJson);
+        : await (await SharedPreferences.getInstance()).setString(
+            'saved_invoices',
+            invoicesJson,
+          );
     if (!saved) {
       throw StateError('Failed to save invoices to local storage');
     }
@@ -259,9 +262,11 @@ class InvoiceProvider extends ChangeNotifier {
     if (normalizedCustomerName.isEmpty) return [];
 
     return _invoices
-        .where((invoice) =>
-            _normalizeCustomerName(invoice.customerName) ==
-            normalizedCustomerName)
+        .where(
+          (invoice) =>
+              _normalizeCustomerName(invoice.customerName) ==
+              normalizedCustomerName,
+        )
         .toList();
   }
 
@@ -269,16 +274,19 @@ class InvoiceProvider extends ChangeNotifier {
       customerName.trim().split(RegExp(r'\s+')).join(' ').toLowerCase();
 
   static double calculateCustomerBalance(Iterable<Invoice> invoices) {
-    return invoices.fold(0.0, (balance, invoice) {
-      return switch (InvoiceAction.tryParse(invoice.invoiceAction)) {
-        InvoiceAction.purchase => balance + invoice.rest,
+    var balance = Money.zero;
+    for (final invoice in invoices) {
+      final rest = Money.fromDouble(invoice.rest);
+      balance = switch (InvoiceAction.tryParse(invoice.invoiceAction)) {
+        InvoiceAction.purchase => balance + rest,
         InvoiceAction.storage => balance,
         // Sales and unknown legacy types reduce the balance, as before.
-        InvoiceAction.sale || null => balance - invoice.rest,
+        InvoiceAction.sale || null => balance - rest,
       };
-    });
+    }
+    return balance.toDouble();
   }
-  
+
   Future<void> deleteInvoice(String invoiceId) {
     return _withInvoiceMutationLock(() async {
       final index = _uniqueInvoiceIndex(invoiceId);
@@ -313,7 +321,7 @@ class InvoiceProvider extends ChangeNotifier {
     }
   }
 
-// Save products to local storage
+  // Save products to local storage
   Future<void> _saveMasterProducts() async {
     try {
       final prefs = await SharedPreferences.getInstance();
@@ -324,7 +332,7 @@ class InvoiceProvider extends ChangeNotifier {
     }
   }
 
-// Add new product
+  // Add new product
   Future<void> addMasterProduct(String productName) async {
     if (productName.trim().isNotEmpty &&
         !_masterProductList.contains(productName.trim())) {

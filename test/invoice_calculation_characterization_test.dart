@@ -1,5 +1,6 @@
 import 'package:arqamy/features/orderscreen/data/models/product_model.dart';
 import 'package:arqamy/features/orderscreen/providers/invoice_provider.dart';
+import 'package:arqamy/features/orderscreen/data/models/invoice.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 // Half of the smallest money unit (0.01). A future decimal-safe
@@ -22,18 +23,20 @@ Product _product({
 }
 
 void main() {
-  test('fractional weights, packages and prices give the exact decimal total',
-      () {
-    final product = _product(
-      weight: 12.345,
-      packageWeight: 0.5,
-      numberPackage: 2,
-      price: 7.25,
-    );
+  test(
+    'fractional weights, packages and prices give the exact decimal total',
+    () {
+      final product = _product(
+        weight: 12.345,
+        packageWeight: 0.5,
+        numberPackage: 2,
+        price: 7.25,
+      );
 
-    expect(product.netWeight, closeTo(11.345, 1e-9));
-    expect(product.totalPrice, closeTo(82.25, 1e-9));
-  });
+      expect(product.netWeight, closeTo(11.345, 1e-9));
+      expect(product.totalPrice, closeTo(82.25, 1e-9));
+    },
+  );
 
   test('many small lines add up to the exact decimal total', () {
     final products = List.generate(
@@ -66,12 +69,31 @@ void main() {
       closeTo(32.15, 1e-9),
     );
   });
-    test('merged summary lines add up to the invoice total', () {
+  test('merged summary lines add up to the invoice total', () {
     final provider = InvoiceProvider()
       ..addProduct(_product(weight: 0.5, price: 0.99))
       ..addProduct(_product(weight: 0.5, price: 0.99));
 
     expect(provider.totalCost, closeTo(1.00, 1e-9));
     expect(provider.groupedProducts.single.totalPrice, closeTo(1.00, 1e-9));
+  });
+  test('customer balance sums rests without floating-point leftovers', () {
+    final invoices = List.generate(
+      10,
+      (index) => Invoice(
+        id: 'id-$index',
+        customerName: 'Customer',
+        products: const [],
+        totalCost: 0.1,
+        paid: 0,
+        rest: 0.1,
+        formattedDate: 'Jan 1, 2026',
+        formattedTime: '10:00',
+        invoiceAction: 'شراء',
+        invoiceSerial: '${index + 1}',
+      ),
+    );
+
+    expect(InvoiceProvider.calculateCustomerBalance(invoices), 1.0);
   });
 }

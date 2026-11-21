@@ -4,6 +4,7 @@ import 'package:arqamy/config/theme/colors.dart';
 import 'package:arqamy/core/helpers/formatters.dart';
 import 'package:arqamy/core/helpers/invoice_action.dart';
 import 'package:arqamy/core/helpers/invoice_date_parser.dart';
+import 'package:arqamy/core/helpers/money.dart';
 import 'package:arqamy/core/services/invoice_service.dart';
 import 'package:arqamy/features/customerscreen/ui/widgets/edit_invoice_dialog.dart';
 import 'package:arqamy/features/customerscreen/ui/widgets/invoice_detail_dialog.dart';
@@ -560,29 +561,32 @@ class _CustomerScreenState extends State<CustomerScreen> {
     ).isNotEmpty;
     final hasActiveFilters = _hasActiveFilters;
     final balance = InvoiceProvider.calculateCustomerBalance(_customerInvoices);
-    final purchaseBalance = _customerInvoices
-        .where(
-          (invoice) =>
-              InvoiceAction.tryParse(invoice.invoiceAction) ==
-              InvoiceAction.purchase,
-        )
-        .fold<double>(0, (sum, invoice) => sum + invoice.rest);
-    final salesBalance = _customerInvoices
-        .where(
-          (invoice) =>
-              InvoiceAction.tryParse(invoice.invoiceAction) ==
-              InvoiceAction.sale,
-        )
-        .fold<double>(0, (sum, invoice) => sum + invoice.rest);
+    final purchaseBalance = Money.sum(
+      _customerInvoices
+          .where(
+            (invoice) =>
+                InvoiceAction.tryParse(invoice.invoiceAction) ==
+                InvoiceAction.purchase,
+          )
+          .map((invoice) => Money.fromDouble(invoice.rest)),
+    ).toDouble();
+    final salesBalance = Money.sum(
+      _customerInvoices
+          .where(
+            (invoice) =>
+                InvoiceAction.tryParse(invoice.invoiceAction) ==
+                InvoiceAction.sale,
+          )
+          .map((invoice) => Money.fromDouble(invoice.rest)),
+    ).toDouble();
     final storageInvoices = _customerInvoices.where(
       (invoice) =>
           InvoiceAction.tryParse(invoice.invoiceAction) ==
           InvoiceAction.storage,
     );
-    final storageValue = storageInvoices.fold<double>(
-      0,
-      (sum, invoice) => sum + invoice.totalCost,
-    );
+    final storageValue = Money.sum(
+      storageInvoices.map((invoice) => Money.fromDouble(invoice.totalCost)),
+    ).toDouble();
     final storageNetWeight = storageInvoices.fold<double>(
       0,
       (sum, invoice) =>
