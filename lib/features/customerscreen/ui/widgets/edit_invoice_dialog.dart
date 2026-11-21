@@ -1,4 +1,5 @@
 import 'package:arqamy/config/theme/colors.dart';
+import 'package:arqamy/core/helpers/invoice_action.dart';
 import 'package:arqamy/core/helpers/invoice_date_parser.dart';
 import 'package:arqamy/core/helpers/money.dart';
 import 'package:arqamy/core/widgets/app_snack_bar.dart';
@@ -20,8 +21,7 @@ class EditInvoiceDialog extends StatefulWidget {
 }
 
 class _EditInvoiceDialogState extends State<EditInvoiceDialog> {
-  static const _actions = ['شراء', 'بيع', 'تخزين'];
-
+  static final _actions = InvoiceAction.storedValues;
   final _formKey = GlobalKey<FormState>();
   late final TextEditingController _paidController;
   late final TextEditingController _customerNameController;
@@ -359,13 +359,13 @@ class _EditInvoiceDialogState extends State<EditInvoiceDialog> {
     );
   }
 
-  String _localizedAction(String action, S strings) => switch (action) {
-    'شراء' => strings.purchase,
-    'بيع' => strings.sale,
-    'تخزين' => strings.storage,
-    _ => action,
-  };
-
+  String _localizedAction(String action, S strings) =>
+      switch (InvoiceAction.tryParse(action)) {
+        InvoiceAction.purchase => strings.purchase,
+        InvoiceAction.sale => strings.sale,
+        InvoiceAction.storage => strings.storage,
+        null => action,
+      };
   Widget _buildDateTimeControls(S strings, ColorScheme colors) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,

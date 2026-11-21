@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:arqamy/config/theme/colors.dart';
 import 'package:arqamy/core/helpers/formatters.dart';
+import 'package:arqamy/core/helpers/invoice_action.dart';
 import 'package:arqamy/core/helpers/invoice_date_parser.dart';
 import 'package:arqamy/core/services/invoice_service.dart';
 import 'package:arqamy/features/customerscreen/ui/widgets/edit_invoice_dialog.dart';
@@ -47,9 +48,7 @@ class _CustomerScreenState extends State<CustomerScreen> {
     // تحميل الفواتير عند بدء التشغيل
     WidgetsBinding.instance.addPostFrameCallback((_) {
       unawaited(
-        _loadInvoices(
-          errorMessage: S.of(context).could_not_load_invoices,
-        ),
+        _loadInvoices(errorMessage: S.of(context).could_not_load_invoices),
       );
     });
   }
@@ -102,11 +101,7 @@ class _CustomerScreenState extends State<CustomerScreen> {
       await context.read<InvoiceProvider>().loadInvoices();
     } catch (error) {
       if (!mounted) return;
-      showAppSnackBar(
-        context,
-        '$errorMessage: $error',
-        isError: true,
-      );
+      showAppSnackBar(context, '$errorMessage: $error', isError: true);
     }
   }
 
@@ -197,12 +192,12 @@ class _CustomerScreenState extends State<CustomerScreen> {
   bool _matchesActionFilter(Invoice invoice) {
     final expectedAction = switch (_actionFilter) {
       _InvoiceActionFilter.all => null,
-      _InvoiceActionFilter.purchase => 'شراء',
-      _InvoiceActionFilter.sale => 'بيع',
-      _InvoiceActionFilter.storage => 'تخزين',
+      _InvoiceActionFilter.purchase => InvoiceAction.purchase,
+      _InvoiceActionFilter.sale => InvoiceAction.sale,
+      _InvoiceActionFilter.storage => InvoiceAction.storage,
     };
     if (expectedAction == null) return true;
-    return _normalizeInvoiceAction(invoice.invoiceAction) == expectedAction;
+    return InvoiceAction.tryParse(invoice.invoiceAction) == expectedAction;
   }
 
   bool _matchesPaymentStatusFilter(Invoice invoice) {
@@ -226,9 +221,6 @@ class _CustomerScreenState extends State<CustomerScreen> {
     }
     return null;
   }
-
-  String? _normalizeInvoiceAction(String? action) =>
-      action?.replaceAll('\u0640', '').trim();
 
   bool get _hasActiveFilters =>
       _actionFilter != _InvoiceActionFilter.all ||
@@ -335,8 +327,8 @@ class _CustomerScreenState extends State<CustomerScreen> {
         invoiceDateRangeValue == null
             ? strings.selectDateRange
             : '${MaterialLocalizations.of(context).formatMediumDate(invoiceDateRangeValue.start)}'
-                ' – '
-                '${MaterialLocalizations.of(context).formatMediumDate(invoiceDateRangeValue.end)}',
+                  ' – '
+                  '${MaterialLocalizations.of(context).formatMediumDate(invoiceDateRangeValue.end)}',
         maxLines: 1,
         overflow: TextOverflow.ellipsis,
       ),
@@ -497,9 +489,7 @@ class _CustomerScreenState extends State<CustomerScreen> {
 
     if (result == true && _customerName != null) {
       // Reload invoices after edit
-      await _loadInvoices(
-        errorMessage: strings.invoice_saved_reload_failed,
-      );
+      await _loadInvoices(errorMessage: strings.invoice_saved_reload_failed);
       if (!mounted) return;
       _loadCustomerInvoices(_customerName!);
     }
@@ -514,9 +504,7 @@ class _CustomerScreenState extends State<CustomerScreen> {
     showDialog(
       context: context,
       builder: (dialogContext) => AlertDialog(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(15),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
         title: Row(
           children: [
             Icon(Icons.warning, color: semanticColors.warning),
@@ -567,20 +555,30 @@ class _CustomerScreenState extends State<CustomerScreen> {
         ? _customerInvoices
         : _allInvoices.reversed.toList();
     final visibleInvoices = _filterInvoices(_sortInvoices(invoices));
-    final hasInvoiceSearchQuery =
-        _normalizeSearchText(_invoiceSearchQuery).isNotEmpty;
+    final hasInvoiceSearchQuery = _normalizeSearchText(
+      _invoiceSearchQuery,
+    ).isNotEmpty;
     final hasActiveFilters = _hasActiveFilters;
     final balance = InvoiceProvider.calculateCustomerBalance(_customerInvoices);
     final purchaseBalance = _customerInvoices
-        .where((invoice) =>
-            invoice.invoiceAction?.replaceAll('\u0640', '').trim() == 'شراء')
+        .where(
+          (invoice) =>
+              InvoiceAction.tryParse(invoice.invoiceAction) ==
+              InvoiceAction.purchase,
+        )
         .fold<double>(0, (sum, invoice) => sum + invoice.rest);
     final salesBalance = _customerInvoices
-        .where((invoice) =>
-            invoice.invoiceAction?.replaceAll('\u0640', '').trim() == 'بيع')
+        .where(
+          (invoice) =>
+              InvoiceAction.tryParse(invoice.invoiceAction) ==
+              InvoiceAction.sale,
+        )
         .fold<double>(0, (sum, invoice) => sum + invoice.rest);
-    final storageInvoices = _customerInvoices.where((invoice) =>
-        invoice.invoiceAction?.replaceAll('\u0640', '').trim() == 'تخزين');
+    final storageInvoices = _customerInvoices.where(
+      (invoice) =>
+          InvoiceAction.tryParse(invoice.invoiceAction) ==
+          InvoiceAction.storage,
+    );
     final storageValue = storageInvoices.fold<double>(
       0,
       (sum, invoice) => sum + invoice.totalCost,
@@ -599,9 +597,7 @@ class _CustomerScreenState extends State<CustomerScreen> {
     return Directionality(
       textDirection: Directionality.of(context),
       child: Scaffold(
-        appBar: AppBar(
-          title: Text(strings.customers_and_suppliers),
-        ),
+        appBar: AppBar(title: Text(strings.customers_and_suppliers)),
         body: SafeArea(
           child: CustomScrollView(
             keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
@@ -638,7 +634,12 @@ class _CustomerScreenState extends State<CustomerScreen> {
                         storageInvoiceCount: storageInvoiceCount,
                       ),
                     Padding(
-                      padding: const EdgeInsetsDirectional.fromSTEB(4, 18, 4, 8),
+                      padding: const EdgeInsetsDirectional.fromSTEB(
+                        4,
+                        18,
+                        4,
+                        8,
+                      ),
                       child: Row(
                         children: [
                           Expanded(
@@ -700,8 +701,9 @@ class _CustomerScreenState extends State<CustomerScreen> {
                               backgroundColor: hasActiveFilters
                                   ? colors.primaryContainer
                                   : null,
-                              foregroundColor:
-                                  hasActiveFilters ? colors.primary : null,
+                              foregroundColor: hasActiveFilters
+                                  ? colors.primary
+                                  : null,
                             ),
                             onPressed: () => _showInvoiceFilters(strings),
                             icon: const Icon(Icons.filter_list),
@@ -739,9 +741,7 @@ class _CustomerScreenState extends State<CustomerScreen> {
                               ? strings.no_customer_invoices
                               : strings.noRecentInvoices,
                           textAlign: TextAlign.center,
-                          style: Theme.of(context)
-                              .textTheme
-                              .titleMedium
+                          style: Theme.of(context).textTheme.titleMedium
                               ?.copyWith(color: colors.onSurfaceVariant),
                         ),
                       ],
@@ -757,10 +757,9 @@ class _CustomerScreenState extends State<CustomerScreen> {
                           ? strings.noInvoicesMatchFilters
                           : strings.noInvoicesMatchSearch,
                       textAlign: TextAlign.center,
-                      style: Theme.of(context)
-                          .textTheme
-                          .titleMedium
-                          ?.copyWith(color: colors.onSurfaceVariant),
+                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                        color: colors.onSurfaceVariant,
+                      ),
                     ),
                   ),
                 )
@@ -799,13 +798,13 @@ class _CustomerScreenState extends State<CustomerScreen> {
     final balanceColor = balance > 0
         ? semanticColors.warning
         : balance < 0
-            ? colors.primary
-            : semanticColors.success;
+        ? colors.primary
+        : semanticColors.success;
     final balanceLabel = balance > 0
         ? strings.net_due_to_customer
         : balance < 0
-            ? strings.net_due_to_you
-            : strings.account_balanced;
+        ? strings.net_due_to_you
+        : strings.account_balanced;
 
     return Container(
       margin: const EdgeInsets.only(top: 14),
@@ -835,8 +834,10 @@ class _CustomerScreenState extends State<CustomerScreen> {
                 ),
               ),
               Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 10,
+                  vertical: 6,
+                ),
                 decoration: BoxDecoration(
                   color: colors.surfaceContainerHighest,
                   borderRadius: BorderRadius.circular(20),
@@ -852,12 +853,7 @@ class _CustomerScreenState extends State<CustomerScreen> {
             ],
           ),
           const SizedBox(height: 18),
-          Text(
-            balanceLabel,
-            style: TextStyle(
-              color: colors.onSurfaceVariant,
-            ),
-          ),
+          Text(balanceLabel, style: TextStyle(color: colors.onSurfaceVariant)),
           const SizedBox(height: 2),
           Text(
             AppFormatters.currency(balance.abs(), strings),
@@ -979,9 +975,9 @@ class _CustomerScreenState extends State<CustomerScreen> {
           key: ValueKey('storage-metric-value-$label'),
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
-          style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
+          style: Theme.of(
+            context,
+          ).textTheme.labelLarge?.copyWith(fontWeight: FontWeight.bold),
         ),
       ],
     );
@@ -1039,12 +1035,11 @@ class _CustomerScreenState extends State<CustomerScreen> {
     final semanticColors = AppSemanticColors.of(context);
     final strings = S.of(context);
     final actionColor = _getActionColor(context, invoice.invoiceAction);
-    final normalizedAction = _normalizeInvoiceAction(invoice.invoiceAction);
-    final action = switch (normalizedAction) {
-      'شراء' => strings.purchase,
-      'بيع' => strings.sale,
-      'تخزين' => strings.storage,
-      _ => invoice.invoiceAction ?? strings.unspecified,
+    final action = switch (InvoiceAction.tryParse(invoice.invoiceAction)) {
+      InvoiceAction.purchase => strings.purchase,
+      InvoiceAction.sale => strings.sale,
+      InvoiceAction.storage => strings.storage,
+      null => invoice.invoiceAction ?? strings.unspecified,
     };
     final status = _invoicePaymentStatus(invoice);
     final statusColor = switch (status) {
@@ -1299,10 +1294,7 @@ class _CustomerScreenState extends State<CustomerScreen> {
         children: [
           Text(
             label,
-            style: TextStyle(
-              color: colors.onSurfaceVariant,
-              fontSize: 10,
-            ),
+            style: TextStyle(color: colors.onSurfaceVariant, fontSize: 10),
           ),
           Text(
             AppFormatters.currency(amount, strings),
@@ -1319,16 +1311,12 @@ class _CustomerScreenState extends State<CustomerScreen> {
 
   Color _getActionColor(BuildContext context, String? action) {
     final colors = Theme.of(context).colorScheme;
-    switch (action?.replaceAll('\u0640', '').trim()) {
-      case 'شراء':
-        return colors.primary;
-      case 'بيع':
-        return colors.secondary;
-      case 'تخزين':
-        return colors.tertiary;
-      default:
-        return colors.onSurfaceVariant;
-    }
+    return switch (InvoiceAction.tryParse(action)) {
+      InvoiceAction.purchase => colors.primary,
+      InvoiceAction.sale => colors.secondary,
+      InvoiceAction.storage => colors.tertiary,
+      null => colors.onSurfaceVariant,
+    };
   }
 
   Future<void> _shareInvoice(Invoice invoice) async {
@@ -1339,7 +1327,7 @@ class _CustomerScreenState extends State<CustomerScreen> {
     for (var product in invoice.products) {
       tempProvider.addProduct(product);
     }
-// generateAndShareInvoice
+    // generateAndShareInvoice
     try {
       await InvoiceService.generateAndShareInvoice(
         provider: tempProvider,
