@@ -3,6 +3,7 @@ import 'dart:convert';
 
 import 'package:arqamy/core/helpers/product_list_constants.dart';
 import 'package:arqamy/core/helpers/money.dart';
+import 'package:arqamy/core/helpers/invoice_backup.dart';
 import 'package:arqamy/features/orderscreen/data/models/invoice.dart';
 import 'package:arqamy/core/helpers/invoice_action.dart';
 import 'package:flutter/foundation.dart';
@@ -296,6 +297,42 @@ class InvoiceProvider extends ChangeNotifier {
       await _saveInvoicesToStorage(updatedInvoices);
       _replaceInvoices(updatedInvoices);
       notifyListeners();
+    });
+  }
+
+  // Load products from local storage
+  /// Backup text containing every saved invoice.
+  String exportBackup({DateTime? now}) {
+    return InvoiceBackup.encode(_invoices, exportedAt: now ?? DateTime.now());
+  }
+
+  /// Merges the invoices in [backupText] into the saved invoices.
+  ///
+  /// Invoices with the same id are replaced; all others are kept. Nothing
+  /// changes if the text is not a valid backup or the storage write fails.
+  Future<InvoiceRestoreResult> restoreBackup(String backupText) async {
+    final restored = InvoiceBackup.decode(backupText);
+    return _withInvoiceMutationLock(() async {
+      final updatedInvoices = List<Invoice>.of(_invoices);
+      var added = 0;
+      var replaced = 0;
+      for (final invoice in restored) {
+        final index = updatedInvoices.indexWhere(
+          (saved) => saved.id == invoice.id,
+        );
+        if (index == -1) {
+          updatedInvoices.add(invoice);
+          added++;
+        } else {
+          updatedInvoices[index] = invoice;
+          replaced++;
+        }
+      }
+
+      await _saveInvoicesToStorage(updatedInvoices);
+      _replaceInvoices(updatedInvoices);
+      notifyListeners();
+      return InvoiceRestoreResult(added: added, replaced: replaced);
     });
   }
 

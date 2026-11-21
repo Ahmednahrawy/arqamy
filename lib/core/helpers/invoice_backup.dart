@@ -173,3 +173,16 @@ class InvoiceBackup {
   static InvoiceBackupFormatException _invalid(int number, String reason) =>
       InvoiceBackupFormatException('Invoice $number is invalid: $reason.');
 }
+
+/// What a restore changed.
+class InvoiceRestoreResult {
+  const InvoiceRestoreResult({required this.added, required this.replaced});
+
+  /// Invoices that were not saved before.
+  final int added;
+
+  /// Saved invoices that were overwritten by the backup copy (same id).
+  final int replaced;
+
+  int get total => added + replaced;
+}
