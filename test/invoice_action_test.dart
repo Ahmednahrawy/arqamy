@@ -25,4 +25,9 @@ void main() {
     expect(InvoiceAction.tryParse(''), isNull);
     expect(InvoiceAction.tryParse(null), isNull);
   });
+  test('InvoiceActionL10n constants match the enum', () {
+    expect(InvoiceActionL10n.purchase, InvoiceAction.purchase.storedValue);
+    expect(InvoiceActionL10n.sale, InvoiceAction.sale.storedValue);
+    expect(InvoiceActionL10n.storage, InvoiceAction.storage.storedValue);
+  });
 }

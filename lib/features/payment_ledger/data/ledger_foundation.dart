@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:arqamy/features/orderscreen/data/models/invoice.dart' as legacy;
+import 'package:arqamy/core/helpers/invoice_action.dart';
 import 'package:uuid/uuid.dart';
 
 enum LedgerPartyRole { customer, supplier }
@@ -130,13 +131,13 @@ class LedgerInvoiceMapper {
     }
 
     final legacyAction = invoice.invoiceAction;
-    final action = switch (legacyAction) {
-      'بيع' => LedgerInvoiceAction.sale,
-      'شراء' => LedgerInvoiceAction.purchase,
-      'تخزين' => LedgerInvoiceAction.storage,
-      _ => LedgerInvoiceAction.unknown,
+    final action = switch (InvoiceAction.tryParse(legacyAction)) {
+      InvoiceAction.sale => LedgerInvoiceAction.sale,
+      InvoiceAction.purchase => LedgerInvoiceAction.purchase,
+      InvoiceAction.storage => LedgerInvoiceAction.storage,
+      null => LedgerInvoiceAction.unknown,
     };
-
+    
     return LedgerInvoiceDraft(
       id: _uuid.v4(),
       serial: invoice.invoiceSerial,

@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:arqamy/core/helpers/product_list_constants.dart';
 import 'package:arqamy/core/helpers/money.dart';
 import 'package:arqamy/features/orderscreen/data/models/invoice.dart';
+import 'package:arqamy/core/helpers/invoice_action.dart';
 import 'package:flutter/foundation.dart';
 import 'package:arqamy/features/orderscreen/data/models/product_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -269,20 +270,15 @@ class InvoiceProvider extends ChangeNotifier {
 
   static double calculateCustomerBalance(Iterable<Invoice> invoices) {
     return invoices.fold(0.0, (balance, invoice) {
-      final action = invoice.invoiceAction?.replaceAll('\u0640', '').trim();
-      switch (action) {
-        case 'شراء':
-          return balance + invoice.rest;
-        case 'بيع':
-          return balance - invoice.rest;
-        case 'تخزين':
-          return balance;
-        default:
-          return balance - invoice.rest;
-      }
+      return switch (InvoiceAction.tryParse(invoice.invoiceAction)) {
+        InvoiceAction.purchase => balance + invoice.rest,
+        InvoiceAction.storage => balance,
+        // Sales and unknown legacy types reduce the balance, as before.
+        InvoiceAction.sale || null => balance - invoice.rest,
+      };
     });
   }
-
+  
   Future<void> deleteInvoice(String invoiceId) {
     return _withInvoiceMutationLock(() async {
       final index = _uniqueInvoiceIndex(invoiceId);
