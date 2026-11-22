@@ -57,10 +57,12 @@ dependencies:
   flutter_localizations:
     sdk: flutter
   image_picker: ^1.2.0
+  file_picker: ^13.4.1
   path: ^1.9.1
   # open_file: ^3.3.2
 
   cupertino_ui: any
+  file_picker: ^13.4.1
 dev_dependencies:
   flutter_launcher_icons: ^0.14.1
   build_runner: ^2.14.0
