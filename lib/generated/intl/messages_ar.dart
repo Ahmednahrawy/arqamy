@@ -337,6 +337,34 @@ class MessageLookup extends MessageLookupByLibrary {
     "resetInvoiceFilters": MessageLookupByLibrary.simpleMessage(
       "إعادة ضبط عوامل التصفية",
     ),
+    "restore_action": MessageLookupByLibrary.simpleMessage("استعادة"),
+    "restore_confirm_message": MessageLookupByLibrary.simpleMessage(
+      "سيتم دمج فواتير النسخة الاحتياطية مع فواتيرك المحفوظة. أي فاتورة محفوظة لها نفس المعرّف ستُستبدل بنسخة الملف. بقية الفواتير المحفوظة تبقى كما هي.",
+    ),
+    "restore_done": MessageLookupByLibrary.simpleMessage(
+      "تمت استعادة النسخة الاحتياطية",
+    ),
+    "restore_empty_backup": MessageLookupByLibrary.simpleMessage(
+      "النسخة الاحتياطية لا تحتوي على فواتير",
+    ),
+    "restore_failed": MessageLookupByLibrary.simpleMessage(
+      "تعذرت استعادة النسخة الاحتياطية",
+    ),
+    "restore_invalid_backup": MessageLookupByLibrary.simpleMessage(
+      "هذا الملف ليس نسخة احتياطية صالحة للفواتير",
+    ),
+    "restore_invoices": MessageLookupByLibrary.simpleMessage(
+      "استعادة من نسخة احتياطية",
+    ),
+    "restore_invoices_desc": MessageLookupByLibrary.simpleMessage(
+      "إضافة الفواتير من ملف نسخة احتياطية",
+    ),
+    "restore_new_invoices": MessageLookupByLibrary.simpleMessage(
+      "فواتير جديدة",
+    ),
+    "restore_replaced_invoices": MessageLookupByLibrary.simpleMessage(
+      "فواتير سيتم استبدالها",
+    ),
     "sale": MessageLookupByLibrary.simpleMessage("بيع"),
     "sales": MessageLookupByLibrary.simpleMessage("مبيعات"),
     "save": MessageLookupByLibrary.simpleMessage("حفظ"),

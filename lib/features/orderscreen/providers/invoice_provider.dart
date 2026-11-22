@@ -306,8 +306,24 @@ class InvoiceProvider extends ChangeNotifier {
     return InvoiceBackup.encode(_invoices, exportedAt: now ?? DateTime.now());
   }
 
-  /// Merges the invoices in [backupText] into the saved invoices.
-  ///
+  /// Counts what [restoreBackup] would add and replace, without changing
+  /// anything. Throws [InvoiceBackupFormatException] for an invalid backup.
+  InvoiceRestoreResult previewRestore(String backupText) {
+    final restored = InvoiceBackup.decode(backupText);
+    final savedIds = {for (final invoice in _invoices) invoice.id};
+    var added = 0;
+    var replaced = 0;
+    for (final invoice in restored) {
+      if (savedIds.contains(invoice.id)) {
+        replaced++;
+      } else {
+        added++;
+      }
+    }
+    return InvoiceRestoreResult(added: added, replaced: replaced);
+  }
+
+  /// Merges the invoices in [backupText] into the saved invoices.  ///
   /// Invoices with the same id are replaced; all others are kept. Nothing
   /// changes if the text is not a valid backup or the storage write fails.
   Future<InvoiceRestoreResult> restoreBackup(String backupText) async {

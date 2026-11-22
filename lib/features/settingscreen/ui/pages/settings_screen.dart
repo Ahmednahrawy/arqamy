@@ -1,4 +1,5 @@
 import 'package:arqamy/core/providers/language.dart';
+import 'package:arqamy/core/helpers/invoice_backup.dart';
 import 'package:arqamy/core/providers/theme.dart';
 import 'package:arqamy/core/services/invoice_backup_service.dart';
 import 'package:arqamy/core/widgets/app_snack_bar.dart';
@@ -31,6 +32,69 @@ class SettingsScreen extends StatelessWidget {
     }
   }
 
+  Future<void> _restoreInvoices(BuildContext context) async {
+    final strings = S.of(context);
+    final provider = context.read<InvoiceProvider>();
+    try {
+      final text = await InvoiceBackupService.pickBackupText();
+      if (text == null || !context.mounted) return;
+
+      // Reload so the preview compares against what is really saved.
+      await provider.loadInvoices();
+      final preview = provider.previewRestore(text);
+      if (!context.mounted) return;
+      if (preview.total == 0) {
+        showAppSnackBar(context, strings.restore_empty_backup);
+        return;
+      }
+
+      final confirmed = await showDialog<bool>(
+        context: context,
+        builder: (dialogContext) => AlertDialog(
+          title: Text(strings.restore_invoices),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(strings.restore_confirm_message),
+              const SizedBox(height: 12),
+              Text('${strings.restore_new_invoices}: ${preview.added}'),
+              Text('${strings.restore_replaced_invoices}: ${preview.replaced}'),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(dialogContext, false),
+              child: Text(strings.cancel),
+            ),
+            FilledButton(
+              onPressed: () => Navigator.pop(dialogContext, true),
+              child: Text(strings.restore_action),
+            ),
+          ],
+        ),
+      );
+      if (confirmed != true || !context.mounted) return;
+
+      await provider.restoreBackup(text);
+      if (!context.mounted) return;
+      showAppSnackBar(context, strings.restore_done);
+    } on InvoiceBackupFormatException catch (error) {
+      if (!context.mounted) return;
+      showAppSnackBar(
+        context,
+        '${strings.restore_invalid_backup}: ${error.message}',
+        isError: true,
+      );
+    } catch (error) {
+      if (!context.mounted) return;
+      showAppSnackBar(
+        context,
+        '${strings.restore_failed}: $error',
+        isError: true,
+      );
+    }
+  }
   @override
   Widget build(BuildContext context) {    final themeProvider = Provider.of<ThemeProvider>(context);
     final languageProvider = Provider.of<Language>(context);
@@ -90,6 +154,11 @@ class SettingsScreen extends StatelessWidget {
             onTap: () => _backupInvoices(context),
           ),
           ListTile(
+            leading: const Icon(Icons.restore),
+            title: Text(S.of(context).restore_invoices),
+            subtitle: Text(S.of(context).restore_invoices_desc),
+            onTap: () => _restoreInvoices(context),
+          ),          ListTile(
             leading: const Icon(Icons.notifications),
             title: Text(S.of(context).notifications),            onTap: () {
               // Handle notifications tap

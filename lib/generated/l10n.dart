@@ -1854,6 +1854,101 @@ class S {
       args: [],
     );
   }
+
+  /// `Restore from backup`
+  String get restore_invoices {
+    return Intl.message(
+      'Restore from backup',
+      name: 'restore_invoices',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Add invoices from a backup file`
+  String get restore_invoices_desc {
+    return Intl.message(
+      'Add invoices from a backup file',
+      name: 'restore_invoices_desc',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Invoices from the backup will be merged with your saved invoices. A saved invoice with the same ID is replaced by the backup copy. All other saved invoices are kept.`
+  String get restore_confirm_message {
+    return Intl.message(
+      'Invoices from the backup will be merged with your saved invoices. A saved invoice with the same ID is replaced by the backup copy. All other saved invoices are kept.',
+      name: 'restore_confirm_message',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `New invoices`
+  String get restore_new_invoices {
+    return Intl.message(
+      'New invoices',
+      name: 'restore_new_invoices',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Invoices to replace`
+  String get restore_replaced_invoices {
+    return Intl.message(
+      'Invoices to replace',
+      name: 'restore_replaced_invoices',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Restore`
+  String get restore_action {
+    return Intl.message('Restore', name: 'restore_action', desc: '', args: []);
+  }
+
+  /// `The backup contains no invoices`
+  String get restore_empty_backup {
+    return Intl.message(
+      'The backup contains no invoices',
+      name: 'restore_empty_backup',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Backup restored`
+  String get restore_done {
+    return Intl.message(
+      'Backup restored',
+      name: 'restore_done',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `This is not a valid invoice backup`
+  String get restore_invalid_backup {
+    return Intl.message(
+      'This is not a valid invoice backup',
+      name: 'restore_invalid_backup',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Could not restore the backup`
+  String get restore_failed {
+    return Intl.message(
+      'Could not restore the backup',
+      name: 'restore_failed',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

@@ -353,6 +353,32 @@ class MessageLookup extends MessageLookupByLibrary {
     "resetInvoiceFilters": MessageLookupByLibrary.simpleMessage(
       "Reset filters",
     ),
+    "restore_action": MessageLookupByLibrary.simpleMessage("Restore"),
+    "restore_confirm_message": MessageLookupByLibrary.simpleMessage(
+      "Invoices from the backup will be merged with your saved invoices. A saved invoice with the same ID is replaced by the backup copy. All other saved invoices are kept.",
+    ),
+    "restore_done": MessageLookupByLibrary.simpleMessage("Backup restored"),
+    "restore_empty_backup": MessageLookupByLibrary.simpleMessage(
+      "The backup contains no invoices",
+    ),
+    "restore_failed": MessageLookupByLibrary.simpleMessage(
+      "Could not restore the backup",
+    ),
+    "restore_invalid_backup": MessageLookupByLibrary.simpleMessage(
+      "This is not a valid invoice backup",
+    ),
+    "restore_invoices": MessageLookupByLibrary.simpleMessage(
+      "Restore from backup",
+    ),
+    "restore_invoices_desc": MessageLookupByLibrary.simpleMessage(
+      "Add invoices from a backup file",
+    ),
+    "restore_new_invoices": MessageLookupByLibrary.simpleMessage(
+      "New invoices",
+    ),
+    "restore_replaced_invoices": MessageLookupByLibrary.simpleMessage(
+      "Invoices to replace",
+    ),
     "sale": MessageLookupByLibrary.simpleMessage("Sale"),
     "sales": MessageLookupByLibrary.simpleMessage("Sales"),
     "save": MessageLookupByLibrary.simpleMessage("Save"),

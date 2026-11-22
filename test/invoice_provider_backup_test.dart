@@ -116,4 +116,30 @@ void main() {
 
     expect(provider.invoices.map((invoice) => invoice.id), ['a']);
   });
+
+    test('previewRestore counts what a restore would change without changing it',
+      () async {
+    final provider = _provider();
+    await provider.saveInvoice(_invoice('a'));
+    await provider.saveInvoice(_invoice('keep'));
+    final backup = _backupOf([
+      _invoice('a', customer: 'New'),
+      _invoice('c'),
+      _invoice('d'),
+    ]);
+
+    final preview = provider.previewRestore(backup);
+
+    expect(preview.added, 2);
+    expect(preview.replaced, 1);
+    expect(provider.invoices.map((invoice) => invoice.id), ['a', 'keep']);
+    expect(provider.invoices.first.customerName, 'أحمد');
+  });
+
+  test('previewRestore rejects an invalid backup', () {
+    expect(
+      () => _provider().previewRestore('not json'),
+      throwsA(isA<InvoiceBackupFormatException>()),
+    );
+  });
 }

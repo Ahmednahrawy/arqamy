@@ -219,5 +219,15 @@
   "backup_invoices": "Back up invoices",
   "backup_invoices_desc": "Save all invoices to a file you can keep safe",
   "backup_no_invoices": "There are no invoices to back up yet",
-  "backup_failed": "Could not create the backup"
+  "backup_failed": "Could not create the backup",
+  "restore_invoices": "Restore from backup",
+  "restore_invoices_desc": "Add invoices from a backup file",
+  "restore_confirm_message": "Invoices from the backup will be merged with your saved invoices. A saved invoice with the same ID is replaced by the backup copy. All other saved invoices are kept.",
+  "restore_new_invoices": "New invoices",
+  "restore_replaced_invoices": "Invoices to replace",
+  "restore_action": "Restore",
+  "restore_empty_backup": "The backup contains no invoices",
+  "restore_done": "Backup restored",
+  "restore_invalid_backup": "This is not a valid invoice backup",
+  "restore_failed": "Could not restore the backup"
 }
