@@ -57,9 +57,9 @@ class _ProductManagementScreenState extends State<ProductManagementScreen> {
             onPressed: () async {
               if (_addController.text.trim().isNotEmpty) {
                 try {
-                  await context
-                      .read<InvoiceProvider>()
-                      .addMasterProduct(_addController.text);
+                  await context.read<InvoiceProvider>().addMasterProduct(
+                    _addController.text,
+                  );
                   if (!mounted || !dialogContext.mounted) return;
                   Navigator.pop(dialogContext);
                   showAppSnackBarOn(
@@ -108,9 +108,10 @@ class _ProductManagementScreenState extends State<ProductManagementScreen> {
             onPressed: () async {
               if (_editController.text.trim().isNotEmpty) {
                 try {
-                  await context
-                      .read<InvoiceProvider>()
-                      .editMasterProduct(index, _editController.text);
+                  await context.read<InvoiceProvider>().editMasterProduct(
+                    index,
+                    _editController.text,
+                  );
                   if (!mounted || !dialogContext.mounted) return;
                   Navigator.pop(dialogContext);
                   showAppSnackBarOn(
@@ -151,9 +152,9 @@ class _ProductManagementScreenState extends State<ProductManagementScreen> {
           ElevatedButton(
             onPressed: () async {
               try {
-                await context
-                    .read<InvoiceProvider>()
-                    .deleteMasterProduct(index);
+                await context.read<InvoiceProvider>().deleteMasterProduct(
+                  index,
+                );
                 if (!mounted || !dialogContext.mounted) return;
                 Navigator.pop(dialogContext);
                 showAppSnackBarOn(
@@ -213,8 +214,8 @@ class _ProductManagementScreenState extends State<ProductManagementScreen> {
                   Text(
                     strings.no_products,
                     style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                          color: colors.onSurfaceVariant,
-                        ),
+                      color: colors.onSurfaceVariant,
+                    ),
                   ),
                   const SizedBox(height: 8),
                   Text(
@@ -228,8 +229,11 @@ class _ProductManagementScreenState extends State<ProductManagementScreen> {
 
           return ReorderableListView.builder(
             itemCount: products.length,
-            onReorder: (oldIndex, newIndex) async {
-              await provider.reorderMasterProducts(oldIndex, newIndex);
+            onReorderItem: (oldIndex, newIndex) async {
+              // onReorderItem gives the item's final position, but the provider
+              // expects the raw ReorderableListView index (it adjusts itself).
+              final rawNewIndex = newIndex > oldIndex ? newIndex + 1 : newIndex;
+              await provider.reorderMasterProducts(oldIndex, rawNewIndex);
             },
             itemBuilder: (context, index) {
               final product = products[index];
