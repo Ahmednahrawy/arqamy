@@ -1,5 +1,5 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
-import 'package:material_ui/material_ui.dart';
+import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 import 'intl/messages_all.dart';
@@ -1813,6 +1813,46 @@ class S {
   /// `Total price`
   String get total_price {
     return Intl.message('Total price', name: 'total_price', desc: '', args: []);
+  }
+
+  /// `Back up invoices`
+  String get backup_invoices {
+    return Intl.message(
+      'Back up invoices',
+      name: 'backup_invoices',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Save all invoices to a file you can keep safe`
+  String get backup_invoices_desc {
+    return Intl.message(
+      'Save all invoices to a file you can keep safe',
+      name: 'backup_invoices_desc',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `There are no invoices to back up yet`
+  String get backup_no_invoices {
+    return Intl.message(
+      'There are no invoices to back up yet',
+      name: 'backup_no_invoices',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Could not create the backup`
+  String get backup_failed {
+    return Intl.message(
+      'Could not create the backup',
+      name: 'backup_failed',
+      desc: '',
+      args: [],
+    );
   }
 }
 

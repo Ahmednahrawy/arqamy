@@ -38,6 +38,16 @@ class MessageLookup extends MessageLookupByLibrary {
     "are_you_sure_logout": MessageLookupByLibrary.simpleMessage(
       "Are you sure you want to log out?",
     ),
+    "backup_failed": MessageLookupByLibrary.simpleMessage(
+      "Could not create the backup",
+    ),
+    "backup_invoices": MessageLookupByLibrary.simpleMessage("Back up invoices"),
+    "backup_invoices_desc": MessageLookupByLibrary.simpleMessage(
+      "Save all invoices to a file you can keep safe",
+    ),
+    "backup_no_invoices": MessageLookupByLibrary.simpleMessage(
+      "There are no invoices to back up yet",
+    ),
     "cancel": MessageLookupByLibrary.simpleMessage("Cancel"),
     "change_invoice_type": MessageLookupByLibrary.simpleMessage(
       "Change invoice type",

@@ -1,6 +1,8 @@
 import 'package:arqamy/core/providers/language.dart';
 import 'package:arqamy/core/providers/theme.dart';
+import 'package:arqamy/core/services/invoice_backup_service.dart';
 import 'package:arqamy/core/widgets/app_snack_bar.dart';
+import 'package:arqamy/features/orderscreen/providers/invoice_provider.dart';
 import 'package:arqamy/features/settingscreen/ui/pages/invoice_setting.dart';
 import 'package:arqamy/features/settingscreen/ui/pages/product_management.dart';
 import 'package:arqamy/generated/l10n.dart';
@@ -10,9 +12,27 @@ import 'package:provider/provider.dart';
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});
 
+  Future<void> _backupInvoices(BuildContext context) async {
+    final strings = S.of(context);
+    final provider = context.read<InvoiceProvider>();
+    try {
+      final count = await InvoiceBackupService.shareBackup(provider);
+      if (!context.mounted) return;
+      if (count == 0) {
+        showAppSnackBar(context, strings.backup_no_invoices);
+      }
+    } catch (error) {
+      if (!context.mounted) return;
+      showAppSnackBar(
+        context,
+        '${strings.backup_failed}: $error',
+        isError: true,
+      );
+    }
+  }
+
   @override
-  Widget build(BuildContext context) {
-    final themeProvider = Provider.of<ThemeProvider>(context);
+  Widget build(BuildContext context) {    final themeProvider = Provider.of<ThemeProvider>(context);
     final languageProvider = Provider.of<Language>(context);
     final size = MediaQuery.sizeOf(context);
 
@@ -64,9 +84,14 @@ class SettingsScreen extends StatelessWidget {
             },
           ),
           ListTile(
+            leading: const Icon(Icons.backup_outlined),
+            title: Text(S.of(context).backup_invoices),
+            subtitle: Text(S.of(context).backup_invoices_desc),
+            onTap: () => _backupInvoices(context),
+          ),
+          ListTile(
             leading: const Icon(Icons.notifications),
-            title: Text(S.of(context).notifications),
-            onTap: () {
+            title: Text(S.of(context).notifications),            onTap: () {
               // Handle notifications tap
             },
           ),

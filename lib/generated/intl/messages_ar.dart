@@ -36,6 +36,18 @@ class MessageLookup extends MessageLookupByLibrary {
     "are_you_sure_logout": MessageLookupByLibrary.simpleMessage(
       "هل أنت متأكد أنك تريد تسجيل الخروج؟",
     ),
+    "backup_failed": MessageLookupByLibrary.simpleMessage(
+      "تعذر إنشاء النسخة الاحتياطية",
+    ),
+    "backup_invoices": MessageLookupByLibrary.simpleMessage(
+      "نسخ احتياطي للفواتير",
+    ),
+    "backup_invoices_desc": MessageLookupByLibrary.simpleMessage(
+      "احفظ جميع الفواتير في ملف يمكنك الاحتفاظ به",
+    ),
+    "backup_no_invoices": MessageLookupByLibrary.simpleMessage(
+      "لا توجد فواتير لنسخها بعد",
+    ),
     "cancel": MessageLookupByLibrary.simpleMessage("إلغاء"),
     "change_invoice_type": MessageLookupByLibrary.simpleMessage(
       "تغيير نوع الفاتورة",
