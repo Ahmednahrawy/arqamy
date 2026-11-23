@@ -171,8 +171,8 @@ class _EditInvoiceDialogState extends State<EditInvoiceDialog> {
       formattedTime: _formattedTime,
       invoiceAction: _invoiceAction,
       invoiceSerial: widget.invoice.invoiceSerial,
+      customerId: widget.invoice.customerId,
     );
-
     setState(() => _saving = true);
     try {
       await context.read<InvoiceProvider>().updateInvoice(updatedInvoice);

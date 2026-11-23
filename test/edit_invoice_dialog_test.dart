@@ -21,8 +21,10 @@ Invoice _invoice({
   String? action = 'شراء',
   List<Product>? products,
   double paid = 5,
+  String? customerId,
 }) {
-  final invoiceProducts = products ??
+  final invoiceProducts =
+      products ??
       [
         Product(
           name: 'Rice',
@@ -44,6 +46,7 @@ Invoice _invoice({
     formattedTime: formattedTime,
     invoiceAction: action,
     invoiceSerial: serial,
+    customerId: customerId,
   );
 }
 
@@ -65,9 +68,8 @@ Widget _app(InvoiceProvider provider, {String languageCode = 'en'}) {
             child: TextButton(
               onPressed: () => showDialog<bool>(
                 context: context,
-                builder: (_) => EditInvoiceDialog(
-                  invoice: provider.invoices.single,
-                ),
+                builder: (_) =>
+                    EditInvoiceDialog(invoice: provider.invoices.single),
               ),
               child: const Text('Open editor'),
             ),
@@ -102,8 +104,9 @@ void main() {
     SharedPreferences.setMockInitialValues({});
   });
 
-  testWidgets('edits product fields and invoice metadata, then reloads',
-      (tester) async {
+  testWidgets('edits product fields and invoice metadata, then reloads', (
+    tester,
+  ) async {
     _useTallViewport(tester);
     final provider = InvoiceProvider();
     final original = _invoice();
@@ -112,16 +115,26 @@ void main() {
     await _openEditor(tester);
 
     await tester.enterText(
-        find.byKey(const ValueKey('product-name-0')), 'Barley');
+      find.byKey(const ValueKey('product-name-0')),
+      'Barley',
+    );
     await tester.enterText(
-        find.byKey(const ValueKey('product-weight-0')), '12');
+      find.byKey(const ValueKey('product-weight-0')),
+      '12',
+    );
     await tester.enterText(
-        find.byKey(const ValueKey('product-package-weight-0')), '1.5');
+      find.byKey(const ValueKey('product-package-weight-0')),
+      '1.5',
+    );
     await tester.enterText(
-        find.byKey(const ValueKey('product-package-count-0')), '2');
+      find.byKey(const ValueKey('product-package-count-0')),
+      '2',
+    );
     await tester.enterText(find.byKey(const ValueKey('product-price-0')), '4');
     await tester.enterText(
-        find.byKey(const ValueKey('customer-name')), 'Updated customer');
+      find.byKey(const ValueKey('customer-name')),
+      'Updated customer',
+    );
     await tester.enterText(find.byKey(const ValueKey('paid-amount')), '10');
     await _tapVisible(tester, find.byKey(const ValueKey('invoice-action')));
     await tester.tap(find.text('Sale').last);
@@ -145,7 +158,9 @@ void main() {
     await tester.pumpAndSettle();
     final timeFields = find.byType(TextField);
     await tester.enterText(
-        timeFields.at(timeFields.evaluate().length - 2), '9');
+      timeFields.at(timeFields.evaluate().length - 2),
+      '9',
+    );
     await tester.enterText(timeFields.last, '47');
     await tester.tap(find.text('OK'));
     await tester.pumpAndSettle();
@@ -178,21 +193,18 @@ void main() {
     expect(persisted.id, original.id);
     expect(persisted.invoiceSerial, original.invoiceSerial);
     expect(persisted.toJson(), updated.toJson());
-    expect(
-      persisted.toJson().keys,
-      {
-        'id',
-        'customerName',
-        'products',
-        'totalCost',
-        'paid',
-        'rest',
-        'formattedDate',
-        'formattedTime',
-        'invoiceAction',
-        'invoiceSerial',
-      },
-    );
+    expect(persisted.toJson().keys, {
+      'id',
+      'customerName',
+      'products',
+      'totalCost',
+      'paid',
+      'rest',
+      'formattedDate',
+      'formattedTime',
+      'invoiceAction',
+      'invoiceSerial',
+    });
   });
 
   testWidgets('adds and removes product rows', (tester) async {
@@ -206,12 +218,18 @@ void main() {
     await _tapVisible(tester, find.byKey(const ValueKey('add-product')));
     expect(find.byKey(const ValueKey('product-name-1')), findsOneWidget);
     await tester.enterText(
-        find.byKey(const ValueKey('product-name-1')), 'Corn');
+      find.byKey(const ValueKey('product-name-1')),
+      'Corn',
+    );
     await tester.enterText(find.byKey(const ValueKey('product-weight-1')), '3');
     await tester.enterText(
-        find.byKey(const ValueKey('product-package-weight-1')), '0');
+      find.byKey(const ValueKey('product-package-weight-1')),
+      '0',
+    );
     await tester.enterText(
-        find.byKey(const ValueKey('product-package-count-1')), '0');
+      find.byKey(const ValueKey('product-package-count-1')),
+      '0',
+    );
     await tester.enterText(find.byKey(const ValueKey('product-price-1')), '7');
 
     await _tapVisible(tester, find.byKey(const ValueKey('remove-product-0')));
@@ -233,11 +251,17 @@ void main() {
 
     await tester.enterText(find.byKey(const ValueKey('product-name-0')), '  ');
     await tester.enterText(
-        find.byKey(const ValueKey('product-weight-0')), 'NaN');
+      find.byKey(const ValueKey('product-weight-0')),
+      'NaN',
+    );
     await tester.enterText(
-        find.byKey(const ValueKey('product-package-count-0')), '1.5');
+      find.byKey(const ValueKey('product-package-count-0')),
+      '1.5',
+    );
     await tester.enterText(
-        find.byKey(const ValueKey('paid-amount')), 'Infinity');
+      find.byKey(const ValueKey('paid-amount')),
+      'Infinity',
+    );
     await _tapVisible(tester, find.text('Save changes'));
 
     expect(provider.invoices.single.toJson(), original.toJson());
@@ -247,31 +271,36 @@ void main() {
     expect(find.byType(Dialog), findsOneWidget);
   });
 
-  testWidgets('persistence failure keeps the original invoice and editor open',
-      (tester) async {
-    _useTallViewport(tester);
-    var failWrites = false;
-    final provider = InvoiceProvider.withStorageWriter((json) async {
-      if (failWrites) throw StateError('storage unavailable');
-      return true;
-    });
-    final original = _invoice();
-    await provider.saveInvoice(original);
-    failWrites = true;
-    await tester.pumpWidget(_app(provider, languageCode: 'ar'));
-    await _openEditor(tester);
-    await tester.enterText(
-        find.byKey(const ValueKey('customer-name')), 'Changed customer');
+  testWidgets(
+    'persistence failure keeps the original invoice and editor open',
+    (tester) async {
+      _useTallViewport(tester);
+      var failWrites = false;
+      final provider = InvoiceProvider.withStorageWriter((json) async {
+        if (failWrites) throw StateError('storage unavailable');
+        return true;
+      });
+      final original = _invoice();
+      await provider.saveInvoice(original);
+      failWrites = true;
+      await tester.pumpWidget(_app(provider, languageCode: 'ar'));
+      await _openEditor(tester);
+      await tester.enterText(
+        find.byKey(const ValueKey('customer-name')),
+        'Changed customer',
+      );
 
-    await _tapVisible(tester, find.text('حفظ التغييرات'));
+      await _tapVisible(tester, find.text('حفظ التغييرات'));
 
-    expect(provider.invoices.single.toJson(), original.toJson());
-    expect(find.byType(Dialog), findsOneWidget);
-    expect(find.textContaining('تعذر حفظ تعديلات الفاتورة'), findsOneWidget);
-  });
+      expect(provider.invoices.single.toJson(), original.toJson());
+      expect(find.byType(Dialog), findsOneWidget);
+      expect(find.textContaining('تعذر حفظ تعديلات الفاتورة'), findsOneWidget);
+    },
+  );
 
-  testWidgets('Arabic and ISO legacy dates remain readable and unchanged',
-      (tester) async {
+  testWidgets('Arabic and ISO legacy dates remain readable and unchanged', (
+    tester,
+  ) async {
     _useTallViewport(tester);
     final arabicDate = DateFormat.yMMMd('ar').format(DateTime(2026, 10, 28));
     final fixtures = [
@@ -292,12 +321,37 @@ void main() {
       await provider.saveInvoice(invoice);
       await tester.pumpWidget(_app(provider, languageCode: 'ar'));
       await _openEditor(tester);
-      expect(find.textContaining('تعذر قراءة التاريخ أو الوقت المحفوظ'),
-          findsNothing);
+      expect(
+        find.textContaining('تعذر قراءة التاريخ أو الوقت المحفوظ'),
+        findsNothing,
+      );
       await _tapVisible(tester, find.text('حفظ التغييرات'));
 
       expect(provider.invoices.single.formattedDate, invoice.formattedDate);
       expect(provider.invoices.single.formattedTime, invoice.formattedTime);
     }
   });
+
+  testWidgets('editing an invoice keeps its customer ID', (tester) async {
+    _useTallViewport(tester);
+    final provider = InvoiceProvider();
+    await provider.saveInvoice(_invoice(customerId: 'customer-123'));
+    await tester.pumpWidget(_app(provider));
+    await _openEditor(tester);
+
+    await tester.enterText(
+      find.byKey(const ValueKey('customer-name')),
+      'Renamed customer',
+    );
+    await _tapVisible(tester, find.text('Save changes'));
+
+    final updated = provider.invoices.single;
+    expect(updated.customerName, 'Renamed customer');
+    expect(updated.customerId, 'customer-123');
+
+    final reloaded = InvoiceProvider();
+    await reloaded.loadInvoices();
+    expect(reloaded.invoices.single.customerId, 'customer-123');
+  });
+  
 }

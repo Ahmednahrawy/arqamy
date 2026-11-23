@@ -17,8 +17,11 @@ class Invoice {
   final String? invoiceAction;
   final String invoiceSerial;
 
-  Invoice({
-    required this.id,
+  /// Stable customer identity (Decision 39). Null for invoices saved before
+  /// customer IDs existed; those are mapped after the owner confirms them.
+  final String? customerId;
+
+  Invoice({    required this.id,
     required this.customerName,
     required this.products,
     required this.totalCost,
@@ -28,8 +31,8 @@ class Invoice {
     required this.formattedTime,
     this.invoiceAction,
     required this.invoiceSerial,
+    this.customerId,
   });
-
   Map<String, dynamic> toJson() {
     return {
       'id': id,
@@ -42,8 +45,9 @@ class Invoice {
       'formattedTime': formattedTime,
       'invoiceAction': invoiceAction,
       'invoiceSerial': invoiceSerial,
-    };
-  }
+      if (customerId != null) 'customerId': customerId,
+      }; 
+    }
 
   factory Invoice.fromJson(Map<String, dynamic> json) {
     return Invoice(
@@ -57,8 +61,9 @@ class Invoice {
       formattedTime: json['formattedTime'],
       invoiceAction: json['invoiceAction'],
       invoiceSerial: json['invoiceSerial'],
-    );
-  }
+      customerId: json['customerId'],
+      ); 
+    }
 
   static Map<String, dynamic> _productToMap(Product product) {
     return {
@@ -80,51 +85,3 @@ class Invoice {
     );
   }
 }
-
-
-// import 'package:arqamy/features/data/models/sales/customer.dart';
-// import 'package:arqamy/features/data/models/supply/supply.dart';
-
-// class Invoice {
-//   final InvoiceInfo info;
-//   final Supply supplier;
-//   final Customer customer;
-//   final List<InvoiceItem> items;
-
-//   const Invoice({
-//     required this.info,
-//     required this.supplier,
-//     required this.customer,
-//     required this.items,
-//   });
-// }
-
-// class InvoiceInfo {
-//   final String description;
-//   final String number;
-//   final DateTime date;
-//   final DateTime dueDate;
-
-//   const InvoiceInfo({
-//     required this.description,
-//     required this.number,
-//     required this.date,
-//     required this.dueDate,
-//   });
-// }
-
-// class InvoiceItem {
-//   final String description;
-//   final DateTime date;
-//   final int quantity;
-//   final double vat;
-//   final double unitPrice;
-
-//   const InvoiceItem({
-//     required this.description,
-//     required this.date,
-//     required this.quantity,
-//     required this.vat,
-//     required this.unitPrice,
-//   });
-// }

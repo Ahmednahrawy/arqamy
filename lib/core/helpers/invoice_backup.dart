@@ -103,7 +103,11 @@ class InvoiceBackup {
     if (action != null && action is! String) {
       throw _invalid(number, 'invoiceAction is not text');
     }
-    final rawProducts = map['products'];
+    final customerId = map['customerId'];
+    if (customerId != null &&
+        (customerId is! String || customerId.trim().isEmpty)) {
+      throw _invalid(number, 'customerId is not valid text');
+    }    final rawProducts = map['products'];
     if (rawProducts is! List) {
       throw _invalid(number, 'products is not a list');
     }
@@ -121,8 +125,8 @@ class InvoiceBackup {
       formattedTime: _text(map, 'formattedTime', number),
       invoiceAction: action as String?,
       invoiceSerial: _text(map, 'invoiceSerial', number),
-    );
-  }
+      customerId: customerId as String?,
+    );  }
 
   static Product _parseProduct(Object? raw, int number) {
     if (raw is! Map) {
