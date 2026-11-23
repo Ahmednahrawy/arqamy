@@ -1,3 +1,4 @@
+import java.io.File
 import java.util.Properties
 
 plugins {
@@ -36,7 +37,12 @@ android {
             if (keystoreFile.exists()) {
                 keyAlias = keystoreProperties["keyAlias"] as String
                 keyPassword = keystoreProperties["keyPassword"] as String
-                storeFile = file(keystoreProperties["storeFile"] as String)
+                val storePath = keystoreProperties["storeFile"] as String
+                storeFile = if (File(storePath).isAbsolute) {
+                    file(storePath)
+                } else {
+                    rootProject.file(storePath)
+                }
                 storePassword = keystoreProperties["storePassword"] as String
             }
         }
@@ -44,16 +50,30 @@ android {
 
     buildTypes {
         release {
-            // TODO: Add your own signing config for the release build.
-            // Signing with the debug keys for now, so `flutter run --release` works.
+            // Never fall back to debug signing: a debug-signed release cannot
+            // be published or installed as an update. The task check below
+            // fails release builds loudly when the keystore is missing.
             signingConfig = if (keystoreFile.exists()) {
                 signingConfigs.getByName("release")
             } else {
-                signingConfigs.getByName("debug")
+                null
             }
         }
     }
 }
+
+// Release artifacts must be signed with the real key or not produced at all.
+tasks.matching { it.name == "assembleRelease" || it.name == "bundleRelease" }
+    .configureEach {
+        doFirst {
+            if (!keystoreFile.exists()) {
+                throw GradleException(
+                    "Release signing is not configured. Create android/key.properties " +
+                        "with storeFile, storePassword, keyAlias and keyPassword."
+                )
+            }
+        }
+    }
 
 // Modern syntax replacing the old inside-android kotlinOptions block
 kotlin {
