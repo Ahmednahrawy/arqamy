@@ -1,5 +1,5 @@
-// Read-only audit of customer names in an Arqamy invoice backup.
-//
+// ignore_for_file: avoid_print
+// Read-only audit of customer names in an Arqamy invoice backup.//
 // Usage:
 //   dart tool/customer_audit.dart path/to/arqamy-backup-XXXX.json
 //   dart tool/customer_audit.dart path/to/arqamy-backup-XXXX.json --names
