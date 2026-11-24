@@ -178,6 +178,7 @@ class InvoiceProvider extends ChangeNotifier {
 
   Future<void> updateInvoice(Invoice invoice) {
     return _withInvoiceMutationLock(() async {
+      await _ensureInvoicesLoaded();
       final updatedInvoices = List<Invoice>.of(_invoices);
       final index = _uniqueInvoiceIndex(invoice.id);
       if (index == -1) {
