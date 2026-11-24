@@ -5,6 +5,7 @@ import 'package:arqamy/core/providers/theme.dart';
 import 'package:arqamy/core/services/invoice_backup_service.dart';
 import 'package:arqamy/core/widgets/app_snack_bar.dart';
 import 'package:arqamy/features/orderscreen/providers/invoice_provider.dart';
+import 'package:arqamy/features/payment_ledger/data/ledger_import_service.dart';
 import 'package:arqamy/features/settingscreen/ui/pages/invoice_setting.dart';
 import 'package:arqamy/features/settingscreen/ui/pages/product_management.dart';
 import 'package:arqamy/generated/l10n.dart';
@@ -167,6 +168,89 @@ class SettingsScreen extends StatelessWidget {
     }
   }
 
+  Future<void> _importToLedger(BuildContext context) async {
+    final strings = S.of(context);
+    final provider = context.read<InvoiceProvider>();
+    try {
+      final plan = await LedgerImportService.preview(provider);
+      if (!context.mounted) return;
+      if (plan.ready.isEmpty) {
+        showAppSnackBar(context, strings.ledger_import_nothing);
+        return;
+      }
+
+      final confirmed = await showDialog<bool>(
+        context: context,
+        builder: (dialogContext) => AlertDialog(
+          title: Text(strings.ledger_import),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(strings.ledger_import_confirm),
+              const SizedBox(height: 12),
+              Text('${strings.ledger_import_ready}: ${plan.ready.length}'),
+              Text('${strings.ledger_import_held}: ${plan.held.length}'),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(dialogContext, false),
+              child: Text(strings.cancel),
+            ),
+            FilledButton(
+              onPressed: () => Navigator.pop(dialogContext, true),
+              child: Text(strings.ledger_import_action),
+            ),
+          ],
+        ),
+      );
+      if (confirmed != true || !context.mounted) return;
+
+      final result = await LedgerImportService.run(provider, plan);
+      if (!context.mounted) return;
+      await showDialog<void>(
+        context: context,
+        builder: (dialogContext) => AlertDialog(
+          title: Text(strings.ledger_import),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                '${strings.ledger_import_imported}: ${result.invoicesImported}',
+              ),
+              Text(
+                '${strings.ledger_import_already}: '
+                '${result.invoicesAlreadyImported}',
+              ),
+              Text(
+                '${strings.ledger_import_missing_customer}: '
+                '${result.skippedMissingParty}',
+              ),
+              Text(
+                '${strings.ledger_import_accounts}: ${result.accountsCreated}',
+              ),
+              Text('${strings.ledger_import_held}: ${result.held}'),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(dialogContext),
+              child: Text(strings.confirm),
+            ),
+          ],
+        ),
+      );
+    } catch (error) {
+      if (!context.mounted) return;
+      showAppSnackBar(
+        context,
+        '${strings.ledger_import_failed}: $error',
+        isError: true,
+      );
+    }
+  }
   @override
   Widget build(BuildContext context) {
     final themeProvider = Provider.of<ThemeProvider>(context);
@@ -239,6 +323,13 @@ class SettingsScreen extends StatelessWidget {
               title: Text(S.of(context).link_customers),
               subtitle: Text(S.of(context).link_customers_desc),
               onTap: () => _linkCustomers(context),
+            ),
+          if (kDebugMode)
+            ListTile(
+              leading: const Icon(Icons.account_balance_outlined),
+              title: Text(S.of(context).ledger_import),
+              subtitle: Text(S.of(context).ledger_import_desc),
+              onTap: () => _importToLedger(context),
             ),
           ListTile(
             leading: const Icon(Icons.notifications),

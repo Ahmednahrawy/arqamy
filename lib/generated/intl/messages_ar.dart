@@ -209,6 +209,38 @@ class MessageLookup extends MessageLookupByLibrary {
     "invoices_many": MessageLookupByLibrary.simpleMessage("فاتورة"),
     "kilograms": MessageLookupByLibrary.simpleMessage("كجم"),
     "language": MessageLookupByLibrary.simpleMessage("اللغة"),
+    "ledger_import": MessageLookupByLibrary.simpleMessage(
+      "استيراد إلى دفتر الحسابات",
+    ),
+    "ledger_import_accounts": MessageLookupByLibrary.simpleMessage(
+      "حسابات تم إنشاؤها",
+    ),
+    "ledger_import_action": MessageLookupByLibrary.simpleMessage("استيراد"),
+    "ledger_import_already": MessageLookupByLibrary.simpleMessage(
+      "تم استيرادها سابقاً",
+    ),
+    "ledger_import_confirm": MessageLookupByLibrary.simpleMessage(
+      "سيتم حفظ نسخة احتياطية أولاً. الفواتير الجاهزة تُنسخ إلى دفتر الحسابات بالجنيه المصري (EGP). فواتيرك المحفوظة لا تتغير، والفواتير التي تحتاج إلى قرار يتم تخطيها.",
+    ),
+    "ledger_import_desc": MessageLookupByLibrary.simpleMessage(
+      "نسخة تجريبية: نسخ الفواتير إلى دفتر المدفوعات",
+    ),
+    "ledger_import_failed": MessageLookupByLibrary.simpleMessage(
+      "تعذر الاستيراد إلى دفتر الحسابات",
+    ),
+    "ledger_import_held": MessageLookupByLibrary.simpleMessage("بانتظار قرار"),
+    "ledger_import_imported": MessageLookupByLibrary.simpleMessage(
+      "فواتير تم استيرادها",
+    ),
+    "ledger_import_missing_customer": MessageLookupByLibrary.simpleMessage(
+      "تم التخطي: العميل غير موجود",
+    ),
+    "ledger_import_nothing": MessageLookupByLibrary.simpleMessage(
+      "لا توجد فواتير جاهزة للاستيراد. اربط العملاء أولاً، أو راجع الفواتير المعلقة.",
+    ),
+    "ledger_import_ready": MessageLookupByLibrary.simpleMessage(
+      "جاهزة للاستيراد",
+    ),
     "legacyDatePickerHint": MessageLookupByLibrary.simpleMessage(
       "تعذر قراءة التاريخ أو الوقت المحفوظ. اختر قيمة بديلة عند الحاجة.",
     ),

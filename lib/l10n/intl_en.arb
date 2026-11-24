@@ -239,5 +239,17 @@
   "link_customers_reused": "Existing customers reused",
   "link_customers_need_confirmation": "Customers needing confirmation",
   "link_customers_unnamed": "Invoices without a name",
-  "link_customers_failed": "Could not link customers"
+  "link_customers_failed": "Could not link customers",
+  "ledger_import": "Import to ledger",
+  "ledger_import_desc": "Debug preview: copy invoices into the payment ledger",
+  "ledger_import_confirm": "A backup is saved first. Invoices that are ready are copied into the ledger in Egyptian pounds (EGP). Your saved invoices are not changed, and invoices that need a decision are skipped.",
+  "ledger_import_ready": "Ready to import",
+  "ledger_import_held": "Held for a decision",
+  "ledger_import_action": "Import",
+  "ledger_import_imported": "Invoices imported",
+  "ledger_import_already": "Already imported",
+  "ledger_import_missing_customer": "Skipped: customer not found",
+  "ledger_import_accounts": "Accounts created",
+  "ledger_import_nothing": "No invoices are ready to import. Link customers first, or check the held invoices.",
+  "ledger_import_failed": "Could not import to the ledger"
 }

@@ -221,6 +221,38 @@ class MessageLookup extends MessageLookupByLibrary {
     "invoices_many": MessageLookupByLibrary.simpleMessage("invoices"),
     "kilograms": MessageLookupByLibrary.simpleMessage("kg"),
     "language": MessageLookupByLibrary.simpleMessage("Language"),
+    "ledger_import": MessageLookupByLibrary.simpleMessage("Import to ledger"),
+    "ledger_import_accounts": MessageLookupByLibrary.simpleMessage(
+      "Accounts created",
+    ),
+    "ledger_import_action": MessageLookupByLibrary.simpleMessage("Import"),
+    "ledger_import_already": MessageLookupByLibrary.simpleMessage(
+      "Already imported",
+    ),
+    "ledger_import_confirm": MessageLookupByLibrary.simpleMessage(
+      "A backup is saved first. Invoices that are ready are copied into the ledger in Egyptian pounds (EGP). Your saved invoices are not changed, and invoices that need a decision are skipped.",
+    ),
+    "ledger_import_desc": MessageLookupByLibrary.simpleMessage(
+      "Debug preview: copy invoices into the payment ledger",
+    ),
+    "ledger_import_failed": MessageLookupByLibrary.simpleMessage(
+      "Could not import to the ledger",
+    ),
+    "ledger_import_held": MessageLookupByLibrary.simpleMessage(
+      "Held for a decision",
+    ),
+    "ledger_import_imported": MessageLookupByLibrary.simpleMessage(
+      "Invoices imported",
+    ),
+    "ledger_import_missing_customer": MessageLookupByLibrary.simpleMessage(
+      "Skipped: customer not found",
+    ),
+    "ledger_import_nothing": MessageLookupByLibrary.simpleMessage(
+      "No invoices are ready to import. Link customers first, or check the held invoices.",
+    ),
+    "ledger_import_ready": MessageLookupByLibrary.simpleMessage(
+      "Ready to import",
+    ),
     "legacyDatePickerHint": MessageLookupByLibrary.simpleMessage(
       "The stored date or time could not be parsed. Choose a replacement if needed.",
     ),

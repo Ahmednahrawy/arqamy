@@ -2049,6 +2049,126 @@ class S {
       args: [],
     );
   }
+
+  /// `Import to ledger`
+  String get ledger_import {
+    return Intl.message(
+      'Import to ledger',
+      name: 'ledger_import',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Debug preview: copy invoices into the payment ledger`
+  String get ledger_import_desc {
+    return Intl.message(
+      'Debug preview: copy invoices into the payment ledger',
+      name: 'ledger_import_desc',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `A backup is saved first. Invoices that are ready are copied into the ledger in Egyptian pounds (EGP). Your saved invoices are not changed, and invoices that need a decision are skipped.`
+  String get ledger_import_confirm {
+    return Intl.message(
+      'A backup is saved first. Invoices that are ready are copied into the ledger in Egyptian pounds (EGP). Your saved invoices are not changed, and invoices that need a decision are skipped.',
+      name: 'ledger_import_confirm',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Ready to import`
+  String get ledger_import_ready {
+    return Intl.message(
+      'Ready to import',
+      name: 'ledger_import_ready',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Held for a decision`
+  String get ledger_import_held {
+    return Intl.message(
+      'Held for a decision',
+      name: 'ledger_import_held',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Import`
+  String get ledger_import_action {
+    return Intl.message(
+      'Import',
+      name: 'ledger_import_action',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Invoices imported`
+  String get ledger_import_imported {
+    return Intl.message(
+      'Invoices imported',
+      name: 'ledger_import_imported',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Already imported`
+  String get ledger_import_already {
+    return Intl.message(
+      'Already imported',
+      name: 'ledger_import_already',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Skipped: customer not found`
+  String get ledger_import_missing_customer {
+    return Intl.message(
+      'Skipped: customer not found',
+      name: 'ledger_import_missing_customer',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Accounts created`
+  String get ledger_import_accounts {
+    return Intl.message(
+      'Accounts created',
+      name: 'ledger_import_accounts',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No invoices are ready to import. Link customers first, or check the held invoices.`
+  String get ledger_import_nothing {
+    return Intl.message(
+      'No invoices are ready to import. Link customers first, or check the held invoices.',
+      name: 'ledger_import_nothing',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Could not import to the ledger`
+  String get ledger_import_failed {
+    return Intl.message(
+      'Could not import to the ledger',
+      name: 'ledger_import_failed',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

@@ -239,5 +239,17 @@
   "link_customers_reused": "عملاء موجودون أُعيد استخدامهم",
   "link_customers_need_confirmation": "عملاء بحاجة إلى تأكيد",
   "link_customers_unnamed": "فواتير بلا اسم",
-  "link_customers_failed": "تعذر ربط العملاء"
+  "link_customers_failed": "تعذر ربط العملاء",
+  "ledger_import": "استيراد إلى دفتر الحسابات",
+  "ledger_import_desc": "نسخة تجريبية: نسخ الفواتير إلى دفتر المدفوعات",
+  "ledger_import_confirm": "سيتم حفظ نسخة احتياطية أولاً. الفواتير الجاهزة تُنسخ إلى دفتر الحسابات بالجنيه المصري (EGP). فواتيرك المحفوظة لا تتغير، والفواتير التي تحتاج إلى قرار يتم تخطيها.",
+  "ledger_import_ready": "جاهزة للاستيراد",
+  "ledger_import_held": "بانتظار قرار",
+  "ledger_import_action": "استيراد",
+  "ledger_import_imported": "فواتير تم استيرادها",
+  "ledger_import_already": "تم استيرادها سابقاً",
+  "ledger_import_missing_customer": "تم التخطي: العميل غير موجود",
+  "ledger_import_accounts": "حسابات تم إنشاؤها",
+  "ledger_import_nothing": "لا توجد فواتير جاهزة للاستيراد. اربط العملاء أولاً، أو راجع الفواتير المعلقة.",
+  "ledger_import_failed": "تعذر الاستيراد إلى دفتر الحسابات"
 }
