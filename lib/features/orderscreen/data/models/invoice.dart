@@ -21,7 +21,8 @@ class Invoice {
   /// customer IDs existed; those are mapped after the owner confirms them.
   final String? customerId;
 
-  Invoice({    required this.id,
+  Invoice({
+    required this.id,
     required this.customerName,
     required this.products,
     required this.totalCost,
@@ -33,6 +34,24 @@ class Invoice {
     required this.invoiceSerial,
     this.customerId,
   });
+
+  /// The same invoice linked to [customerId]; everything else is unchanged.
+  Invoice withCustomerId(String customerId) {
+    return Invoice(
+      id: id,
+      customerName: customerName,
+      products: products,
+      totalCost: totalCost,
+      paid: paid,
+      rest: rest,
+      formattedDate: formattedDate,
+      formattedTime: formattedTime,
+      invoiceAction: invoiceAction,
+      invoiceSerial: invoiceSerial,
+      customerId: customerId,
+    );
+  }
+
   Map<String, dynamic> toJson() {
     return {
       'id': id,
@@ -46,14 +65,16 @@ class Invoice {
       'invoiceAction': invoiceAction,
       'invoiceSerial': invoiceSerial,
       if (customerId != null) 'customerId': customerId,
-      }; 
-    }
+    };
+  }
 
   factory Invoice.fromJson(Map<String, dynamic> json) {
     return Invoice(
       id: json['id'],
       customerName: json['customerName'],
-      products: (json['products'] as List).map((productMap) => _productFromMap(productMap)).toList(),
+      products: (json['products'] as List)
+          .map((productMap) => _productFromMap(productMap))
+          .toList(),
       totalCost: json['totalCost'],
       paid: json['paid'],
       rest: json['rest'],
@@ -62,8 +83,8 @@ class Invoice {
       invoiceAction: json['invoiceAction'],
       invoiceSerial: json['invoiceSerial'],
       customerId: json['customerId'],
-      ); 
-    }
+    );
+  }
 
   static Map<String, dynamic> _productToMap(Product product) {
     return {

@@ -288,6 +288,52 @@ class InvoiceProvider extends ChangeNotifier {
     return balance.toDouble();
   }
 
+  /// Links invoices to customers in one all-or-nothing save.
+  ///
+  /// [customerIdByInvoiceId] maps an invoice id to the customer id to set.
+  /// Invoices that already have a customer ID are never changed, and an id
+  /// shared by several saved invoices is skipped because the invoices cannot
+  /// be told apart. Returns how many invoices were linked.
+  Future<int> assignCustomerIds(
+    Map<String, String> customerIdByInvoiceId,
+  ) async {
+    for (final customerId in customerIdByInvoiceId.values) {
+      if (customerId.trim().isEmpty) {
+        throw ArgumentError.value(
+          customerIdByInvoiceId,
+          'customerIdByInvoiceId',
+          'A customer ID cannot be empty.',
+        );
+      }
+    }
+    return _withInvoiceMutationLock(() async {
+      final occurrences = <String, int>{};
+      for (final invoice in _invoices) {
+        occurrences[invoice.id] = (occurrences[invoice.id] ?? 0) + 1;
+      }
+
+      var linked = 0;
+      final updatedInvoices = <Invoice>[];
+      for (final invoice in _invoices) {
+        final customerId = customerIdByInvoiceId[invoice.id];
+        if (customerId == null ||
+            invoice.customerId != null ||
+            occurrences[invoice.id]! > 1) {
+          updatedInvoices.add(invoice);
+          continue;
+        }
+        updatedInvoices.add(invoice.withCustomerId(customerId));
+        linked++;
+      }
+      if (linked == 0) return 0;
+
+      await _saveInvoicesToStorage(updatedInvoices);
+      _replaceInvoices(updatedInvoices);
+      notifyListeners();
+      return linked;
+    });
+  }
+
   Future<void> deleteInvoice(String invoiceId) {
     return _withInvoiceMutationLock(() async {
       final index = _uniqueInvoiceIndex(invoiceId);
