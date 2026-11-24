@@ -80,9 +80,6 @@ class _CustomerNameAutoCompleteState extends State<CustomerNameAutoComplete> {
         isError: true,
       );
     }
-    if (kDebugMode) {
-      print('save done ##############################');
-    }
   }
 
   // Add new suggestion if it doesn't exist
@@ -93,9 +90,6 @@ class _CustomerNameAutoCompleteState extends State<CustomerNameAutoComplete> {
           _customers.add(suggestion);
           _saveSuggestions();
         });
-      }
-      if (kDebugMode) {
-        print('add done ###################################################');
       }
     } catch (e) {
       showAppSnackBar(
