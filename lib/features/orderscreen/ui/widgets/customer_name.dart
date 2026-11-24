@@ -8,8 +8,11 @@ import 'package:shared_preferences/shared_preferences.dart';
 class CustomerNameAutoComplete extends StatefulWidget {
   final Function(String?) onCustomerSelected;
   final String? initialValue;
-  const CustomerNameAutoComplete(
-      {super.key, required this.onCustomerSelected, this.initialValue});
+  const CustomerNameAutoComplete({
+    super.key,
+    required this.onCustomerSelected,
+    this.initialValue,
+  });
   @override
   _CustomerNameAutoCompleteState createState() =>
       _CustomerNameAutoCompleteState();
@@ -60,9 +63,6 @@ class _CustomerNameAutoCompleteState extends State<CustomerNameAutoComplete> {
         '${S.of(context).error_loading_suggestions}: $e',
         isError: true,
       );
-    }
-    if (kDebugMode) {
-      print('load done #########################');
     }
   }
 
@@ -117,9 +117,9 @@ class _CustomerNameAutoCompleteState extends State<CustomerNameAutoComplete> {
           return const Iterable<String>.empty();
         }
         return _customers.where((String option) {
-          return option
-              .toLowerCase()
-              .contains(textEditingValue.text.toLowerCase());
+          return option.toLowerCase().contains(
+            textEditingValue.text.toLowerCase(),
+          );
         });
       },
       onSelected: (String selection) {
@@ -145,9 +145,6 @@ class _CustomerNameAutoCompleteState extends State<CustomerNameAutoComplete> {
                 _addSuggestion(value);
                 _handleSubmit(value);
               }
-              if (kDebugMode) {
-                print('Field submitted #############################');
-              }
             } catch (e) {
               showAppSnackBar(
                 context,
@@ -164,34 +161,27 @@ class _CustomerNameAutoCompleteState extends State<CustomerNameAutoComplete> {
                     onPressed: () {
                       controller.clear();
                       widget.onCustomerSelected(null);
-                    }),
+                    },
+                  ),
             isDense: true,
             contentPadding: const EdgeInsets.symmetric(
               horizontal: 20,
               vertical: 15,
             ),
             focusedBorder: OutlineInputBorder(
-                borderSide: BorderSide(
-                  color: colors.primary,
-                  width: 1.3,
-                ),
-                borderRadius: BorderRadius.circular(15)),
+              borderSide: BorderSide(color: colors.primary, width: 1.3),
+              borderRadius: BorderRadius.circular(15),
+            ),
             enabledBorder: OutlineInputBorder(
               borderSide: BorderSide(color: colors.outline, width: 1.3),
               borderRadius: BorderRadius.circular(15),
             ),
             errorBorder: OutlineInputBorder(
-              borderSide: BorderSide(
-                color: colors.error,
-                width: 1.3,
-              ),
+              borderSide: BorderSide(color: colors.error, width: 1.3),
               borderRadius: BorderRadius.circular(15.0),
             ),
             focusedErrorBorder: OutlineInputBorder(
-              borderSide: BorderSide(
-                color: colors.error,
-                width: 1.3,
-              ),
+              borderSide: BorderSide(color: colors.error, width: 1.3),
               borderRadius: BorderRadius.circular(15.0),
             ),
             labelText: S.of(context).customerName,

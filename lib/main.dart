@@ -13,7 +13,7 @@ import 'firebase_options.dart';
 Future<void> main() async {
   // Make sure Flutter is initialized
   WidgetsFlutterBinding.ensureInitialized();
-  await SystemChrome.setPreferredOrientations([
+  await SystemChrome.setPreferredOrientations([ 
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
   ]);
