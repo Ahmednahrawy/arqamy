@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:arqamy/core/database/app_database.dart';
+import 'package:arqamy/core/database/app_database.dart' hide Invoice;
 import 'package:arqamy/features/customerscreen/data/customer_linker.dart';
 import 'package:arqamy/features/customerscreen/data/customer_registry.dart';
 import 'package:arqamy/features/orderscreen/data/models/invoice.dart';
@@ -185,28 +185,30 @@ void main() {
     expect(provider.invoices.last.customerId, isNull);
   });
 
-  test('a failed save changes no invoice and a retry reuses the customer',
-      () async {
-    await seed([_invoice('a1', 'منى')]);
-    failWrites = true;
+  test(
+    'a failed save changes no invoice and a retry reuses the customer',
+    () async {
+      await seed([_invoice('a1', 'منى')]);
+      failWrites = true;
 
-    await expectLater(
-      linker().linkAutomaticMatches(),
-      throwsA(isA<StateError>()),
-    );
+      await expectLater(
+        linker().linkAutomaticMatches(),
+        throwsA(isA<StateError>()),
+      );
 
-    expect(provider.invoices.single.customerId, isNull);
-    final afterFailure = await registry.listCustomers();
-    expect(afterFailure, hasLength(1));
+      expect(provider.invoices.single.customerId, isNull);
+      final afterFailure = await registry.listCustomers();
+      expect(afterFailure, hasLength(1));
 
-    failWrites = false;
-    final result = await linker().linkAutomaticMatches();
+      failWrites = false;
+      final result = await linker().linkAutomaticMatches();
 
-    expect(result.customersReused, 1);
-    expect(result.customersCreated, 0);
-    expect(provider.invoices.single.customerId, afterFailure.single.id);
-    expect(await registry.listCustomers(), hasLength(1));
-  });
+      expect(result.customersReused, 1);
+      expect(result.customersCreated, 0);
+      expect(provider.invoices.single.customerId, afterFailure.single.id);
+      expect(await registry.listCustomers(), hasLength(1));
+    },
+  );
 
   test('invoices sharing one id are left unlinked', () async {
     stored = jsonEncode([
