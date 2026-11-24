@@ -105,6 +105,29 @@ class LedgerInvoiceDraft {
   final String? legacyRemainingValue;
   final DateTime? issuedAt;
   final List<LedgerInvoiceLineDraft> lines;
+
+  /// The same draft attached to a financial account.
+  LedgerInvoiceDraft withFinancialAccount(String financialAccountId) {
+    return LedgerInvoiceDraft(
+      id: id,
+      serial: serial,
+      action: action,
+      lines: lines,
+      legacyRecordKey: legacyRecordKey,
+      legacyInvoiceId: legacyInvoiceId,
+      sourceJson: sourceJson,
+      partyId: partyId,
+      partyRole: partyRole,
+      financialAccountId: financialAccountId,
+      currencyCode: currencyCode,
+      legacyAction: legacyAction,
+      totalMinor: totalMinor,
+      legacyTotalValue: legacyTotalValue,
+      legacyPaidValue: legacyPaidValue,
+      legacyRemainingValue: legacyRemainingValue,
+      issuedAt: issuedAt,
+    );
+  }
 }
 
 class LedgerInvoiceMapper {
@@ -137,7 +160,7 @@ class LedgerInvoiceMapper {
       InvoiceAction.storage => LedgerInvoiceAction.storage,
       null => LedgerInvoiceAction.unknown,
     };
-    
+
     return LedgerInvoiceDraft(
       id: _uuid.v4(),
       serial: invoice.invoiceSerial,

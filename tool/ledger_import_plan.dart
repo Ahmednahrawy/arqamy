@@ -11,7 +11,6 @@ import 'dart:io';
 import 'package:arqamy/core/helpers/invoice_backup.dart';
 import 'package:arqamy/features/payment_ledger/data/ledger_foundation.dart';
 import 'package:arqamy/features/payment_ledger/data/ledger_import_planner.dart';
-import 'package:arqamy/features/payment_ledger/data/legacy_invoice_audit.dart';
 
 void main(List<String> args) {
   final paths = args.where((arg) => !arg.startsWith('--')).toList();
@@ -49,9 +48,8 @@ void main(List<String> args) {
   final reasons = <String, int>{};
   void count(String reason) => reasons[reason] = (reasons[reason] ?? 0) + 1;
   for (final held in plan.held) {
-    if (held.storageRoleUndecided) count('Storage invoice (role undecided)');
     for (final issue in held.issues) {
-      count(issue.name);
+            count(issue.name);
     }
   }
 

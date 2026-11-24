@@ -83,14 +83,16 @@ void main() {
     expect(plan.ready.single.draft.action, LedgerInvoiceAction.purchase);
   });
 
-  test('storage invoices are held until the owner decides their role', () {
+  test('a storage invoice is a service for a customer, like a sale', () {
     final plan = _planner().plan([_invoice(action: 'تخزين')]);
 
-    expect(plan.ready, isEmpty);
-    expect(plan.held.single.storageRoleUndecided, isTrue);
-    expect(plan.held.single.issues, isEmpty);
+    expect(plan.held, isEmpty);
+    final item = plan.ready.single;
+    expect(item.partyRole, LedgerPartyRole.customer);
+    expect(item.draft.partyRole, LedgerPartyRole.customer);
+    expect(item.draft.action, LedgerInvoiceAction.storage);
+    expect(item.draft.currencyCode, 'EGP');
   });
-
   test('an invoice not linked to a customer is held, never guessed', () {
     final plan = _planner().plan([_invoice(customerId: null)]);
 

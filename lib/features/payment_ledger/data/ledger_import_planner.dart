@@ -1,3 +1,4 @@
+import 'package:arqamy/core/helpers/invoice_action.dart';
 import 'package:arqamy/core/helpers/money.dart';
 import 'package:arqamy/features/orderscreen/data/models/invoice.dart' as legacy;
 import 'package:arqamy/features/payment_ledger/data/ledger_foundation.dart';
@@ -27,15 +28,11 @@ class HeldInvoice {
     required this.invoiceId,
     required this.serial,
     required this.issues,
-    this.storageRoleUndecided = false,
   });
 
   final String invoiceId;
   final String serial;
   final List<LegacyInvoiceIssue> issues;
-
-  /// Storage invoices wait until the owner decides which role they belong to.
-  final bool storageRoleUndecided;
 }
 
 class LedgerImportPlan {
@@ -94,27 +91,22 @@ class LedgerImportPlanner {
         if (idCounts[invoice.id]! > 1) LegacyInvoiceIssue.duplicateInvoiceId,
         ...?LegacyInvoiceAudit.run([invoice]).findings.firstOrNull?.issues,
       ];
-      final draftAction = _mapper
-          .fromExistingInvoice(
-            invoice,
-            sourceRecordKey: legacyRecordKeyFor(invoice),
-          )
-          .action;
-      final storage = draftAction == LedgerInvoiceAction.storage;
-
-      if (issues.isNotEmpty || storage) {
+      if (issues.isNotEmpty) {
         held.add(
           HeldInvoice(
             invoiceId: invoice.id,
             serial: invoice.invoiceSerial,
             issues: List.unmodifiable(issues),
-            storageRoleUndecided: storage,
           ),
         );
         continue;
       }
 
-      final role = draftAction == LedgerInvoiceAction.purchase
+      // Purchases are with suppliers; sales and storage (a service offered to
+      // customers) are with customers. Unknown types never get this far.
+      final role =
+          InvoiceAction.tryParse(invoice.invoiceAction) ==
+              InvoiceAction.purchase
           ? LedgerPartyRole.supplier
           : LedgerPartyRole.customer;
       final partyId = invoice.customerId!;

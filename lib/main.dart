@@ -10,7 +10,7 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'firebase_options.dart';
 
-Future<void> main() async {
+Future<void> main() async { 
   // Make sure Flutter is initialized
   WidgetsFlutterBinding.ensureInitialized();
   await SystemChrome.setPreferredOrientations([ 
