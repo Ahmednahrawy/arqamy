@@ -30,6 +30,7 @@ class InvoiceProvider extends ChangeNotifier {
   String? _customerName;
   List<String> _masterProductList = [];
   final List<Invoice> _invoices = []; // قائمة الفواتير المخزنة
+  bool _invoicesLoaded = false;
   List<Product>? _productsViewCache;
   List<Product>? _groupedProductsCache;
   double? _totalCostCache;
@@ -160,6 +161,7 @@ class InvoiceProvider extends ChangeNotifier {
   // 🔄 الدوال الجديدة لإدارة الفواتير
   Future<void> saveInvoice(Invoice invoice) {
     return _withInvoiceMutationLock(() async {
+      await _ensureInvoicesLoaded();
       final updatedInvoices = List<Invoice>.of(_invoices);
       final index = _uniqueInvoiceIndex(invoice.id);
       if (index == -1) {
@@ -176,6 +178,7 @@ class InvoiceProvider extends ChangeNotifier {
 
   Future<void> updateInvoice(Invoice invoice) {
     return _withInvoiceMutationLock(() async {
+      await _ensureInvoicesLoaded();
       final updatedInvoices = List<Invoice>.of(_invoices);
       final index = _uniqueInvoiceIndex(invoice.id);
       if (index == -1) {
@@ -202,27 +205,36 @@ class InvoiceProvider extends ChangeNotifier {
   }
 
   Future<void> loadInvoices() {
-    return _withInvoiceMutationLock(() async {
-      try {
-        final String? invoicesJson = _invoiceStorageReader != null
-            ? await _invoiceStorageReader()
-            : (await SharedPreferences.getInstance()).getString(
-                'saved_invoices',
-              );
+    return _withInvoiceMutationLock(_loadInvoicesFromStorage);
+  }
 
-        if (invoicesJson != null) {
-          final List<dynamic> invoicesList = json.decode(invoicesJson);
-          final loadedInvoices = invoicesList
-              .map((invoiceJson) => Invoice.fromJson(invoiceJson))
-              .toList();
-          _replaceInvoices(loadedInvoices);
-        }
-        notifyListeners();
-      } catch (error) {
-        debugPrint('Error loading invoices: $error');
-        rethrow;
+  Future<void> _ensureInvoicesLoaded() async {
+    if (_invoicesLoaded) return;
+    await _loadInvoicesFromStorage();
+  }
+
+  // Must only be called while holding _invoiceMutationQueue.
+  Future<void> _loadInvoicesFromStorage() async {
+    try {
+      final String? invoicesJson = _invoiceStorageReader != null
+          ? await _invoiceStorageReader()
+          : (await SharedPreferences.getInstance()).getString(
+              'saved_invoices',
+            );
+
+      if (invoicesJson != null) {
+        final List<dynamic> invoicesList = json.decode(invoicesJson);
+        final loadedInvoices = invoicesList
+            .map((invoiceJson) => Invoice.fromJson(invoiceJson))
+            .toList();
+        _replaceInvoices(loadedInvoices);
       }
-    });
+      _invoicesLoaded = true;
+      notifyListeners();
+    } catch (error) {
+      debugPrint('Error loading invoices: $error');
+      rethrow;
+    }
   }
 
   Future<void> _saveInvoicesToStorage(List<Invoice> invoices) async {
@@ -307,6 +319,7 @@ class InvoiceProvider extends ChangeNotifier {
       }
     }
     return _withInvoiceMutationLock(() async {
+      await _ensureInvoicesLoaded();
       final occurrences = <String, int>{};
       for (final invoice in _invoices) {
         occurrences[invoice.id] = (occurrences[invoice.id] ?? 0) + 1;
@@ -336,6 +349,7 @@ class InvoiceProvider extends ChangeNotifier {
 
   Future<void> deleteInvoice(String invoiceId) {
     return _withInvoiceMutationLock(() async {
+      await _ensureInvoicesLoaded();
       final index = _uniqueInvoiceIndex(invoiceId);
       if (index == -1) return;
 
@@ -375,6 +389,7 @@ class InvoiceProvider extends ChangeNotifier {
   Future<InvoiceRestoreResult> restoreBackup(String backupText) async {
     final restored = InvoiceBackup.decode(backupText);
     return _withInvoiceMutationLock(() async {
+      await _ensureInvoicesLoaded();
       final updatedInvoices = List<Invoice>.of(_invoices);
       var added = 0;
       var replaced = 0;
