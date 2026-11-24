@@ -4,7 +4,7 @@
 **Branch:** `main`  
 **Audited commit:** `7d821f7af4d3f16b92fca78af0bcb901b746247e`  
 **Product direction:** Global, modular business management SaaS  
-**Status:** Proposed plan — pending approval
+**Status:** Approved roadmap — implementation remains phase-gated and requires separate approval for code/schema changes
 
 ---
 
