@@ -37,14 +37,17 @@ class CustomerRegistry {
 
   /// All customers, ordered by display name.
   Future<List<LedgerParty>> listCustomers() async {
-    final query = _database.select(_database.parties).join([
-      innerJoin(
-        _database.partyRoles,
-        _database.partyRoles.partyId.equalsExp(_database.parties.id),
-      ),
-    ])
-      ..where(_database.partyRoles.role.equals(LedgerPartyRole.customer.name))
-      ..orderBy([OrderingTerm.asc(_database.parties.displayName)]);
+    final query =
+        _database.select(_database.parties).join([
+            innerJoin(
+              _database.partyRoles,
+              _database.partyRoles.partyId.equalsExp(_database.parties.id),
+            ),
+          ])
+          ..where(
+            _database.partyRoles.role.equals(LedgerPartyRole.customer.name),
+          )
+          ..orderBy([OrderingTerm.asc(_database.parties.displayName)]);
     final rows = await query.get();
     return [
       for (final row in rows)
@@ -73,7 +76,7 @@ class CustomerRegistry {
     ];
   }
 
-  Future<LedgerParty> createCustomer(String displayName) {
+  Future<LedgerParty> createCustomer(String displayName) async {
     final name = cleanCustomerName(displayName);
     if (customerNameKey(name).isEmpty) {
       throw ArgumentError.value(
