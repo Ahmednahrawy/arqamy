@@ -213,6 +213,30 @@ class MessageLookup extends MessageLookupByLibrary {
       "تعذر قراءة التاريخ أو الوقت المحفوظ. اختر قيمة بديلة عند الحاجة.",
     ),
     "light_mode": MessageLookupByLibrary.simpleMessage("الوضع الفاتح"),
+    "link_customers": MessageLookupByLibrary.simpleMessage("ربط العملاء"),
+    "link_customers_action": MessageLookupByLibrary.simpleMessage("ربط"),
+    "link_customers_confirm": MessageLookupByLibrary.simpleMessage(
+      "سيتم حفظ نسخة احتياطية أولاً. الفواتير التي يظهر اسم عميلها بكتابة واحدة سيتم ربطها بسجل عميل. الأسماء ذات الكتابات المتعددة تُترك لتؤكدها لاحقاً.",
+    ),
+    "link_customers_created": MessageLookupByLibrary.simpleMessage("عملاء جدد"),
+    "link_customers_desc": MessageLookupByLibrary.simpleMessage(
+      "نسخة تجريبية: إعطاء كل عميل معرّفاً ثابتاً",
+    ),
+    "link_customers_failed": MessageLookupByLibrary.simpleMessage(
+      "تعذر ربط العملاء",
+    ),
+    "link_customers_linked": MessageLookupByLibrary.simpleMessage(
+      "فواتير تم ربطها",
+    ),
+    "link_customers_need_confirmation": MessageLookupByLibrary.simpleMessage(
+      "عملاء بحاجة إلى تأكيد",
+    ),
+    "link_customers_reused": MessageLookupByLibrary.simpleMessage(
+      "عملاء موجودون أُعيد استخدامهم",
+    ),
+    "link_customers_unnamed": MessageLookupByLibrary.simpleMessage(
+      "فواتير بلا اسم",
+    ),
     "loading": MessageLookupByLibrary.simpleMessage("جارٍ التحميل..."),
     "logout": MessageLookupByLibrary.simpleMessage("تسجيل الخروج"),
     "manager_name": MessageLookupByLibrary.simpleMessage("اسم المدير"),

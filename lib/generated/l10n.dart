@@ -1949,6 +1949,106 @@ class S {
       args: [],
     );
   }
+
+  /// `Link customers`
+  String get link_customers {
+    return Intl.message(
+      'Link customers',
+      name: 'link_customers',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Debug preview: give each customer a stable ID`
+  String get link_customers_desc {
+    return Intl.message(
+      'Debug preview: give each customer a stable ID',
+      name: 'link_customers_desc',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `A backup is saved first. Invoices whose customer name has a single spelling are linked to a customer record. Names with several spellings are left for you to confirm later.`
+  String get link_customers_confirm {
+    return Intl.message(
+      'A backup is saved first. Invoices whose customer name has a single spelling are linked to a customer record. Names with several spellings are left for you to confirm later.',
+      name: 'link_customers_confirm',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Link`
+  String get link_customers_action {
+    return Intl.message(
+      'Link',
+      name: 'link_customers_action',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Invoices linked`
+  String get link_customers_linked {
+    return Intl.message(
+      'Invoices linked',
+      name: 'link_customers_linked',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Customers created`
+  String get link_customers_created {
+    return Intl.message(
+      'Customers created',
+      name: 'link_customers_created',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Existing customers reused`
+  String get link_customers_reused {
+    return Intl.message(
+      'Existing customers reused',
+      name: 'link_customers_reused',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Customers needing confirmation`
+  String get link_customers_need_confirmation {
+    return Intl.message(
+      'Customers needing confirmation',
+      name: 'link_customers_need_confirmation',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Invoices without a name`
+  String get link_customers_unnamed {
+    return Intl.message(
+      'Invoices without a name',
+      name: 'link_customers_unnamed',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Could not link customers`
+  String get link_customers_failed {
+    return Intl.message(
+      'Could not link customers',
+      name: 'link_customers_failed',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

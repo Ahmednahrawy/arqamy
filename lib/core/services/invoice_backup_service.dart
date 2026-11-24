@@ -36,6 +36,30 @@ class InvoiceBackupService {
     return count;
   }
 
+  /// Writes a safety copy of every saved invoice into the app's private
+  /// backups folder (nothing is shared). Throws if it cannot be written, so
+  /// callers can refuse to continue without a backup.
+  static Future<File> saveLocalBackup(
+    InvoiceProvider provider, {
+    DateTime? now,
+    Directory? directory,
+  }) async {
+    await provider.loadInvoices();
+    final timestamp = now ?? DateTime.now();
+    final folder =
+        directory ??
+        Directory(
+          p.join((await getApplicationDocumentsDirectory()).path, 'backups'),
+        );
+    await folder.create(recursive: true);
+    final file = File(p.join(folder.path, 'auto-${backupFileName(timestamp)}'));
+    await file.writeAsString(
+      provider.exportBackup(now: timestamp),
+      flush: true,
+    );
+    return file;
+  }
+
   static const int maxBackupBytes = 50 * 1024 * 1024;
 
   /// Lets the user choose a file and returns its text, or null if cancelled.
@@ -62,7 +86,8 @@ class InvoiceBackupService {
     return text.startsWith('\uFEFF') ? text.substring(1) : text;
   }
 
-  static String backupFileName(DateTime time) {    String two(int value) => value.toString().padLeft(2, '0');
+  static String backupFileName(DateTime time) {
+    String two(int value) => value.toString().padLeft(2, '0');
     return 'arqamy-backup-${time.year}${two(time.month)}${two(time.day)}'
         '-${two(time.hour)}${two(time.minute)}.json';
   }

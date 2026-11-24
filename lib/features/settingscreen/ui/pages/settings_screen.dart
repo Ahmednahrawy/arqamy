@@ -1,5 +1,6 @@
 import 'package:arqamy/core/providers/language.dart';
 import 'package:arqamy/core/helpers/invoice_backup.dart';
+import 'package:arqamy/features/customerscreen/data/customer_linking_service.dart';
 import 'package:arqamy/core/providers/theme.dart';
 import 'package:arqamy/core/services/invoice_backup_service.dart';
 import 'package:arqamy/core/widgets/app_snack_bar.dart';
@@ -7,6 +8,7 @@ import 'package:arqamy/features/orderscreen/providers/invoice_provider.dart';
 import 'package:arqamy/features/settingscreen/ui/pages/invoice_setting.dart';
 import 'package:arqamy/features/settingscreen/ui/pages/product_management.dart';
 import 'package:arqamy/generated/l10n.dart';
+import 'package:flutter/foundation.dart' show kDebugMode;
 import 'package:material_ui/material_ui.dart';
 import 'package:provider/provider.dart';
 
@@ -95,15 +97,84 @@ class SettingsScreen extends StatelessWidget {
       );
     }
   }
+
+  Future<void> _linkCustomers(BuildContext context) async {
+    final strings = S.of(context);
+    final provider = context.read<InvoiceProvider>();
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: Text(strings.link_customers),
+        content: Text(strings.link_customers_confirm),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(dialogContext, false),
+            child: Text(strings.cancel),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.pop(dialogContext, true),
+            child: Text(strings.link_customers_action),
+          ),
+        ],
+      ),
+    );
+    if (confirmed != true || !context.mounted) return;
+
+    try {
+      final result = await CustomerLinkingService.linkCustomers(provider);
+      if (!context.mounted) return;
+      await showDialog<void>(
+        context: context,
+        builder: (dialogContext) => AlertDialog(
+          title: Text(strings.link_customers),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                '${strings.link_customers_linked}: ${result.invoicesLinked}',
+              ),
+              Text(
+                '${strings.link_customers_created}: ${result.customersCreated}',
+              ),
+              Text(
+                '${strings.link_customers_reused}: ${result.customersReused}',
+              ),
+              Text(
+                '${strings.link_customers_need_confirmation}: '
+                '${result.groupsNeedingConfirmation}',
+              ),
+              Text(
+                '${strings.link_customers_unnamed}: ${result.unnamedInvoices}',
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(dialogContext),
+              child: Text(strings.confirm),
+            ),
+          ],
+        ),
+      );
+    } catch (error) {
+      if (!context.mounted) return;
+      showAppSnackBar(
+        context,
+        '${strings.link_customers_failed}: $error',
+        isError: true,
+      );
+    }
+  }
+
   @override
-  Widget build(BuildContext context) {    final themeProvider = Provider.of<ThemeProvider>(context);
+  Widget build(BuildContext context) {
+    final themeProvider = Provider.of<ThemeProvider>(context);
     final languageProvider = Provider.of<Language>(context);
     final size = MediaQuery.sizeOf(context);
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(S.of(context).settings),
-      ),
+      appBar: AppBar(title: Text(S.of(context).settings)),
       body: ListView(
         children: [
           ListTile(
@@ -114,8 +185,10 @@ class SettingsScreen extends StatelessWidget {
             },
           ),
           Padding(
-            padding:
-                const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+            padding: const EdgeInsets.symmetric(
+              horizontal: 16.0,
+              vertical: 8.0,
+            ),
             child: Text(
               S.of(context).invoice_management,
               style: Theme.of(context).textTheme.titleMedium,
@@ -127,10 +200,11 @@ class SettingsScreen extends StatelessWidget {
             subtitle: Text(S.of(context).invoice_templated_desc),
             onTap: () {
               Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (_) => const InvoiceSettingsScreen(),
-                  ));
+                context,
+                MaterialPageRoute(
+                  builder: (_) => const InvoiceSettingsScreen(),
+                ),
+              );
             },
           ),
           const Divider(),
@@ -158,9 +232,18 @@ class SettingsScreen extends StatelessWidget {
             title: Text(S.of(context).restore_invoices),
             subtitle: Text(S.of(context).restore_invoices_desc),
             onTap: () => _restoreInvoices(context),
-          ),          ListTile(
+          ),
+          if (kDebugMode)
+            ListTile(
+              leading: const Icon(Icons.people_outline),
+              title: Text(S.of(context).link_customers),
+              subtitle: Text(S.of(context).link_customers_desc),
+              onTap: () => _linkCustomers(context),
+            ),
+          ListTile(
             leading: const Icon(Icons.notifications),
-            title: Text(S.of(context).notifications),            onTap: () {
+            title: Text(S.of(context).notifications),
+            onTap: () {
               // Handle notifications tap
             },
           ),

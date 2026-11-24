@@ -229,5 +229,15 @@
   "restore_empty_backup": "النسخة الاحتياطية لا تحتوي على فواتير",
   "restore_done": "تمت استعادة النسخة الاحتياطية",
   "restore_invalid_backup": "هذا الملف ليس نسخة احتياطية صالحة للفواتير",
-  "restore_failed": "تعذرت استعادة النسخة الاحتياطية"
+  "restore_failed": "تعذرت استعادة النسخة الاحتياطية",
+  "link_customers": "ربط العملاء",
+  "link_customers_desc": "نسخة تجريبية: إعطاء كل عميل معرّفاً ثابتاً",
+  "link_customers_confirm": "سيتم حفظ نسخة احتياطية أولاً. الفواتير التي يظهر اسم عميلها بكتابة واحدة سيتم ربطها بسجل عميل. الأسماء ذات الكتابات المتعددة تُترك لتؤكدها لاحقاً.",
+  "link_customers_action": "ربط",
+  "link_customers_linked": "فواتير تم ربطها",
+  "link_customers_created": "عملاء جدد",
+  "link_customers_reused": "عملاء موجودون أُعيد استخدامهم",
+  "link_customers_need_confirmation": "عملاء بحاجة إلى تأكيد",
+  "link_customers_unnamed": "فواتير بلا اسم",
+  "link_customers_failed": "تعذر ربط العملاء"
 }

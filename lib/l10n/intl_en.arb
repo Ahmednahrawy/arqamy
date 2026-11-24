@@ -229,5 +229,15 @@
   "restore_empty_backup": "The backup contains no invoices",
   "restore_done": "Backup restored",
   "restore_invalid_backup": "This is not a valid invoice backup",
-  "restore_failed": "Could not restore the backup"
+  "restore_failed": "Could not restore the backup",
+  "link_customers": "Link customers",
+  "link_customers_desc": "Debug preview: give each customer a stable ID",
+  "link_customers_confirm": "A backup is saved first. Invoices whose customer name has a single spelling are linked to a customer record. Names with several spellings are left for you to confirm later.",
+  "link_customers_action": "Link",
+  "link_customers_linked": "Invoices linked",
+  "link_customers_created": "Customers created",
+  "link_customers_reused": "Existing customers reused",
+  "link_customers_need_confirmation": "Customers needing confirmation",
+  "link_customers_unnamed": "Invoices without a name",
+  "link_customers_failed": "Could not link customers"
 }

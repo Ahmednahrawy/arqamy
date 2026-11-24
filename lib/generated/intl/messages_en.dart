@@ -225,6 +225,32 @@ class MessageLookup extends MessageLookupByLibrary {
       "The stored date or time could not be parsed. Choose a replacement if needed.",
     ),
     "light_mode": MessageLookupByLibrary.simpleMessage("Light Mode"),
+    "link_customers": MessageLookupByLibrary.simpleMessage("Link customers"),
+    "link_customers_action": MessageLookupByLibrary.simpleMessage("Link"),
+    "link_customers_confirm": MessageLookupByLibrary.simpleMessage(
+      "A backup is saved first. Invoices whose customer name has a single spelling are linked to a customer record. Names with several spellings are left for you to confirm later.",
+    ),
+    "link_customers_created": MessageLookupByLibrary.simpleMessage(
+      "Customers created",
+    ),
+    "link_customers_desc": MessageLookupByLibrary.simpleMessage(
+      "Debug preview: give each customer a stable ID",
+    ),
+    "link_customers_failed": MessageLookupByLibrary.simpleMessage(
+      "Could not link customers",
+    ),
+    "link_customers_linked": MessageLookupByLibrary.simpleMessage(
+      "Invoices linked",
+    ),
+    "link_customers_need_confirmation": MessageLookupByLibrary.simpleMessage(
+      "Customers needing confirmation",
+    ),
+    "link_customers_reused": MessageLookupByLibrary.simpleMessage(
+      "Existing customers reused",
+    ),
+    "link_customers_unnamed": MessageLookupByLibrary.simpleMessage(
+      "Invoices without a name",
+    ),
     "loading": MessageLookupByLibrary.simpleMessage("Loading..."),
     "logout": MessageLookupByLibrary.simpleMessage("Log out"),
     "manager_name": MessageLookupByLibrary.simpleMessage("Manager name"),
