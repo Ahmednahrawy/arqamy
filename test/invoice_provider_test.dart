@@ -337,6 +337,58 @@ void main() {
     expect(provider.invoices.single.invoiceSerial, draft.invoiceSerial);
   });
 
+  test('cold-start save preserves invoices already in storage', () async {
+    final existing = _invoice(id: 'existing', serial: '1001');
+    final added = _invoice(id: 'added', serial: '1002');
+    SharedPreferences.setMockInitialValues({
+      'saved_invoices': json.encode([existing.toJson()]),
+    });
+
+    // Match the production startup path: a fresh provider saves without
+    // first visiting a screen that explicitly calls loadInvoices().
+    final provider = InvoiceProvider();
+    await provider.saveInvoice(added);
+
+    final reloadedProvider = InvoiceProvider();
+    await reloadedProvider.loadInvoices();
+    expect(
+      reloadedProvider.invoices.map((invoice) => invoice.id).toSet(),
+      {'existing', 'added'},
+    );
+  });
+
+  test('failed cold-start read aborts mutation without overwriting storage',
+      () async {
+    final existing = _invoice(id: 'existing', serial: '1001');
+    final added = _invoice(id: 'added', serial: '1002');
+    final originalJson = json.encode([existing.toJson()]);
+    SharedPreferences.setMockInitialValues({'saved_invoices': originalJson});
+    final storage = _ControlledInvoiceStorage();
+    final provider = InvoiceProvider.withStorageWriter(
+      storage.write,
+      invoiceStorageReader: storage.read,
+    )..prepareDraft();
+    storage.failNextRead();
+
+    await expectLater(
+      provider.saveInvoice(added),
+      throwsA(isA<StateError>()),
+    );
+
+    final prefs = await SharedPreferences.getInstance();
+    expect(prefs.getString('saved_invoices'), originalJson);
+    expect(provider.invoices, isEmpty);
+
+    // A transient read failure must not mark the provider as loaded.
+    await provider.saveInvoice(added);
+    final reloadedProvider = InvoiceProvider();
+    await reloadedProvider.loadInvoices();
+    expect(
+      reloadedProvider.invoices.map((invoice) => invoice.id).toSet(),
+      {'existing', 'added'},
+    );
+  });
+
   test('concurrent saves both survive persistence and reload', () async {
     SharedPreferences.setMockInitialValues({});
     final storage = _ControlledInvoiceStorage();
