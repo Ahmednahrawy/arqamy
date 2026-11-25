@@ -1,18 +1,51 @@
-# Arqamy — Full Project Audit
+# Arqamy — Project Audit and Remediation Status
 
 | | |
 |---|---|
 | **Repository** | `Ahmednahrawy/arqamy` (public) |
-| **Commit** | `fa56a7c` — "Add optional customerId to invoices, preserved by edit and backup" (2026-11-23) |
+| **Current HEAD reviewed** | `8ab55c7d1526245aadde9c87e078be65ca503d58` — latest verified CI commit (2026-11-25) |
+| **Original audit baseline** | `fa56a7c` — 2026-11-23; detailed findings below originated from this snapshot |
 | **App version** | `1.0.4+22` (`pubspec.yaml`) |
-| **Platforms** | Android, iOS, Web, Windows, macOS, Linux scaffolding |
-| **Code size** | 67 hand-written Dart files in `lib/` (~12.0k LOC), 24 test files (~13.6k LOC), plus a generated Drift schema |
-| **Method** | First-hand source review, `flutter analyze`, `flutter test`, `flutter test --coverage`, `flutter pub outdated`, git history/object inspection, Android/iOS config review |
-| **Changes made** | None. This report (`docs/AUDIT.md`) is the only file added; the working tree is otherwise unchanged. |
+| **Last status review** | 2026-11-25 |
+| **Review scope** | Targeted revalidation of startup loading, invoice mutation guards, customer linking, Drift call sites, Android release-signing validation, and GitHub Actions CI. This is not yet a complete re-run of every original audit check. |
+| **Documentation change** | Added the current-status section below; the original detailed audit is retained as a dated baseline pending full re-audit. |
 
 ---
 
-## 1. Executive summary
+## Current status — 2026-11-25
+
+This section supersedes older statements in the original audit wherever the same issue is discussed below. The detailed findings after this section remain the 2026-11-23 baseline unless explicitly revalidated here.
+
+### Verified progress on current `main`
+
+| Area | Current status | Evidence / remaining boundary |
+|---|---|---|
+| Invoice cold-start overwrite | **Mitigated** | `InvoiceProvider` calls `_ensureInvoicesLoaded()` inside the serialized mutation path before save, update, delete, restore, and customer-ID assignment. |
+| Application startup | **Implemented** | `AppBootstrap` loads saved invoices before exposing `MyApp`; it shows a loading state and a retry screen if storage loading fails. |
+| Startup regression coverage | **Added** | `test/app_bootstrap_test.dart` covers loading existing invoices before the app appears and retry after a read failure. Provider tests also cover persisted invoice operations. |
+| CI analysis and tests | **Passing on reviewed HEAD** | GitHub Actions run [45680408341](https://github.com/Ahmednahrawy/arqamy/actions/runs/45680408341) completed successfully for `8ab55c7`; both `flutter analyze` and `flutter test` passed. |
+| Customer identity | **Partially implemented** | Stable optional `customerId`, a Drift-backed customer registry, a migration planner, and an explicit Settings workflow for automatic unambiguous linking exist. Ambiguous name groups and unnamed invoices remain unresolved by design; normal invoice creation is not yet shown to assign a customer ID. |
+| Drift / ledger | **In active, limited use — not the main invoice store** | `CustomerLinkingService` and `LedgerImportService` open `AppDatabase` for customer linking and ledger import, then close it. The operational invoice provider still reads/writes the `saved_invoices` SharedPreferences key. Do not describe Drift as entirely dead or already adopted as the application-wide source of truth. |
+| Android release signing | **Configuration hardened; incident not closed** | `android/app/build.gradle.kts` requires complete signing properties and an existing keystore for release tasks; it does not fall back to debug signing. The exposed old upload key remains compromised. Replacement-key acceptance by Google Play and historical Git cleanup remain pending in `docs/SECURITY_REMEDIATION_STATUS.md`. |
+| CI workflow | **Partially implemented** | `.github/workflows/ci.yml` runs on pushes to `main` and pull requests, with `flutter pub get`, `flutter analyze`, and `flutter test`. Formatting enforcement and Android/Web build validation are not present in this workflow. |
+
+### Remaining high-priority risks confirmed in the targeted review
+
+1. **Legacy invoice storage remains the production source of truth.** The invoice list is still serialized as one JSON array under SharedPreferences key `saved_invoices`; there is no versioned envelope, per-record recovery strategy, or completed migration to Drift.
+2. **Invoice JSON parsing remains permissive only by assumption, not by validation.** `Invoice.fromJson` still assigns dynamic JSON values directly to typed fields and maps product records without defensive field-level validation. A malformed record can still fail the whole load.
+3. **Drift adoption is incomplete.** Drift now supports customer registry/linking and ledger import workflows, but ordinary invoice persistence and the broader payment workflow have not been switched to Drift. A migration design, reconciliation rules, rollback, and acceptance criteria are still required before changing the production source of truth.
+4. **Signing-key incident remains open.** The old upload key and password material must continue to be treated as compromised. Do not use the old key. Do not upload with the replacement key until Google Play confirms it is active. Do not rewrite Git history or delete refs without explicit approval.
+5. **The startup error/retry screen is currently hardcoded in English.** It is not yet wired to the app's AR/EN localization resources.
+
+### Audit limitations
+
+The original code-size counts, test count, coverage percentages, dependency-outdated results, branch inventory, and detailed findings below describe the `fa56a7c` audit snapshot. They have **not** all been recomputed against `8ab55c7`. The latest CI result proves that analysis and tests passed on that commit; it does not prove that coverage, platform builds, dependency status, or every historical finding has been re-audited.
+
+The next planned engineering task after this status refresh is the **detailed Drift adoption and legacy invoice migration design**, including backup, data mapping, duplicate handling, financial reconciliation, retry/idempotency, rollback, and explicit migration acceptance criteria. No migration implementation is authorized by this audit update.
+
+---
+
+## 1. Original executive summary (baseline at `fa56a7c`)
 
 The app is a working Arabic-first invoice/POS tool with a genuinely good foundation in places: a correct fixed-point `Money` type with half-away-from-zero rounding, a versioned and validated backup format, a mutation lock around persistence, full ARB-based localization, and 211 passing tests.
 
