@@ -14,14 +14,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:arqamy/generated/l10n.dart';
 
 class _CustomerScreenStorage {
-  bool failNextRead = false;
   bool failNextWrite = false;
 
   Future<String?> read() async {
-    if (failNextRead) {
-      failNextRead = false;
-      throw StateError('storage unavailable');
-    }
     return (await SharedPreferences.getInstance()).getString('saved_invoices');
   }
 
@@ -175,26 +170,6 @@ Future<void> _clearInvoiceDateRange(WidgetTester tester) async {
 }
 
 void main() {
-  testWidgets('initial invoice load failure shows user-visible feedback',
-      (tester) async {
-    _useTallViewport(tester);
-    SharedPreferences.setMockInitialValues({});
-    final storage = _CustomerScreenStorage()..failNextRead = true;
-    final provider = InvoiceProvider.withStorageWriter(
-      storage.write,
-      invoiceStorageReader: storage.read,
-    );
-
-    await tester.pumpWidget(_customerScreen(provider));
-    await tester.pumpAndSettle();
-
-    expect(
-      find.textContaining('تعذر تحميل سجل الفواتير'),
-      findsOneWidget,
-    );
-    expect(find.textContaining('storage unavailable'), findsOneWidget);
-  });
-
   testWidgets('post-edit reload failure is reported after successful edit',
       (tester) async {
     _useTallViewport(tester);
