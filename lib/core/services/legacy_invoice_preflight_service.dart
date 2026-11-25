@@ -30,6 +30,7 @@ class LegacyInvoicePreflightOccurrence {
     required this.serial,
     required this.issues,
     required this.malformedReasons,
+    required this.rawJson,
     this.invoice,
   });
 
@@ -354,7 +355,7 @@ class LegacyInvoicePreflightService {
         if (inString) {
           if (escaped) {
             escaped = false;
-          } else if (character == r'\\') {
+          } else if (character == '\\') {
             escaped = true;
           } else if (character == '"') {
             inString = false;
