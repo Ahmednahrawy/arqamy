@@ -1,0 +1,7 @@
+# Copy this file to android/key.properties and replace every placeholder.
+# Keep key.properties and the keystore outside version control.
+# Use an absolute path to the private keystore where possible.
+storeFile=C:/secure/android-signing/upload-keystore.jks
+storePassword=REPLACE_WITH_YOUR_KEYSTORE_PASSWORD
+keyAlias=upload
+keyPassword=REPLACE_WITH_YOUR_KEY_PASSWORD
