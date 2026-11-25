@@ -51,9 +51,9 @@ void main() {
     await temporaryDirectory.delete(recursive: true);
   });
 
-  test('initializes the ledger schema with version 5', () async {
-    expect(database.schemaVersion, 5);
-    expect(await database.storedSchemaVersion, 5);
+  test('initializes the ledger schema with version 6', () async {
+    expect(database.schemaVersion, 6);
+    expect(await database.storedSchemaVersion, 6);
 
     final tables = await database
         .customSelect(
@@ -75,6 +75,9 @@ void main() {
       'invoice_lifecycle_events',
       'invoice_lines',
       'invoices',
+      'legacy_migration_occurrences',
+      'legacy_migration_runs',
+      'legacy_party_review_decisions',
       'parties',
       'party_roles',
       'payment_identities',
@@ -236,7 +239,7 @@ void main() {
 
     database = await AppDatabase.open(path: databasePath);
 
-    expect(await database.storedSchemaVersion, 5);
+    expect(await database.storedSchemaVersion, 6);
     final tables = await database
         .customSelect(
           "SELECT COUNT(*) AS count FROM sqlite_master "
@@ -341,7 +344,7 @@ void main() {
 
     database = await AppDatabase.open(path: databasePath);
 
-    expect(await database.storedSchemaVersion, 5);
+    expect(await database.storedSchemaVersion, 6);
     expect(
       await database
           .customSelect('SELECT * FROM currencies')
