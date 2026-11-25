@@ -81,6 +81,7 @@
   "packageWeight": "وزن العبوة",
   "packageCount": "عدد العبوات",
   "price": "السعر",
+  "default_price_optional": "السعر الافتراضي (اختياري)",
   "paidAmount": "المبلغ المدفوع",
   "currency": "ج.م",
   "invoiceTotal": "إجمالي الفاتورة",

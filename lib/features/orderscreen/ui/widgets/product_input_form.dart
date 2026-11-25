@@ -112,7 +112,8 @@ class _ProductInputFormState extends State<ProductInputForm> {
       _showErrorSnackBar(strings.invalidNumber);
       return;
     }
-    if (widget.onAdd != null) {      widget.onAdd!(product);
+    if (widget.onAdd != null) {
+      widget.onAdd!(product);
     } else {
       try {
         provider.addProduct(product);
@@ -165,9 +166,7 @@ class _ProductInputFormState extends State<ProductInputForm> {
                       .map(
                         (action) => PopupMenuItem<String>(
                           value: action,
-                          child: Text(
-                            InvoiceActionL10n.label(action, strings),
-                          ),
+                          child: Text(InvoiceActionL10n.label(action, strings)),
                         ),
                       )
                       .toList(),
@@ -204,8 +203,9 @@ class _ProductInputFormState extends State<ProductInputForm> {
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(9),
                             border: Border.all(
-                              color:
-                                  isSelected ? colors.primary : colors.outline,
+                              color: isSelected
+                                  ? colors.primary
+                                  : colors.outline,
                             ),
                           ),
                           child: Text(
@@ -279,9 +279,9 @@ class _ProductInputFormState extends State<ProductInputForm> {
                           decoration: BoxDecoration(
                             border: Border(
                               bottom: BorderSide(
-                                color: Theme.of(context)
-                                    .colorScheme
-                                    .outlineVariant,
+                                color: Theme.of(
+                                  context,
+                                ).colorScheme.outlineVariant,
                                 width: 1.0,
                               ),
                             ),
@@ -291,8 +291,17 @@ class _ProductInputFormState extends State<ProductInputForm> {
                       },
                       showSearchBox: true,
                     ),
-                    onSelected: (value) =>
-                        setState(() => _selectedProduct = value),
+                    onSelected: (value) {
+                      setState(() {
+                        _selectedProduct = value;
+                        final defaultPrice = value == null
+                            ? null
+                            : provider.defaultProductPrice(value);
+                        _priceController.text = defaultPrice == null
+                            ? ''
+                            : defaultPrice.toStringAsFixed(2);
+                      });
+                    },
                   ),
                 ),
               ),
@@ -308,8 +317,9 @@ class _ProductInputFormState extends State<ProductInputForm> {
                       onEditingComplete: () => _focusField(_priceFocusNode),
                       labelText: strings.weight_or_count,
                       hintText: strings.kilograms,
-                      keyboardType:
-                          const TextInputType.numberWithOptions(decimal: true),
+                      keyboardType: const TextInputType.numberWithOptions(
+                        decimal: true,
+                      ),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           _firstInvalidFocusNode ??= _weightFocusNode;
@@ -334,8 +344,9 @@ class _ProductInputFormState extends State<ProductInputForm> {
                           _focusField(_packageWeightFocusNode),
                       labelText: strings.price,
                       hintText: strings.currency,
-                      keyboardType:
-                          const TextInputType.numberWithOptions(decimal: true),
+                      keyboardType: const TextInputType.numberWithOptions(
+                        decimal: true,
+                      ),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           _firstInvalidFocusNode ??= _priceFocusNode;
@@ -387,8 +398,9 @@ class _ProductInputFormState extends State<ProductInputForm> {
                           _focusField(_packageNumberFocusNode),
                       labelText: strings.packageWeight,
                       suffixText: strings.kilograms,
-                      keyboardType:
-                          const TextInputType.numberWithOptions(decimal: true),
+                      keyboardType: const TextInputType.numberWithOptions(
+                        decimal: true,
+                      ),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           _firstInvalidFocusNode ??= _packageWeightFocusNode;

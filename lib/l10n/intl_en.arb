@@ -81,6 +81,7 @@
   "packageWeight": "Package weight",
   "packageCount": "Package count",
   "price": "Price",
+  "default_price_optional": "Default price (optional)",
   "paidAmount": "Amount paid",
   "currency": "EGP",
   "invoiceTotal": "Invoice total",

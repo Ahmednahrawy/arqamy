@@ -255,12 +255,25 @@ class _ProductManagementScreenState extends State<ProductManagementScreen> {
                     trailing: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
+                        SizedBox(
+                          width: 80,
+                          child: _ProductPriceField(
+                            productName: product,
+                            price: provider.masterProductPrices[product],
+                            onChanged: (value) {
+                              provider.setMasterProductPrice(product, value);
+                            },
+                          ),
+                        ),
+                        const SizedBox(width: 4),
                         IconButton(
+                          visualDensity: VisualDensity.compact,
                           onPressed: () => _showEditDialog(index, product),
                           icon: Icon(Icons.edit, color: colors.primary),
                           tooltip: strings.edit,
                         ),
                         IconButton(
+                          visualDensity: VisualDensity.compact,
                           onPressed: () =>
                               _showDeleteConfirmation(index, product),
                           icon: Icon(Icons.delete, color: colors.error),
@@ -279,6 +292,75 @@ class _ProductManagementScreenState extends State<ProductManagementScreen> {
         onPressed: _showAddDialog,
         tooltip: strings.addProduct,
         child: const Icon(Icons.add),
+      ),
+    );
+  }
+}
+
+class _ProductPriceField extends StatefulWidget {
+  const _ProductPriceField({
+    required this.productName,
+    required this.price,
+    required this.onChanged,
+  });
+
+  final String productName;
+  final double? price;
+  final ValueChanged<double?> onChanged;
+
+  @override
+  State<_ProductPriceField> createState() => _ProductPriceFieldState();
+}
+
+class _ProductPriceFieldState extends State<_ProductPriceField> {
+  late final TextEditingController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = TextEditingController(
+      text: widget.price == null ? '' : widget.price!.toStringAsFixed(2),
+    );
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final strings = S.of(context);
+
+    return Tooltip(
+      message: strings.default_price_optional,
+      child: TextField(
+        key: ValueKey('product-default-price-${widget.productName}'),
+        controller: _controller,
+        textDirection: TextDirection.ltr,
+        textAlign: TextAlign.center,
+        keyboardType: const TextInputType.numberWithOptions(decimal: true),
+        decoration: InputDecoration(
+          hintText: strings.price,
+          isDense: true,
+          contentPadding: const EdgeInsets.symmetric(
+            horizontal: 6,
+            vertical: 8,
+          ),
+          border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+        ),
+        onChanged: (value) {
+          final text = value.trim();
+          if (text.isEmpty) {
+            widget.onChanged(null);
+            return;
+          }
+          final parsed = double.tryParse(text);
+          if (parsed != null && parsed.isFinite && parsed >= 0) {
+            widget.onChanged(parsed);
+          }
+        },
       ),
     );
   }

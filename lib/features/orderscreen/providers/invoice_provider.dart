@@ -29,6 +29,7 @@ class InvoiceProvider extends ChangeNotifier {
   String? _invoiceAction;
   String? _customerName;
   List<String> _masterProductList = [];
+  final Map<String, double> _masterProductPrices = {};
   final List<Invoice> _invoices = []; // قائمة الفواتير المخزنة
   bool _invoicesLoaded = false;
   List<Product>? _productsViewCache;
@@ -41,8 +42,13 @@ class InvoiceProvider extends ChangeNotifier {
   String? get invoiceAction => _invoiceAction;
   String? get customerName => _customerName;
   List<String> get masterProductList => List.unmodifiable(_masterProductList);
+  Map<String, double> get masterProductPrices =>
+      Map.unmodifiable(_masterProductPrices);
   List<Invoice> get invoices => List.unmodifiable(_invoices);
   String get draftInvoiceId => _draftInvoiceId ??= Invoice.generateId();
+
+  double? defaultProductPrice(String productName) =>
+      _masterProductPrices[productName];
 
   void prepareDraft() {
     _draftInvoiceId ??= Invoice.generateId();
@@ -218,9 +224,7 @@ class InvoiceProvider extends ChangeNotifier {
     try {
       final String? invoicesJson = _invoiceStorageReader != null
           ? await _invoiceStorageReader()
-          : (await SharedPreferences.getInstance()).getString(
-              'saved_invoices',
-            );
+          : (await SharedPreferences.getInstance()).getString('saved_invoices');
 
       if (invoicesJson != null) {
         final List<dynamic> invoicesList = json.decode(invoicesJson);
@@ -413,10 +417,13 @@ class InvoiceProvider extends ChangeNotifier {
     });
   }
 
+  static const String _masterProductPricesKey = 'master_product_prices';
+
   // Load products from local storage
   Future<void> loadMasterProducts() async {
     try {
       final prefs = await SharedPreferences.getInstance();
+      _loadMasterProductPrices(prefs);
       final String? productsJson = prefs.getString('master_products');
 
       if (productsJson != null) {
@@ -446,6 +453,58 @@ class InvoiceProvider extends ChangeNotifier {
     }
   }
 
+  void _loadMasterProductPrices(SharedPreferences prefs) {
+    _masterProductPrices.clear();
+    final pricesJson = prefs.getString(_masterProductPricesKey);
+    if (pricesJson == null) return;
+
+    try {
+      final decoded = json.decode(pricesJson);
+      if (decoded is! Map) return;
+      for (final entry in decoded.entries) {
+        final value = entry.value;
+        if (entry.key is String &&
+            value is num &&
+            value.isFinite &&
+            value >= 0) {
+          _masterProductPrices[entry.key as String] = value.toDouble();
+        }
+      }
+    } catch (e) {
+      debugPrint('Error reading product prices: $e');
+    }
+  }
+
+  Future<void> _saveMasterProductPrices() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString(
+        _masterProductPricesKey,
+        json.encode(_masterProductPrices),
+      );
+    } catch (e) {
+      debugPrint('Error saving product prices: $e');
+    }
+  }
+
+  /// Sets an optional default price for a master product. Passing [null]
+  /// (or an invalid value) removes the stored default for that product.
+  Future<void> setMasterProductPrice(String productName, double? price) async {
+    final name = productName.trim();
+    if (name.isEmpty) return;
+
+    final validPrice = price != null && price.isFinite && price >= 0;
+    if (!validPrice) {
+      if (_masterProductPrices.remove(name) == null) return;
+    } else {
+      if (_masterProductPrices[name] == price) return;
+      _masterProductPrices[name] = price;
+    }
+
+    await _saveMasterProductPrices();
+    notifyListeners();
+  }
+
   // Add new product
   Future<void> addMasterProduct(String productName) async {
     if (productName.trim().isNotEmpty &&
@@ -458,11 +517,20 @@ class InvoiceProvider extends ChangeNotifier {
 
   // Edit existing product
   Future<void> editMasterProduct(int index, String newName) async {
+    final trimmedName = newName.trim();
     if (index >= 0 &&
         index < _masterProductList.length &&
-        newName.trim().isNotEmpty) {
-      _masterProductList[index] = newName.trim();
+        trimmedName.isNotEmpty) {
+      final oldName = _masterProductList[index];
+      final price = _masterProductPrices.remove(oldName);
+      _masterProductList[index] = trimmedName;
+      if (price != null) {
+        _masterProductPrices[trimmedName] = price;
+      }
       await _saveMasterProducts();
+      if (price != null) {
+        await _saveMasterProductPrices();
+      }
       notifyListeners();
     }
   }
@@ -470,8 +538,12 @@ class InvoiceProvider extends ChangeNotifier {
   // Delete product
   Future<void> deleteMasterProduct(int index) async {
     if (index >= 0 && index < _masterProductList.length) {
-      _masterProductList.removeAt(index);
+      final removedName = _masterProductList.removeAt(index);
+      final hadPrice = _masterProductPrices.remove(removedName) != null;
       await _saveMasterProducts();
+      if (hadPrice) {
+        await _saveMasterProductPrices();
+      }
       notifyListeners();
     }
   }
@@ -489,6 +561,6 @@ class InvoiceProvider extends ChangeNotifier {
 
   // Default products (from your constants)
   List<String> _getDefaultProducts() {
-    return ProductListConstants.productList;
+    return List<String>.from(ProductListConstants.productList);
   }
 }
