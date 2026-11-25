@@ -160,58 +160,57 @@ class _SideNavState extends State<SideNav> {
                   );
                 },
               ),
-              if (isCollapse)
-                IconButton(
-                  onPressed: () => languageProvider.switchLanguage(
-                    languageProvider.isArabic ? 'en' : 'ar',
-                  ),
-                  icon: Icon(Icons.language, color: colors.onSurface),
-                  tooltip: strings.language,
-                )
-              else
-                Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 12,
-                    vertical: 4,
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      Text(
-                        strings.language,
-                        style: TextStyle(
-                          fontSize: 13,
-                          color: colors.onSurfaceVariant,
-                        ),
-                      ),
-                      const SizedBox(height: 2),
-                      DropdownButton<String>(
-                        isExpanded: true,
-                        value: languageProvider.currentLocale.languageCode,
-                        icon: const Icon(Icons.arrow_drop_down, size: 18),
-                        underline: const SizedBox.shrink(),
-                        borderRadius: BorderRadius.circular(12),
-                        dropdownColor: colors.surface,
-                        style: TextStyle(fontSize: 14, color: colors.onSurface),
-                        items: languageProvider.languageOptions.map((lang) {
-                          return DropdownMenuItem<String>(
-                            value: lang['code'],
-                            child: Text(
+              PopupMenuButton<String>(
+                tooltip: strings.language,
+                color: colors.surface,
+                surfaceTintColor: Colors.transparent,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                onSelected: (code) => languageProvider.switchLanguage(code),
+                itemBuilder: (context) => languageProvider.languageOptions
+                    .map(
+                      (lang) => PopupMenuItem<String>(
+                        value: lang['code'],
+                        child: Row(
+                          children: [
+                            Icon(
+                              lang['code'] ==
+                                      languageProvider.currentLocale.languageCode
+                                  ? Icons.check
+                                  : Icons.language_outlined,
+                              size: 18,
+                              color: lang['code'] ==
+                                      languageProvider.currentLocale.languageCode
+                                  ? colors.primary
+                                  : colors.onSurfaceVariant,
+                            ),
+                            const SizedBox(width: 10),
+                            Text(
                               lang['code'] == 'ar'
                                   ? strings.arabic
                                   : strings.english,
+                              style: TextStyle(
+                                fontSize: 14,
+                                color: colors.onSurface,
+                              ),
                             ),
-                          );
-                        }).toList(),
-                        onChanged: (code) {
-                          if (code != null) {
-                            languageProvider.switchLanguage(code);
-                          }
-                        },
+                          ],
+                        ),
                       ),
-                    ],
-                  ),
+                    )
+                    .toList(),
+                child: ListTile(
+                  leading: Icon(Icons.language, color: colors.onSurface),
+                  title: isCollapse
+                      ? null
+                      : TextBuilder(
+                          text: strings.language,
+                          fontSize: 18.0,
+                          color: colors.onSurface,
+                        ),
                 ),
+              ),
               ListTile(
                 onTap: () {
                   Navigator.pushAndRemoveUntil(
