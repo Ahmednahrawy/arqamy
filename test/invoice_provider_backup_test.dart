@@ -84,6 +84,7 @@ void main() {
 
   test('restore notifies listeners once', () async {
     final provider = _provider();
+    await provider.loadInvoices();
     var notifications = 0;
     provider.addListener(() => notifications++);
 
