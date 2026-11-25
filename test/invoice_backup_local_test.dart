@@ -68,10 +68,13 @@ void main() {
 
   test('backs up invoices that were saved earlier but not loaded yet',
       () async {
-    final other = InvoiceProvider.withStorageWriter((json) async {
-      stored = json;
-      return true;
-    });
+    final other = InvoiceProvider.withStorageWriter(
+      (json) async {
+        stored = json;
+        return true;
+      },
+      invoiceStorageReader: () async => stored,
+    );
     await other.saveInvoice(_invoice('saved-earlier'));
 
     final file = await InvoiceBackupService.saveLocalBackup(
