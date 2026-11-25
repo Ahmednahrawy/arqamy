@@ -61,7 +61,8 @@ void main() {
 
   test('classifies a structurally and financially valid invoice as ready',
       () async {
-    final snapshot = await snapshotFor([_invoice()]);
+    final record = jsonEncode(_invoice()).replaceFirst('"id":', '"id" : ');
+    final snapshot = await snapshotFor('[  $record  ]');
 
     final report = await service.inspect(snapshot);
 
@@ -70,6 +71,7 @@ void main() {
     expect(report.count(LegacyInvoicePreflightClassification.ready), 1);
     expect(report.occurrences.single.sourceIndex, 0);
     expect(report.occurrences.single.invoice?.id, 'invoice-1');
+    expect(report.occurrences.single.rawJson, record);
     expect(report.occurrences.single.issues, isEmpty);
   });
 
