@@ -61,7 +61,7 @@ class LegacyInvoiceSnapshotService {
 
     final rawFile = File(p.join(folder.path, 'saved-invoices-$digest.raw'));
     final manifestFile = File(
-      p.join(folder.path, 'saved-invoices-$digest.json'),
+      p.join(\n        folder.path,\n        'saved-invoices-$digest-${raw == null ? 'missing' : 'present'}.json',\n      ),
     );
 
     await _writeAndVerifyRawFile(rawFile, bytes, digest);
