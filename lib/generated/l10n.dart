@@ -275,6 +275,96 @@ class S {
     return Intl.message('Privacy', name: 'privacy', desc: '', args: []);
   }
 
+  /// `Arqamy keeps your invoices and customer details on this device. We do not collect or share your data.`
+  String get privacy_intro {
+    return Intl.message('Arqamy keeps your invoices and customer details on this device. We do not collect or share your data.', name: 'privacy_intro', desc: '', args: []);
+  }
+
+  /// `Data stored on your device`
+  String get privacy_data_title {
+    return Intl.message('Data stored on your device', name: 'privacy_data_title', desc: '', args: []);
+  }
+
+  /// `Invoice details, customer names, products, and settings are saved locally on your device.`
+  String get privacy_data_body {
+    return Intl.message('Invoice details, customer names, products, and settings are saved locally on your device.', name: 'privacy_data_body', desc: '', args: []);
+  }
+
+  /// `How we use your data`
+  String get privacy_usage_title {
+    return Intl.message('How we use your data', name: 'privacy_usage_title', desc: '', args: []);
+  }
+
+  /// `Your data is only used to display, organize, and back up your invoices inside the app.`
+  String get privacy_usage_body {
+    return Intl.message('Your data is only used to display, organize, and back up your invoices inside the app.', name: 'privacy_usage_body', desc: '', args: []);
+  }
+
+  /// `Your choices`
+  String get privacy_choices_title {
+    return Intl.message('Your choices', name: 'privacy_choices_title', desc: '', args: []);
+  }
+
+  /// `You can back up or restore your invoices from Settings at any time, and clear app data through your device settings.`
+  String get privacy_choices_body {
+    return Intl.message('You can back up or restore your invoices from Settings at any time, and clear app data through your device settings.', name: 'privacy_choices_body', desc: '', args: []);
+  }
+
+  /// `Find answers to common questions about using Arqamy.`
+  String get help_intro {
+    return Intl.message('Find answers to common questions about using Arqamy.', name: 'help_intro', desc: '', args: []);
+  }
+
+  /// `Creating an invoice`
+  String get help_create_invoice_title {
+    return Intl.message('Creating an invoice', name: 'help_create_invoice_title', desc: '', args: []);
+  }
+
+  /// `Open the home screen, choose a customer, add products, then save the invoice.`
+  String get help_create_invoice_body {
+    return Intl.message('Open the home screen, choose a customer, add products, then save the invoice.', name: 'help_create_invoice_body', desc: '', args: []);
+  }
+
+  /// `Backing up invoices`
+  String get help_backup_title {
+    return Intl.message('Backing up invoices', name: 'help_backup_title', desc: '', args: []);
+  }
+
+  /// `In Settings, open Invoice actions and choose Backup invoices to save a copy.`
+  String get help_backup_body {
+    return Intl.message('In Settings, open Invoice actions and choose Backup invoices to save a copy.', name: 'help_backup_body', desc: '', args: []);
+  }
+
+  /// `Restoring invoices`
+  String get help_restore_title {
+    return Intl.message('Restoring invoices', name: 'help_restore_title', desc: '', args: []);
+  }
+
+  /// `In Settings, open Invoice actions and choose Restore from backup.`
+  String get help_restore_body {
+    return Intl.message('In Settings, open Invoice actions and choose Restore from backup.', name: 'help_restore_body', desc: '', args: []);
+  }
+
+  /// `Changing the language`
+  String get help_language_title {
+    return Intl.message('Changing the language', name: 'help_language_title', desc: '', args: []);
+  }
+
+  /// `Open the side menu and use the Language row to switch between Arabic and English.`
+  String get help_language_body {
+    return Intl.message('Open the side menu and use the Language row to switch between Arabic and English.', name: 'help_language_body', desc: '', args: []);
+  }
+
+  /// `Need more help?`
+  String get help_contact_title {
+    return Intl.message('Need more help?', name: 'help_contact_title', desc: '', args: []);
+  }
+
+  /// `Contact the app support team for further assistance.`
+  String get help_contact_body {
+    return Intl.message('Contact the app support team for further assistance.', name: 'help_contact_body', desc: '', args: []);
+  }
+
   /// `Invoice Management`
   String get invoice_management {
     return Intl.message('Invoice Management', name: 'invoice_management', desc: '', args: []);

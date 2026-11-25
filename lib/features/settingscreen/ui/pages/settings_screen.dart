@@ -5,7 +5,9 @@ import 'package:arqamy/core/services/invoice_backup_service.dart';
 import 'package:arqamy/core/widgets/app_snack_bar.dart';
 import 'package:arqamy/features/orderscreen/providers/invoice_provider.dart';
 import 'package:arqamy/features/payment_ledger/data/ledger_import_service.dart';
+import 'package:arqamy/features/settingscreen/ui/pages/help_screen.dart';
 import 'package:arqamy/features/settingscreen/ui/pages/invoice_setting.dart';
+import 'package:arqamy/features/settingscreen/ui/pages/privacy_screen.dart';
 import 'package:arqamy/features/settingscreen/ui/pages/product_management.dart';
 import 'package:arqamy/features/settingscreen/ui/widgets/settings_actions_dropdown.dart';
 import 'package:arqamy/generated/l10n.dart';
@@ -343,14 +345,24 @@ class SettingsScreen extends StatelessWidget {
             leading: const Icon(Icons.lock),
             title: Text(S.of(context).privacy),
             onTap: () {
-              // Handle privacy tap
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => const PrivacyScreen(),
+                ),
+              );
             },
           ),
           ListTile(
             leading: const Icon(Icons.help),
             title: Text(S.of(context).help),
             onTap: () {
-              // Handle help tap
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => const HelpScreen(),
+                ),
+              );
             },
           ),
           ListTile(
