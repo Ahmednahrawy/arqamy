@@ -1,5 +1,5 @@
 import 'package:arqamy/features/orderscreen/providers/invoice_provider.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Loads business data before exposing the application screens.
 class AppBootstrap extends StatefulWidget {
