@@ -207,9 +207,9 @@ void _navigateToRoute(BuildContext context, int index) {
     case 1:
       routeName = Routes.customerScreen;
       break;
-    // case 2:
-    // routeName = Routes.inventoryScreen;
-    // break;
+    case 2:
+      routeName = Routes.inventoryScreen;
+      break;
     case 3:
       routeName = Routes.settingsScreen;
       break;
@@ -234,7 +234,7 @@ class DrawersController {
   List<DrawerModel> get sideDrawer => [
         DrawerModel(S.of(context).home, Icons.home),
         DrawerModel(S.of(context).customers_and_suppliers, Icons.receipt_long),
-        DrawerModel(S.of(context).inventory, Icons.person),
+        DrawerModel(S.of(context).inventory, Icons.inventory_2_outlined),
         DrawerModel(S.of(context).settings, Icons.settings),
         DrawerModel(S.of(context).share_app, Icons.share),
         DrawerModel(

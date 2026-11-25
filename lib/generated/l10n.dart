@@ -80,6 +80,41 @@ class S {
     return Intl.message('Inventory', name: 'inventory', desc: '', args: []);
   }
 
+  /// `Inventory items`
+  String get inventory_items {
+    return Intl.message('Inventory items', name: 'inventory_items', desc: '', args: []);
+  }
+
+  /// `Items`
+  String get inventory_total_items {
+    return Intl.message('Items', name: 'inventory_total_items', desc: '', args: []);
+  }
+
+  /// `Low stock`
+  String get inventory_low_stock {
+    return Intl.message('Low stock', name: 'inventory_low_stock', desc: '', args: []);
+  }
+
+  /// `Units`
+  String get inventory_total_quantity {
+    return Intl.message('Units', name: 'inventory_total_quantity', desc: '', args: []);
+  }
+
+  /// `Min`
+  String get inventory_minimum {
+    return Intl.message('Min', name: 'inventory_minimum', desc: '', args: []);
+  }
+
+  /// `No inventory items yet`
+  String get inventory_empty {
+    return Intl.message('No inventory items yet', name: 'inventory_empty', desc: '', args: []);
+  }
+
+  /// `Quantity`
+  String get quantity {
+    return Intl.message('Quantity', name: 'quantity', desc: '', args: []);
+  }
+
   /// `Settings`
   String get settings {
     return Intl.message('Settings', name: 'settings', desc: '', args: []);

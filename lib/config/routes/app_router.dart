@@ -3,6 +3,7 @@ import 'package:material_ui/material_ui.dart';
 import 'package:arqamy/config/routes/routes.dart';
 import 'package:arqamy/features/customerscreen/ui/pages/customer_screen.dart';
 import 'package:arqamy/features/drawer/ui/side_nav.dart';
+import 'package:arqamy/features/inventoryscreen/ui/pages/inventory_screen.dart';
 import 'package:arqamy/features/orderscreen/ui/pages/order_screen.dart';
 
 class AppRouter {
@@ -22,10 +23,10 @@ class AppRouter {
         return MaterialPageRoute(
           builder: (_) => const CustomerScreen(),
         );      
-        // case Routes.inventoryScreen:
-        // return MaterialPageRoute(
-        //   builder: (_) => const InventoryScreen(),
-        // );
+      case Routes.inventoryScreen:
+        return MaterialPageRoute(
+          builder: (_) => const InventoryScreen(),
+        );
       case Routes.settingsScreen:
         return MaterialPageRoute(
           builder: (_) => const SettingsScreen(),
