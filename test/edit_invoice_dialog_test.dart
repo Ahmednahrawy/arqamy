@@ -317,6 +317,7 @@ void main() {
     ];
 
     for (final invoice in fixtures) {
+      SharedPreferences.setMockInitialValues({});
       final provider = InvoiceProvider();
       await provider.saveInvoice(invoice);
       await tester.pumpWidget(_app(provider, languageCode: 'ar'));
