@@ -335,7 +335,7 @@ void main() {
     expect(
       await database
           .customSelect('SELECT role FROM party_roles WHERE party_id = ?', variables: [
-            const Variable<String>('party-preserved'),
+            Variable.withString('party-preserved'),
           ])
           .map((row) => row.read<String>('role'))
           .getSingle(),
