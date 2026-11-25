@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:arqamy/config/theme/colors.dart';
 import 'package:arqamy/core/helpers/formatters.dart';
 import 'package:arqamy/core/helpers/invoice_action.dart';
@@ -44,17 +42,6 @@ class _CustomerScreenState extends State<CustomerScreen> {
   DateTimeRange? _invoiceDateRange;
 
   @override
-  void initState() {
-    super.initState();
-    // تحميل الفواتير عند بدء التشغيل
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      unawaited(
-        _loadInvoices(errorMessage: S.of(context).could_not_load_invoices),
-      );
-    });
-  }
-
-  @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     final provider = context.read<InvoiceProvider>();
@@ -95,15 +82,6 @@ class _CustomerScreenState extends State<CustomerScreen> {
       _allInvoices = allInvoices;
       _customerInvoices = invoices;
     });
-  }
-
-  Future<void> _loadInvoices({required String errorMessage}) async {
-    try {
-      await context.read<InvoiceProvider>().loadInvoices();
-    } catch (error) {
-      if (!mounted) return;
-      showAppSnackBar(context, '$errorMessage: $error', isError: true);
-    }
   }
 
   void _handleCustomerSelection(String? customerName) {
