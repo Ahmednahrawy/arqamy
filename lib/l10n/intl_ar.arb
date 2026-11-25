@@ -211,6 +211,8 @@
   "could_not_save_settings": "تعذر حفظ إعدادات الفاتورة",
   "product_management": "إدارة المنتجات",
   "product_management_desc": "إضافة وتعديل وحذف المنتجات",
+  "productSearchHint": "ابحث عن منتج",
+  "noProductsMatchSearch": "لا توجد منتجات تطابق بحثك",
   "add_new_product": "إضافة منتج جديد",
   "edit_product": "تعديل المنتج",
   "delete_product": "حذف المنتج",

@@ -211,6 +211,8 @@
   "could_not_save_settings": "Could not save invoice settings",
   "product_management": "Product management",
   "product_management_desc": "Add, edit, and delete products",
+  "productSearchHint": "Search products",
+  "noProductsMatchSearch": "No products match your search",
   "add_new_product": "Add new product",
   "edit_product": "Edit product",
   "delete_product": "Delete product",

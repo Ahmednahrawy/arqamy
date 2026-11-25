@@ -17,6 +17,8 @@ class ProductManagementScreen extends StatefulWidget {
 class _ProductManagementScreenState extends State<ProductManagementScreen> {
   final TextEditingController _addController = TextEditingController();
   final TextEditingController _editController = TextEditingController();
+  final TextEditingController _searchController = TextEditingController();
+  String _searchQuery = '';
 
   @override
   void initState() {
@@ -31,7 +33,39 @@ class _ProductManagementScreenState extends State<ProductManagementScreen> {
   void dispose() {
     _addController.dispose();
     _editController.dispose();
+    _searchController.dispose();
     super.dispose();
+  }
+
+  void _clearSearch() {
+    _searchController.clear();
+    setState(() => _searchQuery = '');
+  }
+
+  Widget _buildSearchField(S strings) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(12, 8, 12, 4),
+      child: TextField(
+        key: const ValueKey('product-management-search'),
+        controller: _searchController,
+        onChanged: (value) => setState(() => _searchQuery = value),
+        textInputAction: TextInputAction.search,
+        decoration: InputDecoration(
+          hintText: strings.productSearchHint,
+          prefixIcon: const Icon(Icons.search),
+          suffixIcon: _searchQuery.isEmpty
+              ? null
+              : IconButton(
+                  key: const ValueKey('clear-product-search'),
+                  tooltip: strings.clearInvoiceSearch,
+                  onPressed: _clearSearch,
+                  icon: const Icon(Icons.clear),
+                ),
+          isDense: true,
+          border: OutlineInputBorder(borderRadius: BorderRadius.circular(14)),
+        ),
+      ),
+    );
   }
 
   void _showAddDialog() {
@@ -202,9 +236,82 @@ class _ProductManagementScreenState extends State<ProductManagementScreen> {
         child: Consumer<InvoiceProvider>(
           builder: (context, provider, child) {
             final products = provider.masterProductList;
+            final query = _searchQuery.trim().toLowerCase();
+            final visibleProducts = query.isEmpty
+                ? products
+                : products
+                      .where((product) => product.toLowerCase().contains(query))
+                      .toList();
 
+            Widget buildItem(int index) {
+              final product = visibleProducts[index];
+              // Edit/delete operate on the provider's full list, not the
+              // filtered view, so look up the real index by product name.
+              final providerIndex = products.indexOf(product);
+              return Card(
+                key: ValueKey(product),
+                margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                child: ListTile(
+                  leading: query.isEmpty
+                      ? Icon(Icons.drag_handle, color: colors.onSurfaceVariant)
+                      : const SizedBox(width: 24),
+                  title: Text(product),
+                  subtitle: Padding(
+                    padding: const EdgeInsets.only(top: 10, bottom: 4),
+                    child: Row(
+                      children: [
+                        for (final action in InvoiceAction.values) ...[
+                          Expanded(
+                            child: _ProductPriceField(
+                              productName: product,
+                              action: action,
+                              label: InvoiceActionL10n.labelFor(
+                                action,
+                                strings,
+                              ),
+                              price: provider
+                                  .masterProductPrices[product]?[action],
+                              onChanged: (value) {
+                                provider.setMasterProductPrice(
+                                  product,
+                                  action,
+                                  value,
+                                );
+                              },
+                            ),
+                          ),
+                          if (action != InvoiceAction.values.last)
+                            const SizedBox(width: 8),
+                        ],
+                      ],
+                    ),
+                  ),
+                  trailing: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      IconButton(
+                        visualDensity: VisualDensity.compact,
+                        onPressed: () =>
+                            _showEditDialog(providerIndex, product),
+                        icon: Icon(Icons.edit, color: colors.primary),
+                        tooltip: strings.edit,
+                      ),
+                      IconButton(
+                        visualDensity: VisualDensity.compact,
+                        onPressed: () =>
+                            _showDeleteConfirmation(providerIndex, product),
+                        icon: Icon(Icons.delete, color: colors.error),
+                        tooltip: strings.delete,
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            }
+
+            late final Widget content;
             if (products.isEmpty) {
-              return Center(
+              content = Center(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -228,83 +335,51 @@ class _ProductManagementScreenState extends State<ProductManagementScreen> {
                   ],
                 ),
               );
-            }
-
-            return ReorderableListView.builder(
-              itemCount: products.length,
-              onReorderItem: (oldIndex, newIndex) async {
-                // onReorderItem gives the item's final position, but the provider
-                // expects the raw ReorderableListView index (it adjusts itself).
-                final rawNewIndex = newIndex > oldIndex
-                    ? newIndex + 1
-                    : newIndex;
-                await provider.reorderMasterProducts(oldIndex, rawNewIndex);
-              },
-              itemBuilder: (context, index) {
-                final product = products[index];
-                return Card(
-                  key: ValueKey(product),
-                  margin: const EdgeInsets.symmetric(
-                    horizontal: 8,
-                    vertical: 4,
-                  ),
-                  child: ListTile(
-                    leading: Icon(
-                      Icons.drag_handle,
+            } else if (visibleProducts.isEmpty) {
+              content = Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      Icons.search_off,
+                      size: 56,
                       color: colors.onSurfaceVariant,
                     ),
-                    title: Text(product),
-                    subtitle: Padding(
-                      padding: const EdgeInsets.only(top: 10, bottom: 4),
-                      child: Row(
-                        children: [
-                          for (final action in InvoiceAction.values) ...[
-                            Expanded(
-                              child: _ProductPriceField(
-                                productName: product,
-                                action: action,
-                                label: InvoiceActionL10n.labelFor(
-                                  action,
-                                  strings,
-                                ),
-                                price: provider
-                                    .masterProductPrices[product]?[action],
-                                onChanged: (value) {
-                                  provider.setMasterProductPrice(
-                                    product,
-                                    action,
-                                    value,
-                                  );
-                                },
-                              ),
-                            ),
-                            if (action != InvoiceAction.values.last)
-                              const SizedBox(width: 8),
-                          ],
-                        ],
+                    const SizedBox(height: 12),
+                    Text(
+                      strings.noProductsMatchSearch,
+                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                        color: colors.onSurfaceVariant,
                       ),
                     ),
-                    trailing: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        IconButton(
-                          visualDensity: VisualDensity.compact,
-                          onPressed: () => _showEditDialog(index, product),
-                          icon: Icon(Icons.edit, color: colors.primary),
-                          tooltip: strings.edit,
-                        ),
-                        IconButton(
-                          visualDensity: VisualDensity.compact,
-                          onPressed: () =>
-                              _showDeleteConfirmation(index, product),
-                          icon: Icon(Icons.delete, color: colors.error),
-                          tooltip: strings.delete,
-                        ),
-                      ],
-                    ),
-                  ),
-                );
-              },
+                  ],
+                ),
+              );
+            } else if (query.isEmpty) {
+              content = ReorderableListView.builder(
+                itemCount: visibleProducts.length,
+                onReorderItem: (oldIndex, newIndex) async {
+                  // onReorderItem gives the item's final position, but the
+                  // provider expects the raw index (it adjusts itself).
+                  final rawNewIndex = newIndex > oldIndex
+                      ? newIndex + 1
+                      : newIndex;
+                  await provider.reorderMasterProducts(oldIndex, rawNewIndex);
+                },
+                itemBuilder: (context, index) => buildItem(index),
+              );
+            } else {
+              content = ListView.builder(
+                itemCount: visibleProducts.length,
+                itemBuilder: (context, index) => buildItem(index),
+              );
+            }
+
+            return Column(
+              children: [
+                _buildSearchField(strings),
+                Expanded(child: content),
+              ],
             );
           },
         ),

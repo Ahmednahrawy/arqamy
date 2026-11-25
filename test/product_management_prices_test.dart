@@ -11,17 +11,7 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
-  testWidgets('product management shows all three optional prices', (
-    WidgetTester tester,
-  ) async {
-    SharedPreferences.setMockInitialValues({
-      'master_products': json.encode(['Rice']),
-      'master_product_prices': json.encode({
-        'Rice': {'purchase': 1.0, 'sale': 2.0, 'storage': 3.0},
-      }),
-    });
-    final provider = InvoiceProvider();
-
+  Future<void> pumpScreen(WidgetTester tester, InvoiceProvider provider) async {
     await tester.pumpWidget(
       ChangeNotifierProvider.value(
         value: provider,
@@ -38,6 +28,19 @@ void main() {
       ),
     );
     await tester.pumpAndSettle();
+  }
+
+  testWidgets('product management shows all three optional prices', (
+    WidgetTester tester,
+  ) async {
+    SharedPreferences.setMockInitialValues({
+      'master_products': json.encode(['Rice']),
+      'master_product_prices': json.encode({
+        'Rice': {'purchase': 1.0, 'sale': 2.0, 'storage': 3.0},
+      }),
+    });
+    final provider = InvoiceProvider();
+    await pumpScreen(tester, provider);
 
     for (final entry in {
       'purchase': '1.00',
@@ -50,6 +53,37 @@ void main() {
       expect(field, findsOneWidget);
       expect(tester.widget<TextField>(field).controller!.text, entry.value);
     }
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('search filters products and clear restores the full list', (
+    WidgetTester tester,
+  ) async {
+    SharedPreferences.setMockInitialValues({
+      'master_products': json.encode(['Rice', 'Corn', 'Wheat']),
+    });
+    await pumpScreen(tester, InvoiceProvider());
+
+    expect(find.text('Rice'), findsOneWidget);
+    expect(find.text('Corn'), findsOneWidget);
+    expect(find.text('Wheat'), findsOneWidget);
+
+    await tester.enterText(
+      find.byKey(const ValueKey('product-management-search')),
+      'co',
+    );
+    await tester.pumpAndSettle();
+
+    expect(find.text('Rice'), findsNothing);
+    expect(find.text('Corn'), findsOneWidget);
+    expect(find.text('Wheat'), findsNothing);
+
+    await tester.tap(find.byKey(const ValueKey('clear-product-search')));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Rice'), findsOneWidget);
+    expect(find.text('Corn'), findsOneWidget);
+    expect(find.text('Wheat'), findsOneWidget);
     expect(tester.takeException(), isNull);
   });
 }

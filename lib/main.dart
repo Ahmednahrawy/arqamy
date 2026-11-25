@@ -31,7 +31,7 @@ Future<void> main() async {
 
   final themeProvider = ThemeProvider();
   try {
-    await themeProvider.loadTheme();
+    await themeProvider.loadTheme();  
   } catch (error) {
     debugPrint('Theme preference loading error: $error');
   }
