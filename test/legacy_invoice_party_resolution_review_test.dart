@@ -17,7 +17,7 @@ LegacyPartyCandidate _party(
       roles: roles,
     );
 
-LegacyPartyResolutionReport _plan() => LegacyPartyResolutionReport(
+LegacyPartyResolutionReport _plan() => const LegacyPartyResolutionReport(
       snapshotSha256: _snapshotHash,
       resolutions: [
         LegacyPartyOccurrenceResolution(
@@ -35,7 +35,7 @@ LegacyPartyResolutionReport _plan() => LegacyPartyResolutionReport(
           invoiceId: 'legacy-2',
           status: LegacyPartyResolutionStatus.ambiguousName,
           expectedRole: LedgerPartyRole.supplier,
-          candidatePartyIds: const ['supplier-1', 'supplier-2'],
+          candidatePartyIds: ['supplier-1', 'supplier-2'],
         ),
         LegacyPartyOccurrenceResolution(
           sourceOccurrenceKey: 'occurrence-3',
