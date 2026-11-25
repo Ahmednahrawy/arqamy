@@ -929,6 +929,7 @@ class AppDatabase extends _$AppDatabase {
         await m.createAll();
         await _createCashEventIndexesAndTriggers();
         await _createStage4IndexesAndTriggers();
+        await _createLegacyPartyReviewJournalTriggers();
       } else if (from < 3) {
         await m.createTable(paymentIdentities);
         await m.createTable(cashEvents);
