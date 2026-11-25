@@ -1,3 +1,4 @@
+import 'package:arqamy/app/bootstrap/app_bootstrap.dart';
 import 'package:arqamy/config/routes/app_router.dart';
 import 'package:arqamy/core/providers/language.dart';
 import 'package:arqamy/features/orderscreen/providers/invoice_provider.dart';
@@ -39,7 +40,7 @@ Future<void> main() async {
     providers: [
       ChangeNotifierProvider(create: (_) => Language()),
       ChangeNotifierProvider.value(value: themeProvider),
-      ChangeNotifierProvider(create: (_) => InvoiceProvider()),
+      ChangeNotifierProvider.value(value: invoiceProvider),
       ChangeNotifierProvider(create: (_) => InvoiceSettingsProvider()),
     ],
     child: MyApp(
