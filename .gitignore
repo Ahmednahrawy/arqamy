@@ -3,6 +3,7 @@
 /android/app/upload-keystore.p12
 /android/app/keytool.txt
 /android/app/key.properties
+**/keytool.txt
 # Signing and build artifacts
 *.jks
 *.p12
