@@ -83,7 +83,15 @@ class LegacyInvoicePreflightService {
       return _fatal(snapshot, LegacyInvoicePreflightFatalIssue.sourceMissing);
     }
 
-    final bytes = await snapshot.rawFile.readAsBytes();
+    late final List<int> bytes;
+    try {
+      bytes = await snapshot.rawFile.readAsBytes();
+    } on FileSystemException {
+      return _fatal(
+        snapshot,
+        LegacyInvoicePreflightFatalIssue.snapshotIntegrityFailure,
+      );
+    }
     if (bytes.length != snapshot.byteLength ||
         sha256.convert(bytes).toString() != snapshot.sha256) {
       return _fatal(
