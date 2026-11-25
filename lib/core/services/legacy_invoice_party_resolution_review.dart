@@ -133,6 +133,7 @@ class LegacyInvoicePartyResolutionReview {
             decision: decision,
             isApproved: false,
           ));
+          break;
 
         case LegacyPartyReviewAction.acceptSuggestedMatch:
           if (decision.selectedPartyId != null || !resolution.isResolved) {
@@ -151,6 +152,7 @@ class LegacyInvoicePartyResolutionReview {
             partyId: party.party.id,
             partyDisplayName: party.party.displayName,
           ));
+          break;
 
         case LegacyPartyReviewAction.selectParty:
           final selectedId = decision.selectedPartyId;
@@ -168,6 +170,7 @@ class LegacyInvoicePartyResolutionReview {
             partyId: party.party.id,
             partyDisplayName: party.party.displayName,
           ));
+          break;
       }
     }
 
