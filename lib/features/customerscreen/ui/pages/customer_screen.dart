@@ -84,6 +84,15 @@ class _CustomerScreenState extends State<CustomerScreen> {
     });
   }
 
+  Future<void> _loadInvoices({required String errorMessage}) async {
+    try {
+      await context.read<InvoiceProvider>().loadInvoices();
+    } catch (error) {
+      if (!mounted) return;
+      showAppSnackBar(context, '$errorMessage: $error', isError: true);
+    }
+  }
+
   void _handleCustomerSelection(String? customerName) {
     final provider = context.read<InvoiceProvider>();
     setState(() {
