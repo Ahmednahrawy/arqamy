@@ -70,6 +70,14 @@ void main() {
     expect(report.totalOccurrences, 1);
     expect(report.count(LegacyInvoicePreflightClassification.ready), 1);
     expect(report.occurrences.single.sourceIndex, 0);
+    expect(
+      report.occurrences.single.sourceOccurrenceIdentity.snapshotSha256,
+      snapshot.sha256,
+    );
+    expect(
+      report.occurrences.single.sourceOccurrenceIdentity.recordSha256,
+      isNotEmpty,
+    );
     expect(report.occurrences.single.invoice?.id, 'invoice-1');
     expect(report.occurrences.single.rawJson, record);
     expect(report.occurrences.single.issues, isEmpty);
@@ -186,4 +194,66 @@ void main() {
     expect(report.sourceExists, isFalse);
     expect(report.fatalIssue, LegacyInvoicePreflightFatalIssue.sourceMissing);
   });
+  test('assigns stable but distinct identities to identical duplicate records',
+      () async {
+    final record = _invoice(id: 'duplicate');
+    final snapshot = await snapshotFor([record, record]);
+
+    final firstReport = await service.inspect(snapshot);
+    final repeatedReport = await service.inspect(snapshot);
+
+    final firstIdentity =
+        firstReport.occurrences[0].sourceOccurrenceIdentity;
+    final secondIdentity =
+        firstReport.occurrences[1].sourceOccurrenceIdentity;
+
+    expect(firstIdentity.key, isNot(secondIdentity.key));
+    expect(firstIdentity.sourceIndex, 0);
+    expect(secondIdentity.sourceIndex, 1);
+    expect(firstIdentity.recordSha256, secondIdentity.recordSha256);
+    expect(
+      firstReport.occurrences.map((item) => item.sourceOccurrenceIdentity.key),
+      repeatedReport.occurrences
+          .map((item) => item.sourceOccurrenceIdentity.key),
+    );
+  });
+
+  test('changes occurrence identity when the immutable snapshot changes',
+      () async {
+    final firstSnapshot = await snapshotFor([_invoice(id: 'same')]);
+    final secondSnapshot = await snapshotFor([
+      _invoice(id: 'same'),
+      _invoice(id: 'additional'),
+    ]);
+
+    final first = (await service.inspect(firstSnapshot))
+        .occurrences.single.sourceOccurrenceIdentity;
+    final second = (await service.inspect(secondSnapshot))
+        .occurrences.first.sourceOccurrenceIdentity;
+
+    expect(first.sourceIndex, second.sourceIndex);
+    expect(first.recordSha256, second.recordSha256);
+    expect(first.snapshotSha256, isNot(second.snapshotSha256));
+    expect(first.key, isNot(second.key));
+  });
+
+  test('assigns an occurrence identity to malformed records', () async {
+    final snapshot = await snapshotFor([
+      {'id': 'malformed'},
+    ]);
+
+    final report = await service.inspect(snapshot);
+    final occurrence = report.occurrences.single;
+
+    expect(
+      occurrence.classification,
+      LegacyInvoicePreflightClassification.malformedRecord,
+    );
+    expect(occurrence.sourceOccurrenceIdentity.sourceIndex, 0);
+    expect(
+      occurrence.sourceOccurrenceIdentity.snapshotSha256,
+      snapshot.sha256,
+    );
+  });
+
 }
