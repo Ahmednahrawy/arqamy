@@ -833,9 +833,12 @@ class LegacyMigrationOccurrences extends Table {
     "CHECK (expected_role IS NULL OR expected_role IN ('customer', 'supplier'))",
     'CHECK (suggested_party_id IS NULL OR length(trim(suggested_party_id)) > 0)',
     'CHECK (suggested_party_name IS NULL OR length(trim(suggested_party_name)) > 0)',
+    'CHECK ((suggested_party_id IS NULL AND suggested_party_name IS NULL) OR '
+        '(suggested_party_id IS NOT NULL AND suggested_party_name IS NOT NULL))',
     'CHECK (json_valid(candidate_party_ids_json))',
     'CHECK (json_valid(findings_json))',
     'FOREIGN KEY (run_id) REFERENCES legacy_migration_runs (run_id)',
+    'FOREIGN KEY (suggested_party_id) REFERENCES parties (party_id)',
   ];
 }
 
