@@ -36,6 +36,8 @@ Future<void> main() async {
     debugPrint('Theme preference loading error: $error');
   }
 
+  final invoiceProvider = InvoiceProvider();
+
   runApp(MultiProvider(
     providers: [
       ChangeNotifierProvider(create: (_) => Language()),
@@ -43,8 +45,9 @@ Future<void> main() async {
       ChangeNotifierProvider.value(value: invoiceProvider),
       ChangeNotifierProvider(create: (_) => InvoiceSettingsProvider()),
     ],
-    child: MyApp(
-      appRouter: AppRouter(),
+    child: AppBootstrap(
+      invoiceProvider: invoiceProvider,
+      child: MyApp(appRouter: AppRouter()),
     ),
   ));
 }
