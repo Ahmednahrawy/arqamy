@@ -1,8 +1,23 @@
 import 'dart:io';
 
 import 'package:arqamy/core/database/app_database.dart';
+import 'package:drift/drift.dart';
 import 'package:drift/native.dart';
 import 'package:flutter_test/flutter_test.dart';
+
+
+class _Version5InspectorDatabase extends GeneratedDatabase {
+  _Version5InspectorDatabase(super.executor);
+
+  @override
+  int get schemaVersion => 5;
+
+  @override
+  Iterable<TableInfo> get allTables => const [];
+
+  @override
+  MigrationStrategy get migration => MigrationStrategy(onCreate: (_) async {});
+}
 
 void main() {
   late Directory temporaryDirectory;
@@ -169,6 +184,22 @@ void main() {
       throwsA(anything),
     );
 
+    await expectLater(
+      _insertDecision(
+        database,
+        decisionId: 'decision-wrong-party-role',
+        occurrenceKey: 'occurrence-1',
+        sequence: 3,
+        previousDecisionId: 'decision-2',
+        action: 'selectParty',
+        expectedRole: 'customer',
+        partyId: 'party-supplier',
+        partyName: 'Supplier One',
+        partyRole: 'customer',
+      ),
+      throwsA(anything),
+    );
+
     await _insertDecision(
       database,
       decisionId: 'decision-3',
@@ -219,6 +250,47 @@ void main() {
       await database.customSelect('PRAGMA foreign_key_check').get(),
       isEmpty,
     );
+  });
+
+  test('rolls back a failed v5-to-v6 journal migration', () async {
+    await database.customStatement(
+      'INSERT INTO parties (party_id, display_name, created_at, updated_at) '
+      'VALUES (?, ?, ?, ?)',
+      ['party-rollback', 'Rollback Party', 100, 200],
+    );
+    await database.customStatement('DROP TABLE legacy_party_review_decisions');
+    await database.customStatement('DROP TABLE legacy_migration_occurrences');
+    await database.customStatement('DROP TABLE legacy_migration_runs');
+    await database.customStatement(
+      'CREATE TABLE legacy_migration_occurrences (sentinel TEXT)',
+    );
+    await database.customStatement('PRAGMA user_version = 5');
+    await database.close();
+
+    await expectLater(
+      AppDatabase.open(path: databasePath),
+      throwsA(anything),
+    );
+
+    final inspector = _Version5InspectorDatabase(
+      NativeDatabase(File(databasePath)),
+    );
+    expect(
+      (await inspector.customSelect('PRAGMA user_version').getSingle())
+          .read<int>('user_version'),
+      5,
+    );
+    final createdRunTable = await inspector.customSelect(
+      "SELECT COUNT(*) AS count FROM sqlite_master "
+      "WHERE type = 'table' AND name = 'legacy_migration_runs'",
+    ).getSingle();
+    expect(createdRunTable.read<int>('count'), 0);
+    final preservedParty = await inspector.customSelect(
+      'SELECT display_name FROM parties WHERE party_id = ?',
+      variables: [Variable.withString('party-rollback')],
+    ).getSingle();
+    expect(preservedParty.read<String>('display_name'), 'Rollback Party');
+    await inspector.close();
   });
 
   test('upgrades a version 5 database and preserves existing business data', () async {
