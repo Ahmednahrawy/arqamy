@@ -30,11 +30,13 @@ Invoice _invoice(String id, {String customer = 'أحمد'}) {
 String _backupOf(List<Invoice> invoices) =>
     InvoiceBackup.encode(invoices, exportedAt: DateTime.utc(2026, 11, 21));
 
+// The first change loads storage, so the reader is given explicitly instead
+// of touching the real SharedPreferences.
 InvoiceProvider _provider({bool Function()? failWrites}) =>
     InvoiceProvider.withStorageWriter(
       (_) async => !(failWrites?.call() ?? false),
+      invoiceStorageReader: () async => null,
     );
-
 void main() {
   test('an exported backup restores into an empty provider', () async {
     final source = _provider();
@@ -59,29 +61,37 @@ void main() {
     expect(InvoiceBackup.decode(backup), isEmpty);
   });
 
-  test('restore replaces matching ids and keeps other saved invoices', () async {
-    final provider = _provider();
-    await provider.saveInvoice(_invoice('a', customer: 'Old'));
-    await provider.saveInvoice(_invoice('keep'));
+  test(
+    'restore replaces matching ids and keeps other saved invoices',
+    () async {
+      final provider = _provider();
+      await provider.saveInvoice(_invoice('a', customer: 'Old'));
+      await provider.saveInvoice(_invoice('keep'));
 
-    final result = await provider.restoreBackup(
-      _backupOf([_invoice('a', customer: 'New'), _invoice('c')]),
-    );
+      final result = await provider.restoreBackup(
+        _backupOf([_invoice('a', customer: 'New'), _invoice('c')]),
+      );
 
-    expect(result.added, 1);
-    expect(result.replaced, 1);
-    expect(result.total, 2);
-    expect(provider.invoices.map((invoice) => invoice.id), ['a', 'keep', 'c']);
-    expect(provider.invoices.first.customerName, 'New');
-  });
+      expect(result.added, 1);
+      expect(result.replaced, 1);
+      expect(result.total, 2);
+      expect(provider.invoices.map((invoice) => invoice.id), [
+        'a',
+        'keep',
+        'c',
+      ]);
+      expect(provider.invoices.first.customerName, 'New');
+    },
+  );
 
   test('restore notifies listeners once', () async {
     final provider = _provider();
+    // The first change loads storage, which notifies once by itself.
+    await provider.loadInvoices();
     var notifications = 0;
     provider.addListener(() => notifications++);
 
     await provider.restoreBackup(_backupOf([_invoice('a')]));
-
     expect(notifications, 1);
   });
 
@@ -90,7 +100,7 @@ void main() {
     final provider = InvoiceProvider.withStorageWriter((_) async {
       writes++;
       return true;
-    });
+    }, invoiceStorageReader: () async => null);
     await provider.saveInvoice(_invoice('a'));
     writes = 0;
 
@@ -117,24 +127,26 @@ void main() {
     expect(provider.invoices.map((invoice) => invoice.id), ['a']);
   });
 
-    test('previewRestore counts what a restore would change without changing it',
-      () async {
-    final provider = _provider();
-    await provider.saveInvoice(_invoice('a'));
-    await provider.saveInvoice(_invoice('keep'));
-    final backup = _backupOf([
-      _invoice('a', customer: 'New'),
-      _invoice('c'),
-      _invoice('d'),
-    ]);
+  test(
+    'previewRestore counts what a restore would change without changing it',
+    () async {
+      final provider = _provider();
+      await provider.saveInvoice(_invoice('a'));
+      await provider.saveInvoice(_invoice('keep'));
+      final backup = _backupOf([
+        _invoice('a', customer: 'New'),
+        _invoice('c'),
+        _invoice('d'),
+      ]);
 
-    final preview = provider.previewRestore(backup);
+      final preview = provider.previewRestore(backup);
 
-    expect(preview.added, 2);
-    expect(preview.replaced, 1);
-    expect(provider.invoices.map((invoice) => invoice.id), ['a', 'keep']);
-    expect(provider.invoices.first.customerName, 'أحمد');
-  });
+      expect(preview.added, 2);
+      expect(preview.replaced, 1);
+      expect(provider.invoices.map((invoice) => invoice.id), ['a', 'keep']);
+      expect(provider.invoices.first.customerName, 'أحمد');
+    },
+  );
 
   test('previewRestore rejects an invalid backup', () {
     expect(

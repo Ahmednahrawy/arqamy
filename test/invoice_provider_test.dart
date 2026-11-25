@@ -102,8 +102,10 @@ class _ControlledInvoiceStorage {
       return false;
     }
 
-    return (await SharedPreferences.getInstance())
-        .setString('saved_invoices', json);
+    return (await SharedPreferences.getInstance()).setString(
+      'saved_invoices',
+      json,
+    );
   }
 }
 
@@ -187,25 +189,24 @@ void main() {
     expect(InvoiceProvider.calculateInvoiceTotal(products), 80);
   });
 
-  test('outstanding balance preserves absolute total and accepted payments',
-      () {
-    for (final totalCost in [20.0, -20.0]) {
-      expect(
-        [
-          0.0,
-          5.0,
-          25.0,
-          -5.0,
-        ]
-            .map(
-              (paid) =>
-                  InvoiceProvider.calculateOutstandingBalance(totalCost, paid),
-            )
-            .toList(),
-        [20.0, 15.0, -5.0, 25.0],
-      );
-    }
-  });
+  test(
+    'outstanding balance preserves absolute total and accepted payments',
+    () {
+      for (final totalCost in [20.0, -20.0]) {
+        expect(
+          [0.0, 5.0, 25.0, -5.0]
+              .map(
+                (paid) => InvoiceProvider.calculateOutstandingBalance(
+                  totalCost,
+                  paid,
+                ),
+              )
+              .toList(),
+          [20.0, 15.0, -5.0, 25.0],
+        );
+      }
+    },
+  );
 
   test('products with different package weights are not combined', () {
     final provider = InvoiceProvider()
@@ -235,10 +236,10 @@ void main() {
       InvoiceProvider.calculateInvoiceTotal(groupedProducts),
       provider.totalCost,
     );
-    expect(
-      groupedProducts.map((product) => product.packageWeight).toSet(),
-      {1.0, 2.0},
-    );
+    expect(groupedProducts.map((product) => product.packageWeight).toSet(), {
+      1.0,
+      2.0,
+    });
   });
   test('deleting an invoice removes it from persistent storage', () async {
     SharedPreferences.setMockInitialValues({});
@@ -271,71 +272,75 @@ void main() {
     expect(reloadedProvider.invoices, isEmpty);
   });
 
-  test('same-second invoices have unique IDs and survive save and reload',
-      () async {
-    SharedPreferences.setMockInitialValues({});
-    const sameSecondSerial = '20261028123456';
-    final provider = InvoiceProvider();
-    provider.prepareDraft();
-    final firstId = provider.draftInvoiceId;
-    provider.setCustomerName('Customer');
-    provider.setInvoiceAction('شراء');
-    provider.addProduct(
-      Product(
-        name: 'Rice',
-        weight: 2,
-        packageWeight: 0,
-        numberPackage: 0,
-        price: 10,
-      ),
-    );
-    expect(provider.draftInvoiceId, firstId);
-    provider.prepareDraft();
-    expect(provider.draftInvoiceId, firstId);
-    final first = _invoice(id: firstId, serial: sameSecondSerial);
-    provider.clearInvoice();
-    final secondId = provider.draftInvoiceId;
-    final second = _invoice(id: secondId, serial: sameSecondSerial);
-
-    expect(first.id, isNot(second.id));
-    expect(
-      first.id,
-      matches(
-        RegExp(
-          r'^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$',
+  test(
+    'same-second invoices have unique IDs and survive save and reload',
+    () async {
+      SharedPreferences.setMockInitialValues({});
+      const sameSecondSerial = '20261028123456';
+      final provider = InvoiceProvider();
+      provider.prepareDraft();
+      final firstId = provider.draftInvoiceId;
+      provider.setCustomerName('Customer');
+      provider.setInvoiceAction('شراء');
+      provider.addProduct(
+        Product(
+          name: 'Rice',
+          weight: 2,
+          packageWeight: 0,
+          numberPackage: 0,
+          price: 10,
         ),
-      ),
-    );
+      );
+      expect(provider.draftInvoiceId, firstId);
+      provider.prepareDraft();
+      expect(provider.draftInvoiceId, firstId);
+      final first = _invoice(id: firstId, serial: sameSecondSerial);
+      provider.clearInvoice();
+      final secondId = provider.draftInvoiceId;
+      final second = _invoice(id: secondId, serial: sameSecondSerial);
 
-    await provider.saveInvoice(first);
-    await provider.saveInvoice(second);
+      expect(first.id, isNot(second.id));
+      expect(
+        first.id,
+        matches(
+          RegExp(
+            r'^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$',
+          ),
+        ),
+      );
 
-    final reloadedProvider = InvoiceProvider();
-    await reloadedProvider.loadInvoices();
-    expect(reloadedProvider.invoices, hasLength(2));
-    expect(
-      reloadedProvider.invoices.map((invoice) => invoice.id).toSet(),
-      {first.id, second.id},
-    );
-    expect(
-      reloadedProvider.invoices.map((invoice) => invoice.invoiceSerial),
-      [sameSecondSerial, sameSecondSerial],
-    );
-  });
+      await provider.saveInvoice(first);
+      await provider.saveInvoice(second);
 
-  test('saving the same invoice repeatedly updates rather than duplicates',
-      () async {
-    SharedPreferences.setMockInitialValues({});
-    final provider = InvoiceProvider();
-    final draft = _invoice(id: provider.draftInvoiceId, serial: '1001');
+      final reloadedProvider = InvoiceProvider();
+      await reloadedProvider.loadInvoices();
+      expect(reloadedProvider.invoices, hasLength(2));
+      expect(reloadedProvider.invoices.map((invoice) => invoice.id).toSet(), {
+        first.id,
+        second.id,
+      });
+      expect(
+        reloadedProvider.invoices.map((invoice) => invoice.invoiceSerial),
+        [sameSecondSerial, sameSecondSerial],
+      );
+    },
+  );
 
-    await provider.saveInvoice(draft);
-    await provider.saveInvoice(draft);
+  test(
+    'saving the same invoice repeatedly updates rather than duplicates',
+    () async {
+      SharedPreferences.setMockInitialValues({});
+      final provider = InvoiceProvider();
+      final draft = _invoice(id: provider.draftInvoiceId, serial: '1001');
 
-    expect(provider.invoices, hasLength(1));
-    expect(provider.invoices.single.id, draft.id);
-    expect(provider.invoices.single.invoiceSerial, draft.invoiceSerial);
-  });
+      await provider.saveInvoice(draft);
+      await provider.saveInvoice(draft);
+
+      expect(provider.invoices, hasLength(1));
+      expect(provider.invoices.single.id, draft.id);
+      expect(provider.invoices.single.invoiceSerial, draft.invoiceSerial);
+    },
+  );
 
   test('cold-start save preserves invoices already in storage', () async {
     final existing = _invoice(id: 'existing', serial: '1001');
@@ -351,43 +356,45 @@ void main() {
 
     final reloadedProvider = InvoiceProvider();
     await reloadedProvider.loadInvoices();
-    expect(
-      reloadedProvider.invoices.map((invoice) => invoice.id).toSet(),
-      {'existing', 'added'},
-    );
+    expect(reloadedProvider.invoices.map((invoice) => invoice.id).toSet(), {
+      'existing',
+      'added',
+    });
   });
 
-  test('failed cold-start read aborts mutation without overwriting storage',
-      () async {
-    final existing = _invoice(id: 'existing', serial: '1001');
-    final added = _invoice(id: 'added', serial: '1002');
-    final originalJson = json.encode([existing.toJson()]);
-    SharedPreferences.setMockInitialValues({'saved_invoices': originalJson});
-    final storage = _ControlledInvoiceStorage();
-    final provider = InvoiceProvider.withStorageWriter(
-      storage.write,
-      invoiceStorageReader: storage.read,
-    )..prepareDraft();
-    storage.failNextRead();
+  test(
+    'failed cold-start read aborts mutation without overwriting storage',
+    () async {
+      final existing = _invoice(id: 'existing', serial: '1001');
+      final added = _invoice(id: 'added', serial: '1002');
+      final originalJson = json.encode([existing.toJson()]);
+      SharedPreferences.setMockInitialValues({'saved_invoices': originalJson});
+      final storage = _ControlledInvoiceStorage();
+      final provider = InvoiceProvider.withStorageWriter(
+        storage.write,
+        invoiceStorageReader: storage.read,
+      )..prepareDraft();
+      storage.failNextRead();
 
-    await expectLater(
-      provider.saveInvoice(added),
-      throwsA(isA<StateError>()),
-    );
+      await expectLater(
+        provider.saveInvoice(added),
+        throwsA(isA<StateError>()),
+      );
 
-    final prefs = await SharedPreferences.getInstance();
-    expect(prefs.getString('saved_invoices'), originalJson);
-    expect(provider.invoices, isEmpty);
+      final prefs = await SharedPreferences.getInstance();
+      expect(prefs.getString('saved_invoices'), originalJson);
+      expect(provider.invoices, isEmpty);
 
-    // A transient read failure must not mark the provider as loaded.
-    await provider.saveInvoice(added);
-    final reloadedProvider = InvoiceProvider();
-    await reloadedProvider.loadInvoices();
-    expect(
-      reloadedProvider.invoices.map((invoice) => invoice.id).toSet(),
-      {'existing', 'added'},
-    );
-  });
+      // A transient read failure must not mark the provider as loaded.
+      await provider.saveInvoice(added);
+      final reloadedProvider = InvoiceProvider();
+      await reloadedProvider.loadInvoices();
+      expect(reloadedProvider.invoices.map((invoice) => invoice.id).toSet(), {
+        'existing',
+        'added',
+      });
+    },
+  );
 
   test('concurrent saves both survive persistence and reload', () async {
     SharedPreferences.setMockInitialValues({});
@@ -395,10 +402,12 @@ void main() {
     final provider = InvoiceProvider.withStorageWriter(storage.write);
     final writeStarted = storage.blockNextWrite();
 
-    final firstSave =
-        provider.saveInvoice(_invoice(id: 'invoice-1', serial: '1'));
-    final secondSave =
-        provider.saveInvoice(_invoice(id: 'invoice-2', serial: '2'));
+    final firstSave = provider.saveInvoice(
+      _invoice(id: 'invoice-1', serial: '1'),
+    );
+    final secondSave = provider.saveInvoice(
+      _invoice(id: 'invoice-2', serial: '2'),
+    );
     await writeStarted.future;
     expect(provider.invoices, isEmpty);
     storage.releaseWrite();
@@ -406,77 +415,83 @@ void main() {
 
     final reloadedProvider = InvoiceProvider();
     await reloadedProvider.loadInvoices();
-    expect(
-      reloadedProvider.invoices.map((invoice) => invoice.id).toSet(),
-      {'invoice-1', 'invoice-2'},
-    );
+    expect(reloadedProvider.invoices.map((invoice) => invoice.id).toSet(), {
+      'invoice-1',
+      'invoice-2',
+    });
   });
 
-  test('load queued behind save reads and publishes the saved invoice',
-      () async {
-    SharedPreferences.setMockInitialValues({});
-    final storage = _ControlledInvoiceStorage();
-    final provider = InvoiceProvider.withStorageWriter(
-      storage.write,
-      invoiceStorageReader: storage.read,
-    );
-    final writeStarted = storage.blockNextWrite();
-    final readStarted = storage.blockNextRead();
-    final savedInvoice = _invoice(id: 'saved', serial: '1');
+  test(
+    'load queued behind save reads and publishes the saved invoice',
+    () async {
+      SharedPreferences.setMockInitialValues({});
+      final storage = _ControlledInvoiceStorage();
+      final provider = InvoiceProvider.withStorageWriter(
+        storage.write,
+        invoiceStorageReader: storage.read,
+      );
+      // The first change loads storage by itself. Do that now, so the blocked
+      // read below belongs to the queued load, which is what this test checks.
+      await provider.loadInvoices();
+      final writeStarted = storage.blockNextWrite();
+      final readStarted = storage.blockNextRead();
+      final savedInvoice = _invoice(id: 'saved', serial: '1');
+      final save = provider.saveInvoice(savedInvoice);
+      await writeStarted.future;
+      final load = provider.loadInvoices();
+      storage.releaseWrite();
+      await readStarted.future;
+      expect(provider.invoices.single.id, savedInvoice.id);
+      storage.releaseRead();
+      await Future.wait([save, load]);
 
-    final save = provider.saveInvoice(savedInvoice);
-    await writeStarted.future;
-    final load = provider.loadInvoices();
-    storage.releaseWrite();
-    await readStarted.future;
-    expect(provider.invoices.single.id, savedInvoice.id);
-    storage.releaseRead();
-    await Future.wait([save, load]);
+      final reloadedProvider = InvoiceProvider();
+      await reloadedProvider.loadInvoices();
+      expect(
+        provider.invoices.map((invoice) => invoice.toJson()).toList(),
+        reloadedProvider.invoices.map((invoice) => invoice.toJson()).toList(),
+      );
+      expect(provider.invoices.single.id, savedInvoice.id);
+    },
+  );
 
-    final reloadedProvider = InvoiceProvider();
-    await reloadedProvider.loadInvoices();
-    expect(
-      provider.invoices.map((invoice) => invoice.toJson()).toList(),
-      reloadedProvider.invoices.map((invoice) => invoice.toJson()).toList(),
-    );
-    expect(provider.invoices.single.id, savedInvoice.id);
-  });
+  test(
+    'load queued behind update does not restore stale invoice data',
+    () async {
+      SharedPreferences.setMockInitialValues({});
+      final storage = _ControlledInvoiceStorage();
+      final provider = InvoiceProvider.withStorageWriter(
+        storage.write,
+        invoiceStorageReader: storage.read,
+      );
+      final original = _invoice(id: 'invoice-1', serial: '1');
+      await provider.saveInvoice(original);
+      final writeStarted = storage.blockNextWrite();
+      final readStarted = storage.blockNextRead();
+      final updated = _invoice(
+        id: original.id,
+        serial: original.invoiceSerial,
+        customerName: 'Updated customer',
+      );
 
-  test('load queued behind update does not restore stale invoice data',
-      () async {
-    SharedPreferences.setMockInitialValues({});
-    final storage = _ControlledInvoiceStorage();
-    final provider = InvoiceProvider.withStorageWriter(
-      storage.write,
-      invoiceStorageReader: storage.read,
-    );
-    final original = _invoice(id: 'invoice-1', serial: '1');
-    await provider.saveInvoice(original);
-    final writeStarted = storage.blockNextWrite();
-    final readStarted = storage.blockNextRead();
-    final updated = _invoice(
-      id: original.id,
-      serial: original.invoiceSerial,
-      customerName: 'Updated customer',
-    );
+      final update = provider.updateInvoice(updated);
+      await writeStarted.future;
+      final load = provider.loadInvoices();
+      storage.releaseWrite();
+      await readStarted.future;
+      expect(provider.invoices.single.customerName, updated.customerName);
+      storage.releaseRead();
+      await Future.wait([update, load]);
 
-    final update = provider.updateInvoice(updated);
-    await writeStarted.future;
-    final load = provider.loadInvoices();
-    storage.releaseWrite();
-    await readStarted.future;
-    expect(provider.invoices.single.customerName, updated.customerName);
-    storage.releaseRead();
-    await Future.wait([update, load]);
-
-    final reloadedProvider = InvoiceProvider();
-    await reloadedProvider.loadInvoices();
-    expect(
-      provider.invoices.map((invoice) => invoice.toJson()).toList(),
-      reloadedProvider.invoices.map((invoice) => invoice.toJson()).toList(),
-    );
-    expect(provider.invoices.single.customerName, updated.customerName);
-  });
+      final reloadedProvider = InvoiceProvider();
+      await reloadedProvider.loadInvoices();
+      expect(
+        provider.invoices.map((invoice) => invoice.toJson()).toList(),
+        reloadedProvider.invoices.map((invoice) => invoice.toJson()).toList(),
+      );
+      expect(provider.invoices.single.customerName, updated.customerName);
+    },
+  );
 
   test('load queued behind delete does not resurrect the invoice', () async {
     SharedPreferences.setMockInitialValues({});
@@ -529,42 +544,44 @@ void main() {
       provider.invoices.map((invoice) => invoice.toJson()).toList(),
       reloadedProvider.invoices.map((invoice) => invoice.toJson()).toList(),
     );
-    expect(
-      provider.invoices.map((invoice) => invoice.id).toSet(),
-      {'existing', 'after-load-failure'},
-    );
+    expect(provider.invoices.map((invoice) => invoice.id).toSet(), {
+      'existing',
+      'after-load-failure',
+    });
   });
 
-  test('false write preserves state and does not block later mutations',
-      () async {
-    SharedPreferences.setMockInitialValues({});
-    final storage = _ControlledInvoiceStorage();
-    final provider = InvoiceProvider.withStorageWriter(storage.write);
-    final original = _invoice(id: 'original', serial: '1');
-    await provider.saveInvoice(original);
-    final prefs = await SharedPreferences.getInstance();
-    final originalJson = prefs.getString('saved_invoices');
-    storage.returnFalseForNextWrite();
+  test(
+    'false write preserves state and does not block later mutations',
+    () async {
+      SharedPreferences.setMockInitialValues({});
+      final storage = _ControlledInvoiceStorage();
+      final provider = InvoiceProvider.withStorageWriter(storage.write);
+      final original = _invoice(id: 'original', serial: '1');
+      await provider.saveInvoice(original);
+      final prefs = await SharedPreferences.getInstance();
+      final originalJson = prefs.getString('saved_invoices');
+      storage.returnFalseForNextWrite();
 
-    await expectLater(
-      provider.saveInvoice(_invoice(id: 'rejected', serial: '2')),
-      throwsA(isA<StateError>()),
-    );
-    expect(provider.invoices, [original]);
-    expect(prefs.getString('saved_invoices'), originalJson);
+      await expectLater(
+        provider.saveInvoice(_invoice(id: 'rejected', serial: '2')),
+        throwsA(isA<StateError>()),
+      );
+      expect(provider.invoices, [original]);
+      expect(prefs.getString('saved_invoices'), originalJson);
 
-    await provider.saveInvoice(_invoice(id: 'later', serial: '3'));
-    final reloadedProvider = InvoiceProvider();
-    await reloadedProvider.loadInvoices();
-    expect(
-      provider.invoices.map((invoice) => invoice.toJson()).toList(),
-      reloadedProvider.invoices.map((invoice) => invoice.toJson()).toList(),
-    );
-    expect(
-      provider.invoices.map((invoice) => invoice.id).toSet(),
-      {'original', 'later'},
-    );
-  });
+      await provider.saveInvoice(_invoice(id: 'later', serial: '3'));
+      final reloadedProvider = InvoiceProvider();
+      await reloadedProvider.loadInvoices();
+      expect(
+        provider.invoices.map((invoice) => invoice.toJson()).toList(),
+        reloadedProvider.invoices.map((invoice) => invoice.toJson()).toList(),
+      );
+      expect(provider.invoices.map((invoice) => invoice.id).toSet(), {
+        'original',
+        'later',
+      });
+    },
+  );
 
   test('concurrent updates preserve both changes', () async {
     SharedPreferences.setMockInitialValues({});
@@ -578,15 +595,17 @@ void main() {
 
     final firstUpdate = provider.updateInvoice(
       _invoice(
-          id: first.id,
-          serial: first.invoiceSerial,
-          customerName: 'First updated'),
+        id: first.id,
+        serial: first.invoiceSerial,
+        customerName: 'First updated',
+      ),
     );
     final secondUpdate = provider.updateInvoice(
       _invoice(
-          id: second.id,
-          serial: second.invoiceSerial,
-          customerName: 'Second updated'),
+        id: second.id,
+        serial: second.invoiceSerial,
+        customerName: 'Second updated',
+      ),
     );
     await writeStarted.future;
     storage.releaseWrite();
@@ -644,10 +663,10 @@ void main() {
 
     final reloadedProvider = InvoiceProvider();
     await reloadedProvider.loadInvoices();
-    expect(
-      reloadedProvider.invoices.map((invoice) => invoice.id).toSet(),
-      {'original', 'later'},
-    );
+    expect(reloadedProvider.invoices.map((invoice) => invoice.id).toSet(), {
+      'original',
+      'later',
+    });
     expect(
       reloadedProvider.invoices
           .firstWhere((invoice) => invoice.id == original.id)
@@ -693,35 +712,37 @@ void main() {
     );
   });
 
-  test('failed invoice update preserves memory and persisted contents',
-      () async {
-    var failWrites = false;
-    var persistedJson = '';
-    final provider = InvoiceProvider.withStorageWriter((json) async {
-      if (failWrites) throw StateError('storage unavailable');
-      persistedJson = json;
-      return true;
-    });
-    final original = _invoice(id: 'legacy-id', serial: 'legacy-serial');
-    await provider.saveInvoice(original);
-    final originalPersistedJson = persistedJson;
-    final replacement = _invoice(
-      id: original.id,
-      serial: original.invoiceSerial,
-      customerName: 'Changed customer',
-      paid: 10,
-    );
-    failWrites = true;
+  test(
+    'failed invoice update preserves memory and persisted contents',
+    () async {
+      var failWrites = false;
+      var persistedJson = '';
+      final provider = InvoiceProvider.withStorageWriter((json) async {
+        if (failWrites) throw StateError('storage unavailable');
+        persistedJson = json;
+        return true;
+      }, invoiceStorageReader: () async => null);
+      final original = _invoice(id: 'legacy-id', serial: 'legacy-serial');
+      await provider.saveInvoice(original);
+      final originalPersistedJson = persistedJson;
+      final replacement = _invoice(
+        id: original.id,
+        serial: original.invoiceSerial,
+        customerName: 'Changed customer',
+        paid: 10,
+      );
+      failWrites = true;
 
-    await expectLater(
-      provider.updateInvoice(replacement),
-      throwsA(isA<StateError>()),
-    );
+      await expectLater(
+        provider.updateInvoice(replacement),
+        throwsA(isA<StateError>()),
+      );
 
-    expect(provider.invoices, [original]);
-    expect(persistedJson, originalPersistedJson);
-    expect(json.decode(persistedJson).single['customerName'], 'Customer');
-  });
+      expect(provider.invoices, [original]);
+      expect(persistedJson, originalPersistedJson);
+      expect(json.decode(persistedJson).single['customerName'], 'Customer');
+    },
+  );
 
   test('legacy invoice IDs and serials survive load and save', () async {
     const legacyId = 'INV_20261020_080000';
@@ -753,8 +774,9 @@ void main() {
     );
   });
 
-  testWidgets('failed edit reports an error and keeps the original invoice',
-      (tester) async {
+  testWidgets('failed edit reports an error and keeps the original invoice', (
+    tester,
+  ) async {
     tester.view.physicalSize = const Size(1000, 1400);
     tester.view.devicePixelRatio = 1;
     addTearDown(tester.view.resetPhysicalSize);
@@ -764,7 +786,7 @@ void main() {
     final provider = InvoiceProvider.withStorageWriter((json) async {
       if (failWrites) throw StateError('storage unavailable');
       return true;
-    });
+    }, invoiceStorageReader: () async => null);
     await provider.saveInvoice(original);
     failWrites = true;
 
@@ -832,8 +854,9 @@ void main() {
       invoice(id: 'sale-1', action: 'بـيع', rest: 375),
     ];
 
-    final balanceWithoutStorage =
-        InvoiceProvider.calculateCustomerBalance(invoices);
+    final balanceWithoutStorage = InvoiceProvider.calculateCustomerBalance(
+      invoices,
+    );
     final balanceWithStorage = InvoiceProvider.calculateCustomerBalance([
       ...invoices,
       invoice(id: 'storage-1', action: 'تخزين', rest: 900),

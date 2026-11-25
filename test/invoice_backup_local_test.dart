@@ -66,20 +66,22 @@ void main() {
     expect(restored.map((invoice) => invoice.id), ['a', 'b']);
   });
 
-  test('backs up invoices that were saved earlier but not loaded yet',
-      () async {
-    final other = InvoiceProvider.withStorageWriter((json) async {
-      stored = json;
-      return true;
-    });
-    await other.saveInvoice(_invoice('saved-earlier'));
+  test(
+    'backs up invoices that were saved earlier but not loaded yet',
+    () async {
+      final other = InvoiceProvider.withStorageWriter((json) async {
+        stored = json;
+        return true;
+      }, invoiceStorageReader: () async => stored);
+      await other.saveInvoice(_invoice('saved-earlier'));
 
-    final file = await InvoiceBackupService.saveLocalBackup(
-      provider,
-      directory: temporaryDirectory,
-    );
+      final file = await InvoiceBackupService.saveLocalBackup(
+        provider,
+        directory: temporaryDirectory,
+      );
 
-    final restored = InvoiceBackup.decode(await file.readAsString());
-    expect(restored.map((invoice) => invoice.id), ['saved-earlier']);
-  });
+      final restored = InvoiceBackup.decode(await file.readAsString());
+      expect(restored.map((invoice) => invoice.id), ['saved-earlier']);
+    },
+  );
 }

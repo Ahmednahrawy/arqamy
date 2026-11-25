@@ -317,6 +317,8 @@ void main() {
     ];
 
     for (final invoice in fixtures) {
+      // Each fixture is checked on its own, so start from empty storage.
+      SharedPreferences.setMockInitialValues({});
       final provider = InvoiceProvider();
       await provider.saveInvoice(invoice);
       await tester.pumpWidget(_app(provider, languageCode: 'ar'));
@@ -353,5 +355,4 @@ void main() {
     await reloaded.loadInvoices();
     expect(reloaded.invoices.single.customerId, 'customer-123');
   });
-  
 }
