@@ -250,7 +250,7 @@ void main() {
     expect(
       await database
           .customSelect('SELECT display_name FROM parties WHERE party_id = ?', variables: [
-            const Variable<String>('party-preserved'),
+            Variable.withString('party-preserved'),
           ])
           .map((row) => row.read<String>('display_name'))
           .getSingle(),
