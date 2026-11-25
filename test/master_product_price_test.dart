@@ -23,6 +23,12 @@ void main() {
     await provider.setMasterProductPrice('Rice', InvoiceAction.sale, 15);
     await provider.setMasterProductPrice('Rice', InvoiceAction.storage, 2);
 
+    final snapshot = provider.masterProductPrices['Rice'];
+    expect(snapshot, isA<Map<InvoiceAction, double>>());
+    expect(snapshot?[InvoiceAction.purchase], 12.5);
+    expect(snapshot?[InvoiceAction.sale], 15);
+    expect(snapshot?[InvoiceAction.storage], 2);
+
     final reloaded = InvoiceProvider();
     await reloaded.loadMasterProducts();
     expect(reloaded.defaultProductPrice('Rice', InvoiceAction.purchase), 12.5);

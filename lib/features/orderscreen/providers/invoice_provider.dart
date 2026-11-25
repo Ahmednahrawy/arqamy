@@ -43,9 +43,9 @@ class InvoiceProvider extends ChangeNotifier {
   String? get customerName => _customerName;
   List<String> get masterProductList => List.unmodifiable(_masterProductList);
   Map<String, Map<InvoiceAction, double>> get masterProductPrices =>
-      Map.unmodifiable({
+      Map<String, Map<InvoiceAction, double>>.unmodifiable({
         for (final entry in _masterProductPrices.entries)
-          entry.key: Map.unmodifiable(entry.value),
+          entry.key: Map<InvoiceAction, double>.unmodifiable(entry.value),
       });
   List<Invoice> get invoices => List.unmodifiable(_invoices);
   String get draftInvoiceId => _draftInvoiceId ??= Invoice.generateId();
