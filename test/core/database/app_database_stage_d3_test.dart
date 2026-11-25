@@ -290,7 +290,11 @@ void main() {
       variables: [Variable.withString('party-rollback')],
     ).getSingle();
     expect(preservedParty.read<String>('display_name'), 'Rollback Party');
+    await inspector.customStatement('DROP TABLE legacy_migration_occurrences');
     await inspector.close();
+
+    database = await AppDatabase.open(path: databasePath);
+    expect(await database.storedSchemaVersion, 6);
   });
 
   test('upgrades a version 5 database and preserves existing business data', () async {
