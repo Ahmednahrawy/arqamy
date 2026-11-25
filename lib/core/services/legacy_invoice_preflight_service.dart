@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:arqamy/core/services/legacy_invoice_snapshot_service.dart';
+import 'package:arqamy/core/services/legacy_invoice_source_occurrence_identity.dart';
 import 'package:arqamy/features/orderscreen/data/models/invoice.dart';
 import 'package:arqamy/features/orderscreen/data/models/product_model.dart';
 import 'package:arqamy/features/payment_ledger/data/legacy_invoice_audit.dart';
@@ -25,6 +26,7 @@ enum LegacyInvoicePreflightFatalIssue {
 class LegacyInvoicePreflightOccurrence {
   const LegacyInvoicePreflightOccurrence({
     required this.sourceIndex,
+    required this.sourceOccurrenceIdentity,
     required this.classification,
     required this.invoiceId,
     required this.serial,
@@ -35,6 +37,7 @@ class LegacyInvoicePreflightOccurrence {
   });
 
   final int sourceIndex;
+  final LegacyInvoiceSourceOccurrenceIdentity sourceOccurrenceIdentity;
   final LegacyInvoicePreflightClassification classification;
   final String? invoiceId;
   final String? serial;
@@ -139,10 +142,17 @@ class LegacyInvoicePreflightService {
     for (final record in records) {
       final duplicate = record.invoiceId != null &&
           idCounts[record.invoiceId]! > 1;
+      final sourceOccurrenceIdentity =
+          LegacyInvoiceSourceOccurrenceIdentity.create(
+        snapshotSha256: snapshot.sha256,
+        sourceIndex: record.sourceIndex,
+        rawJson: record.rawJson,
+      );
       if (record.invoice == null) {
         occurrences.add(
           LegacyInvoicePreflightOccurrence(
             sourceIndex: record.sourceIndex,
+            sourceOccurrenceIdentity: sourceOccurrenceIdentity,
             classification: LegacyInvoicePreflightClassification.malformedRecord,
             invoiceId: record.invoiceId,
             serial: record.serial,
@@ -171,6 +181,7 @@ class LegacyInvoicePreflightService {
       occurrences.add(
         LegacyInvoicePreflightOccurrence(
           sourceIndex: record.sourceIndex,
+          sourceOccurrenceIdentity: sourceOccurrenceIdentity,
           classification: classification,
           invoiceId: record.invoiceId,
           serial: record.serial,
