@@ -216,6 +216,7 @@
   "price_egp": "Price (EGP)",
   "total_egp": "Total (EGP)",
   "total_price": "Total price",
+  "invoice_actions": "Invoice actions",
   "backup_invoices": "Back up invoices",
   "backup_invoices_desc": "Save all invoices to a file you can keep safe",
   "backup_no_invoices": "There are no invoices to back up yet",

@@ -216,6 +216,7 @@
   "price_egp": "السعر (جنيه)",
   "total_egp": "الإجمالي (جنيه)",
   "total_price": "إجمالي السعر",
+  "invoice_actions": "إجراءات الفواتير",
   "backup_invoices": "نسخ احتياطي للفواتير",
   "backup_invoices_desc": "احفظ جميع الفواتير في ملف يمكنك الاحتفاظ به",
   "backup_no_invoices": "لا توجد فواتير لنسخها بعد",

@@ -8,6 +8,7 @@ import 'package:arqamy/features/orderscreen/providers/invoice_provider.dart';
 import 'package:arqamy/features/payment_ledger/data/ledger_import_service.dart';
 import 'package:arqamy/features/settingscreen/ui/pages/invoice_setting.dart';
 import 'package:arqamy/features/settingscreen/ui/pages/product_management.dart';
+import 'package:arqamy/features/settingscreen/ui/widgets/settings_actions_dropdown.dart';
 import 'package:arqamy/generated/l10n.dart';
 import 'package:flutter/foundation.dart' show kDebugMode;
 import 'package:material_ui/material_ui.dart';
@@ -251,6 +252,24 @@ class SettingsScreen extends StatelessWidget {
       );
     }
   }
+
+  void _openAction(BuildContext context, SettingsAction action) {
+    switch (action) {
+      case SettingsAction.backupInvoices:
+        _backupInvoices(context);
+        break;
+      case SettingsAction.restoreInvoices:
+        _restoreInvoices(context);
+        break;
+      case SettingsAction.linkCustomers:
+        _linkCustomers(context);
+        break;
+      case SettingsAction.ledgerImport:
+        _importToLedger(context);
+        break;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final themeProvider = Provider.of<ThemeProvider>(context);
@@ -305,32 +324,17 @@ class SettingsScreen extends StatelessWidget {
               );
             },
           ),
-          ListTile(
-            leading: const Icon(Icons.backup_outlined),
-            title: Text(S.of(context).backup_invoices),
-            subtitle: Text(S.of(context).backup_invoices_desc),
-            onTap: () => _backupInvoices(context),
-          ),
-          ListTile(
-            leading: const Icon(Icons.restore),
-            title: Text(S.of(context).restore_invoices),
-            subtitle: Text(S.of(context).restore_invoices_desc),
-            onTap: () => _restoreInvoices(context),
-          ),
-          if (kDebugMode)
-            ListTile(
-              leading: const Icon(Icons.people_outline),
-              title: Text(S.of(context).link_customers),
-              subtitle: Text(S.of(context).link_customers_desc),
-              onTap: () => _linkCustomers(context),
+          Padding(
+            padding: const EdgeInsets.symmetric(
+              horizontal: 16.0,
+              vertical: 8.0,
             ),
-          if (kDebugMode)
-            ListTile(
-              leading: const Icon(Icons.account_balance_outlined),
-              title: Text(S.of(context).ledger_import),
-              subtitle: Text(S.of(context).ledger_import_desc),
-              onTap: () => _importToLedger(context),
+            child: SettingsActionsDropdown(
+              showDebugOptions: kDebugMode,
+              onSelected: (action) => _openAction(context, action),
             ),
+          ),
+          const Divider(),
           ListTile(
             leading: const Icon(Icons.notifications),
             title: Text(S.of(context).notifications),
