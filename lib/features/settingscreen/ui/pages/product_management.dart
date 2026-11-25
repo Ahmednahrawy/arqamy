@@ -196,77 +196,84 @@ class _ProductManagementScreenState extends State<ProductManagementScreen> {
           ),
         ],
       ),
-      body: Consumer<InvoiceProvider>(
-        builder: (context, provider, child) {
-          final products = provider.masterProductList;
+      body: SafeArea(
+        child: Consumer<InvoiceProvider>(
+          builder: (context, provider, child) {
+            final products = provider.masterProductList;
 
-          if (products.isEmpty) {
-            return Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(
-                    Icons.inventory_2,
-                    size: 64,
-                    color: colors.onSurfaceVariant,
-                  ),
-                  const SizedBox(height: 16),
-                  Text(
-                    strings.no_products,
-                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
+            if (products.isEmpty) {
+              return Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      Icons.inventory_2,
+                      size: 64,
                       color: colors.onSurfaceVariant,
                     ),
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    strings.tap_to_add_product,
-                    style: TextStyle(color: colors.onSurfaceVariant),
-                  ),
-                ],
-              ),
-            );
-          }
-
-          return ReorderableListView.builder(
-            itemCount: products.length,
-            onReorderItem: (oldIndex, newIndex) async {
-              // onReorderItem gives the item's final position, but the provider
-              // expects the raw ReorderableListView index (it adjusts itself).
-              final rawNewIndex = newIndex > oldIndex ? newIndex + 1 : newIndex;
-              await provider.reorderMasterProducts(oldIndex, rawNewIndex);
-            },
-            itemBuilder: (context, index) {
-              final product = products[index];
-              return Card(
-                key: ValueKey(product),
-                margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                child: ListTile(
-                  leading: Icon(
-                    Icons.drag_handle,
-                    color: colors.onSurfaceVariant,
-                  ),
-                  title: Text(product),
-                  trailing: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      IconButton(
-                        onPressed: () => _showEditDialog(index, product),
-                        icon: Icon(Icons.edit, color: colors.primary),
-                        tooltip: strings.edit,
+                    const SizedBox(height: 16),
+                    Text(
+                      strings.no_products,
+                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                        color: colors.onSurfaceVariant,
                       ),
-                      IconButton(
-                        onPressed: () =>
-                            _showDeleteConfirmation(index, product),
-                        icon: Icon(Icons.delete, color: colors.error),
-                        tooltip: strings.delete,
-                      ),
-                    ],
-                  ),
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      strings.tap_to_add_product,
+                      style: TextStyle(color: colors.onSurfaceVariant),
+                    ),
+                  ],
                 ),
               );
-            },
-          );
-        },
+            }
+
+            return ReorderableListView.builder(
+              itemCount: products.length,
+              onReorderItem: (oldIndex, newIndex) async {
+                // onReorderItem gives the item's final position, but the provider
+                // expects the raw ReorderableListView index (it adjusts itself).
+                final rawNewIndex = newIndex > oldIndex
+                    ? newIndex + 1
+                    : newIndex;
+                await provider.reorderMasterProducts(oldIndex, rawNewIndex);
+              },
+              itemBuilder: (context, index) {
+                final product = products[index];
+                return Card(
+                  key: ValueKey(product),
+                  margin: const EdgeInsets.symmetric(
+                    horizontal: 8,
+                    vertical: 4,
+                  ),
+                  child: ListTile(
+                    leading: Icon(
+                      Icons.drag_handle,
+                      color: colors.onSurfaceVariant,
+                    ),
+                    title: Text(product),
+                    trailing: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        IconButton(
+                          onPressed: () => _showEditDialog(index, product),
+                          icon: Icon(Icons.edit, color: colors.primary),
+                          tooltip: strings.edit,
+                        ),
+                        IconButton(
+                          onPressed: () =>
+                              _showDeleteConfirmation(index, product),
+                          icon: Icon(Icons.delete, color: colors.error),
+                          tooltip: strings.delete,
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              },
+            );
+          },
+        ),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: _showAddDialog,
