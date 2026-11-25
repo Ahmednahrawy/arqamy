@@ -40,6 +40,9 @@ class LegacyInvoicePreflightOccurrence {
   final List<LegacyInvoiceIssue> issues;
   final List<String> malformedReasons;
 
+  /// Exact JSON text for this array occurrence, excluding surrounding whitespace.
+  final String rawJson;
+
   /// Present only when the record has the complete legacy invoice structure.
   /// This is an in-memory model; the original raw snapshot remains authoritative.
   final Invoice? invoice;
@@ -109,10 +112,15 @@ class LegacyInvoicePreflightService {
       );
     }
 
+    final fragments = _arrayElementFragments(raw);
     final records = <_ParsedOccurrence>[];
     final idCounts = <String, int>{};
     for (var index = 0; index < decoded.length; index++) {
-      final parsed = _parseOccurrence(index, decoded[index]);
+      final parsed = _parseOccurrence(
+        index,
+        decoded[index],
+        fragments[index],
+      );
       records.add(parsed);
       final id = parsed.invoiceId;
       if (id != null) idCounts[id] = (idCounts[id] ?? 0) + 1;
@@ -133,6 +141,7 @@ class LegacyInvoicePreflightService {
                 ? const [LegacyInvoiceIssue.duplicateInvoiceId]
                 : const [],
             malformedReasons: List.unmodifiable(record.malformedReasons),
+            rawJson: record.rawJson,
           ),
         );
         continue;
@@ -158,6 +167,7 @@ class LegacyInvoicePreflightService {
           serial: record.serial,
           issues: List.unmodifiable(auditIssues),
           malformedReasons: const [],
+          rawJson: record.rawJson,
           invoice: record.invoice,
         ),
       );
@@ -182,9 +192,17 @@ class LegacyInvoicePreflightService {
     );
   }
 
-  _ParsedOccurrence _parseOccurrence(int index, Object? value) {
+  _ParsedOccurrence _parseOccurrence(
+    int index,
+    Object? value,
+    String rawJson,
+  ) {
     if (value is! Map) {
-      return _ParsedOccurrence.malformed(index, ['Record must be a JSON object.']);
+      return _ParsedOccurrence.malformed(
+        index,
+        ['Record must be a JSON object.'],
+        rawJson: rawJson,
+      );
     }
 
     final map = <String, dynamic>{};
@@ -193,6 +211,7 @@ class LegacyInvoicePreflightService {
         return _ParsedOccurrence.malformed(
           index,
           ['Record contains a non-string field name.'],
+          rawJson: rawJson,
         );
       }
       map[entry.key as String] = entry.value;
@@ -254,6 +273,7 @@ class LegacyInvoicePreflightService {
         errors,
         invoiceId: id,
         serial: serial,
+        rawJson: rawJson,
       );
     }
 
@@ -280,7 +300,7 @@ class LegacyInvoicePreflightService {
       customerId: map['customerId'] as String?,
     );
 
-    return _ParsedOccurrence.valid(index, invoice);
+    return _ParsedOccurrence.valid(index, invoice, rawJson);
   }
 
   void _requireString(
@@ -308,6 +328,72 @@ class LegacyInvoicePreflightService {
 
   String? _optionalString(Map<String, dynamic> map, String key) =>
       map[key] is String ? map[key] as String : null;
+
+  /// Splits a validated top-level JSON array without re-encoding its elements.
+  /// This retains each source occurrence's original formatting and field order.
+  List<String> _arrayElementFragments(String raw) {
+    final fragments = <String>[];
+    var index = raw.indexOf('[') + 1;
+    while (index < raw.length) {
+      while (index < raw.length &&
+          (raw.codeUnitAt(index) == 0x20 ||
+              raw.codeUnitAt(index) == 0x0A ||
+              raw.codeUnitAt(index) == 0x0D ||
+              raw.codeUnitAt(index) == 0x09)) {
+        index++;
+      }
+      if (index >= raw.length || raw[index] == ']') break;
+
+      final start = index;
+      var objectDepth = 0;
+      var arrayDepth = 0;
+      var inString = false;
+      var escaped = false;
+      while (index < raw.length) {
+        final character = raw[index];
+        if (inString) {
+          if (escaped) {
+            escaped = false;
+          } else if (character == r'\\') {
+            escaped = true;
+          } else if (character == '"') {
+            inString = false;
+          }
+        } else {
+          if (character == '"') {
+            inString = true;
+          } else if (character == '{') {
+            objectDepth++;
+          } else if (character == '}') {
+            objectDepth--;
+          } else if (character == '[') {
+            arrayDepth++;
+          } else if (character == ']') {
+            if (arrayDepth == 0 && objectDepth == 0) break;
+            arrayDepth--;
+          } else if (character == ',' &&
+              objectDepth == 0 &&
+              arrayDepth == 0) {
+            break;
+          }
+        }
+        index++;
+      }
+
+      var end = index;
+      while (end > start &&
+          (raw.codeUnitAt(end - 1) == 0x20 ||
+              raw.codeUnitAt(end - 1) == 0x0A ||
+              raw.codeUnitAt(end - 1) == 0x0D ||
+              raw.codeUnitAt(end - 1) == 0x09)) {
+        end--;
+      }
+      fragments.add(raw.substring(start, end));
+
+      if (index < raw.length && raw[index] == ',') index++;
+    }
+    return fragments;
+  }
 }
 
 class _ParsedOccurrence {
@@ -317,15 +403,21 @@ class _ParsedOccurrence {
     required this.serial,
     required this.invoice,
     required this.malformedReasons,
+    required this.rawJson,
   });
 
-  factory _ParsedOccurrence.valid(int index, Invoice invoice) =>
+  factory _ParsedOccurrence.valid(
+    int index,
+    Invoice invoice,
+    String rawJson,
+  ) =>
       _ParsedOccurrence._(
         sourceIndex: index,
         invoiceId: invoice.id,
         serial: invoice.invoiceSerial,
         invoice: invoice,
         malformedReasons: const [],
+        rawJson: rawJson,
       );
 
   factory _ParsedOccurrence.malformed(
@@ -333,6 +425,7 @@ class _ParsedOccurrence {
     List<String> reasons, {
     String? invoiceId,
     String? serial,
+    required String rawJson,
   }) =>
       _ParsedOccurrence._(
         sourceIndex: index,
@@ -340,6 +433,7 @@ class _ParsedOccurrence {
         serial: serial,
         invoice: null,
         malformedReasons: List.unmodifiable(reasons),
+        rawJson: rawJson,
       );
 
   final int sourceIndex;
@@ -347,4 +441,5 @@ class _ParsedOccurrence {
   final String? serial;
   final Invoice? invoice;
   final List<String> malformedReasons;
+  final String rawJson;
 }
