@@ -145,7 +145,7 @@ void main() {
           _decision(
             'occurrence-1',
             LegacyPartyReviewAction.acceptSuggestedMatch,
-            snapshotSha256: 'b' * 64,
+            snapshotSha256: 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb',
           ),
         ],
         parties: parties,
