@@ -54,7 +54,8 @@ void main() {
 
     expect(missing.sourceExists, isFalse);
     expect(empty.sourceExists, isTrue);
-    expect(missing.sha256, empty.sha256);\n    expect(missing.manifestFile.path, isNot(empty.manifestFile.path));
+    expect(missing.sha256, empty.sha256);
+    expect(missing.manifestFile.path, isNot(empty.manifestFile.path));
     expect(await missing.rawFile.readAsBytes(), isEmpty);
     expect(await empty.rawFile.readAsBytes(), isEmpty);
 
