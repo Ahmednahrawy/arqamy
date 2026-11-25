@@ -1,4 +1,3 @@
-import 'package:arqamy/core/providers/language.dart';
 import 'package:arqamy/core/helpers/invoice_backup.dart';
 import 'package:arqamy/features/customerscreen/data/customer_linking_service.dart';
 import 'package:arqamy/core/providers/theme.dart';
@@ -273,8 +272,6 @@ class SettingsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final themeProvider = Provider.of<ThemeProvider>(context);
-    final languageProvider = Provider.of<Language>(context);
-    final size = MediaQuery.sizeOf(context);
 
     return Scaffold(
       appBar: AppBar(title: Text(S.of(context).settings)),
@@ -389,34 +386,6 @@ class SettingsScreen extends StatelessWidget {
                   );
                 }
               },
-            ),
-          ),
-          ListTile(
-            leading: const Icon(Icons.language),
-            title: Text(S.of(context).language),
-            trailing: DropdownButton<String>(
-              elevation: 8,
-              iconSize: size.height / 30,
-              borderRadius: BorderRadius.circular(15),
-              value: languageProvider.currentLocale.languageCode,
-              icon: const Icon(Icons.arrow_drop_down),
-              dropdownColor: Theme.of(context).colorScheme.surface,
-              underline: const SizedBox(),
-              onChanged: (String? newLanguage) {
-                if (newLanguage != null) {
-                  languageProvider.switchLanguage(newLanguage);
-                }
-              },
-              items: languageProvider.languageOptions.map((lang) {
-                return DropdownMenuItem<String>(
-                  value: lang['code'],
-                  child: Text(
-                    lang['code'] == 'ar'
-                        ? S.of(context).arabic
-                        : S.of(context).english,
-                  ),
-                );
-              }).toList(),
             ),
           ),
           ListTile(

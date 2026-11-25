@@ -1,3 +1,4 @@
+import 'package:arqamy/core/providers/language.dart';
 import 'package:arqamy/generated/l10n.dart';
 import 'package:flutter/foundation.dart';
 import 'package:material_ui/material_ui.dart';
@@ -8,6 +9,7 @@ import 'package:arqamy/core/helpers/spacing.dart';
 import 'package:arqamy/core/widgets/textbuilder.dart';
 import 'package:arqamy/my_app.dart';
 import 'package:in_app_update/in_app_update.dart';
+import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:share_plus/share_plus.dart';
 
@@ -81,6 +83,7 @@ class _SideNavState extends State<SideNav> {
   @override
   Widget build(BuildContext context) {
     final drawer = DrawersController(context, hasUpdate: _hasUpdate);
+    final languageProvider = Provider.of<Language>(context);
     final colors = Theme.of(context).colorScheme;
     final semanticColors = AppSemanticColors.of(context);
     final strings = S.of(context);
@@ -157,6 +160,58 @@ class _SideNavState extends State<SideNav> {
                   );
                 },
               ),
+              if (isCollapse)
+                IconButton(
+                  onPressed: () => languageProvider.switchLanguage(
+                    languageProvider.isArabic ? 'en' : 'ar',
+                  ),
+                  icon: Icon(Icons.language, color: colors.onSurface),
+                  tooltip: strings.language,
+                )
+              else
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 12,
+                    vertical: 4,
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      Text(
+                        strings.language,
+                        style: TextStyle(
+                          fontSize: 13,
+                          color: colors.onSurfaceVariant,
+                        ),
+                      ),
+                      const SizedBox(height: 2),
+                      DropdownButton<String>(
+                        isExpanded: true,
+                        value: languageProvider.currentLocale.languageCode,
+                        icon: const Icon(Icons.arrow_drop_down, size: 18),
+                        underline: const SizedBox.shrink(),
+                        borderRadius: BorderRadius.circular(12),
+                        dropdownColor: colors.surface,
+                        style: TextStyle(fontSize: 14, color: colors.onSurface),
+                        items: languageProvider.languageOptions.map((lang) {
+                          return DropdownMenuItem<String>(
+                            value: lang['code'],
+                            child: Text(
+                              lang['code'] == 'ar'
+                                  ? strings.arabic
+                                  : strings.english,
+                            ),
+                          );
+                        }).toList(),
+                        onChanged: (code) {
+                          if (code != null) {
+                            languageProvider.switchLanguage(code);
+                          }
+                        },
+                      ),
+                    ],
+                  ),
+                ),
               ListTile(
                 onTap: () {
                   Navigator.pushAndRemoveUntil(
