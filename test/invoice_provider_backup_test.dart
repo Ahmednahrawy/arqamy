@@ -30,10 +30,17 @@ Invoice _invoice(String id, {String customer = 'أحمد'}) {
 String _backupOf(List<Invoice> invoices) =>
     InvoiceBackup.encode(invoices, exportedAt: DateTime.utc(2026, 11, 21));
 
-InvoiceProvider _provider({bool Function()? failWrites}) =>
-    InvoiceProvider.withStorageWriter(
-      (_) async => !(failWrites?.call() ?? false),
-    );
+InvoiceProvider _provider({bool Function()? failWrites}) {
+  String? storedInvoices;
+  return InvoiceProvider.withStorageWriter(
+    (json) async {
+      if (failWrites?.call() ?? false) return false;
+      storedInvoices = json;
+      return true;
+    },
+    invoiceStorageReader: () async => storedInvoices,
+  );
+}
 
 void main() {
   test('an exported backup restores into an empty provider', () async {
@@ -87,10 +94,13 @@ void main() {
 
   test('an invalid backup changes nothing and writes nothing', () async {
     var writes = 0;
-    final provider = InvoiceProvider.withStorageWriter((_) async {
-      writes++;
-      return true;
-    });
+    final provider = InvoiceProvider.withStorageWriter(
+      (_) async {
+        writes++;
+        return true;
+      },
+      invoiceStorageReader: () async => null,
+    );
     await provider.saveInvoice(_invoice('a'));
     writes = 0;
 
