@@ -55,9 +55,9 @@ android {
         create("release") {
             if (hasCompleteSigningProperties && releaseKeystoreFile != null) {
                 keyAlias = keystoreProperties.getProperty("keyAlias").trim()
-                keyPassword = keystoreProperties.getProperty("keyPassword").trim()
+                keyPassword = keystoreProperties.getProperty("keyPassword")
                 storeFile = releaseKeystoreFile
-                storePassword = keystoreProperties.getProperty("storePassword").trim()
+                storePassword = keystoreProperties.getProperty("storePassword")
             }
         }
     }
