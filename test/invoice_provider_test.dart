@@ -392,7 +392,10 @@ void main() {
   test('concurrent saves both survive persistence and reload', () async {
     SharedPreferences.setMockInitialValues({});
     final storage = _ControlledInvoiceStorage();
-    final provider = InvoiceProvider.withStorageWriter(storage.write);
+    final provider = InvoiceProvider.withStorageWriter(
+      storage.write,
+      invoiceStorageReader: storage.read,
+    );
     final writeStarted = storage.blockNextWrite();
 
     final firstSave =
@@ -420,17 +423,16 @@ void main() {
       storage.write,
       invoiceStorageReader: storage.read,
     );
-    final writeStarted = storage.blockNextWrite();
     final readStarted = storage.blockNextRead();
+    final writeStarted = storage.blockNextWrite();
     final savedInvoice = _invoice(id: 'saved', serial: '1');
 
     final save = provider.saveInvoice(savedInvoice);
-    await writeStarted.future;
-    final load = provider.loadInvoices();
-    storage.releaseWrite();
     await readStarted.future;
-    expect(provider.invoices.single.id, savedInvoice.id);
+    final load = provider.loadInvoices();
     storage.releaseRead();
+    await writeStarted.future;
+    storage.releaseWrite();
     await Future.wait([save, load]);
 
     final reloadedProvider = InvoiceProvider();
@@ -539,7 +541,10 @@ void main() {
       () async {
     SharedPreferences.setMockInitialValues({});
     final storage = _ControlledInvoiceStorage();
-    final provider = InvoiceProvider.withStorageWriter(storage.write);
+    final provider = InvoiceProvider.withStorageWriter(
+      storage.write,
+      invoiceStorageReader: storage.read,
+    );
     final original = _invoice(id: 'original', serial: '1');
     await provider.saveInvoice(original);
     final prefs = await SharedPreferences.getInstance();
@@ -569,7 +574,10 @@ void main() {
   test('concurrent updates preserve both changes', () async {
     SharedPreferences.setMockInitialValues({});
     final storage = _ControlledInvoiceStorage();
-    final provider = InvoiceProvider.withStorageWriter(storage.write);
+    final provider = InvoiceProvider.withStorageWriter(
+      storage.write,
+      invoiceStorageReader: storage.read,
+    );
     final first = _invoice(id: 'invoice-1', serial: '1');
     final second = _invoice(id: 'invoice-2', serial: '2');
     await provider.saveInvoice(first);
@@ -603,7 +611,10 @@ void main() {
   test('concurrent save and delete preserve both successful changes', () async {
     SharedPreferences.setMockInitialValues({});
     final storage = _ControlledInvoiceStorage();
-    final provider = InvoiceProvider.withStorageWriter(storage.write);
+    final provider = InvoiceProvider.withStorageWriter(
+      storage.write,
+      invoiceStorageReader: storage.read,
+    );
     final existing = _invoice(id: 'existing', serial: '1');
     final added = _invoice(id: 'added', serial: '2');
     await provider.saveInvoice(existing);
@@ -623,7 +634,10 @@ void main() {
   test('failed mutation does not block a later successful mutation', () async {
     SharedPreferences.setMockInitialValues({});
     final storage = _ControlledInvoiceStorage();
-    final provider = InvoiceProvider.withStorageWriter(storage.write);
+    final provider = InvoiceProvider.withStorageWriter(
+      storage.write,
+      invoiceStorageReader: storage.read,
+    );
     final original = _invoice(id: 'original', serial: '1');
     await provider.saveInvoice(original);
     final writeStarted = storage.blockNextWrite(fail: true);
@@ -697,11 +711,16 @@ void main() {
       () async {
     var failWrites = false;
     var persistedJson = '';
-    final provider = InvoiceProvider.withStorageWriter((json) async {
-      if (failWrites) throw StateError('storage unavailable');
-      persistedJson = json;
-      return true;
-    });
+    final provider = InvoiceProvider.withStorageWriter(
+      (json) async {
+        if (failWrites) throw StateError('storage unavailable');
+        persistedJson = json;
+        return true;
+      },
+      invoiceStorageReader: () async => persistedJson.isEmpty
+          ? null
+          : persistedJson,
+    );
     final original = _invoice(id: 'legacy-id', serial: 'legacy-serial');
     await provider.saveInvoice(original);
     final originalPersistedJson = persistedJson;
@@ -761,10 +780,13 @@ void main() {
     addTearDown(tester.view.resetDevicePixelRatio);
     final original = _invoice(id: 'invoice-1', serial: '1001');
     var failWrites = false;
-    final provider = InvoiceProvider.withStorageWriter((json) async {
-      if (failWrites) throw StateError('storage unavailable');
-      return true;
-    });
+    final provider = InvoiceProvider.withStorageWriter(
+      (json) async {
+        if (failWrites) throw StateError('storage unavailable');
+        return true;
+      },
+      invoiceStorageReader: () async => null,
+    );
     await provider.saveInvoice(original);
     failWrites = true;
 
