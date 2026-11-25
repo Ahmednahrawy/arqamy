@@ -214,6 +214,9 @@ void main() {
       'refund_allocation_reversals',
       'payment_refunds',
       'invoice_lifecycle_events',
+      'legacy_party_review_decisions',
+      'legacy_migration_occurrences',
+      'legacy_migration_runs',
       'allocation_status_history',
       'allocation_reversals',
       'invoice_allocations',
@@ -251,10 +254,10 @@ void main() {
           "'invoice_allocations', 'allocation_reversals', "
           "'allocation_status_history', 'payment_refunds', "
           "'refund_allocation_reversals', 'refund_financial_transactions', "
-          "'invoice_lifecycle_events')",
+          "'invoice_lifecycle_events', 'legacy_migration_runs', 'legacy_migration_occurrences', 'legacy_party_review_decisions')",
         )
         .getSingle();
-    expect(tables.read<int>('count'), 21);
+    expect(tables.read<int>('count'), 24);
   });
 
   test('migrates a genuine Stage 2 database without losing records', () async {
