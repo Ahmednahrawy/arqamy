@@ -1031,6 +1031,95 @@ class AppDatabase extends _$AppDatabase {
     }
   }
 
+
+  Future<void> _createLegacyPartyReviewJournalTriggers() async {
+    for (final table in [
+      'legacy_migration_runs',
+      'legacy_migration_occurrences',
+      'legacy_party_review_decisions',
+    ]) {
+      await customStatement(
+        'CREATE TRIGGER IF NOT EXISTS ${table}_immutable_update '
+        'BEFORE UPDATE ON $table BEGIN '
+        "SELECT RAISE(ABORT, '$table is append-only'); END",
+      );
+      await customStatement(
+        'CREATE TRIGGER IF NOT EXISTS ${table}_immutable_delete '
+        'BEFORE DELETE ON $table BEGIN '
+        "SELECT RAISE(ABORT, '$table is append-only'); END",
+      );
+    }
+
+    await customStatement('''
+      CREATE TRIGGER IF NOT EXISTS legacy_migration_occurrences_validate_insert
+      BEFORE INSERT ON legacy_migration_occurrences
+      WHEN NOT EXISTS (
+        SELECT 1 FROM legacy_migration_runs r WHERE r.run_id = NEW.run_id
+      )
+      OR EXISTS (
+        SELECT 1 FROM legacy_party_review_decisions d
+        WHERE d.run_id = NEW.run_id
+      )
+      OR (NEW.suggested_party_id IS NOT NULL AND NOT EXISTS (
+        SELECT 1 FROM parties p WHERE p.party_id = NEW.suggested_party_id
+      ))
+      BEGIN
+        SELECT RAISE(ABORT, 'Invalid or already reviewed legacy occurrence');
+      END
+    ''');
+
+    await customStatement('''
+      CREATE TRIGGER IF NOT EXISTS legacy_party_review_decisions_validate_insert
+      BEFORE INSERT ON legacy_party_review_decisions
+      WHEN NOT EXISTS (
+        SELECT 1
+        FROM legacy_migration_occurrences o
+        WHERE o.run_id = NEW.run_id
+          AND o.source_occurrence_key = NEW.source_occurrence_key
+          AND o.expected_role IS NEW.expected_role
+      )
+      OR (NEW.sequence = 1 AND NEW.previous_decision_id IS NOT NULL)
+      OR (NEW.sequence > 1 AND NOT EXISTS (
+        SELECT 1
+        FROM legacy_party_review_decisions previous
+        WHERE previous.decision_id = NEW.previous_decision_id
+          AND previous.run_id = NEW.run_id
+          AND previous.source_occurrence_key = NEW.source_occurrence_key
+          AND previous.sequence = NEW.sequence - 1
+      ))
+      OR NEW.sequence != (
+        SELECT COALESCE(MAX(existing.sequence), 0) + 1
+        FROM legacy_party_review_decisions existing
+        WHERE existing.run_id = NEW.run_id
+          AND existing.source_occurrence_key = NEW.source_occurrence_key
+      )
+      OR (NEW.action = 'acceptSuggestedMatch' AND NOT EXISTS (
+        SELECT 1
+        FROM legacy_migration_occurrences o
+        JOIN parties p ON p.party_id = o.suggested_party_id
+        JOIN party_roles pr ON pr.party_id = p.party_id
+        WHERE o.run_id = NEW.run_id
+          AND o.source_occurrence_key = NEW.source_occurrence_key
+          AND o.suggested_party_id = NEW.resolved_party_id
+          AND p.display_name = NEW.resolved_party_name
+          AND pr.role = NEW.expected_role
+          AND NEW.resolved_party_role = NEW.expected_role
+      ))
+      OR (NEW.action = 'selectParty' AND NOT EXISTS (
+        SELECT 1
+        FROM parties p
+        JOIN party_roles pr ON pr.party_id = p.party_id
+        WHERE p.party_id = NEW.resolved_party_id
+          AND p.display_name = NEW.resolved_party_name
+          AND pr.role = NEW.expected_role
+          AND NEW.resolved_party_role = NEW.expected_role
+      ))
+      BEGIN
+        SELECT RAISE(ABORT, 'Invalid legacy party review decision');
+      END
+    ''');
+  }
+
   Future<void> _createCashEventIndexesAndTriggers() async {
     await customStatement(
       'CREATE INDEX IF NOT EXISTS financial_transactions_event_time '
