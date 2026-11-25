@@ -1218,7 +1218,6 @@ class AppDatabase extends _$AppDatabase {
         WHERE o.run_id = NEW.run_id
           AND o.source_occurrence_key = NEW.source_occurrence_key
           AND o.suggested_party_id = NEW.resolved_party_id
-          AND p.display_name = NEW.resolved_party_name
           AND pr.role = NEW.expected_role
           AND NEW.resolved_party_role = NEW.expected_role
       ))
