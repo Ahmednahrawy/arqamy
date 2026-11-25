@@ -1,5 +1,7 @@
 import 'package:material_ui/material_ui.dart';
 import 'package:provider/provider.dart';
+import 'package:arqamy/core/helpers/invoice_action.dart';
+import 'package:arqamy/core/helpers/invoice_action_l10n.dart';
 import 'package:arqamy/core/widgets/app_snack_bar.dart';
 import 'package:arqamy/features/orderscreen/providers/invoice_provider.dart';
 import 'package:arqamy/generated/l10n.dart';
@@ -252,20 +254,39 @@ class _ProductManagementScreenState extends State<ProductManagementScreen> {
                       color: colors.onSurfaceVariant,
                     ),
                     title: Text(product),
+                    subtitle: Padding(
+                      padding: const EdgeInsets.only(top: 10, bottom: 4),
+                      child: Row(
+                        children: [
+                          for (final action in InvoiceAction.values) ...[
+                            Expanded(
+                              child: _ProductPriceField(
+                                productName: product,
+                                action: action,
+                                label: InvoiceActionL10n.labelFor(
+                                  action,
+                                  strings,
+                                ),
+                                price: provider
+                                    .masterProductPrices[product]?[action],
+                                onChanged: (value) {
+                                  provider.setMasterProductPrice(
+                                    product,
+                                    action,
+                                    value,
+                                  );
+                                },
+                              ),
+                            ),
+                            if (action != InvoiceAction.values.last)
+                              const SizedBox(width: 8),
+                          ],
+                        ],
+                      ),
+                    ),
                     trailing: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        SizedBox(
-                          width: 80,
-                          child: _ProductPriceField(
-                            productName: product,
-                            price: provider.masterProductPrices[product],
-                            onChanged: (value) {
-                              provider.setMasterProductPrice(product, value);
-                            },
-                          ),
-                        ),
-                        const SizedBox(width: 4),
                         IconButton(
                           visualDensity: VisualDensity.compact,
                           onPressed: () => _showEditDialog(index, product),
@@ -300,11 +321,15 @@ class _ProductManagementScreenState extends State<ProductManagementScreen> {
 class _ProductPriceField extends StatefulWidget {
   const _ProductPriceField({
     required this.productName,
+    required this.action,
+    required this.label,
     required this.price,
     required this.onChanged,
   });
 
   final String productName;
+  final InvoiceAction action;
+  final String label;
   final double? price;
   final ValueChanged<double?> onChanged;
 
@@ -332,36 +357,53 @@ class _ProductPriceFieldState extends State<_ProductPriceField> {
   @override
   Widget build(BuildContext context) {
     final strings = S.of(context);
+    final theme = Theme.of(context);
 
-    return Tooltip(
-      message: strings.default_price_optional,
-      child: TextField(
-        key: ValueKey('product-default-price-${widget.productName}'),
-        controller: _controller,
-        textDirection: TextDirection.ltr,
-        textAlign: TextAlign.center,
-        keyboardType: const TextInputType.numberWithOptions(decimal: true),
-        decoration: InputDecoration(
-          hintText: strings.price,
-          isDense: true,
-          contentPadding: const EdgeInsets.symmetric(
-            horizontal: 6,
-            vertical: 8,
-          ),
-          border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Text(
+          widget.label,
+          style: theme.textTheme.labelSmall,
+          overflow: TextOverflow.ellipsis,
         ),
-        onChanged: (value) {
-          final text = value.trim();
-          if (text.isEmpty) {
-            widget.onChanged(null);
-            return;
-          }
-          final parsed = double.tryParse(text);
-          if (parsed != null && parsed.isFinite && parsed >= 0) {
-            widget.onChanged(parsed);
-          }
-        },
-      ),
+        const SizedBox(height: 2),
+        Tooltip(
+          message: strings.default_price_optional,
+          child: TextField(
+            key: ValueKey(
+              'product-default-price-${widget.productName}-${widget.action.name}',
+            ),
+            controller: _controller,
+            textDirection: TextDirection.ltr,
+            textAlign: TextAlign.center,
+            keyboardType: const TextInputType.numberWithOptions(decimal: true),
+            decoration: InputDecoration(
+              hintText: strings.price,
+              isDense: true,
+              contentPadding: const EdgeInsets.symmetric(
+                horizontal: 6,
+                vertical: 8,
+              ),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8),
+              ),
+            ),
+            onChanged: (value) {
+              final text = value.trim();
+              if (text.isEmpty) {
+                widget.onChanged(null);
+                return;
+              }
+              final parsed = double.tryParse(text);
+              if (parsed != null && parsed.isFinite && parsed >= 0) {
+                widget.onChanged(parsed);
+              }
+            },
+          ),
+        ),
+      ],
     );
   }
 }

@@ -1,3 +1,4 @@
+import 'package:arqamy/core/helpers/invoice_action.dart';
 import 'package:arqamy/generated/l10n.dart';
 
 /// Maps the canonical (stored) invoice action values to localized labels.
@@ -19,13 +20,19 @@ class InvoiceActionL10n {
   static String label(String? action, S strings) {
     switch (normalize(action)) {
       case purchase:
-        return strings.purchase;
+        return labelFor(InvoiceAction.purchase, strings);
       case sale:
-        return strings.sale;
+        return labelFor(InvoiceAction.sale, strings);
       case storage:
-        return strings.storage;
+        return labelFor(InvoiceAction.storage, strings);
       default:
         return action ?? strings.unspecified;
     }
   }
+
+  static String labelFor(InvoiceAction action, S strings) => switch (action) {
+    InvoiceAction.purchase => strings.purchase,
+    InvoiceAction.sale => strings.sale,
+    InvoiceAction.storage => strings.storage,
+  };
 }

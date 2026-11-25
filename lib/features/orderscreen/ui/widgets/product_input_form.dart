@@ -1,3 +1,4 @@
+import 'package:arqamy/core/helpers/invoice_action.dart';
 import 'package:arqamy/core/helpers/money.dart';
 import 'package:arqamy/features/orderscreen/providers/invoice_provider.dart';
 import 'package:dropdown_search/dropdown_search.dart';
@@ -294,9 +295,12 @@ class _ProductInputFormState extends State<ProductInputForm> {
                     onSelected: (value) {
                       setState(() {
                         _selectedProduct = value;
-                        final defaultPrice = value == null
+                        final action = InvoiceAction.tryParse(
+                          provider.invoiceAction,
+                        );
+                        final defaultPrice = value == null || action == null
                             ? null
-                            : provider.defaultProductPrice(value);
+                            : provider.defaultProductPrice(value, action);
                         _priceController.text = defaultPrice == null
                             ? ''
                             : defaultPrice.toStringAsFixed(2);

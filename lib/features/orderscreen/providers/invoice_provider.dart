@@ -29,7 +29,7 @@ class InvoiceProvider extends ChangeNotifier {
   String? _invoiceAction;
   String? _customerName;
   List<String> _masterProductList = [];
-  final Map<String, double> _masterProductPrices = {};
+  final Map<String, Map<InvoiceAction, double>> _masterProductPrices = {};
   final List<Invoice> _invoices = []; // قائمة الفواتير المخزنة
   bool _invoicesLoaded = false;
   List<Product>? _productsViewCache;
@@ -42,13 +42,16 @@ class InvoiceProvider extends ChangeNotifier {
   String? get invoiceAction => _invoiceAction;
   String? get customerName => _customerName;
   List<String> get masterProductList => List.unmodifiable(_masterProductList);
-  Map<String, double> get masterProductPrices =>
-      Map.unmodifiable(_masterProductPrices);
+  Map<String, Map<InvoiceAction, double>> get masterProductPrices =>
+      Map.unmodifiable({
+        for (final entry in _masterProductPrices.entries)
+          entry.key: Map.unmodifiable(entry.value),
+      });
   List<Invoice> get invoices => List.unmodifiable(_invoices);
   String get draftInvoiceId => _draftInvoiceId ??= Invoice.generateId();
 
-  double? defaultProductPrice(String productName) =>
-      _masterProductPrices[productName];
+  double? defaultProductPrice(String productName, InvoiceAction action) =>
+      _masterProductPrices[productName]?[action];
 
   void prepareDraft() {
     _draftInvoiceId ??= Invoice.generateId();
@@ -462,12 +465,26 @@ class InvoiceProvider extends ChangeNotifier {
       final decoded = json.decode(pricesJson);
       if (decoded is! Map) return;
       for (final entry in decoded.entries) {
+        if (entry.key is! String) continue;
         final value = entry.value;
-        if (entry.key is String &&
-            value is num &&
-            value.isFinite &&
-            value >= 0) {
-          _masterProductPrices[entry.key as String] = value.toDouble();
+        final prices = <InvoiceAction, double>{};
+
+        if (value is num && _isValidDefaultPrice(value)) {
+          // Legacy format: one price applied to every invoice type.
+          for (final action in InvoiceAction.values) {
+            prices[action] = value.toDouble();
+          }
+        } else if (value is Map) {
+          for (final action in InvoiceAction.values) {
+            final stored = value[action.name];
+            if (stored is num && _isValidDefaultPrice(stored)) {
+              prices[action] = stored.toDouble();
+            }
+          }
+        }
+
+        if (prices.isNotEmpty) {
+          _masterProductPrices[entry.key as String] = prices;
         }
       }
     } catch (e) {
@@ -475,30 +492,44 @@ class InvoiceProvider extends ChangeNotifier {
     }
   }
 
+  bool _isValidDefaultPrice(num price) => price.isFinite && price >= 0;
+
   Future<void> _saveMasterProductPrices() async {
     try {
       final prefs = await SharedPreferences.getInstance();
       await prefs.setString(
         _masterProductPricesKey,
-        json.encode(_masterProductPrices),
+        json.encode({
+          for (final entry in _masterProductPrices.entries)
+            entry.key: {
+              for (final price in entry.value.entries)
+                price.key.name: price.value,
+            },
+        }),
       );
     } catch (e) {
       debugPrint('Error saving product prices: $e');
     }
   }
 
-  /// Sets an optional default price for a master product. Passing [null]
-  /// (or an invalid value) removes the stored default for that product.
-  Future<void> setMasterProductPrice(String productName, double? price) async {
+  /// Sets an optional default [price] for one invoice type of a master
+  /// product. Passing [null] (or an invalid value) removes that default.
+  Future<void> setMasterProductPrice(
+    String productName,
+    InvoiceAction action,
+    double? price,
+  ) async {
     final name = productName.trim();
     if (name.isEmpty) return;
 
-    final validPrice = price != null && price.isFinite && price >= 0;
+    final prices = _masterProductPrices[name];
+    final validPrice = price != null && _isValidDefaultPrice(price);
     if (!validPrice) {
-      if (_masterProductPrices.remove(name) == null) return;
+      if (prices == null || prices.remove(action) == null) return;
+      if (prices.isEmpty) _masterProductPrices.remove(name);
     } else {
-      if (_masterProductPrices[name] == price) return;
-      _masterProductPrices[name] = price;
+      if (prices?[action] == price) return;
+      (_masterProductPrices[name] ??= {})[action] = price;
     }
 
     await _saveMasterProductPrices();
@@ -522,13 +553,13 @@ class InvoiceProvider extends ChangeNotifier {
         index < _masterProductList.length &&
         trimmedName.isNotEmpty) {
       final oldName = _masterProductList[index];
-      final price = _masterProductPrices.remove(oldName);
+      final prices = _masterProductPrices.remove(oldName);
       _masterProductList[index] = trimmedName;
-      if (price != null) {
-        _masterProductPrices[trimmedName] = price;
+      if (prices != null) {
+        _masterProductPrices[trimmedName] = prices;
       }
       await _saveMasterProducts();
-      if (price != null) {
+      if (prices != null) {
         await _saveMasterProductPrices();
       }
       notifyListeners();
@@ -539,9 +570,9 @@ class InvoiceProvider extends ChangeNotifier {
   Future<void> deleteMasterProduct(int index) async {
     if (index >= 0 && index < _masterProductList.length) {
       final removedName = _masterProductList.removeAt(index);
-      final hadPrice = _masterProductPrices.remove(removedName) != null;
+      final hadPrices = _masterProductPrices.remove(removedName) != null;
       await _saveMasterProducts();
-      if (hadPrice) {
+      if (hadPrices) {
         await _saveMasterProductPrices();
       }
       notifyListeners();
