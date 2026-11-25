@@ -15,8 +15,13 @@ import 'package:arqamy/generated/l10n.dart';
 
 class _CustomerScreenStorage {
   bool failNextWrite = false;
+  bool failNextRead = false;
 
   Future<String?> read() async {
+    if (failNextRead) {
+      failNextRead = false;
+      throw StateError('storage unavailable');
+    }
     return (await SharedPreferences.getInstance()).getString('saved_invoices');
   }
 
