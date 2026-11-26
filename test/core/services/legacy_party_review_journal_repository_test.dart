@@ -22,7 +22,11 @@ class _Fixture {
 }
 
 _Fixture _fixture() {
-  final rawRecords = ['{"id":"legacy-1"}', '{"id":"legacy-2"}', '{"id":"legacy-3"}'];
+  final rawRecords = [
+    '{"id":"legacy-1"}',
+    '{"id":"legacy-2"}',
+    '{"id":"legacy-3"}',
+  ];
   final identities = [
     for (var i = 0; i < rawRecords.length; i++)
       LegacyInvoiceSourceOccurrenceIdentity.create(
@@ -87,7 +91,9 @@ void main() {
   late _Fixture fixture;
 
   setUp(() async {
-    directory = await Directory.systemTemp.createTemp('party_review_repository_');
+    directory = await Directory.systemTemp.createTemp(
+      'party_review_repository_',
+    );
     database = await AppDatabase.open(
       path: '${directory.path}${Platform.pathSeparator}journal.sqlite',
     );
@@ -136,7 +142,10 @@ void main() {
     expect(run.runId, 'run-1');
     expect(run.snapshotSha256, _snapshotHash);
     expect(run.occurrences, hasLength(3));
-    expect(run.occurrences.first.recordSha256, fixture.preflight.occurrences.first.sourceOccurrenceIdentity.recordSha256);
+    expect(
+      run.occurrences.first.recordSha256,
+      fixture.preflight.occurrences.first.sourceOccurrenceIdentity.recordSha256,
+    );
     expect(run.occurrences[1].candidatePartyIds, ['supplier-1', 'supplier-2']);
     expect(run.occurrences[0].findings['issues'], isEmpty);
 
@@ -151,227 +160,243 @@ void main() {
     expect(summary.unreviewedCount, 3);
   });
 
-  test('records all decision actions, appends superseding history, and replays idempotently', () async {
-    await createRun();
-    final accepted = await repository.recordDecision(
-      RecordLegacyPartyReviewDecisionRequest(
-        runId: 'run-1',
-        decision: decision(0, LegacyPartyReviewAction.acceptSuggestedMatch),
-        idempotencyKey: 'accept-occurrence-1',
-      ),
-    );
-    expect(accepted.sequence, 1);
-    expect(accepted.wasIdempotentReplay, isFalse);
-
-    final replay = await repository.recordDecision(
-      RecordLegacyPartyReviewDecisionRequest(
-        runId: 'run-1',
-        decision: decision(0, LegacyPartyReviewAction.acceptSuggestedMatch),
-        idempotencyKey: 'accept-occurrence-1',
-      ),
-    );
-    expect(replay.decisionId, accepted.decisionId);
-    expect(replay.wasIdempotentReplay, isTrue);
-
-    await expectLater(
-      repository.recordDecision(
-        RecordLegacyPartyReviewDecisionRequest(
-          runId: 'run-1',
-          decision: decision(0, LegacyPartyReviewAction.keepHeld),
-          idempotencyKey: 'accept-occurrence-1',
-        ),
-      ),
-      throwsA(isA<LegacyPartyReviewIdempotencyConflict>()),
-    );
-
-    final selected = await repository.recordDecision(
-      RecordLegacyPartyReviewDecisionRequest(
-        runId: 'run-1',
-        decision: decision(
-          1,
-          LegacyPartyReviewAction.selectParty,
-          selectedPartyId: 'supplier-2',
-        ),
-        idempotencyKey: 'select-occurrence-2',
-        reviewNote: 'Selected after manual review',
-      ),
-    );
-    final held = await repository.recordDecision(
-      RecordLegacyPartyReviewDecisionRequest(
-        runId: 'run-1',
-        decision: decision(1, LegacyPartyReviewAction.keepHeld),
-        idempotencyKey: 'hold-occurrence-2',
-      ),
-    );
-
-    expect(held.sequence, 2);
-    final history = await repository.getDecisionHistory(
-      runId: 'run-1',
-      sourceOccurrenceKey: fixture.keys[1],
-    );
-    expect(history, hasLength(2));
-    expect(history.first.decisionId, selected.decisionId);
-    expect(history.first.resolvedPartyName, 'Supplier Two');
-    expect(history.last.previousDecisionId, selected.decisionId);
-    expect(history.last.action, LegacyPartyReviewAction.keepHeld);
-    expect(history.last.resolvedPartyId, isNull);
-
-    final loaded = await repository.getRun('run-1');
-    expect(loaded.occurrences[1].latestDecision!.decisionId, held.decisionId);
-    final summary = await repository.getSummary('run-1');
-    expect(summary.approvedCount, 1);
-    expect(summary.heldCount, 1);
-    expect(summary.staleCount, 0);
-    expect(summary.reviewedCount, 2);
-    expect(summary.unreviewedCount, 1);
-  });
-
-  test('rejects wrong-role, wrong-snapshot, and unknown occurrence decisions', () async {
-    await createRun();
-    await expectLater(
-      repository.recordDecision(
-        RecordLegacyPartyReviewDecisionRequest(
-          runId: 'run-1',
-          decision: decision(
-            1,
-            LegacyPartyReviewAction.selectParty,
-            selectedPartyId: 'customer-1',
-          ),
-          idempotencyKey: 'wrong-role',
-        ),
-      ),
-      throwsArgumentError,
-    );
-    await expectLater(
-      repository.recordDecision(
-        RecordLegacyPartyReviewDecisionRequest(
-          runId: 'run-1',
-          decision: LegacyPartyReviewDecision(
-            snapshotSha256: 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb',
-            sourceOccurrenceKey: fixture.keys[0],
-            action: LegacyPartyReviewAction.keepHeld,
-            reviewerId: 'reviewer-1',
-            decidedAtUtc: _decisionTime,
-          ),
-          idempotencyKey: 'wrong-snapshot',
-        ),
-      ),
-      throwsArgumentError,
-    );
-    await expectLater(
-      repository.recordDecision(
-        RecordLegacyPartyReviewDecisionRequest(
-          runId: 'run-1',
-          decision: LegacyPartyReviewDecision(
-            snapshotSha256: _snapshotHash,
-            sourceOccurrenceKey: 'not-in-this-run',
-            action: LegacyPartyReviewAction.keepHeld,
-            reviewerId: 'reviewer-1',
-            decidedAtUtc: _decisionTime,
-          ),
-          idempotencyKey: 'unknown-occurrence',
-        ),
-      ),
-      throwsArgumentError,
-    );
-    expect(
-      await repository.getDecisionHistory(
-        runId: 'run-1',
-        sourceOccurrenceKey: fixture.keys[1],
-      ),
-      isEmpty,
-    );
-  });
-
-  test('rolls back every decision when one item in a batch is invalid', () async {
-    await createRun();
-    await expectLater(
-      repository.recordDecisions([
+  test(
+    'records all decision actions, appends superseding history, and replays idempotently',
+    () async {
+      await createRun();
+      final accepted = await repository.recordDecision(
         RecordLegacyPartyReviewDecisionRequest(
           runId: 'run-1',
           decision: decision(0, LegacyPartyReviewAction.acceptSuggestedMatch),
-          idempotencyKey: 'batch-valid-first',
+          idempotencyKey: 'accept-occurrence-1',
         ),
+      );
+      expect(accepted.sequence, 1);
+      expect(accepted.wasIdempotentReplay, isFalse);
+
+      final replay = await repository.recordDecision(
+        RecordLegacyPartyReviewDecisionRequest(
+          runId: 'run-1',
+          decision: decision(0, LegacyPartyReviewAction.acceptSuggestedMatch),
+          idempotencyKey: 'accept-occurrence-1',
+        ),
+      );
+      expect(replay.decisionId, accepted.decisionId);
+      expect(replay.wasIdempotentReplay, isTrue);
+
+      await expectLater(
+        repository.recordDecision(
+          RecordLegacyPartyReviewDecisionRequest(
+            runId: 'run-1',
+            decision: decision(0, LegacyPartyReviewAction.keepHeld),
+            idempotencyKey: 'accept-occurrence-1',
+          ),
+        ),
+        throwsA(isA<LegacyPartyReviewIdempotencyConflict>()),
+      );
+
+      final selected = await repository.recordDecision(
         RecordLegacyPartyReviewDecisionRequest(
           runId: 'run-1',
           decision: decision(
             1,
             LegacyPartyReviewAction.selectParty,
-            selectedPartyId: 'customer-1',
+            selectedPartyId: 'supplier-2',
           ),
-          idempotencyKey: 'batch-invalid-second',
+          idempotencyKey: 'select-occurrence-2',
+          reviewNote: 'Selected after manual review',
         ),
-      ]),
-      throwsArgumentError,
-    );
-    expect(
-      await repository.getDecisionHistory(
+      );
+      final held = await repository.recordDecision(
+        RecordLegacyPartyReviewDecisionRequest(
+          runId: 'run-1',
+          decision: decision(1, LegacyPartyReviewAction.keepHeld),
+          idempotencyKey: 'hold-occurrence-2',
+        ),
+      );
+
+      expect(held.sequence, 2);
+      final history = await repository.getDecisionHistory(
+        runId: 'run-1',
+        sourceOccurrenceKey: fixture.keys[1],
+      );
+      expect(history, hasLength(2));
+      expect(history.first.decisionId, selected.decisionId);
+      expect(history.first.resolvedPartyName, 'Supplier Two');
+      expect(history.last.previousDecisionId, selected.decisionId);
+      expect(history.last.action, LegacyPartyReviewAction.keepHeld);
+      expect(history.last.resolvedPartyId, isNull);
+
+      final loaded = await repository.getRun('run-1');
+      expect(loaded.occurrences[1].latestDecision!.decisionId, held.decisionId);
+      final summary = await repository.getSummary('run-1');
+      expect(summary.approvedCount, 1);
+      expect(summary.heldCount, 1);
+      expect(summary.staleCount, 0);
+      expect(summary.reviewedCount, 2);
+      expect(summary.unreviewedCount, 1);
+    },
+  );
+
+  test(
+    'rejects wrong-role, wrong-snapshot, and unknown occurrence decisions',
+    () async {
+      await createRun();
+      await expectLater(
+        repository.recordDecision(
+          RecordLegacyPartyReviewDecisionRequest(
+            runId: 'run-1',
+            decision: decision(
+              1,
+              LegacyPartyReviewAction.selectParty,
+              selectedPartyId: 'customer-1',
+            ),
+            idempotencyKey: 'wrong-role',
+          ),
+        ),
+        throwsArgumentError,
+      );
+      await expectLater(
+        repository.recordDecision(
+          RecordLegacyPartyReviewDecisionRequest(
+            runId: 'run-1',
+            decision: LegacyPartyReviewDecision(
+              snapshotSha256:
+                  'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb',
+              sourceOccurrenceKey: fixture.keys[0],
+              action: LegacyPartyReviewAction.keepHeld,
+              reviewerId: 'reviewer-1',
+              decidedAtUtc: _decisionTime,
+            ),
+            idempotencyKey: 'wrong-snapshot',
+          ),
+        ),
+        throwsArgumentError,
+      );
+      await expectLater(
+        repository.recordDecision(
+          RecordLegacyPartyReviewDecisionRequest(
+            runId: 'run-1',
+            decision: LegacyPartyReviewDecision(
+              snapshotSha256: _snapshotHash,
+              sourceOccurrenceKey: 'not-in-this-run',
+              action: LegacyPartyReviewAction.keepHeld,
+              reviewerId: 'reviewer-1',
+              decidedAtUtc: _decisionTime,
+            ),
+            idempotencyKey: 'unknown-occurrence',
+          ),
+        ),
+        throwsArgumentError,
+      );
+      expect(
+        await repository.getDecisionHistory(
+          runId: 'run-1',
+          sourceOccurrenceKey: fixture.keys[1],
+        ),
+        isEmpty,
+      );
+    },
+  );
+
+  test(
+    'rolls back every decision when one item in a batch is invalid',
+    () async {
+      await createRun();
+      await expectLater(
+        repository.recordDecisions([
+          RecordLegacyPartyReviewDecisionRequest(
+            runId: 'run-1',
+            decision: decision(0, LegacyPartyReviewAction.acceptSuggestedMatch),
+            idempotencyKey: 'batch-valid-first',
+          ),
+          RecordLegacyPartyReviewDecisionRequest(
+            runId: 'run-1',
+            decision: decision(
+              1,
+              LegacyPartyReviewAction.selectParty,
+              selectedPartyId: 'customer-1',
+            ),
+            idempotencyKey: 'batch-invalid-second',
+          ),
+        ]),
+        throwsArgumentError,
+      );
+      expect(
+        await repository.getDecisionHistory(
+          runId: 'run-1',
+          sourceOccurrenceKey: fixture.keys[0],
+        ),
+        isEmpty,
+      );
+    },
+  );
+
+  test(
+    'reports a previously approved decision as stale after its role is removed',
+    () async {
+      await createRun();
+      await repository.recordDecision(
+        RecordLegacyPartyReviewDecisionRequest(
+          runId: 'run-1',
+          decision: decision(0, LegacyPartyReviewAction.acceptSuggestedMatch),
+          idempotencyKey: 'accept-before-role-change',
+        ),
+      );
+      await database.customStatement(
+        'DELETE FROM party_roles WHERE party_id = ? AND role = ?',
+        ['customer-1', 'customer'],
+      );
+
+      final summary = await repository.getSummary('run-1');
+      expect(summary.approvedCount, 0);
+      expect(summary.heldCount, 0);
+      expect(summary.staleCount, 1);
+      expect(summary.reviewedCount, 1);
+      expect(summary.unreviewedCount, 2);
+      final history = await repository.getDecisionHistory(
         runId: 'run-1',
         sourceOccurrenceKey: fixture.keys[0],
-      ),
-      isEmpty,
-    );
-  });
+      );
+      expect(history, hasLength(1));
+      expect(history.single.resolvedPartyName, 'Customer One');
+    },
+  );
 
-  test('reports a previously approved decision as stale after its role is removed', () async {
-    await createRun();
-    await repository.recordDecision(
-      RecordLegacyPartyReviewDecisionRequest(
-        runId: 'run-1',
-        decision: decision(0, LegacyPartyReviewAction.acceptSuggestedMatch),
-        idempotencyKey: 'accept-before-role-change',
-      ),
-    );
-    await database.customStatement(
-      'DELETE FROM party_roles WHERE party_id = ? AND role = ?',
-      ['customer-1', 'customer'],
-    );
-
-    final summary = await repository.getSummary('run-1');
-    expect(summary.approvedCount, 0);
-    expect(summary.heldCount, 0);
-    expect(summary.staleCount, 1);
-    expect(summary.reviewedCount, 1);
-    expect(summary.unreviewedCount, 2);
-    final history = await repository.getDecisionHistory(
-      runId: 'run-1',
-      sourceOccurrenceKey: fixture.keys[0],
-    );
-    expect(history, hasLength(1));
-    expect(history.single.resolvedPartyName, 'Customer One');
-  });
-
-  test('rolls back the whole run when an occurrence cannot be inserted', () async {
-    final invalidPlan = LegacyPartyResolutionReport(
-      snapshotSha256: _snapshotHash,
-      resolutions: [
-        LegacyPartyOccurrenceResolution(
-          sourceOccurrenceKey: fixture.keys[0],
-          sourceIndex: 0,
-          invoiceId: 'legacy-1',
-          status: LegacyPartyResolutionStatus.resolvedByName,
-          expectedRole: LedgerPartyRole.customer,
-          partyId: 'missing-party',
-          partyDisplayName: 'Missing Party',
+  test(
+    'rolls back the whole run when an occurrence cannot be inserted',
+    () async {
+      final invalidPlan = LegacyPartyResolutionReport(
+        snapshotSha256: _snapshotHash,
+        resolutions: [
+          LegacyPartyOccurrenceResolution(
+            sourceOccurrenceKey: fixture.keys[0],
+            sourceIndex: 0,
+            invoiceId: 'legacy-1',
+            status: LegacyPartyResolutionStatus.resolvedByName,
+            expectedRole: LedgerPartyRole.customer,
+            partyId: 'missing-party',
+            partyDisplayName: 'Missing Party',
+          ),
+          ...fixture.plan.resolutions.skip(1),
+        ],
+      );
+      await expectLater(
+        repository.createRun(
+          runId: 'failed-run',
+          snapshotManifestPath: 'legacy/snapshots/failed.json',
+          migrationVersion: 1,
+          occurrenceIdentityVersion: 1,
+          preflightVersion: 1,
+          createdByActorId: 'actor-1',
+          preflight: fixture.preflight,
+          plan: invalidPlan,
         ),
-        ...fixture.plan.resolutions.skip(1),
-      ],
-    );
-    await expectLater(
-      repository.createRun(
-        runId: 'failed-run',
-        snapshotManifestPath: 'legacy/snapshots/failed.json',
-        migrationVersion: 1,
-        occurrenceIdentityVersion: 1,
-        preflightVersion: 1,
-        createdByActorId: 'actor-1',
-        preflight: fixture.preflight,
-        plan: invalidPlan,
-      ),
-      throwsA(anything),
-    );
-    await expectLater(repository.getRun('failed-run'), throwsStateError);
-  });
+        throwsA(anything),
+      );
+      await expectLater(repository.getRun('failed-run'), throwsStateError);
+    },
+  );
 }
 
 Future<void> _insertParty(

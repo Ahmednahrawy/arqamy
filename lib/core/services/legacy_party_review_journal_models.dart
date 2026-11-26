@@ -140,10 +140,13 @@ class LegacyPartyReviewJournalSummary {
   });
 
   final int totalOccurrences;
+
   /// Latest approval whose party still exists with the required role.
   final int approvedCount;
+
   /// Latest decision explicitly says to keep the occurrence held.
   final int heldCount;
+
   /// Latest approval is no longer valid because the party or role is missing.
   final int staleCount;
   final int reviewedCount;
