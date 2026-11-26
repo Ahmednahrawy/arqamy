@@ -393,7 +393,7 @@ void main() {
     await database.customStatement('DROP TABLE legacy_migration_occurrences');
     await database.customStatement('DROP TABLE legacy_migration_runs');
     // A view with the target table name cannot be silently accepted by
-    // CREATE TABLE IF NOT EXISTS, so this forces the v5-to-v6 DDL to fail
+    // CREATE TABLE IF NOT EXISTS, so this forces the v5-to-v7 DDL to fail
     // after legacy_migration_runs has been created inside the migration.
     await database.customStatement(
       'CREATE VIEW legacy_migration_occurrences AS SELECT 1 AS sentinel',
