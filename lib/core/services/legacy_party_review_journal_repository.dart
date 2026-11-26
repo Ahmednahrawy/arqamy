@@ -133,6 +133,13 @@ class LegacyPartyReviewJournalRepository {
           'Party plan keys, source indexes, and invoice IDs must match preflight.',
         );
       }
+      if ((resolution.partyId != null ||
+              resolution.partyDisplayName != null) &&
+          !resolution.isResolved) {
+        throw ArgumentError(
+          'Only resolved occurrences may contain a suggested party.',
+        );
+      }
     }
 
     return _serialize(
