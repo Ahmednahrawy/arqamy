@@ -2,8 +2,8 @@
 
 **Repository:** Ahmednahrawy/arqamy  
 **Baseline:** Drift schema version 7  
-**Design status:** Proposal for owner approval  
-**Implementation status:** Not authorized  
+**Design status:** Approved for schema v8 implementation  
+**Implementation status:** Schema-only implementation authorized; importer and production migration excluded  
 **Depends on:** Owner-approved D4 execution contract; repository audit; field-mapping matrix  
 **Scope:** Additive Drift persistence for invoice-migration execution, attempts, operator events, and source-occurrence mappings.
 
@@ -306,21 +306,31 @@ After schema v8 is shipped, do not downgrade by dropping D4 tables if they conta
 - wrong-role/stale/missing party decision rejected;
 - foreign-key and integrity checks pass after migration and after representative journal writes.
 
-## 10. Open design dependencies
+## 10. Approved status vocabularies
+
+The owner approved and froze the following database-enforced values for schema v8:
+
+- Run `status`: `prepared, executing, execution_blocked, execution_complete, reconciling, reconciliation_failed, reconciled, accepted, aborted`.
+- Occurrence `execution_status`: `preflighted, ready, held, excluded, claimed, imported, retryable_failure, permanent_failure, conflict, reconciled, reconciliation_failed`.
+- Attempt `outcome`: `imported, already_imported, retryable_failure, permanent_failure, conflict, abandoned`.
+
+These are value constraints only. Repository-level transition validation is a separate implementation layer and must not be inferred from the allowed-value lists. No run, occurrence, or attempt may use an unlisted value.
+
+## 11. Open design dependencies
 
 The schema can be implemented only after:
 1. Owner resolves the field-mapping matrix's open business rules, especially date/time semantics and product measurement sign/precision/range.
-2. The final run/occurrence status values and transition table are frozen.
+2. The status value vocabularies are frozen; repository transition rules remain a separate implementation concern.
 3. The authenticated/local actor metadata contract is mapped to actual app capabilities.
 4. The export package manifest and restore location contract are specified.
 5. The current old-importer collision inventory and resolution process are defined.
 
 ## 11. Approval boundary
 
-This document proposes a schema. It does **not** authorize changes to `app_database.dart`, generated Drift files, repositories, import planner/executor, tests, or production data.
+The owner has authorized implementation of the additive v8 schema, generated Drift files, and schema-focused tests only. This does **not** authorize an invoice importer, export/restore implementation, production data migration, or cutover.
 
 The next owner approval should be specifically for the schema contract and its v7-to-v8 migration plan. Importer implementation, export/restore implementation, production import, and cutover remain separate approval gates.
 
 ---
 
-**End of D4 schema proposal — implementation not authorized.**
+**End of D4 schema proposal — schema v8 implementation authorized; importer and production migration remain out of scope.**
