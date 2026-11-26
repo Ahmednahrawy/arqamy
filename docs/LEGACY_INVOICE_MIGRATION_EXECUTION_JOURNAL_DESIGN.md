@@ -395,18 +395,19 @@ Implementation should remain separately gated and be split into reviewable steps
 
 Do not combine schema, importer, app cutover, and legacy deletion in one change.
 
-## 15. Open decisions for owner review
+## 15. Owner-approved design decisions
 
-The following require explicit confirmation before implementation:
-1. Whether the first production execution is strictly single-worker (recommended) or needs parallel workers.
-2. Whether a retry after a terminally aborted run resumes the same run or creates a linked new run.
-3. Which actor identity is authoritative for local migration review and acceptance, and how its trust limitations are communicated.
-4. The retention period and user-selected destination for the independent export package.
-5. Whether explicit exclusion is allowed for any occurrence class, and which roles may authorize it.
-6. The precise post-cutover recovery approach and acceptable rollback window.
-7. Whether an execution-event table is separate from attempt history or implemented as a unified append-only audit stream.
+The owner approved the following D4 recommendations on 2026-11-26:
 
-No decision here authorizes code or schema changes.
+1. **Initial execution concurrency:** strictly one controlled local worker. Parallel execution is out of scope until separately justified and designed.
+2. **Retry after terminal abort:** create a new run linked to the aborted run. Preserve the original run and all its attempt/event history.
+3. **Actor identity:** use the authenticated application actor where available. Document that local database actor fields are audit metadata, not tamper-proof proof of identity.
+4. **Snapshot retention:** independently export and verify the source snapshot before production import; retain it through the agreed recovery period. The exact retention duration and destination remain an operational decision before production use.
+5. **Exclusion:** allow only as an explicit authorized action with a reason and immutable audit event. Authorization policy and eligible occurrence classes must be specified before implementation.
+6. **Post-cutover recovery:** design and test forward-recovery/replay before cutover. Do not assume that restoring the old database file preserves post-cutover writes.
+7. **Audit model:** keep append-only attempt history separate from append-only operator-action events.
+
+These decisions approve the D4 design direction, not its implementation. Schema changes, importer changes, export/restore implementation, production execution, and cutover still require separate explicit approval.
 
 ---
 
