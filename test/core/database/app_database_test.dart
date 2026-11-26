@@ -53,7 +53,7 @@ void main() {
 
   test('initializes the ledger schema with version 6', () async {
     expect(database.schemaVersion, 6);
-    expect(await database.storedSchemaVersion, 6);
+    expect(await database.storedSchemaVersion, 7);
 
     final tables = await database
         .customSelect(
@@ -242,7 +242,7 @@ void main() {
 
     database = await AppDatabase.open(path: databasePath);
 
-    expect(await database.storedSchemaVersion, 6);
+    expect(await database.storedSchemaVersion, 7);
     final tables = await database
         .customSelect(
           "SELECT COUNT(*) AS count FROM sqlite_master "
@@ -347,7 +347,7 @@ void main() {
 
     database = await AppDatabase.open(path: databasePath);
 
-    expect(await database.storedSchemaVersion, 6);
+    expect(await database.storedSchemaVersion, 7);
     expect(
       await database
           .customSelect('SELECT * FROM currencies')
