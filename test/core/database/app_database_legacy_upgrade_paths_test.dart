@@ -48,9 +48,7 @@ void main() {
       expect(await _readCurrencies(database), currenciesBeforeFailure);
       await _expectDatabaseHealthy(database);
 
-      await database.customStatement(
-        'DROP TABLE legacy_migration_runs',
-      );
+      await database.customStatement('DROP TABLE legacy_migration_runs');
       await _runProductionUpgrade(database, from: 5, to: 7);
 
       expect(await _readUserVersion(database), 7);
@@ -73,10 +71,12 @@ void main() {
     expect(await _readCurrencies(database), currenciesBefore);
     await _expectPartyReviewJournalExists(database);
 
-    final validationTrigger = await database.customSelect(
-      "SELECT sql FROM sqlite_master WHERE type = 'trigger' "
-      "AND name = 'legacy_party_review_decisions_validate_insert'",
-    ).getSingle();
+    final validationTrigger = await database
+        .customSelect(
+          "SELECT sql FROM sqlite_master WHERE type = 'trigger' "
+          "AND name = 'legacy_party_review_decisions_validate_insert'",
+        )
+        .getSingle();
     expect(
       validationTrigger.read<String>('sql'),
       contains('legacy_party_review_decisions_validate_insert'),
@@ -84,29 +84,35 @@ void main() {
     await _expectDatabaseHealthy(database);
   });
 
-  test('preserves the v7 schema and data on the current v7 no-op path', () async {
-    await database.customStatement(
-      "INSERT INTO currencies VALUES ('EGP', 2, 'Egyptian pound')",
-    );
-    final schemaBefore = await _snapshotSchemaObjects(database);
-    final currenciesBefore = await _readCurrencies(database);
-    await database.customStatement('PRAGMA user_version = 7');
+  test(
+    'preserves the v7 schema and data on the current v7 no-op path',
+    () async {
+      await database.customStatement(
+        "INSERT INTO currencies VALUES ('EGP', 2, 'Egyptian pound')",
+      );
+      final schemaBefore = await _snapshotSchemaObjects(database);
+      final currenciesBefore = await _readCurrencies(database);
+      await database.customStatement('PRAGMA user_version = 7');
 
-    await _runProductionUpgrade(database, from: 7, to: 7);
+      await _runProductionUpgrade(database, from: 7, to: 7);
 
-    expect(await _readUserVersion(database), 7);
-    expect(await _snapshotSchemaObjects(database), schemaBefore);
-    expect(await _readCurrencies(database), currenciesBefore);
-    await _expectDatabaseHealthy(database);
-  });
+      expect(await _readUserVersion(database), 7);
+      expect(await _snapshotSchemaObjects(database), schemaBefore);
+      expect(await _readCurrencies(database), currenciesBefore);
+      await _expectDatabaseHealthy(database);
+    },
+  );
 }
 
 Future<void> _removePartyReviewJournal(AppDatabase database) async {
-  final triggers = await database.customSelect(
-    "SELECT name FROM sqlite_master WHERE type = 'trigger' "
-    "AND tbl_name IN ('legacy_party_review_decisions', "
-    "'legacy_migration_occurrences', 'legacy_migration_runs')",
-  ).map((row) => row.read<String>('name')).get();
+  final triggers = await database
+      .customSelect(
+        "SELECT name FROM sqlite_master WHERE type = 'trigger' "
+        "AND tbl_name IN ('legacy_party_review_decisions', "
+        "'legacy_migration_occurrences', 'legacy_migration_runs')",
+      )
+      .map((row) => row.read<String>('name'))
+      .get();
 
   for (final trigger in triggers) {
     await database.customStatement('DROP TRIGGER "$trigger"');
@@ -148,9 +154,9 @@ Future<void> _runProductionUpgrade(
     }
 
     await database.customStatement('PRAGMA defer_foreign_keys = OFF');
-    final foreignKeysEnabled = (await database
-        .customSelect('PRAGMA foreign_keys')
-        .getSingle()).read<int>('foreign_keys');
+    final foreignKeysEnabled =
+        (await database.customSelect('PRAGMA foreign_keys').getSingle())
+            .read<int>('foreign_keys');
     if (foreignKeysEnabled != 1) {
       throw StateError('Foreign-key enforcement was unexpectedly disabled.');
     }
@@ -160,12 +166,15 @@ Future<void> _runProductionUpgrade(
 }
 
 Future<void> _expectPartyReviewJournalExists(AppDatabase database) async {
-  final tables = await database.customSelect(
-    "SELECT name FROM sqlite_master WHERE type = 'table' "
-    "AND name IN ('legacy_migration_runs', "
-    "'legacy_migration_occurrences', 'legacy_party_review_decisions') "
-    'ORDER BY name',
-  ).map((row) => row.read<String>('name')).get();
+  final tables = await database
+      .customSelect(
+        "SELECT name FROM sqlite_master WHERE type = 'table' "
+        "AND name IN ('legacy_migration_runs', "
+        "'legacy_migration_occurrences', 'legacy_party_review_decisions') "
+        'ORDER BY name',
+      )
+      .map((row) => row.read<String>('name'))
+      .get();
 
   expect(tables, [
     'legacy_migration_occurrences',
@@ -173,16 +182,19 @@ Future<void> _expectPartyReviewJournalExists(AppDatabase database) async {
     'legacy_party_review_decisions',
   ]);
 
-  final triggers = await database.customSelect(
-    "SELECT name FROM sqlite_master WHERE type = 'trigger' "
-    "AND name IN ('legacy_migration_runs_immutable_update', "
-    "'legacy_migration_runs_immutable_delete', "
-    "'legacy_migration_occurrences_immutable_update', "
-    "'legacy_migration_occurrences_immutable_delete', "
-    "'legacy_party_review_decisions_immutable_update', "
-    "'legacy_party_review_decisions_immutable_delete') "
-    'ORDER BY name',
-  ).map((row) => row.read<String>('name')).get();
+  final triggers = await database
+      .customSelect(
+        "SELECT name FROM sqlite_master WHERE type = 'trigger' "
+        "AND name IN ('legacy_migration_runs_immutable_update', "
+        "'legacy_migration_runs_immutable_delete', "
+        "'legacy_migration_occurrences_immutable_update', "
+        "'legacy_migration_occurrences_immutable_delete', "
+        "'legacy_party_review_decisions_immutable_update', "
+        "'legacy_party_review_decisions_immutable_delete') "
+        'ORDER BY name',
+      )
+      .map((row) => row.read<String>('name'))
+      .get();
 
   expect(triggers, [
     'legacy_migration_occurrences_immutable_delete',
@@ -197,30 +209,32 @@ Future<void> _expectPartyReviewJournalExists(AppDatabase database) async {
 Future<List<Map<String, Object?>>> _snapshotSchemaObjects(
   AppDatabase database,
 ) async {
-  final rows = await database.customSelect(
-    "SELECT type, name, tbl_name, sql FROM sqlite_master "
-    "WHERE name NOT LIKE 'sqlite_%' ORDER BY type, name",
-  ).get();
+  final rows = await database
+      .customSelect(
+        "SELECT type, name, tbl_name, sql FROM sqlite_master "
+        "WHERE name NOT LIKE 'sqlite_%' ORDER BY type, name",
+      )
+      .get();
   return rows.map((row) => row.data).toList();
 }
 
-Future<List<Map<String, Object?>>> _readCurrencies(
-  AppDatabase database,
-) async {
-  final rows = await database.customSelect(
-    'SELECT * FROM currencies ORDER BY currency_code',
-  ).get();
+Future<List<Map<String, Object?>>> _readCurrencies(AppDatabase database) async {
+  final rows = await database
+      .customSelect('SELECT * FROM currencies ORDER BY currency_code')
+      .get();
   return rows.map((row) => row.data).toList();
 }
 
 Future<int> _readUserVersion(AppDatabase database) async =>
-    (await database.customSelect('PRAGMA user_version').getSingle())
-        .read<int>('user_version');
+    (await database.customSelect('PRAGMA user_version').getSingle()).read<int>(
+      'user_version',
+    );
 
 Future<void> _expectDatabaseHealthy(AppDatabase database) async {
   expect(
-    (await database.customSelect('PRAGMA foreign_keys').getSingle())
-        .read<int>('foreign_keys'),
+    (await database.customSelect('PRAGMA foreign_keys').getSingle()).read<int>(
+      'foreign_keys',
+    ),
     1,
   );
   expect(
