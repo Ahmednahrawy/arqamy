@@ -526,3 +526,13 @@ On 2026-11-26, the owner approved this D4 validation rule: hold the entire invoi
 Preflight must emit a stable finding identifying the source occurrence and affected product line. Preserve the exact original input values in the immutable source snapshot. Never clamp net weight to zero, alter the source inputs, omit the line, or silently correct the calculation. A later correction or disposition must be explicit, authorized, attributable, and auditable without mutating original source evidence.
 
 This rule applies even when all individual inputs are non-negative. Calculation must respect the separately approved numeric-range and precision contract. This approval is design policy only; it does not authorize schema changes, importer implementation, or production migration execution.
+
+## Owner-approved validation policy — zero calculated net product weight
+
+On 2026-11-26, the owner approved this D4 validation rule: hold the entire invoice occurrence for human review if any product line has a calculated net weight equal to zero:
+
+`netWeight = weight - (packageWeight * numberPackage)`
+
+Preflight must emit a stable finding identifying the source occurrence and affected product line. Preserve exact original component values in the immutable source snapshot. Do not assume the line is a valid zero-quantity product, remove or omit it, substitute values, or silently alter the calculation. Any later disposition must be explicit, authorized, attributable, and auditable without mutating original source evidence.
+
+This zero-net-weight rule is separate from the negative-net-weight rule. This approval is design policy only; it does not authorize schema changes, importer implementation, or production migration execution.
