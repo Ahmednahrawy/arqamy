@@ -280,3 +280,16 @@ On 2026-11-26, the owner approved holding the entire invoice occurrence for huma
 Emit a stable finding identifying the source occurrence and affected product line. Preserve exact original component values in the immutable source snapshot. Do not assume the line is a valid zero-quantity product, remove or omit it, substitute values, or silently change the calculation. Any later disposition must be explicit, authorized, attributable, and auditable without mutating original source evidence.
 
 This rule is distinct from the negative-net-weight rule. It is policy documentation only and does not authorize code, schema, or production migration changes.
+
+
+## Owner-approved validation policy — negative calculated product line total
+
+On 2026-11-26, the owner approved this D4 rule: hold the entire invoice occurrence for human review if any calculated product line total is negative.
+
+The calculation is:
+
+`lineTotal = (weight - (packageWeight * numberPackage)) * price`
+
+Preflight must emit a stable finding identifying the source occurrence and affected product line. Preserve the exact original input values in the immutable source snapshot. Do not clamp the result, modify inputs, omit the line, or silently change the calculation. Any later correction or disposition must be explicit, authorized, attributable, and auditable without mutating source evidence.
+
+This check is additional to the individual input, net-weight, invoice-total, and numeric-range/precision checks. Apply the approved safe arithmetic contract; its exact limits and precision must be defined and tested before implementation. Design policy only; no schema, importer, or production migration implementation is authorized.
