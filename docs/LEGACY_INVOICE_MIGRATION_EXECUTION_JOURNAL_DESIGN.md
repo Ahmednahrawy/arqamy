@@ -433,3 +433,12 @@ On 2026-11-26, the owner approved this D4 validation rule: hold an entire invoic
 Preflight must emit a stable finding identifying the source occurrence, product line, and field. No clamping, absolute-value conversion, line omission, or other silent correction is permitted. Preserve the original value in the immutable source snapshot. A later correction requires an explicit, authorized, attributable, auditable operator action and must not mutate source evidence.
 
 Apply this check before database insertion, including negative package counts rejected by the current Drift schema. This approval does not define non-negative upper bounds or precision limits. It is a design decision only; schema and importer implementation remain separately gated and are not authorized by this approval.
+
+
+## 18. Owner-approved field validation rule — party existence and role
+
+On 2026-11-26, the owner approved the following D4 rule: hold an invoice occurrence for human review if the referenced party does not exist, lacks the required role, has a role inconsistent with the invoice action or effective review decision, or no longer matches the current effective party-review decision at import time.
+
+The D4 importer must not create a missing party, add a missing role, change an existing role, or infer a replacement party. Release from hold requires an explicit, authorized, attributable, immutable review decision, followed by revalidation immediately before import. The original source snapshot remains unchanged.
+
+The current legacy importer behavior that automatically adds missing party roles must not be reused in the D4 migration path. This approval defines policy only; it does not authorize party, schema, or importer implementation.
