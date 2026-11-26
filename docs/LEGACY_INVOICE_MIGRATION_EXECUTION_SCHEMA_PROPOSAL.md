@@ -63,17 +63,20 @@ Proposed columns:
 - `export_manifest_sha256 TEXT NULL` — populated only after independently verified export;
 - `created_at INTEGER NOT NULL`;
 - `created_by_actor_id TEXT NULL`;
-- `created_by_actor_source TEXT NOT NULL` — authenticated, local_operator, or system;
+- `created_by_actor_source TEXT NOT NULL` — exactly one of `authenticated`, `local_operator`, or `system`;
 - `status TEXT NOT NULL` — current run-state projection;
 - `updated_at INTEGER NOT NULL`.
 
 Constraints:
-- valid SHA-256 shape and non-negative byte length;
-- positive format/migration/identity/preflight/mapping versions;
+- `snapshot_sha256` and non-null `export_manifest_sha256` must be exactly 64 hexadecimal characters;
+- `snapshot_byte_length >= 0`; `snapshot_source_exists` must be exactly 0 or 1;
+- format/migration/identity/preflight/mapping versions must be positive;
+- `run_id` and every required text identifier must be non-empty after trimming;
+- `created_by_actor_source` must be one of `authenticated`, `local_operator`, or `system`;
 - allowed status values only;
 - parent run must exist and cannot equal this run;
 - party-review run, if present, references `legacy_migration_runs(run_id)`;
-- source/contract identity fields are immutable after creation;
+- immutable source/contract/creation/actor identity fields are protected by a database trigger; only the designated mutable run projection fields `status` and `updated_at` may change;
 - status changes occur only through repository transition methods and must be accompanied by a durable event where the action is operator initiated.
 
 Actor metadata must not claim stronger identity than the app can prove. If no authenticated identity exists, record a local-operator actor source and document its unverified nature; do not fabricate an authenticated user ID.
@@ -104,6 +107,9 @@ Proposed columns:
 - `updated_at INTEGER NOT NULL`.
 
 Keys and constraints:
+- required identifiers, `source_occurrence_key`, and required text fields must be non-empty after trimming;
+- `record_sha256` must be exactly 64 hexadecimal characters;
+- non-null `active_claim_token_hash` must be non-empty after trimming;
 - primary key `(run_id, source_occurrence_key)`;
 - unique `(run_id, source_index)`;
 - foreign key `run_id` to the D4 run;
@@ -138,6 +144,9 @@ Proposed columns:
 - `destination_fingerprint TEXT NULL`.
 
 Constraints:
+- `attempt_id`, `run_id`, `source_occurrence_key`, `attempt_idempotency_key`, `claim_token_hash`, and `worker_id` must be non-empty after trimming;
+- `claim_token_hash` must be non-null;
+- `completed_at >= started_at`;
 - unique `(run_id, source_occurrence_key, attempt_number)`;
 - unique `attempt_idempotency_key`;
 - foreign key to the matching occurrence;
@@ -164,6 +173,7 @@ Proposed columns:
 - `request_idempotency_key TEXT NULL`.
 
 Constraints:
+- required identifiers and `actor_source` must be non-empty after trimming; `actor_source` is constrained to `authenticated`, `local_operator`, or `system`;
 - foreign key to run;
 - occurrence foreign key when the key is present;
 - valid JSON details;
@@ -194,7 +204,9 @@ Constraints:
 - unique destination invoice ID;
 - foreign key to the successful import run and its occurrence;
 - foreign key to `invoices(invoice_id)`;
-- valid digest/version/index checks;
+- valid digest/version/index checks and non-empty required identifiers;
+- an insert-validation trigger must verify that the referenced occurrence exists in the same `import_run_id` and that its source key, snapshot digest, identity version, source index, record digest, migration version, and mapping-contract version exactly match the mapping row;
+- the trigger must verify that the occurrence is in `imported` state, that a successful `imported` attempt exists for the same run/source occurrence/destination invoice, and that the destination invoice's `legacy_record_key` exactly equals the mapping's `source_occurrence_key`;
 - append-only update/delete triggers.
 
 The source occurrence key is the global duplicate-prevention boundary. A later run may discover the existing mapping and record an `already_imported` attempt only after verifying the destination invoice and lines against the mapping fingerprint. It must not create a second invoice.
@@ -250,9 +262,9 @@ One Drift transaction must:
 2. Check for an existing global source-occurrence mapping.
 3. Check for pre-existing unmapped invoice collisions by legacy invoice ID.
 4. Insert invoice and all lines using the source occurrence key as `legacy_record_key`.
-5. Insert the global occurrence mapping and destination fingerprint.
-6. Insert the successful attempt record.
-7. Update occurrence projection to imported and clear active claim fields.
+5. Insert the successful `imported` attempt record.
+6. Update the occurrence projection to `imported` and clear active claim fields.
+7. Insert the global occurrence mapping and destination fingerprint. Its insert trigger verifies the completed attempt, imported occurrence projection, exact occurrence metadata, and destination `legacy_record_key`.
 
 Any failure rolls back invoice, lines, mapping, attempt result, and imported state together. The prior durable claim remains available for lease recovery/retry.
 
@@ -265,8 +277,9 @@ Persist the deterministic reconciliation report reference/digest and outcome eve
 Target schema version: **8**, additive from version 7.
 
 Proposed migration:
-1. Create the five D4 tables.
-2. Create required unique constraints, foreign keys, indexes, and append-only triggers.
+1. Ensure the five D4 tables and all their indexes/triggers exist for every supported upgrade path from every schema version below 8. A direct `from == 7` branch alone is insufficient.
+2. For legacy upgrade branches that call `createAll()`, account for the D4 tables being included in fresh-schema creation so they are not created a second time later in the same migration callback. Use one idempotent migration strategy with explicit version-path coverage; do not silently skip D4 creation for older installed databases.
+3. Create the required unique constraints, foreign keys, indexes, run-identity immutability trigger, mapping insert-validation trigger, and append-only triggers exactly once.
 3. Verify existing v7 rows remain unchanged in:
    - invoices and invoice_lines;
    - currencies, parties, party_roles, financial_accounts;
@@ -294,12 +307,19 @@ After schema v8 is shipped, do not downgrade by dropping D4 tables if they conta
 ## 9. Required tests before implementation can be considered complete
 
 - fresh schema creates all five tables and expected indexes/triggers;
+- every supported pre-v8 upgrade path, including legacy paths that invoke `createAll()`, finishes with all five D4 tables and triggers exactly once;
+- schema v7 → v8 and representative older-version → v8 upgrades preserve all pre-existing rows;
 - schema v7 → v8 preserves all existing tables and rows;
 - migration failure rolls back atomically;
-- immutable run identity fields cannot be changed;
-- occurrence identity fields cannot be changed or deleted;
+- immutable run identity fields cannot be changed, while only `status` and `updated_at` remain mutable;
+- run snapshot existence, byte-length, digest, optional export-manifest digest, actor-source, and required-identifier checks reject invalid values;
+- occurrence identity fields cannot be changed or deleted; non-null claim-token hashes and required identifiers reject blank values;
+- attempts reject blank required identifiers/token hashes and completion timestamps earlier than start;
+- operator events reject blank required identifiers and unsupported actor-source values;
 - attempts, operator events, and mappings reject update/delete;
 - same source occurrence cannot map twice across different runs or mapping-contract versions;
+- mapping insertion rejects mismatched occurrence snapshot/identity/index/record/version metadata;
+- mapping insertion rejects a non-imported occurrence, missing matching successful attempt, mismatched destination invoice, or destination `legacy_record_key` different from the source occurrence key;
 - two source occurrences with the same legacy invoice ID remain distinct keys (subject to review/hold rules);
 - attempt idempotency uniqueness and retry semantics;
 - valid D3.2 decision reference belongs to the same source occurrence;
@@ -316,21 +336,21 @@ The owner approved and froze the following database-enforced values for schema v
 
 These are value constraints only. Repository-level transition validation is a separate implementation layer and must not be inferred from the allowed-value lists. No run, occurrence, or attempt may use an unlisted value.
 
-## 11. Open design dependencies
+## 11. Remaining operational dependencies (outside schema v8 scope)
 
-The schema can be implemented only after:
-1. Owner resolves the field-mapping matrix's open business rules, especially date/time semantics and product measurement sign/precision/range.
-2. The status value vocabularies are frozen; repository transition rules remain a separate implementation concern.
-3. The authenticated/local actor metadata contract is mapped to actual app capabilities.
-4. The export package manifest and restore location contract are specified.
-5. The current old-importer collision inventory and resolution process are defined.
+The following remain necessary before a production import can be designed or executed, but they do not block the approved schema-only implementation:
+1. Resolve the field-mapping matrix's remaining business rules, especially date/time semantics and product measurement sign/precision/range.
+2. Map authenticated/local actor metadata to actual app capabilities.
+3. Specify the export package manifest and restore location contract.
+4. Define the current old-importer collision inventory and resolution process.
+5. Define repository-level state-transition validation independently of database allowed-value checks.
 
-## 11. Approval boundary
+## 12. Approval boundary
 
-The owner has authorized implementation of the additive v8 schema, generated Drift files, and schema-focused tests only. This does **not** authorize an invoice importer, export/restore implementation, production data migration, or cutover.
+The owner has approved the corrected schema v8 contract and authorized implementation of the five additive D4 tables, migration coverage from every supported pre-v8 schema version, required constraints/triggers/indexes, generated Drift files, and schema-focused tests only.
 
-The next owner approval should be specifically for the schema contract and its v7-to-v8 migration plan. Importer implementation, export/restore implementation, production import, and cutover remain separate approval gates.
+This does **not** authorize an invoice importer, export/restore implementation, production data migration, source mutation, UI integration, financial-ledger operations, or cutover. Those remain separate approval gates.
 
 ---
 
-**End of D4 schema proposal — schema v8 implementation authorized; importer and production migration remain out of scope.**
+**End of D4 schema proposal — corrected schema v8 contract approved; schema-only implementation authorized. Importer, export/restore, production migration, and cutover remain out of scope.**
