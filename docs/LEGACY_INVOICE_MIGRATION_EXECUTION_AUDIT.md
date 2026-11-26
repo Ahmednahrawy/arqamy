@@ -233,3 +233,11 @@ On 2026-11-26, the owner approved holding the entire invoice occurrence for huma
 Preserve the original invoice total and all original line values in the immutable source snapshot. Do not recalculate the invoice total, modify product lines, omit lines, or silently adjust values or rounding to force a match. Emit a stable finding identifying the mismatch and report the compared values where safely representable. Any later correction, if supported, must be explicit, authorized, attributable, and auditable without changing original source evidence.
 
 The exact comparison arithmetic and precision rules must be specified and tested before implementation to ensure deterministic results. This is a policy decision only; it does not authorize schema or importer changes.
+
+## Owner-approved validation policy — historical paid and remaining amounts
+
+On 2026-11-26, the owner approved holding the entire invoice occurrence for human review if any of these conditions is true: `paid` is negative; `paid` exceeds the absolute invoice total; or `rest` differs from the absolute invoice total minus `paid`.
+
+Preserve the original `totalCost`, `paid`, and `rest` values in the immutable source snapshot and retain them as historical aggregates. Do not clamp, cap, recalculate, overwrite, or silently correct these values. Emit stable findings identifying each failed condition. Any later correction must be explicit, authorized, attributable, and auditable without changing original source evidence.
+
+These aggregate values do not prove physical cash movement. The migration must not synthesize cash events, payments, allocations, refunds, reversals, suspense entries, or accounting postings from them. Design policy only; no implementation is authorized.
