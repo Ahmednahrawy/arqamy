@@ -434,7 +434,6 @@ class _OrderscreenState extends State<Orderscreen>
             style: Theme.of(context).textTheme.labelLarge,
           ),
           icon: const Icon(Icons.preview),
-          backgroundColor: Theme.of(context).colorScheme.primary,
         ),
       ),
     );
