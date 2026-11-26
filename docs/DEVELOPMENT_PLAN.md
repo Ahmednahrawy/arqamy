@@ -2,7 +2,7 @@
 
 **Repository:** `Ahmednahrawy/arqamy`  
 **Branch:** `main`  
-**Audited commit:** `7d821f7af4d3f16b92fca78af0bcb901b746247e`  
+**Current main baseline:** `271d330` — D3.2 merge; local validation on 2026-11-26: `flutter analyze` clean and 362 tests passed.  
 **Product direction:** Global, modular business management SaaS  
 **Status:** Approved roadmap — implementation remains phase-gated and requires separate approval for code/schema changes
 
@@ -45,37 +45,37 @@ iOS, Windows, and macOS remain future platform targets.
 
 ## 2. Current repository baseline
 
-The audited application currently contains:
+**Verified baseline:** `main` at merge commit `271d330` (2026-11-26).
+
+The repository currently contains:
 
 - Flutter application using Provider.
-- SharedPreferences-based invoice persistence.
-- Drift database at schema version 5.
-- Financial ledger domain and repositories.
-- Customer identity and migration utilities.
-- Fixed-point Money implementation.
+- SharedPreferences key `saved_invoices` remains the operational invoice source of truth.
+- Drift/SQLite database at schema version **7**.
+- Financial ledger domain, repositories, and invoice import planner/executor.
+- Customer/party registry and role model.
+- Legacy invoice raw-snapshot, record-level preflight, deterministic source-occurrence identity, party-resolution planning, and persistent party-review journal.
+- Invoice bootstrap/retry handling and regression coverage for storage-read failures.
+- Fixed-point `Money` implementation.
 - Arabic/English ARB localization.
-- Invoice PDF generation and sharing.
+- Invoice PDF generation, WhatsApp PDF sharing, and Excel export/sharing.
 - Backup and restore functionality.
-- Android, iOS, Web, Windows, macOS, and Linux project scaffolding.
-- GitHub Actions workflow for analysis and tests.
+- GitHub Actions CI for Flutter analysis and tests.
 
-### Major gaps
+The completed engineering work is recorded in [`finished_tasks.md`](finished_tasks.md). Do not re-add completed tasks to the active roadmap unless a later audit finds a regression.
 
-- Invoice history can be overwritten after a cold start.
-- Release signing material was exposed in public Git history, according to the existing audit report.
-- Legacy invoice persistence remains the primary operational storage.
-- Drift is not yet the primary application data source.
-- Normal invoice and payment workflows are not integrated with the ledger.
-- New invoices do not consistently receive stable customer identities.
-- No complete authentication, tenant, or multi-business architecture.
-- No production cloud synchronization.
-- No complete inventory, purchasing, warehouse, or accounting workflows.
-- No subscription or entitlement system.
-- No production-grade web business workspace.
+### Current architecture boundary
 
-The previous `docs/AUDIT.md` should be updated after a complete remediation audit because some of its CI and architecture observations are now outdated.
+The legacy invoice store is **not yet migrated**. Drift currently supports the ledger/customer foundation and migration-review journal, but ordinary invoice reads and writes still use SharedPreferences. The migration import planner/executor is not yet safe for duplicate source occurrences because its existing key is based on `saved_invoices/{invoice.id}`; it must be adapted to the immutable occurrence identity before production migration.
 
----
+### Open high-priority risks
+
+- The exposed Android upload-key incident is not closed: Google Play confirmation of the replacement upload key, replacement-key release verification, and historical Git cleanup remain pending. See [`SECURITY_REMEDIATION_STATUS.md`](SECURITY_REMEDIATION_STATUS.md).
+- The current SharedPreferences invoice format remains a single serialized value and is not yet the authoritative-data migration target.
+- The snapshot service currently stores a verified raw snapshot and manifest in app-private storage; an independently recoverable/user-exportable copy must be included in the approved migration runbook before cutover.
+- Invoice-level historical `paid` and `rest` aggregates must not be converted into cash events or allocations without separate evidence and authorization.
+- The Drift import path still needs occurrence-key idempotency, durable execution/recovery states, reconciliation, and a post-cutover rollback strategy.
+- The latest local full test run passed 362 tests, but Drift emits multiple-database warnings in payment-ledger concurrency tests. These warnings remain an investigation item; they were not suppressed.
 
 ## 3. Target architecture
 
