@@ -174,139 +174,195 @@ class LegacyPartyReviewJournalRepository {
   Future<LegacyPartyReviewJournalSummary> getSummary(String runId) async {
     final run = await getRun(runId);
     var approved = 0;
+    var held = 0;
+    var stale = 0;
     var reviewed = 0;
     for (final occurrence in run.occurrences) {
       final latest = occurrence.latestDecision;
       if (latest == null) continue;
       reviewed++;
-      if (latest.action != LegacyPartyReviewAction.keepHeld) approved++;
+      if (latest.action == LegacyPartyReviewAction.keepHeld) {
+        held++;
+      } else if (await _partyHasRole(
+        latest.resolvedPartyId,
+        latest.resolvedPartyRole,
+      )) {
+        approved++;
+      } else {
+        stale++;
+      }
     }
     final total = run.occurrences.length;
     return LegacyPartyReviewJournalSummary(
       totalOccurrences: total,
       approvedCount: approved,
-      heldCount: total - approved,
+      heldCount: held,
+      staleCount: stale,
       reviewedCount: reviewed,
       unreviewedCount: total - reviewed,
     );
   }
 
+  /// Records one decision. This is a convenience wrapper over the atomic batch API.
   Future<LegacyPartyReviewDecisionResult> recordDecision(
     RecordLegacyPartyReviewDecisionRequest request,
+  ) async {
+    final results = await recordDecisions([request]);
+    return results.single;
+  }
+
+  /// Commits every decision in [requests] in one SQLite transaction.
+  ///
+  /// If any request is invalid or conflicts with an existing idempotency key,
+  /// the entire batch is rolled back.
+  Future<List<LegacyPartyReviewDecisionResult>> recordDecisions(
+    Iterable<RecordLegacyPartyReviewDecisionRequest> requests,
   ) {
+    final batch = requests.toList(growable: false);
+    if (batch.isEmpty) return Future.value(const []);
+    return _serialize(() => _transaction(() async {
+      final results = <LegacyPartyReviewDecisionResult>[];
+      for (final request in batch) {
+        results.add(await _recordDecisionInTransaction(request));
+      }
+      return List.unmodifiable(results);
+    }));
+  }
+
+  Future<LegacyPartyReviewDecisionResult> _recordDecisionInTransaction(
+    RecordLegacyPartyReviewDecisionRequest request,
+  ) async {
     _validateText(request.runId, 'runId');
     _validateText(request.idempotencyKey, 'idempotencyKey');
     final decision = request.decision;
     _validateText(decision.snapshotSha256, 'snapshotSha256');
     _validateText(decision.sourceOccurrenceKey, 'sourceOccurrenceKey');
     _validateText(decision.reviewerId, 'reviewerId');
-    if (!decision.decidedAtUtc.isUtc) throw ArgumentError('Decision timestamp must be UTC.');
+    if (!decision.decidedAtUtc.isUtc) {
+      throw ArgumentError('Decision timestamp must be UTC.');
+    }
     final rawNote = request.reviewNote?.trim();
     final note = rawNote == null || rawNote.isEmpty ? null : rawNote;
     final fingerprint = _decisionFingerprint(request.runId, decision, note);
 
-    return _serialize(() => _transaction(() async {
-      // Idempotency is checked before mutable party state, so retries remain stable.
-      final duplicate = await _database.customSelect(
-        'SELECT decision_id, run_id, source_occurrence_key, sequence, request_fingerprint '
-        'FROM legacy_party_review_decisions WHERE idempotency_key = ?',
-        variables: [Variable.withString(request.idempotencyKey.trim())],
-      ).getSingleOrNull();
-      if (duplicate != null) {
-        if (duplicate.read<String>('request_fingerprint') != fingerprint) {
-          throw LegacyPartyReviewIdempotencyConflict(request.idempotencyKey);
-        }
-        return LegacyPartyReviewDecisionResult(
-          runId: duplicate.read<String>('run_id'),
-          sourceOccurrenceKey: duplicate.read<String>('source_occurrence_key'),
-          decisionId: duplicate.read<String>('decision_id'),
-          sequence: duplicate.read<int>('sequence'),
-          wasIdempotentReplay: true,
-        );
+    // Idempotency is checked before mutable party state, so retries remain stable.
+    final duplicate = await _database.customSelect(
+      'SELECT decision_id, run_id, source_occurrence_key, sequence, request_fingerprint '
+      'FROM legacy_party_review_decisions WHERE idempotency_key = ?',
+      variables: [Variable.withString(request.idempotencyKey.trim())],
+    ).getSingleOrNull();
+    if (duplicate != null) {
+      if (duplicate.read<String>('request_fingerprint') != fingerprint) {
+        throw LegacyPartyReviewIdempotencyConflict(request.idempotencyKey);
       }
-
-      final run = await _database.customSelect(
-        'SELECT snapshot_sha256 FROM legacy_migration_runs WHERE run_id = ?',
-        variables: [Variable.withString(request.runId)],
-      ).getSingleOrNull();
-      if (run == null) throw StateError('Migration run does not exist.');
-      if (run.read<String>('snapshot_sha256') != decision.snapshotSha256) {
-        throw ArgumentError('Review decision belongs to a different snapshot.');
-      }
-      final occurrence = await _database.customSelect(
-        'SELECT expected_role, suggested_party_id FROM legacy_migration_occurrences '
-        'WHERE run_id = ? AND source_occurrence_key = ?',
-        variables: [Variable.withString(request.runId),
-          Variable.withString(decision.sourceOccurrenceKey)],
-      ).getSingleOrNull();
-      if (occurrence == null) {
-        throw ArgumentError('Review decision references an unknown occurrence.');
-      }
-
-      final expectedRoleValue = occurrence.data['expected_role'] as String?;
-      final expectedRole = _roleFromDatabase(expectedRoleValue);
-      String? partyId;
-      String? partyName;
-      String? partyRole;
-      switch (decision.action) {
-        case LegacyPartyReviewAction.keepHeld:
-          if (decision.selectedPartyId != null) {
-            throw ArgumentError('keepHeld must not select a party.');
-          }
-          break;
-        case LegacyPartyReviewAction.acceptSuggestedMatch:
-          if (decision.selectedPartyId != null) {
-            throw ArgumentError('acceptSuggestedMatch must not supply a party ID.');
-          }
-          final suggestedId = occurrence.data['suggested_party_id'] as String?;
-          if (suggestedId == null) throw ArgumentError('There is no suggested party to accept.');
-          final party = await _findRoleCompatibleParty(suggestedId, expectedRole);
-          partyId = party.id;
-          partyName = party.name;
-          partyRole = _roleToDatabase(expectedRole);
-          break;
-        case LegacyPartyReviewAction.selectParty:
-          final selectedId = decision.selectedPartyId;
-          if (selectedId == null || selectedId.trim().isEmpty) {
-            throw ArgumentError('selectParty requires a party ID.');
-          }
-          final party = await _findRoleCompatibleParty(selectedId, expectedRole);
-          partyId = party.id;
-          partyName = party.name;
-          partyRole = _roleToDatabase(expectedRole);
-          break;
-      }
-
-      final previous = await _database.customSelect(
-        'SELECT decision_id, sequence FROM legacy_party_review_decisions '
-        'WHERE run_id = ? AND source_occurrence_key = ? '
-        'ORDER BY sequence DESC LIMIT 1',
-        variables: [Variable.withString(request.runId),
-          Variable.withString(decision.sourceOccurrenceKey)],
-      ).getSingleOrNull();
-      final sequence = previous == null ? 1 : previous.read<int>('sequence') + 1;
-      final previousId = previous?.read<String>('decision_id');
-      final decisionId = _uuid.v4();
-      await _database.customStatement(
-        'INSERT INTO legacy_party_review_decisions (decision_id, run_id, '
-        'source_occurrence_key, sequence, previous_decision_id, action, expected_role, '
-        'resolved_party_id, resolved_party_name, resolved_party_role, reviewer_id, '
-        'decided_at, review_note, idempotency_key, request_fingerprint) '
-        'VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
-        [decisionId, request.runId, decision.sourceOccurrenceKey, sequence,
-          previousId, decision.action.name, expectedRoleValue, partyId, partyName,
-          partyRole, decision.reviewerId.trim(),
-          decision.decidedAtUtc.millisecondsSinceEpoch, note,
-          request.idempotencyKey.trim(), fingerprint],
-      );
       return LegacyPartyReviewDecisionResult(
-        runId: request.runId,
-        sourceOccurrenceKey: decision.sourceOccurrenceKey,
-        decisionId: decisionId,
-        sequence: sequence,
-        wasIdempotentReplay: false,
+        runId: duplicate.read<String>('run_id'),
+        sourceOccurrenceKey: duplicate.read<String>('source_occurrence_key'),
+        decisionId: duplicate.read<String>('decision_id'),
+        sequence: duplicate.read<int>('sequence'),
+        wasIdempotentReplay: true,
       );
-    }));
+    }
+
+    final run = await _database.customSelect(
+      'SELECT snapshot_sha256 FROM legacy_migration_runs WHERE run_id = ?',
+      variables: [Variable.withString(request.runId)],
+    ).getSingleOrNull();
+    if (run == null) throw StateError('Migration run does not exist.');
+    if (run.read<String>('snapshot_sha256') != decision.snapshotSha256) {
+      throw ArgumentError('Review decision belongs to a different snapshot.');
+    }
+    final occurrence = await _database.customSelect(
+      'SELECT expected_role, suggested_party_id FROM legacy_migration_occurrences '
+      'WHERE run_id = ? AND source_occurrence_key = ?',
+      variables: [
+        Variable.withString(request.runId),
+        Variable.withString(decision.sourceOccurrenceKey),
+      ],
+    ).getSingleOrNull();
+    if (occurrence == null) {
+      throw ArgumentError('Review decision references an unknown occurrence.');
+    }
+
+    final expectedRoleValue = occurrence.data['expected_role'] as String?;
+    final expectedRole = _roleFromDatabase(expectedRoleValue);
+    String? partyId;
+    String? partyName;
+    String? partyRole;
+    switch (decision.action) {
+      case LegacyPartyReviewAction.keepHeld:
+        if (decision.selectedPartyId != null) {
+          throw ArgumentError('keepHeld must not select a party.');
+        }
+        break;
+      case LegacyPartyReviewAction.acceptSuggestedMatch:
+        if (decision.selectedPartyId != null) {
+          throw ArgumentError('acceptSuggestedMatch must not supply a party ID.');
+        }
+        final suggestedId = occurrence.data['suggested_party_id'] as String?;
+        if (suggestedId == null) {
+          throw ArgumentError('There is no suggested party to accept.');
+        }
+        final party = await _findRoleCompatibleParty(suggestedId, expectedRole);
+        partyId = party.id;
+        partyName = party.name;
+        partyRole = _roleToDatabase(expectedRole);
+        break;
+      case LegacyPartyReviewAction.selectParty:
+        final selectedId = decision.selectedPartyId;
+        if (selectedId == null || selectedId.trim().isEmpty) {
+          throw ArgumentError('selectParty requires a party ID.');
+        }
+        final party = await _findRoleCompatibleParty(selectedId, expectedRole);
+        partyId = party.id;
+        partyName = party.name;
+        partyRole = _roleToDatabase(expectedRole);
+        break;
+    }
+
+    final previous = await _database.customSelect(
+      'SELECT decision_id, sequence FROM legacy_party_review_decisions '
+      'WHERE run_id = ? AND source_occurrence_key = ? '
+      'ORDER BY sequence DESC LIMIT 1',
+      variables: [
+        Variable.withString(request.runId),
+        Variable.withString(decision.sourceOccurrenceKey),
+      ],
+    ).getSingleOrNull();
+    final sequence = previous == null ? 1 : previous.read<int>('sequence') + 1;
+    final previousId = previous?.read<String>('decision_id');
+    final decisionId = _uuid.v4();
+    await _database.customStatement(
+      'INSERT INTO legacy_party_review_decisions (decision_id, run_id, '
+      'source_occurrence_key, sequence, previous_decision_id, action, expected_role, '
+      'resolved_party_id, resolved_party_name, resolved_party_role, reviewer_id, '
+      'decided_at, review_note, idempotency_key, request_fingerprint) '
+      'VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+      [
+        decisionId,
+        request.runId,
+        decision.sourceOccurrenceKey,
+        sequence,
+        previousId,
+        decision.action.name,
+        expectedRoleValue,
+        partyId,
+        partyName,
+        partyRole,
+        decision.reviewerId.trim(),
+        decision.decidedAtUtc.millisecondsSinceEpoch,
+        note,
+        request.idempotencyKey.trim(),
+        fingerprint,
+      ],
+    );
+    return LegacyPartyReviewDecisionResult(
+      runId: request.runId,
+      sourceOccurrenceKey: decision.sourceOccurrenceKey,
+      decisionId: decisionId,
+      sequence: sequence,
+      wasIdempotentReplay: false,
+    );
   }
 
   Future<LegacyPartyReviewJournalRun> _readRun(String runId) async {
@@ -368,6 +424,23 @@ class LegacyPartyReviewJournalRepository {
       createdByActorId: run.read<String>('created_by_actor_id'),
       occurrences: occurrences,
     );
+  }
+
+  Future<bool> _partyHasRole(
+    String? partyId,
+    LedgerPartyRole? role,
+  ) async {
+    if (partyId == null || role == null) return false;
+    final row = await _database.customSelect(
+      'SELECT 1 AS present FROM parties p '
+      'JOIN party_roles pr ON pr.party_id = p.party_id '
+      'WHERE p.party_id = ? AND pr.role = ?',
+      variables: [
+        Variable.withString(partyId),
+        Variable.withString(_roleToDatabase(role)!),
+      ],
+    ).getSingleOrNull();
+    return row != null;
   }
 
   Future<({String id, String name})> _findRoleCompatibleParty(
