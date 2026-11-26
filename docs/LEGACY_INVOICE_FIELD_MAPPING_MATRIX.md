@@ -105,3 +105,17 @@ Unknown JSON keys are not represented in the current `Invoice` or `Product` mode
 Before D4 schema implementation, agree the unresolved field rules and build a field-level mapping test fixture from representative legacy records. Then bind the approved mapping contract version to the execution run and its idempotency key.
 
 No code, schema, or data changes are authorized by this matrix.
+
+## 8. Owner decision — blank required text fields
+
+**Decision approved by the owner on 2026-11-26: hold for human review.**
+
+The following values must be classified as requiring human review when empty or whitespace-only:
+- legacy invoice `id`;
+- legacy invoice `invoiceSerial`;
+- legacy invoice `customerName`;
+- legacy product `name` on any invoice line.
+
+The importer must not invent replacement values, silently trim-and-substitute a different business value, discard the affected field, or import the occurrence as ready. Preserve the exact original value in the immutable source snapshot and emit a stable, field-specific preflight finding. A human correction, if later supported, must be explicit, authorized, attributable, and auditable; it must not mutate the original source evidence.
+
+This decision resolves item 1 in section 6. The other field-mapping decisions remain open.
