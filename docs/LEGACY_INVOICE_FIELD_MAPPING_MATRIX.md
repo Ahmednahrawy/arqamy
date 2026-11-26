@@ -182,3 +182,11 @@ This decision does not change party resolution or role validation requirements a
 Preserve the exact original `formattedDate` and `formattedTime` strings in the immutable source snapshot. After the supported formats and timezone semantics have been explicitly established and tested, convert the combined value into the existing `issued_at` field. Do not add separate structured date or time columns solely for this migration. Reconsider separate columns only if a distinct business requirement requires them.
 
 This decision does not relax the approved hold policy for invalid or unrecognized formats and does not authorize implementation.
+
+## 15. Owner decision — invoice total must match product line totals
+
+**Decision approved by the owner on 2026-11-26: hold the entire occurrence for human review when the invoice total does not match the sum of its calculated product line totals.**
+
+Preserve the original `totalCost` and every original product-line value exactly in the immutable source snapshot. Do not recalculate or overwrite the invoice total, change line values, omit lines, or silently adjust rounding to force agreement. Emit a stable finding that identifies the invoice-total/line-total mismatch and includes the compared values in the audit report where safely representable. Any later correction, if supported, must be explicit, authorized, attributable, and auditable without mutating the original source evidence.
+
+This policy applies to the migration validation boundary; it does not authorize implementation. The mapping contract must still define the exact comparison arithmetic and precision before implementation, so the same source values produce deterministic findings.
