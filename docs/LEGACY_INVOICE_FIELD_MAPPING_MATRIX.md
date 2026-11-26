@@ -20,7 +20,7 @@
 | `rest` | Required finite number | `legacy_remaining_value` text | Preserve as historical invoice aggregate only. Current audit checks consistency with absolute total minus paid. Do not infer physical money movement. |
 | `formattedDate` | Required string; semantic format validation is not yet implemented | No current structured mapping; `issued_at` remains unset until date/time and timezone rules are established | Owner-approved policy: preserve the exact original string and hold occurrences with invalid or unrecognized formats. Do not guess locale, date order, timezone, or convert ambiguous dates. Populate `issued_at` only after supported formats and timezone semantics are explicitly established. |
 | `formattedTime` | Required string; semantic format validation is not yet implemented | No dedicated destination field; retain the exact original string in source evidence | Owner-approved policy: preserve the exact original string and hold occurrences with invalid or unrecognized formats. Do not guess timezone or combine date and time by guesswork. Populate `issued_at` only after supported formats and timezone semantics are explicitly established. |
-| `invoiceAction` | Optional string/null structurally; audit rejects unknown/null values | `legacy_action` plus normalized `action` enum | Arabic stored values are stable: purchase = شراء, sale = بيع, storage = تخزين. Preserve exact legacy action. Unknown action must remain held; never default it to sale/customer. |
+| `invoiceAction` | Current UI requires an action selection, but historical persisted data still requires defensive validation; structurally may be null or contain an unsupported value | `legacy_action` plus normalized `action` enum | Recognized values: purchase = شراء, sale = بيع, storage = تخزين. Owner-approved rule: null, empty, or unrecognized values are held for human review. Preserve the exact original value and emit a stable finding. Never infer an action from customer, products, or amounts, and never apply a default action. |
 | `invoiceSerial` | Required string; blank value is not currently rejected | `invoices.invoice_serial` | Preserve as historical serial. Do not impose uniqueness unless separately justified; duplicate serials must not merge occurrences. |
 
 ## 2. Product field mapping
@@ -98,7 +98,7 @@ Unknown JSON keys are not represented in the current `Invoice` or `Product` mode
 3. Which exact date/time formats and timezone semantics are present in representative source values? The hold/preserve/no-guess policy is approved; the formats and timezone required to populate `issued_at` remain to be established.
 4. Owner-approved: a party that is missing, lacks the required role, or has a mismatched role keeps the occurrence held for human review. Do not auto-create a party or assign/change a role during migration.
 5. Which fields must be represented in structured Drift columns versus retained only in source evidence? At minimum, date/time and original customer display name need an explicit decision if they must be queryable without decoding source JSON.
-6. What is the treatment of any legacy invoice action value outside the three stable Arabic values? Recommended: hold; never coerce.
+6. Owner-approved: null, empty, or unrecognized legacy invoice actions are held for human review; never infer or default an action. The current UI's required selection does not remove the need to validate historical persisted data.
 
 ## 7. Recommendation
 
@@ -158,3 +158,11 @@ This decision resolves the party/role policy question in section 6. It does not 
 Preserve the exact original `formattedDate` and `formattedTime` strings in the immutable source snapshot. Hold an invoice occurrence when either value uses an invalid or unrecognized format. Do not guess date order, locale, timezone, or automatically convert an ambiguous date/time value. Populate Drift `issued_at` only after the supported source formats and timezone semantics have been explicitly established and covered by tests.
 
 This decision defines the safe handling policy; it does not yet establish the actual source formats or timezone, and it does not authorize implementation.
+
+## 12. Owner decision — invoice action validation
+
+**Decision approved by the owner on 2026-11-26: hold invalid or unrecognized historical values for human review.**
+
+The recognized legacy action values are `شراء` (purchase), `بيع` (sale), and `تخزين` (storage). If `invoiceAction` is null, empty, or contains an unrecognized value, hold the entire invoice occurrence and emit a stable validation finding. Preserve the exact original value in the immutable source snapshot. Do not infer an action from the customer, products, or amounts, and do not assign a default action.
+
+The current application UI requires the user to select an action when creating an invoice. This rule is a defensive check for historical persisted data and alternate, older, malformed, or corrupted records; it does not imply that the current UI permits actionless invoice creation. This is a design decision only and does not authorize implementation.
