@@ -710,8 +710,45 @@ Future<void> _runProductionUpgradeInOuterTransaction(
     // visibility. Migrator's constructor is public in the pinned Drift API.
     await database.migration.onUpgrade(Migrator(database), from, 8);
 
+    // Rebuilding a referenced parent table while deferred foreign keys are
+    // enabled can leave SQLite's internal deferred-FK counter nonzero even
+    // when the final schema has no violations. Validate the complete final
+    // database before clearing that counter.
+    final foreignKeyViolations = await database
+        .customSelect('PRAGMA foreign_key_check')
+        .get();
+    expect(
+      foreignKeyViolations,
+      isEmpty,
+      reason: 'Migration left foreign-key violations: $foreignKeyViolations',
+    );
+
+    final integrityResults = await database
+        .customSelect('PRAGMA integrity_check')
+        .get();
+    expect(
+      integrityResults.map((row) => row.read<String>('integrity_check')),
+      ['ok'],
+      reason: 'Migration failed SQLite integrity_check',
+    );
+
+    // This resets SQLite's deferred-FK counter. It does not disable foreign
+    // key enforcement; the full FK check above is the validation gate.
+    await database.customStatement('PRAGMA defer_foreign_keys = OFF');
+    expect(
+      (await database.customSelect('PRAGMA defer_foreign_keys').getSingle())
+          .read<int>('defer_foreign_keys'),
+      0,
+    );
+    expect(
+      (await database.customSelect('PRAGMA foreign_keys').getSingle())
+          .read<int>('foreign_keys'),
+      1,
+    );
+
     // Direct callback invocation bypasses Drift's automatic user_version
-    // update. Emulate that final part of opening a migrated database.
+    // update. Emulate that final part of opening a migrated database only
+    // after all migration validation gates have passed.
     await database.customStatement('PRAGMA user_version = 8');
   });
 }
