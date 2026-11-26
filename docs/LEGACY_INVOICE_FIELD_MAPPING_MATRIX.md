@@ -28,10 +28,10 @@
 | Legacy product JSON field | Legacy model / preflight rule | Current Drift destination | Current behavior and D4 requirement |
 |---|---|---|---|
 | `name` | Required string; blank value not currently rejected | `invoice_lines.product_name` | Preserve exact source text; define whether blank names are held. |
-| `weight` | Required finite number | `quantity_decimal` text | Existing mapper stores `weight.toString()`. Product net weight is `weight - packageWeight × numberPackage`. Define accepted sign/range/precision; current preflight does not reject negative or excessive precision. |
-| `packageWeight` | Required finite number | `package_weight_decimal` text | Existing mapper stores `packageWeight.toString()`. Define accepted sign/range/precision; current preflight does not validate business semantics. |
-| `numberPackage` | Required integer | `package_count` | Existing Drift column has a non-negative check, but preflight currently checks integer type only, not non-negativity. Negative values must be held before insert. |
-| `price` | Required finite number | `unit_price_decimal` text | Existing mapper stores `price.toString()`. Define accepted sign/range/precision. Do not assume negative prices are valid. |
+| `weight` | Required finite number | `quantity_decimal` text | Existing mapper stores `weight.toString()`. Product net weight is `weight - packageWeight × numberPackage`. Owner-approved rule: any negative value is held for human review. Non-negative range/precision limits remain to be defined. |
+| `packageWeight` | Required finite number | `package_weight_decimal` text | Existing mapper stores `packageWeight.toString()`. Owner-approved rule: any negative value is held for human review. Non-negative range/precision limits remain to be defined. |
+| `numberPackage` | Required integer | `package_count` | Existing Drift column has a non-negative check, but preflight currently checks integer type only, not non-negativity. Owner-approved rule: negative values are held for human review before insert. |
+| `price` | Required finite number | `unit_price_decimal` text | Existing mapper stores `price.toString()`. Owner-approved rule: any negative value is held for human review. Non-negative range/precision limits remain to be defined. |
 | Computed line total | Not a stored legacy JSON field; model computes `(weight - packageWeight × numberPackage) × price` | `line_total_minor` | Existing planner uses `Money.fromDouble` with 2-decimal half-away-from-zero rounding. Audit compares sum of rounded line totals with invoice total. Any out-of-range result is held. |
 | Runtime `lineTotalOverride` | Optional model-only field; not serialized by the legacy invoice JSON writer | No direct migration field | Not a source field in the persisted JSON contract. Do not infer or recreate it during migration. |
 
@@ -76,7 +76,7 @@ The current preflight checks required field types, but these values can still pa
 - empty or whitespace-only customer name;
 - empty or whitespace-only product name;
 - negative package count (integer type passes preflight, although Drift rejects it);
-- negative weight, package weight, or unit price;
+- negative weight, package weight, package count, or unit price;
 - unsupported measurement precision;
 - invalid date/time strings;
 - invoice values whose decimal representation is not safely convertible under the approved money policy.
@@ -94,7 +94,7 @@ Unknown JSON keys are not represented in the current `Invoice` or `Product` mode
 ## 6. Required owner decisions before mapping implementation
 
 1. Should blank invoice IDs, serials, customer names, or product names always be held? Recommended: yes.
-2. What sign/range/precision rules apply to weight, package weight, package count, and unit price? Recommended: hold negative values and unsupported precision pending explicit product-domain rules.
+2. What non-negative range/precision limits apply to weight, package weight, package count, and unit price? Negative values are already owner-approved as held for human review; unsupported precision and upper bounds remain open.
 3. What are the actual persisted date/time formats and timezone semantics? This requires examining representative source values; do not assume locale or UTC.
 4. Should a valid legacy invoice with a party ID but no matching party role remain held? Recommended: yes; do not auto-create the role.
 5. Which fields must be represented in structured Drift columns versus retained only in source evidence? At minimum, date/time and original customer display name need an explicit decision if they must be queryable without decoding source JSON.
@@ -119,3 +119,18 @@ The following values must be classified as requiring human review when empty or 
 The importer must not invent replacement values, silently trim-and-substitute a different business value, discard the affected field, or import the occurrence as ready. Preserve the exact original value in the immutable source snapshot and emit a stable, field-specific preflight finding. A human correction, if later supported, must be explicit, authorized, attributable, and auditable; it must not mutate the original source evidence.
 
 This decision resolves item 1 in section 6. The other field-mapping decisions remain open.
+
+
+## 9. Owner decision — negative product values
+
+**Decision approved by the owner on 2026-11-26: hold for human review.**
+
+A source invoice occurrence must be held if any product line contains a negative value in any of these fields:
+- `weight`;
+- `packageWeight`;
+- `numberPackage`;
+- `price`.
+
+Preflight must emit a stable, field-specific finding identifying the affected line and field. Do not clamp values to zero, take absolute values, omit the line, or otherwise auto-correct the source. Preserve the exact original values in the immutable source snapshot. A later correction, if supported, must be explicit, authorized, attributable, and auditable without mutating source evidence.
+
+This rule applies before mapping or database constraints, including negative package counts that the current Drift schema would also reject. It does not establish upper bounds, precision rules, or other non-negative product-domain constraints; those remain open. This is a design decision only and does not authorize implementation.
