@@ -305,3 +305,9 @@ The calculated value is:
 Preflight must emit a stable finding identifying the source occurrence and affected product line. Preserve exact original component values in immutable source evidence. Do not assume the line is intentionally free, remove or omit it, substitute values, clamp the result, or silently alter the calculation. Any later disposition must be explicit, authorized, attributable, and auditable without mutating original source evidence.
 
 This rule applies even if the individual inputs and calculated net weight pass their separate validations. Use the approved safe arithmetic/range/precision contract, which must be defined and tested before implementation. Design only; this does not authorize schema changes, importer implementation, or production migration execution.
+
+## Owner-approved validation policy — duplicate invoice serials
+
+On 2026-11-26, the owner approved that duplicate legacy `invoiceSerial` values must not, by themselves, hold an invoice occurrence or merge distinct source occurrences.
+
+Keep each source occurrence separate using its stable source-occurrence identity; never use the serial as the migration identity. Preserve the original serial value on each invoice and report duplicate serials as a non-blocking audit finding for operator visibility. Other independent validation findings may still hold an occurrence. This is a design policy only and does not authorize implementation.
