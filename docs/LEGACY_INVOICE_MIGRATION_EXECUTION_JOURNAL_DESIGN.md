@@ -471,3 +471,9 @@ The current application UI requires the user to select an action when creating a
 On 2026-11-26, the owner approved this treatment for the legacy invoice `customerName` field: the resolved `party_id` and `party_role` remain authoritative; preserve the exact original display name in the immutable source snapshot and retain it in normalized `source_json` as supporting evidence. Do not add a dedicated invoice column solely for this migration. Reconsider a structured column only if a separate business requirement requires historical-name search or reporting.
 
 This policy does not change the requirement to validate the effective party-review decision and current party role immediately before import. Design only; no schema or importer implementation is authorized.
+
+## Owner-approved date/time destination mapping policy
+
+On 2026-11-26, the owner approved this destination strategy for legacy invoice date/time: preserve the exact original `formattedDate` and `formattedTime` strings in the immutable source snapshot. Once the supported source formats and timezone semantics have been established and tested, convert the combined value into the existing Drift `issued_at` field. Do not add separate structured date or time columns solely for this migration; reconsider only if a separate business requirement justifies them.
+
+Invalid or unrecognized values remain held, and ambiguous values must not be guessed or automatically converted. Design only; no schema or importer implementation is authorized.
