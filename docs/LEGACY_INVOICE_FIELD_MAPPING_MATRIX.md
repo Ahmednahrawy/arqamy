@@ -12,8 +12,8 @@
 | Legacy JSON field | Legacy model / preflight rule | Current Drift destination | Current behavior and D4 requirement |
 |---|---|---|---|
 | `id` | Required string by preflight; not currently checked for non-empty/trimmed value | `invoices.legacy_invoice_id`; destination `invoice_id` is newly generated | Preserve legacy ID as historical metadata. Generate a new destination ID. Never use legacy ID alone as migration identity. Blank IDs require held classification. |
-| `customerName` | Required string; blank value is not currently rejected | No dedicated invoice display-name column; party identity is stored in `party_id` and `party_role`; normalized JSON remains in `source_json` | Require an explicit effective party decision and role. Preserve original display text in immutable raw snapshot; optionally preserve normalized JSON as convenience evidence. Do not create or rename parties automatically. |
-| `customerId` | Optional string/null by structural parser; current audit flags null as `noCustomerId` | `invoices.party_id` after approved resolution | Treat as a suggestion/reference, not proof of role. Validate party exists and has the approved role at import time. Stale/missing/wrong-role values remain held. |
+| `customerName` | Required string; blank value is not currently rejected | No dedicated invoice display-name column; party identity is stored in `party_id` and `party_role`; normalized JSON remains in `source_json` | Require an explicit effective party decision and role. The referenced party must exist and have the exact required role at import time; missing parties, missing roles, or mismatched roles keep the occurrence held. Do not create parties or assign/change roles automatically. Preserve original display text in immutable raw snapshot; optionally preserve normalized JSON as convenience evidence. |
+| `customerId` | Optional string/null by structural parser; current audit flags null as `noCustomerId` | `invoices.party_id` after approved resolution | Treat as a suggestion/reference, not proof of role. Validate party exists and has the approved role at import time. Missing party, missing required role, stale decision, or wrong role remains held for explicit human review; never create a party or assign/change its role automatically. |
 | `products` | Required list; each element must be object | One or more `invoice_lines` rows | Preserve source array order as `line_index`. Every line must commit with its invoice and occurrence mapping. Empty list is held by current audit. |
 | `totalCost` | Required finite number | `total_minor` plus `legacy_total_value` | Existing planner converts with `Money.fromDouble` (2 decimals, half away from zero) and preserves decimal text. Current audit flags precision beyond 2 decimals, out-of-range, negative/zero, and mismatch with rounded line totals. Production mapping must not silently round a held record. |
 | `paid` | Required finite number | `legacy_paid_value` text | Preserve as historical invoice aggregate only. Never synthesize a cash event, payment, allocation, refund, or accounting posting. Current audit flags negative, overpaid, excess precision, and out-of-range values. |
@@ -96,7 +96,7 @@ Unknown JSON keys are not represented in the current `Invoice` or `Product` mode
 1. Should blank invoice IDs, serials, customer names, or product names always be held? Recommended: yes.
 2. What non-negative range/precision limits apply to weight, package weight, package count, and unit price? Negative values are already owner-approved as held for human review; unsupported precision and upper bounds remain open.
 3. What are the actual persisted date/time formats and timezone semantics? This requires examining representative source values; do not assume locale or UTC.
-4. Should a valid legacy invoice with a party ID but no matching party role remain held? Recommended: yes; do not auto-create the role.
+4. Owner-approved: a party that is missing, lacks the required role, or has a mismatched role keeps the occurrence held for human review. Do not auto-create a party or assign/change a role during migration.
 5. Which fields must be represented in structured Drift columns versus retained only in source evidence? At minimum, date/time and original customer display name need an explicit decision if they must be queryable without decoding source JSON.
 6. What is the treatment of any legacy invoice action value outside the three stable Arabic values? Recommended: hold; never coerce.
 
@@ -134,3 +134,18 @@ A source invoice occurrence must be held if any product line contains a negative
 Preflight must emit a stable, field-specific finding identifying the affected line and field. Do not clamp values to zero, take absolute values, omit the line, or otherwise auto-correct the source. Preserve the exact original values in the immutable source snapshot. A later correction, if supported, must be explicit, authorized, attributable, and auditable without mutating source evidence.
 
 This rule applies before mapping or database constraints, including negative package counts that the current Drift schema would also reject. It does not establish upper bounds, precision rules, or other non-negative product-domain constraints; those remain open. This is a design decision only and does not authorize implementation.
+
+
+## 10. Owner decision — party and role must already be valid
+
+**Decision approved by the owner on 2026-11-26: hold for human review.**
+
+An invoice occurrence must remain held if its referenced party:
+- does not exist;
+- does not have the required party role;
+- has a role that does not match the invoice action or approved party-resolution decision; or
+- no longer matches the effective, current party-review decision at import time.
+
+The migration must not create a missing party, add a missing role, change an existing role, or infer a replacement party automatically. Release from hold requires an explicit, authorized, attributable, and immutable review decision, followed by revalidation immediately before import. The source snapshot remains unchanged.
+
+This decision resolves the party/role policy question in section 6. It does not authorize changes to the existing party-review journal or importer implementation.
