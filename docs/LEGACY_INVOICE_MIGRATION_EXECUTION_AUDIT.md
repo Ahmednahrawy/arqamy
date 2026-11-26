@@ -345,3 +345,8 @@ If two or more source occurrences contain the same legacy invoice `id`, but have
 - Use the stable source-occurrence key, not the legacy invoice ID, as the migration identity and idempotency basis.
 - Preserve each original legacy invoice ID as diagnostic historical metadata.
 - This policy does not override holds caused by other independently approved validation findings, and it does not authorize implementation or migration execution.
+
+
+## 10. Schema v8 status vocabulary approval
+
+On 2026-11-26, the owner approved the database-enforced run statuses (`prepared, executing, execution_blocked, execution_complete, reconciling, reconciliation_failed, reconciled, accepted, aborted`), occurrence statuses (`preflighted, ready, held, excluded, claimed, imported, retryable_failure, permanent_failure, conflict, reconciled, reconciliation_failed`), and attempt outcomes (`imported, already_imported, retryable_failure, permanent_failure, conflict, abandoned`). These value lists do not replace repository-level transition validation. Schema v8 implementation, generated Drift code, and schema-focused tests are authorized; importer and production migration remain excluded.
