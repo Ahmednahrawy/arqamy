@@ -2,40 +2,32 @@
 
 **Repository:** `Ahmednahrawy/arqamy`  
 **Target branch:** `main`  
-**Design status:** Proposal for owner review  
-**Implementation status:** Not authorized by this document  
-**Baseline main commit inspected:** `e5a223dd11f8624db1e9b75432a75ca4915ef455`  
+**Design status:** Implemented in part; retained as the design record  
+**Implementation status:** D3.1/D3.2 persistence implementation is merged into `main`; this document does not authorize further implementation  
+**Current implementation baseline:** `main` merge commit `271d330`; schema version 7  
 **Scope:** Persist the human review decisions produced by the occurrence-based legacy invoice party-resolution workflow.
 
 ---
 
 ## 1. Purpose and decision boundary
 
-Stages A–C establish a verified raw snapshot, record-level preflight, and deterministic source-occurrence identities. Stage D1 plans party resolution per occurrence. Stage D2 applies explicit review decisions in memory.
+Stages A–C establish a verified raw snapshot, record-level preflight, and deterministic source-occurrence identities. Stage D1 plans party resolution per occurrence. Stage D2 applies explicit review decisions in memory. Stage D3's persistent party-review journal has now been implemented through D3.1/D3.2 and merged into `main`.
 
-Stage D2 deliberately does not persist decisions. Stage D3 proposes a durable, auditable journal so that a reviewer can leave and resume work, decisions survive app restarts, and later review changes do not erase prior decisions.
+This document records the design and implemented behavior. The implementation is intentionally limited to migration-run metadata, frozen occurrence/review snapshots, and append-only party-review decisions. It does **not** implement UI/startup integration, party creation, role assignment, invoice linking, invoice import, or changes to SharedPreferences business data. Those activities require separate design review and approval.
 
-This is a schema and workflow proposal only. It does **not** authorize:
-- Drift table or SQL changes;
-- a schema-version increase or generated Drift code changes;
-- persistence/repository implementation;
-- UI, startup, or migration-workflow integration;
-- creating parties, assigning roles, linking invoices, or importing invoices;
-- changing SharedPreferences or existing business data.
+## 2. Current implementation baseline
 
-Those changes require separate approval after this proposal is reviewed.
+The implementation is present on `main` at merge commit `271d330`. `AppDatabase` is at schema version **7**.
 
-## 2. Current baseline inspected
+- Persistent tables: `legacy_migration_runs`, `legacy_migration_occurrences`, and `legacy_party_review_decisions`.
+- `LegacyPartyReviewJournalRepository` persists run metadata, frozen preflight/resolution snapshots, and append-only decision events.
+- Decision writes include idempotency keys, request fingerprints, sequence/predecessor relationships, actor metadata, and atomic batch handling.
+- D3.2 adds a schema-v6-to-v7 trigger migration that validates accepted suggested matches against resolved preflight statuses.
+- The repository validates that every occurrence belongs to the run's snapshot and that resolved suggestions contain a complete party identity and role.
 
-The design was checked against current `main` before drafting:
+The journal does not integrate a production review UI or perform invoice-import side effects. It does not create parties, assign roles, link invoices, import invoices, or modify existing business transactions.
 
-- `LegacyInvoicePartyResolutionPlanner` produces one resolution per source occurrence and carries the snapshot digest, occurrence key, source index, expected party role, suggested party, and candidate IDs.
-- `LegacyInvoicePartyResolutionReview` validates decisions in memory against the snapshot digest and occurrence key. It supports accepting a suggested match, selecting an existing party, or keeping an occurrence held.
-- The current decision model carries reviewer ID and UTC decision time, but no durable decision ID, sequence, idempotency key, reason, or supersession link.
-- `AppDatabase` is at schema version 5. It already has party and party-role tables and uses append-only triggers for important financial records.
-- The current Drift invoice table is not a party-review journal. Its existing legacy invoice key must not be repurposed as source-occurrence identity.
-
-No existing persistent migration-review journal was found in the inspected source.
+The owner-reported full local validation on this baseline is `flutter analyze` clean and **362 tests passed**.
 
 ## 3. Design principles
 
