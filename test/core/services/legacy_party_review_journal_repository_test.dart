@@ -145,7 +145,8 @@ void main() {
     final summary = await repository.getSummary('run-1');
     expect(summary.totalOccurrences, 3);
     expect(summary.approvedCount, 0);
-    expect(summary.heldCount, 3);
+    expect(summary.heldCount, 0);
+    expect(summary.staleCount, 0);
     expect(summary.reviewedCount, 0);
     expect(summary.unreviewedCount, 3);
   });
