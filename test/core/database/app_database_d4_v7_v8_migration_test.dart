@@ -58,6 +58,7 @@ void main() {
   test(
     'rolls back a v7 to v8 table collision and succeeds on a clean retry',
     () async {
+      await _dropD4Schema(database);
       await database.customStatement(
         "INSERT INTO currencies VALUES ('EGP', 2, 'Egyptian pound')",
       );
