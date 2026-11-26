@@ -51,7 +51,7 @@ void main() {
     await temporaryDirectory.delete(recursive: true);
   });
 
-  test('initializes the ledger schema with version 6', () async {
+  test('initializes the ledger schema with version 7', () async {
     expect(database.schemaVersion, 7);
     expect(await database.storedSchemaVersion, 7);
 
