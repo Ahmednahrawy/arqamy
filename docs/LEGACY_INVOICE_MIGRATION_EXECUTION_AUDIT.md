@@ -208,3 +208,14 @@ The actual source formats and timezone semantics remain to be established from r
 On 2026-11-26, the owner approved this D4 policy for historical `invoiceAction` values. The recognized values are `شراء` (purchase), `بيع` (sale), and `تخزين` (storage). A null, empty, or unrecognized value must hold the entire invoice occurrence for human review and produce a stable validation finding. Preserve the exact original value in the immutable source snapshot. Never infer an action from the customer, products, or amounts, and never assign a default action.
 
 The current application UI requires an action selection for new invoices. This defensive migration validation protects against older persisted records, alternate write paths, malformed data, and corruption; it does not imply that the current UI permits actionless invoice creation. This is policy documentation only and does not authorize implementation.
+
+## 21. Owner-approved field mapping decision — original customer display name
+
+On 2026-11-26, the owner approved the following handling for legacy `customerName`:
+
+- `party_id` and `party_role` remain the authoritative invoice-party relationship.
+- Preserve the exact original customer display name in the immutable source snapshot.
+- Retain the original name in normalized `source_json` as supporting evidence.
+- Do not add a dedicated invoice column solely for this migration. Reconsider only if a separate business requirement establishes a need for historical-name search or reporting.
+
+This is a mapping policy only. It does not authorize schema or importer implementation.
