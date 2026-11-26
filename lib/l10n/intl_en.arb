@@ -224,6 +224,8 @@
   "product_updated_successfully": "Product updated successfully",
   "product_deleted_successfully": "Product deleted",
   "could_not_add_product": "Could not add the product",
+  "product_already_exists": "A product with this name already exists",
+  "invalid_default_price": "Enter a default price of zero or more",
   "could_not_update_product": "Could not update the product",
   "could_not_delete_product": "Could not delete the product",
   "no_products": "No products",

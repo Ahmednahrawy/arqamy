@@ -16,6 +16,9 @@ class ProductManagementScreen extends StatefulWidget {
 
 class _ProductManagementScreenState extends State<ProductManagementScreen> {
   final TextEditingController _addController = TextEditingController();
+  final Map<InvoiceAction, TextEditingController> _addPriceControllers = {
+    for (final action in InvoiceAction.values) action: TextEditingController(),
+  };
   final TextEditingController _editController = TextEditingController();
   final TextEditingController _searchController = TextEditingController();
   String _searchQuery = '';
@@ -32,6 +35,9 @@ class _ProductManagementScreenState extends State<ProductManagementScreen> {
   @override
   void dispose() {
     _addController.dispose();
+    for (final controller in _addPriceControllers.values) {
+      controller.dispose();
+    }
     _editController.dispose();
     _searchController.dispose();
     super.dispose();
@@ -70,52 +76,125 @@ class _ProductManagementScreenState extends State<ProductManagementScreen> {
 
   void _showAddDialog() {
     _addController.clear();
+    for (final controller in _addPriceControllers.values) {
+      controller.clear();
+    }
     final messenger = ScaffoldMessenger.of(context);
     final strings = S.of(context);
     showDialog(
       context: context,
       builder: (dialogContext) => AlertDialog(
         title: Text(strings.add_new_product),
-        content: TextField(
-          controller: _addController,
-          decoration: InputDecoration(
-            hintText: strings.productName,
-            border: const OutlineInputBorder(),
+        content: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              TextField(
+                key: const ValueKey('add-product-name'),
+                controller: _addController,
+                decoration: InputDecoration(
+                  hintText: strings.productName,
+                  border: const OutlineInputBorder(),
+                ),
+                autofocus: true,
+              ),
+              const SizedBox(height: 16),
+              Text(
+                strings.default_price_optional,
+                style: Theme.of(dialogContext).textTheme.labelLarge,
+              ),
+              const SizedBox(height: 8),
+              for (final action in InvoiceAction.values) ...[
+                _buildAddPriceField(action, strings),
+                const SizedBox(height: 8),
+              ],
+            ],
           ),
-          autofocus: true,
         ),
         actions: [
           TextButton(
-            onPressed: () => Navigator.pop(context),
+            onPressed: () => Navigator.pop(dialogContext),
             child: Text(strings.cancel),
           ),
           ElevatedButton(
             onPressed: () async {
-              if (_addController.text.trim().isNotEmpty) {
-                try {
-                  await context.read<InvoiceProvider>().addMasterProduct(
-                    _addController.text,
-                  );
-                  if (!mounted || !dialogContext.mounted) return;
-                  Navigator.pop(dialogContext);
+              final name = _addController.text.trim();
+              if (name.isEmpty) return;
+              if (context.read<InvoiceProvider>().masterProductList.contains(
+                name,
+              )) {
+                showAppSnackBarOn(
+                  messenger,
+                  strings.product_already_exists,
+                  isError: true,
+                );
+                return;
+              }
+
+              final prices = <InvoiceAction, double>{};
+              for (final entry in _addPriceControllers.entries) {
+                final text = entry.value.text.trim();
+                if (text.isEmpty) continue;
+                final parsed = double.tryParse(text);
+                if (parsed == null || !parsed.isFinite || parsed < 0) {
                   showAppSnackBarOn(
                     messenger,
-                    strings.product_added_successfully,
-                  );
-                } catch (error) {
-                  if (!mounted || !messenger.mounted) return;
-                  showAppSnackBarOn(
-                    messenger,
-                    '${strings.could_not_add_product}: $error',
+                    strings.invalid_default_price,
                     isError: true,
                   );
+                  return;
                 }
+                prices[entry.key] = parsed;
+              }
+
+              try {
+                await context.read<InvoiceProvider>().addMasterProduct(
+                  name,
+                  prices: prices,
+                );
+                if (!mounted || !dialogContext.mounted) return;
+                Navigator.pop(dialogContext);
+                showAppSnackBarOn(
+                  messenger,
+                  strings.product_added_successfully,
+                );
+              } catch (error) {
+                if (!mounted || !messenger.mounted) return;
+                showAppSnackBarOn(
+                  messenger,
+                  '${strings.could_not_add_product}: $error',
+                  isError: true,
+                );
               }
             },
             child: Text(strings.addProduct),
           ),
         ],
       ),
+    );
+  }
+
+  Widget _buildAddPriceField(InvoiceAction action, S strings) {
+    return Row(
+      children: [
+        Expanded(child: Text(InvoiceActionL10n.labelFor(action, strings))),
+        SizedBox(
+          width: 140,
+          child: TextField(
+            key: ValueKey('add-product-default-price-${action.name}'),
+            controller: _addPriceControllers[action],
+            textDirection: TextDirection.ltr,
+            textAlign: TextAlign.center,
+            keyboardType: const TextInputType.numberWithOptions(decimal: true),
+            decoration: InputDecoration(
+              hintText: strings.price,
+              isDense: true,
+              border: const OutlineInputBorder(),
+            ),
+          ),
+        ),
+      ],
     );
   }
 

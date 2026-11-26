@@ -43,6 +43,30 @@ void main() {
     expect(cleared.defaultProductPrice('Rice', InvoiceAction.storage), 2);
   });
 
+  test('adding a product stores all of its initial default prices', () async {
+    final provider = InvoiceProvider();
+    await provider.loadMasterProducts();
+
+    await provider.addMasterProduct(
+      'Lentils',
+      prices: {
+        InvoiceAction.purchase: 12.5,
+        InvoiceAction.sale: 15.25,
+        InvoiceAction.storage: 2,
+      },
+    );
+
+    expect(provider.masterProductList, contains('Lentils'));
+    final reloaded = InvoiceProvider();
+    await reloaded.loadMasterProducts();
+    expect(
+      reloaded.defaultProductPrice('Lentils', InvoiceAction.purchase),
+      12.5,
+    );
+    expect(reloaded.defaultProductPrice('Lentils', InvoiceAction.sale), 15.25);
+    expect(reloaded.defaultProductPrice('Lentils', InvoiceAction.storage), 2);
+  });
+
   test('a legacy single price becomes the default for every action', () async {
     SharedPreferences.setMockInitialValues({
       'master_products': json.encode(['a', 'b']),

@@ -536,14 +536,28 @@ class InvoiceProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  // Add new product
-  Future<void> addMasterProduct(String productName) async {
-    if (productName.trim().isNotEmpty &&
-        !_masterProductList.contains(productName.trim())) {
-      _masterProductList.add(productName.trim());
-      await _saveMasterProducts();
-      notifyListeners();
-    }
+  /// Adds a new master product together with its optional default prices.
+  ///
+  /// Both lists are written before notifying listeners, so the product never
+  /// appears without the prices chosen when it was first added.
+  Future<void> addMasterProduct(
+    String productName, {
+    Map<InvoiceAction, double> prices = const {},
+  }) async {
+    final name = productName.trim();
+    if (name.isEmpty || _masterProductList.contains(name)) return;
+
+    _masterProductList.add(name);
+    final validPrices = {
+      for (final entry in prices.entries)
+        if (_isValidDefaultPrice(entry.value)) entry.key: entry.value,
+    };
+    final hadPrices = validPrices.isNotEmpty;
+    if (hadPrices) _masterProductPrices[name] = validPrices;
+
+    await _saveMasterProducts();
+    if (hadPrices) await _saveMasterProductPrices();
+    notifyListeners();
   }
 
   // Edit existing product
