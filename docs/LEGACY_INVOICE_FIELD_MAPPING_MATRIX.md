@@ -18,8 +18,8 @@
 | `totalCost` | Required finite number | `total_minor` plus `legacy_total_value` | Existing planner converts with `Money.fromDouble` (2 decimals, half away from zero) and preserves decimal text. Current audit flags precision beyond 2 decimals, out-of-range, negative/zero, and mismatch with rounded line totals. Production mapping must not silently round a held record. |
 | `paid` | Required finite number | `legacy_paid_value` text | Preserve as historical invoice aggregate only. Never synthesize a cash event, payment, allocation, refund, or accounting posting. Current audit flags negative, overpaid, excess precision, and out-of-range values. |
 | `rest` | Required finite number | `legacy_remaining_value` text | Preserve as historical invoice aggregate only. Current audit checks consistency with absolute total minus paid. Do not infer physical money movement. |
-| `formattedDate` | Required string; no semantic date validation in preflight | No current structured mapping; `issued_at` remains unset by current mapper; normalized `source_json` retains the string | Decide and test supported date formats, locale, timezone, invalid-date behavior, and whether time is local or UTC before populating `issued_at`. Until then, preserve as raw evidence and do not invent a timestamp. |
-| `formattedTime` | Required string; no semantic time validation in preflight | No dedicated destination field; normalized `source_json` retains it | Same date/time policy requirement as above. Do not combine date and time by guesswork. |
+| `formattedDate` | Required string; semantic format validation is not yet implemented | No current structured mapping; `issued_at` remains unset until date/time and timezone rules are established | Owner-approved policy: preserve the exact original string and hold occurrences with invalid or unrecognized formats. Do not guess locale, date order, timezone, or convert ambiguous dates. Populate `issued_at` only after supported formats and timezone semantics are explicitly established. |
+| `formattedTime` | Required string; semantic format validation is not yet implemented | No dedicated destination field; retain the exact original string in source evidence | Owner-approved policy: preserve the exact original string and hold occurrences with invalid or unrecognized formats. Do not guess timezone or combine date and time by guesswork. Populate `issued_at` only after supported formats and timezone semantics are explicitly established. |
 | `invoiceAction` | Optional string/null structurally; audit rejects unknown/null values | `legacy_action` plus normalized `action` enum | Arabic stored values are stable: purchase = شراء, sale = بيع, storage = تخزين. Preserve exact legacy action. Unknown action must remain held; never default it to sale/customer. |
 | `invoiceSerial` | Required string; blank value is not currently rejected | `invoices.invoice_serial` | Preserve as historical serial. Do not impose uniqueness unless separately justified; duplicate serials must not merge occurrences. |
 
@@ -66,7 +66,7 @@ Preflight verifies that weight, package weight, and price are finite numeric val
 
 ### Date and time
 
-The current legacy model stores separate formatted date and time strings. The current mapper does not populate Drift `issued_at`. A production mapping policy must be based on observed source examples and explicit timezone semantics, with tests for valid, invalid, ambiguous, and daylight-saving cases if relevant.
+The current legacy model stores separate formatted date and time strings. The current mapper does not populate Drift `issued_at`. Owner-approved policy: preserve exact original strings and hold occurrences with invalid or unrecognized formats. Do not guess date format, locale, date order, timezone, or convert ambiguous dates. Populate `issued_at` only after supported formats and timezone semantics are explicitly established. Tests must cover valid, invalid, and ambiguous examples; daylight-saving cases apply if the established timezone makes them relevant.
 
 ## 4. Structural validation gaps identified
 
@@ -95,7 +95,7 @@ Unknown JSON keys are not represented in the current `Invoice` or `Product` mode
 
 1. Should blank invoice IDs, serials, customer names, or product names always be held? Recommended: yes.
 2. What non-negative range/precision limits apply to weight, package weight, package count, and unit price? Negative values are already owner-approved as held for human review; unsupported precision and upper bounds remain open.
-3. What are the actual persisted date/time formats and timezone semantics? This requires examining representative source values; do not assume locale or UTC.
+3. Which exact date/time formats and timezone semantics are present in representative source values? The hold/preserve/no-guess policy is approved; the formats and timezone required to populate `issued_at` remain to be established.
 4. Owner-approved: a party that is missing, lacks the required role, or has a mismatched role keeps the occurrence held for human review. Do not auto-create a party or assign/change a role during migration.
 5. Which fields must be represented in structured Drift columns versus retained only in source evidence? At minimum, date/time and original customer display name need an explicit decision if they must be queryable without decoding source JSON.
 6. What is the treatment of any legacy invoice action value outside the three stable Arabic values? Recommended: hold; never coerce.
@@ -149,3 +149,12 @@ An invoice occurrence must remain held if its referenced party:
 The migration must not create a missing party, add a missing role, change an existing role, or infer a replacement party automatically. Release from hold requires an explicit, authorized, attributable, and immutable review decision, followed by revalidation immediately before import. The source snapshot remains unchanged.
 
 This decision resolves the party/role policy question in section 6. It does not authorize changes to the existing party-review journal or importer implementation.
+
+
+## 11. Owner decision — date and time validation
+
+**Decision approved by the owner on 2026-11-26.**
+
+Preserve the exact original `formattedDate` and `formattedTime` strings in the immutable source snapshot. Hold an invoice occurrence when either value uses an invalid or unrecognized format. Do not guess date order, locale, timezone, or automatically convert an ambiguous date/time value. Populate Drift `issued_at` only after the supported source formats and timezone semantics have been explicitly established and covered by tests.
+
+This decision defines the safe handling policy; it does not yet establish the actual source formats or timezone, and it does not authorize implementation.
