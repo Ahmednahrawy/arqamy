@@ -91,6 +91,18 @@ class LegacyPartyReviewJournalRepository {
     if (byKey.length != preflight.occurrences.length) {
       throw ArgumentError('Preflight contains duplicate occurrence keys.');
     }
+    for (final item in preflight.occurrences) {
+      if (item.sourceOccurrenceIdentity.snapshotSha256 != preflight.snapshotSha256) {
+        throw ArgumentError('Every occurrence identity must belong to the preflight snapshot.');
+      }
+    }
+    final planKeys = plan.resolutions
+        .map((item) => item.sourceOccurrenceKey)
+        .toSet();
+    if (planKeys.length != plan.resolutions.length ||
+        planKeys.length != byKey.length) {
+      throw ArgumentError('Party plan must contain each occurrence key exactly once.');
+    }
     for (final resolution in plan.resolutions) {
       final item = byKey[resolution.sourceOccurrenceKey];
       if (item == null || item.sourceIndex != resolution.sourceIndex) {
