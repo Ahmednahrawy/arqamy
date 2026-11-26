@@ -164,3 +164,11 @@ Submit that schema proposal for explicit approval before changing `app_database.
 ---
 
 **Audit complete — no code or schema changes authorized.**
+
+## 10. Owner decision — blank required text fields
+
+On 2026-11-26, the owner approved holding any occurrence for human review when its legacy invoice ID, invoice serial, customer name, or any product name is empty or whitespace-only.
+
+The preflight/import contract must emit stable field-specific findings and preserve the exact source value in the immutable snapshot. It must not invent replacements, silently normalize a substitute value, discard the field, or import the occurrence as ready. Any later correction must be explicit, authorized, attributable, and auditable, while retaining the original source evidence.
+
+This resolves the blank-text policy question identified in the field-mapping audit. It does not authorize code or schema changes.
