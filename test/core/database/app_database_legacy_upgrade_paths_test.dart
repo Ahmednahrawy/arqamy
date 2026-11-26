@@ -140,8 +140,8 @@ Future<void> _expectD4JournalExists(AppDatabase database) async {
   final tables = await database
       .customSelect(
         "SELECT name FROM sqlite_master WHERE type = 'table' "
-        "AND name LIKE 'legacy_invoice_import_%' "
-        "OR type = 'table' AND name = 'legacy_invoice_occurrence_mappings' "
+        "AND (name LIKE 'legacy_invoice_import_%' "
+        "OR name = 'legacy_invoice_occurrence_mappings') "
         "ORDER BY name",
       )
       .map((row) => row.read<String>('name'))
@@ -151,9 +151,9 @@ Future<void> _expectD4JournalExists(AppDatabase database) async {
     [
       'legacy_invoice_import_attempts',
       'legacy_invoice_import_events',
-      'legacy_invoice_occurrence_mappings',
       'legacy_invoice_import_occurrences',
       'legacy_invoice_import_runs',
+      'legacy_invoice_occurrence_mappings',
     ],
   );
 }
