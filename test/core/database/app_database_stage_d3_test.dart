@@ -40,8 +40,8 @@ void main() {
   test(
     'creates the three persistent journal tables on a fresh database',
     () async {
-      expect(database.schemaVersion, 6);
-      expect(await database.storedSchemaVersion, 6);
+      expect(database.schemaVersion, 7);
+      expect(await database.storedSchemaVersion, 7);
 
       final tables = await database
           .customSelect(
@@ -124,7 +124,34 @@ void main() {
         expectedRole: 'customer',
         suggestedPartyId: 'party-customer',
         suggestedPartyName: 'Customer One',
+        resolutionStatus: 'resolvedByName',
         sourceIndex: 1,
+      );
+
+      await _insertOccurrence(
+        database,
+        key: 'unresolved-suggestion',
+        expectedRole: 'customer',
+        suggestedPartyId: 'party-customer',
+        suggestedPartyName: 'Customer One',
+        resolutionStatus: 'ambiguousName',
+        sourceIndex: 2,
+      );
+
+      await expectLater(
+        _insertDecision(
+          database,
+          decisionId: 'decision-unresolved-suggestion',
+          occurrenceKey: 'unresolved-suggestion',
+          sequence: 1,
+          action: 'acceptSuggestedMatch',
+          expectedRole: 'customer',
+          partyId: 'party-customer',
+          partyName: 'Customer One',
+          partyRole: 'customer',
+        ),
+        throwsA(anything),
+        reason: 'an ambiguous occurrence must never be approved as a suggestion',
       );
 
       await expectLater(
@@ -259,7 +286,104 @@ void main() {
     },
   );
 
-  test('rolls back a failed v5-to-v6 journal migration', () async {
+  test(
+    'atomically upgrades v6 review validation and preserves journal history',
+    () async {
+      await _insertRun(database);
+      await _insertParty(
+        database,
+        'party-v7-customer',
+        'Customer V7',
+        'customer',
+      );
+      await _insertOccurrence(
+        database,
+        key: 'resolved-before-upgrade',
+        expectedRole: 'customer',
+        suggestedPartyId: 'party-v7-customer',
+        suggestedPartyName: 'Customer V7',
+        resolutionStatus: 'resolvedByName',
+      );
+      await _insertOccurrence(
+        database,
+        key: 'ambiguous-before-upgrade',
+        expectedRole: 'customer',
+        suggestedPartyId: 'party-v7-customer',
+        suggestedPartyName: 'Customer V7',
+        resolutionStatus: 'ambiguousName',
+        sourceIndex: 1,
+      );
+      await _insertDecision(
+        database,
+        decisionId: 'decision-before-upgrade',
+        occurrenceKey: 'resolved-before-upgrade',
+        sequence: 1,
+        action: 'keepHeld',
+        expectedRole: 'customer',
+      );
+
+      await database.customStatement(
+        'DROP TRIGGER legacy_party_review_decisions_validate_insert',
+      );
+      await _createV6PartyReviewDecisionTrigger(database);
+      await database.customStatement('PRAGMA user_version = 6');
+      await database.close();
+
+      database = await AppDatabase.open(path: databasePath);
+
+      expect(database.schemaVersion, 7);
+      expect(await database.storedSchemaVersion, 7);
+      final preserved = await database
+          .customSelect(
+            'SELECT COUNT(*) AS count FROM legacy_party_review_decisions '
+            'WHERE decision_id = ?',
+            variables: [Variable.withString('decision-before-upgrade')],
+          )
+          .getSingle();
+      expect(preserved.read<int>('count'), 1);
+
+      await expectLater(
+        _insertDecision(
+          database,
+          decisionId: 'decision-invalid-after-upgrade',
+          occurrenceKey: 'ambiguous-before-upgrade',
+          sequence: 1,
+          action: 'acceptSuggestedMatch',
+          expectedRole: 'customer',
+          partyId: 'party-v7-customer',
+          partyName: 'Customer V7',
+          partyRole: 'customer',
+        ),
+        throwsA(anything),
+        reason: 'the v7 trigger must reject approval of an ambiguous resolution',
+      );
+
+      await _insertDecision(
+        database,
+        decisionId: 'decision-valid-after-upgrade',
+        occurrenceKey: 'resolved-before-upgrade',
+        sequence: 2,
+        previousDecisionId: 'decision-before-upgrade',
+        action: 'acceptSuggestedMatch',
+        expectedRole: 'customer',
+        partyId: 'party-v7-customer',
+        partyName: 'Customer V7',
+        partyRole: 'customer',
+      );
+
+      expect(
+        await database.customSelect('PRAGMA foreign_key_check').get(),
+        isEmpty,
+      );
+      expect(
+        (await database.customSelect('PRAGMA integrity_check').getSingle())
+            .read<String>('integrity_check'),
+        'ok',
+      );
+    },
+  );
+
+  test('rolls back a failed v5-to-v7 journal migration', () async {
     await database.customStatement(
       'INSERT INTO parties (party_id, display_name, created_at, updated_at) '
       'VALUES (?, ?, ?, ?)',
@@ -315,7 +439,7 @@ void main() {
     await inspector.close();
 
     database = await AppDatabase.open(path: databasePath);
-    expect(await database.storedSchemaVersion, 6);
+    expect(await database.storedSchemaVersion, 7);
   });
 
   test(
@@ -347,7 +471,7 @@ void main() {
 
       database = await AppDatabase.open(path: databasePath);
 
-      expect(await database.storedSchemaVersion, 6);
+      expect(await database.storedSchemaVersion, 7);
       expect(
         await database
             .customSelect(
@@ -381,6 +505,60 @@ void main() {
   );
 }
 
+Future<void> _createV6PartyReviewDecisionTrigger(
+  AppDatabase database,
+) {
+  return database.customStatement('''
+    CREATE TRIGGER legacy_party_review_decisions_validate_insert
+    BEFORE INSERT ON legacy_party_review_decisions
+    WHEN NOT EXISTS (
+      SELECT 1
+      FROM legacy_migration_occurrences o
+      WHERE o.run_id = NEW.run_id
+        AND o.source_occurrence_key = NEW.source_occurrence_key
+        AND o.expected_role IS NEW.expected_role
+    )
+    OR (NEW.sequence = 1 AND NEW.previous_decision_id IS NOT NULL)
+    OR (NEW.sequence > 1 AND NOT EXISTS (
+      SELECT 1
+      FROM legacy_party_review_decisions previous
+      WHERE previous.decision_id = NEW.previous_decision_id
+        AND previous.run_id = NEW.run_id
+        AND previous.source_occurrence_key = NEW.source_occurrence_key
+        AND previous.sequence = NEW.sequence - 1
+    ))
+    OR NEW.sequence != (
+      SELECT COALESCE(MAX(existing.sequence), 0) + 1
+      FROM legacy_party_review_decisions existing
+      WHERE existing.run_id = NEW.run_id
+        AND existing.source_occurrence_key = NEW.source_occurrence_key
+    )
+    OR (NEW.action = 'acceptSuggestedMatch' AND NOT EXISTS (
+      SELECT 1
+      FROM legacy_migration_occurrences o
+      JOIN parties p ON p.party_id = o.suggested_party_id
+      JOIN party_roles pr ON pr.party_id = p.party_id
+      WHERE o.run_id = NEW.run_id
+        AND o.source_occurrence_key = NEW.source_occurrence_key
+        AND o.suggested_party_id = NEW.resolved_party_id
+        AND pr.role = NEW.expected_role
+        AND NEW.resolved_party_role = NEW.expected_role
+    ))
+    OR (NEW.action = 'selectParty' AND NOT EXISTS (
+      SELECT 1
+      FROM parties p
+      JOIN party_roles pr ON pr.party_id = p.party_id
+      WHERE p.party_id = NEW.resolved_party_id
+        AND p.display_name = NEW.resolved_party_name
+        AND pr.role = NEW.expected_role
+        AND NEW.resolved_party_role = NEW.expected_role
+    ))
+    BEGIN
+      SELECT RAISE(ABORT, 'Invalid legacy party review decision');
+    END
+  ''');
+}
+
 Future<void> _insertRun(
   AppDatabase database, {
   String runId = 'run-1',
@@ -411,6 +589,7 @@ Future<void> _insertOccurrence(
   String? expectedRole,
   String? suggestedPartyId,
   String? suggestedPartyName,
+  String resolutionStatus = 'pending',
   int sourceIndex = 0,
   String candidateJson = '[]',
 }) {
@@ -427,7 +606,7 @@ Future<void> _insertOccurrence(
       'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb',
       null,
       'unclassified',
-      'pending',
+      resolutionStatus,
       expectedRole,
       suggestedPartyId,
       suggestedPartyName,
