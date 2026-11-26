@@ -1242,14 +1242,16 @@ class AppDatabase extends _$AppDatabase {
 
       // Databases upgraded from v2-v7 already have their D3.2 dependencies.
       // Fresh/very old databases create every table through createAll() above.
-      if (from >= 2 && from < 8) {
-        await m.createTable(legacyInvoiceImportRuns);
-        await m.createTable(legacyInvoiceImportOccurrences);
-        await m.createTable(legacyInvoiceImportAttempts);
-        await m.createTable(legacyInvoiceImportEvents);
-        await m.createTable(legacyInvoiceOccurrenceMappings);
+      if (to >= 8) {
+        if (from >= 2 && from < 8) {
+          await m.createTable(legacyInvoiceImportRuns);
+          await m.createTable(legacyInvoiceImportOccurrences);
+          await m.createTable(legacyInvoiceImportAttempts);
+          await m.createTable(legacyInvoiceImportEvents);
+          await m.createTable(legacyInvoiceOccurrenceMappings);
+        }
+        await _createLegacyInvoiceImportJournalIndexesAndTriggers();
       }
-      await _createLegacyInvoiceImportJournalIndexesAndTriggers();
     }),
   );
 
