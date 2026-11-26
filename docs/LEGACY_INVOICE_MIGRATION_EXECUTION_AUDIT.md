@@ -219,3 +219,9 @@ On 2026-11-26, the owner approved the following handling for legacy `customerNam
 - Do not add a dedicated invoice column solely for this migration. Reconsider only if a separate business requirement establishes a need for historical-name search or reporting.
 
 This is a mapping policy only. It does not authorize schema or importer implementation.
+
+## 22. Owner-approved date/time destination mapping decision
+
+On 2026-11-26, the owner approved the following destination strategy: retain the exact original `formattedDate` and `formattedTime` strings in the immutable source snapshot; after source formats and timezone semantics are established and tested, map the combined value to the existing `issued_at` field. Do not add separate structured date or time columns solely for this migration; reconsider them only for a distinct business requirement.
+
+Invalid or unrecognized values remain held under the previously approved policy. This is a mapping decision only and does not authorize implementation.
