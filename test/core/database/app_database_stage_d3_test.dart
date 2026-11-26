@@ -283,7 +283,11 @@ void main() {
     } catch (_) {
       migrationFailed = true;
     }
-    expect(migrationFailed, isTrue, reason: 'the injected DDL collision must fail migration');
+    expect(
+      migrationFailed,
+      isTrue,
+      reason: 'the injected DDL collision must fail migration',
+    );
 
     final inspector = _Version5InspectorDatabase(
       NativeDatabase(File(databasePath)),
