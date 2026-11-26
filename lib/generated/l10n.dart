@@ -1912,7 +1912,12 @@ class S {
 
   /// `Order defaults`
   String get order_defaults {
-    return Intl.message('Order defaults', name: 'order_defaults', desc: '', args: []);
+    return Intl.message(
+      'Order defaults',
+      name: 'order_defaults',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Default package weight`
@@ -2795,6 +2800,271 @@ class S {
     return Intl.message(
       'Could not import to the ledger',
       name: 'ledger_import_failed',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Sign in`
+  String get auth_sign_in {
+    return Intl.message('Sign in', name: 'auth_sign_in', desc: '', args: []);
+  }
+
+  /// `Create account`
+  String get auth_sign_up {
+    return Intl.message(
+      'Create account',
+      name: 'auth_sign_up',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Email`
+  String get auth_email {
+    return Intl.message('Email', name: 'auth_email', desc: '', args: []);
+  }
+
+  /// `Password`
+  String get auth_password {
+    return Intl.message('Password', name: 'auth_password', desc: '', args: []);
+  }
+
+  /// `Confirm password`
+  String get auth_confirm_password {
+    return Intl.message(
+      'Confirm password',
+      name: 'auth_confirm_password',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Forgot password?`
+  String get auth_forgot_password {
+    return Intl.message(
+      'Forgot password?',
+      name: 'auth_forgot_password',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Don't have an account?`
+  String get auth_no_account {
+    return Intl.message(
+      'Don\'t have an account?',
+      name: 'auth_no_account',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Already have an account?`
+  String get auth_have_account {
+    return Intl.message(
+      'Already have an account?',
+      name: 'auth_have_account',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Show password`
+  String get auth_show_password {
+    return Intl.message(
+      'Show password',
+      name: 'auth_show_password',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Hide password`
+  String get auth_hide_password {
+    return Intl.message(
+      'Hide password',
+      name: 'auth_hide_password',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Reset password`
+  String get auth_reset_password_title {
+    return Intl.message(
+      'Reset password',
+      name: 'auth_reset_password_title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Enter your email and we will send you a link to reset your password.`
+  String get auth_reset_password_intro {
+    return Intl.message(
+      'Enter your email and we will send you a link to reset your password.',
+      name: 'auth_reset_password_intro',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Send reset link`
+  String get auth_send_reset_link {
+    return Intl.message(
+      'Send reset link',
+      name: 'auth_send_reset_link',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `If an account exists for this email, a reset link has been sent.`
+  String get auth_reset_link_sent {
+    return Intl.message(
+      'If an account exists for this email, a reset link has been sent.',
+      name: 'auth_reset_link_sent',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Enter your email`
+  String get auth_email_required {
+    return Intl.message(
+      'Enter your email',
+      name: 'auth_email_required',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Enter a valid email address`
+  String get auth_email_invalid {
+    return Intl.message(
+      'Enter a valid email address',
+      name: 'auth_email_invalid',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Enter your password`
+  String get auth_password_required {
+    return Intl.message(
+      'Enter your password',
+      name: 'auth_password_required',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Use at least {count} characters`
+  String auth_password_too_short(int count) {
+    return Intl.message(
+      'Use at least $count characters',
+      name: 'auth_password_too_short',
+      desc: '',
+      args: [count],
+    );
+  }
+
+  /// `Confirm your password`
+  String get auth_confirm_password_required {
+    return Intl.message(
+      'Confirm your password',
+      name: 'auth_confirm_password_required',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Passwords do not match`
+  String get auth_passwords_do_not_match {
+    return Intl.message(
+      'Passwords do not match',
+      name: 'auth_passwords_do_not_match',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Incorrect email or password`
+  String get auth_error_wrong_credentials {
+    return Intl.message(
+      'Incorrect email or password',
+      name: 'auth_error_wrong_credentials',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `This account has been disabled`
+  String get auth_error_user_disabled {
+    return Intl.message(
+      'This account has been disabled',
+      name: 'auth_error_user_disabled',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `An account with this email already exists`
+  String get auth_error_email_in_use {
+    return Intl.message(
+      'An account with this email already exists',
+      name: 'auth_error_email_in_use',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `This password is too weak`
+  String get auth_error_weak_password {
+    return Intl.message(
+      'This password is too weak',
+      name: 'auth_error_weak_password',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Too many attempts. Try again later.`
+  String get auth_error_too_many_requests {
+    return Intl.message(
+      'Too many attempts. Try again later.',
+      name: 'auth_error_too_many_requests',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No internet connection. Check your connection and try again.`
+  String get auth_error_network {
+    return Intl.message(
+      'No internet connection. Check your connection and try again.',
+      name: 'auth_error_network',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Sign-in is not available right now. Try again later.`
+  String get auth_error_service_unavailable {
+    return Intl.message(
+      'Sign-in is not available right now. Try again later.',
+      name: 'auth_error_service_unavailable',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Something went wrong. Please try again.`
+  String get auth_error_unknown {
+    return Intl.message(
+      'Something went wrong. Please try again.',
+      name: 'auth_error_unknown',
       desc: '',
       args: [],
     );

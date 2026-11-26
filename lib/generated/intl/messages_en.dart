@@ -20,6 +20,8 @@ typedef String MessageIfAbsent(String messageStr, List<dynamic> args);
 class MessageLookup extends MessageLookupByLibrary {
   String get localeName => 'en';
 
+  static String m0(count) => "Use at least ${count} characters";
+
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
     "about": MessageLookupByLibrary.simpleMessage("About"),
@@ -39,6 +41,76 @@ class MessageLookup extends MessageLookupByLibrary {
     "are_you_sure_logout": MessageLookupByLibrary.simpleMessage(
       "Are you sure you want to log out?",
     ),
+    "auth_confirm_password": MessageLookupByLibrary.simpleMessage(
+      "Confirm password",
+    ),
+    "auth_confirm_password_required": MessageLookupByLibrary.simpleMessage(
+      "Confirm your password",
+    ),
+    "auth_email": MessageLookupByLibrary.simpleMessage("Email"),
+    "auth_email_invalid": MessageLookupByLibrary.simpleMessage(
+      "Enter a valid email address",
+    ),
+    "auth_email_required": MessageLookupByLibrary.simpleMessage(
+      "Enter your email",
+    ),
+    "auth_error_email_in_use": MessageLookupByLibrary.simpleMessage(
+      "An account with this email already exists",
+    ),
+    "auth_error_network": MessageLookupByLibrary.simpleMessage(
+      "No internet connection. Check your connection and try again.",
+    ),
+    "auth_error_service_unavailable": MessageLookupByLibrary.simpleMessage(
+      "Sign-in is not available right now. Try again later.",
+    ),
+    "auth_error_too_many_requests": MessageLookupByLibrary.simpleMessage(
+      "Too many attempts. Try again later.",
+    ),
+    "auth_error_unknown": MessageLookupByLibrary.simpleMessage(
+      "Something went wrong. Please try again.",
+    ),
+    "auth_error_user_disabled": MessageLookupByLibrary.simpleMessage(
+      "This account has been disabled",
+    ),
+    "auth_error_weak_password": MessageLookupByLibrary.simpleMessage(
+      "This password is too weak",
+    ),
+    "auth_error_wrong_credentials": MessageLookupByLibrary.simpleMessage(
+      "Incorrect email or password",
+    ),
+    "auth_forgot_password": MessageLookupByLibrary.simpleMessage(
+      "Forgot password?",
+    ),
+    "auth_have_account": MessageLookupByLibrary.simpleMessage(
+      "Already have an account?",
+    ),
+    "auth_hide_password": MessageLookupByLibrary.simpleMessage("Hide password"),
+    "auth_no_account": MessageLookupByLibrary.simpleMessage(
+      "Don\'t have an account?",
+    ),
+    "auth_password": MessageLookupByLibrary.simpleMessage("Password"),
+    "auth_password_required": MessageLookupByLibrary.simpleMessage(
+      "Enter your password",
+    ),
+    "auth_password_too_short": m0,
+    "auth_passwords_do_not_match": MessageLookupByLibrary.simpleMessage(
+      "Passwords do not match",
+    ),
+    "auth_reset_link_sent": MessageLookupByLibrary.simpleMessage(
+      "If an account exists for this email, a reset link has been sent.",
+    ),
+    "auth_reset_password_intro": MessageLookupByLibrary.simpleMessage(
+      "Enter your email and we will send you a link to reset your password.",
+    ),
+    "auth_reset_password_title": MessageLookupByLibrary.simpleMessage(
+      "Reset password",
+    ),
+    "auth_send_reset_link": MessageLookupByLibrary.simpleMessage(
+      "Send reset link",
+    ),
+    "auth_show_password": MessageLookupByLibrary.simpleMessage("Show password"),
+    "auth_sign_in": MessageLookupByLibrary.simpleMessage("Sign in"),
+    "auth_sign_up": MessageLookupByLibrary.simpleMessage("Create account"),
     "backup_failed": MessageLookupByLibrary.simpleMessage(
       "Could not create the backup",
     ),
@@ -60,11 +132,11 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "clearInvoiceSearch": MessageLookupByLibrary.simpleMessage("Clear search"),
     "clear_discount": MessageLookupByLibrary.simpleMessage("Clear discount"),
-    "clear_field": MessageLookupByLibrary.simpleMessage("Double-tap to clear"),
-    "clear_text": MessageLookupByLibrary.simpleMessage("Clear"),
     "clear_draft_message": MessageLookupByLibrary.simpleMessage(
       "Only the current invoice data will be cleared. Saved invoices will not be deleted.",
     ),
+    "clear_field": MessageLookupByLibrary.simpleMessage("Double-tap to clear"),
+    "clear_text": MessageLookupByLibrary.simpleMessage("Clear"),
     "close": MessageLookupByLibrary.simpleMessage("Close"),
     "collected_amount_label": MessageLookupByLibrary.simpleMessage("Collected"),
     "company_description": MessageLookupByLibrary.simpleMessage(
@@ -128,6 +200,12 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "date": MessageLookupByLibrary.simpleMessage("Date"),
     "dateRangeFilter": MessageLookupByLibrary.simpleMessage("Date range"),
+    "default_package_count": MessageLookupByLibrary.simpleMessage(
+      "Default package count",
+    ),
+    "default_package_weight": MessageLookupByLibrary.simpleMessage(
+      "Default package weight",
+    ),
     "default_price_optional": MessageLookupByLibrary.simpleMessage(
       "Default price (optional)",
     ),
@@ -224,6 +302,12 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "invalidNumber": MessageLookupByLibrary.simpleMessage(
       "Enter a valid finite number",
+    ),
+    "invalid_default_package_count": MessageLookupByLibrary.simpleMessage(
+      "Enter a whole package count of zero or more",
+    ),
+    "invalid_default_package_weight": MessageLookupByLibrary.simpleMessage(
+      "Enter a package weight of zero or more",
     ),
     "invalid_default_price": MessageLookupByLibrary.simpleMessage(
       "Enter a default price of zero or more",
@@ -399,6 +483,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "notifications": MessageLookupByLibrary.simpleMessage("Notifications"),
     "operation": MessageLookupByLibrary.simpleMessage("Transaction"),
+    "order_defaults": MessageLookupByLibrary.simpleMessage("Order defaults"),
     "outstandingBalance": MessageLookupByLibrary.simpleMessage(
       "Outstanding balance",
     ),
@@ -526,41 +611,19 @@ class MessageLookup extends MessageLookupByLibrary {
     "purchase": MessageLookupByLibrary.simpleMessage("Purchase"),
     "purchases": MessageLookupByLibrary.simpleMessage("Purchases"),
     "qr_data": MessageLookupByLibrary.simpleMessage("QR data"),
-    "order_defaults": MessageLookupByLibrary.simpleMessage("Order defaults"),
-    "default_package_weight": MessageLookupByLibrary.simpleMessage(
-      "Default package weight",
-    ),
-    "default_package_count": MessageLookupByLibrary.simpleMessage(
-      "Default package count",
-    ),
-    "show_package_weight": MessageLookupByLibrary.simpleMessage(
-      "Show package weight field",
-    ),
-    "show_package_number": MessageLookupByLibrary.simpleMessage(
-      "Show package count field",
-    ),
-    "reset_to_defaults": MessageLookupByLibrary.simpleMessage(
-      "Reset to defaults",
-    ),
-    "reset_action": MessageLookupByLibrary.simpleMessage("Reset"),
-    "reset_defaults_confirm": MessageLookupByLibrary.simpleMessage(
-      "Reset all invoice settings and order defaults?",
-    ),
-    "restore_settings_included": MessageLookupByLibrary.simpleMessage(
-      "Invoice settings will also be restored.",
-    ),
-    "invalid_default_package_weight": MessageLookupByLibrary.simpleMessage(
-      "Enter a package weight of zero or more",
-    ),
-    "invalid_default_package_count": MessageLookupByLibrary.simpleMessage(
-      "Enter a whole package count of zero or more",
-    ),
     "quantity": MessageLookupByLibrary.simpleMessage("Quantity"),
     "recentInvoices": MessageLookupByLibrary.simpleMessage("Recent invoices"),
     "remaining": MessageLookupByLibrary.simpleMessage("Remaining"),
     "removeProduct": MessageLookupByLibrary.simpleMessage("Remove product"),
     "resetInvoiceFilters": MessageLookupByLibrary.simpleMessage(
       "Reset filters",
+    ),
+    "reset_action": MessageLookupByLibrary.simpleMessage("Reset"),
+    "reset_defaults_confirm": MessageLookupByLibrary.simpleMessage(
+      "Reset all invoice settings and order defaults?",
+    ),
+    "reset_to_defaults": MessageLookupByLibrary.simpleMessage(
+      "Reset to defaults",
     ),
     "restore_action": MessageLookupByLibrary.simpleMessage("Restore"),
     "restore_confirm_message": MessageLookupByLibrary.simpleMessage(
@@ -587,6 +650,9 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "restore_replaced_invoices": MessageLookupByLibrary.simpleMessage(
       "Invoices to replace",
+    ),
+    "restore_settings_included": MessageLookupByLibrary.simpleMessage(
+      "Invoice settings will also be restored.",
     ),
     "sale": MessageLookupByLibrary.simpleMessage("Sale"),
     "sales": MessageLookupByLibrary.simpleMessage("Sales"),
@@ -624,6 +690,12 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "share_via_whatsapp": MessageLookupByLibrary.simpleMessage(
       "Share via WhatsApp",
+    ),
+    "show_package_number": MessageLookupByLibrary.simpleMessage(
+      "Show package count field",
+    ),
+    "show_package_weight": MessageLookupByLibrary.simpleMessage(
+      "Show package weight field",
     ),
     "start_adding_products": MessageLookupByLibrary.simpleMessage(
       "Start adding products to the invoice",

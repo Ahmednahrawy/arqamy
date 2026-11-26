@@ -20,6 +20,8 @@ typedef String MessageIfAbsent(String messageStr, List<dynamic> args);
 class MessageLookup extends MessageLookupByLibrary {
   String get localeName => 'ar';
 
+  static String m0(count) => "يجب ألا تقل كلمة المرور عن ${count} أحرف";
+
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
     "about": MessageLookupByLibrary.simpleMessage("حول"),
@@ -37,6 +39,78 @@ class MessageLookup extends MessageLookupByLibrary {
     "are_you_sure_logout": MessageLookupByLibrary.simpleMessage(
       "هل أنت متأكد أنك تريد تسجيل الخروج؟",
     ),
+    "auth_confirm_password": MessageLookupByLibrary.simpleMessage(
+      "تأكيد كلمة المرور",
+    ),
+    "auth_confirm_password_required": MessageLookupByLibrary.simpleMessage(
+      "أكّد كلمة المرور",
+    ),
+    "auth_email": MessageLookupByLibrary.simpleMessage("البريد الإلكتروني"),
+    "auth_email_invalid": MessageLookupByLibrary.simpleMessage(
+      "أدخل بريدًا إلكترونيًا صالحًا",
+    ),
+    "auth_email_required": MessageLookupByLibrary.simpleMessage(
+      "أدخل بريدك الإلكتروني",
+    ),
+    "auth_error_email_in_use": MessageLookupByLibrary.simpleMessage(
+      "يوجد حساب بهذا البريد الإلكتروني بالفعل",
+    ),
+    "auth_error_network": MessageLookupByLibrary.simpleMessage(
+      "لا يوجد اتصال بالإنترنت. تحقق من اتصالك وحاول مرة أخرى.",
+    ),
+    "auth_error_service_unavailable": MessageLookupByLibrary.simpleMessage(
+      "تسجيل الدخول غير متاح حاليًا. حاول لاحقًا.",
+    ),
+    "auth_error_too_many_requests": MessageLookupByLibrary.simpleMessage(
+      "محاولات كثيرة. حاول مرة أخرى لاحقًا.",
+    ),
+    "auth_error_unknown": MessageLookupByLibrary.simpleMessage(
+      "حدث خطأ ما. حاول مرة أخرى.",
+    ),
+    "auth_error_user_disabled": MessageLookupByLibrary.simpleMessage(
+      "تم تعطيل هذا الحساب",
+    ),
+    "auth_error_weak_password": MessageLookupByLibrary.simpleMessage(
+      "كلمة المرور هذه ضعيفة جدًا",
+    ),
+    "auth_error_wrong_credentials": MessageLookupByLibrary.simpleMessage(
+      "البريد الإلكتروني أو كلمة المرور غير صحيحة",
+    ),
+    "auth_forgot_password": MessageLookupByLibrary.simpleMessage(
+      "نسيت كلمة المرور؟",
+    ),
+    "auth_have_account": MessageLookupByLibrary.simpleMessage(
+      "لديك حساب بالفعل؟",
+    ),
+    "auth_hide_password": MessageLookupByLibrary.simpleMessage(
+      "إخفاء كلمة المرور",
+    ),
+    "auth_no_account": MessageLookupByLibrary.simpleMessage("ليس لديك حساب؟"),
+    "auth_password": MessageLookupByLibrary.simpleMessage("كلمة المرور"),
+    "auth_password_required": MessageLookupByLibrary.simpleMessage(
+      "أدخل كلمة المرور",
+    ),
+    "auth_password_too_short": m0,
+    "auth_passwords_do_not_match": MessageLookupByLibrary.simpleMessage(
+      "كلمتا المرور غير متطابقتين",
+    ),
+    "auth_reset_link_sent": MessageLookupByLibrary.simpleMessage(
+      "إذا كان هناك حساب بهذا البريد، فقد تم إرسال رابط إعادة التعيين.",
+    ),
+    "auth_reset_password_intro": MessageLookupByLibrary.simpleMessage(
+      "أدخل بريدك الإلكتروني وسنرسل لك رابطًا لإعادة تعيين كلمة المرور.",
+    ),
+    "auth_reset_password_title": MessageLookupByLibrary.simpleMessage(
+      "إعادة تعيين كلمة المرور",
+    ),
+    "auth_send_reset_link": MessageLookupByLibrary.simpleMessage(
+      "إرسال رابط إعادة التعيين",
+    ),
+    "auth_show_password": MessageLookupByLibrary.simpleMessage(
+      "إظهار كلمة المرور",
+    ),
+    "auth_sign_in": MessageLookupByLibrary.simpleMessage("تسجيل الدخول"),
+    "auth_sign_up": MessageLookupByLibrary.simpleMessage("إنشاء حساب"),
     "backup_failed": MessageLookupByLibrary.simpleMessage(
       "تعذر إنشاء النسخة الاحتياطية",
     ),
@@ -62,11 +136,11 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "clearInvoiceSearch": MessageLookupByLibrary.simpleMessage("مسح البحث"),
     "clear_discount": MessageLookupByLibrary.simpleMessage("إزالة الخصم"),
-    "clear_field": MessageLookupByLibrary.simpleMessage("انقر مرتين للمسح"),
-    "clear_text": MessageLookupByLibrary.simpleMessage("مسح"),
     "clear_draft_message": MessageLookupByLibrary.simpleMessage(
       "سيتم مسح بيانات الفاتورة الحالية فقط. لن يتم حذف الفواتير المحفوظة.",
     ),
+    "clear_field": MessageLookupByLibrary.simpleMessage("انقر مرتين للمسح"),
+    "clear_text": MessageLookupByLibrary.simpleMessage("مسح"),
     "close": MessageLookupByLibrary.simpleMessage("إغلاق"),
     "collected_amount_label": MessageLookupByLibrary.simpleMessage("تحصيل"),
     "company_description": MessageLookupByLibrary.simpleMessage("وصف الشركة"),
@@ -126,6 +200,12 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "date": MessageLookupByLibrary.simpleMessage("التاريخ"),
     "dateRangeFilter": MessageLookupByLibrary.simpleMessage("النطاق الزمني"),
+    "default_package_count": MessageLookupByLibrary.simpleMessage(
+      "عدد العبوات الافتراضي",
+    ),
+    "default_package_weight": MessageLookupByLibrary.simpleMessage(
+      "الوزن الافتراضي للعبوة",
+    ),
     "default_price_optional": MessageLookupByLibrary.simpleMessage(
       "السعر الافتراضي (اختياري)",
     ),
@@ -211,6 +291,12 @@ class MessageLookup extends MessageLookupByLibrary {
     "import_products": MessageLookupByLibrary.simpleMessage("استيراد المنتجات"),
     "invalidInteger": MessageLookupByLibrary.simpleMessage("أدخل عددًا صحيحًا"),
     "invalidNumber": MessageLookupByLibrary.simpleMessage("أدخل رقمًا صالحًا"),
+    "invalid_default_package_count": MessageLookupByLibrary.simpleMessage(
+      "أدخل عدد عبوات صحيحًا صفرًا أو أكثر",
+    ),
+    "invalid_default_package_weight": MessageLookupByLibrary.simpleMessage(
+      "أدخل وزن عبوة صفرًا أو أكثر",
+    ),
     "invalid_default_price": MessageLookupByLibrary.simpleMessage(
       "أدخل سعرًا افتراضيًا صفرًا أو أكثر",
     ),
@@ -385,6 +471,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "notifications": MessageLookupByLibrary.simpleMessage("الإشعارات"),
     "operation": MessageLookupByLibrary.simpleMessage("عملية"),
+    "order_defaults": MessageLookupByLibrary.simpleMessage("إعدادات الطلب"),
     "outstandingBalance": MessageLookupByLibrary.simpleMessage(
       "المبلغ المتبقي",
     ),
@@ -502,41 +589,19 @@ class MessageLookup extends MessageLookupByLibrary {
     "purchase": MessageLookupByLibrary.simpleMessage("شراء"),
     "purchases": MessageLookupByLibrary.simpleMessage("مشتريات"),
     "qr_data": MessageLookupByLibrary.simpleMessage("بيانات QR"),
-    "order_defaults": MessageLookupByLibrary.simpleMessage("إعدادات الطلب"),
-    "default_package_weight": MessageLookupByLibrary.simpleMessage(
-      "الوزن الافتراضي للعبوة",
-    ),
-    "default_package_count": MessageLookupByLibrary.simpleMessage(
-      "عدد العبوات الافتراضي",
-    ),
-    "show_package_weight": MessageLookupByLibrary.simpleMessage(
-      "إظهار حقل وزن العبوة",
-    ),
-    "show_package_number": MessageLookupByLibrary.simpleMessage(
-      "إظهار حقل عدد العبوات",
-    ),
-    "reset_to_defaults": MessageLookupByLibrary.simpleMessage(
-      "إعادة تعيين إلى الافتراضي",
-    ),
-    "reset_action": MessageLookupByLibrary.simpleMessage("إعادة تعيين"),
-    "reset_defaults_confirm": MessageLookupByLibrary.simpleMessage(
-      "إعادة تعيين جميع إعدادات الفاتورة وإعدادات الطلب؟",
-    ),
-    "restore_settings_included": MessageLookupByLibrary.simpleMessage(
-      "سيتم أيضًا استعادة إعدادات الفاتورة.",
-    ),
-    "invalid_default_package_weight": MessageLookupByLibrary.simpleMessage(
-      "أدخل وزن عبوة صفرًا أو أكثر",
-    ),
-    "invalid_default_package_count": MessageLookupByLibrary.simpleMessage(
-      "أدخل عدد عبوات صحيحًا صفرًا أو أكثر",
-    ),
     "quantity": MessageLookupByLibrary.simpleMessage("الكمية"),
     "recentInvoices": MessageLookupByLibrary.simpleMessage("أحدث الفواتير"),
     "remaining": MessageLookupByLibrary.simpleMessage("الباقي"),
     "removeProduct": MessageLookupByLibrary.simpleMessage("حذف المنتج"),
     "resetInvoiceFilters": MessageLookupByLibrary.simpleMessage(
       "إعادة ضبط عوامل التصفية",
+    ),
+    "reset_action": MessageLookupByLibrary.simpleMessage("إعادة تعيين"),
+    "reset_defaults_confirm": MessageLookupByLibrary.simpleMessage(
+      "إعادة تعيين جميع إعدادات الفاتورة وإعدادات الطلب؟",
+    ),
+    "reset_to_defaults": MessageLookupByLibrary.simpleMessage(
+      "إعادة تعيين إلى الافتراضي",
     ),
     "restore_action": MessageLookupByLibrary.simpleMessage("استعادة"),
     "restore_confirm_message": MessageLookupByLibrary.simpleMessage(
@@ -565,6 +630,9 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "restore_replaced_invoices": MessageLookupByLibrary.simpleMessage(
       "فواتير سيتم استبدالها",
+    ),
+    "restore_settings_included": MessageLookupByLibrary.simpleMessage(
+      "سيتم أيضًا استعادة إعدادات الفاتورة.",
     ),
     "sale": MessageLookupByLibrary.simpleMessage("بيع"),
     "sales": MessageLookupByLibrary.simpleMessage("مبيعات"),
@@ -596,6 +664,12 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "share_via_whatsapp": MessageLookupByLibrary.simpleMessage(
       "مشاركة عبر واتساب",
+    ),
+    "show_package_number": MessageLookupByLibrary.simpleMessage(
+      "إظهار حقل عدد العبوات",
+    ),
+    "show_package_weight": MessageLookupByLibrary.simpleMessage(
+      "إظهار حقل وزن العبوة",
     ),
     "start_adding_products": MessageLookupByLibrary.simpleMessage(
       "ابدأ بإضافة منتجات للفاتورة",
