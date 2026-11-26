@@ -93,6 +93,20 @@ void main() {
         .customSelect('PRAGMA foreign_keys')
         .getSingle();
     expect(foreignKeys.read<bool>('foreign_keys'), isTrue);
+    expect(
+      await database.customSelect('PRAGMA foreign_key_check').get(),
+      isEmpty,
+    );
+    expect(
+      (await database.customSelect('PRAGMA integrity_check').getSingle())
+          .read<String>('integrity_check'),
+      'ok',
+    );
+    expect(
+      (await database.customSelect('PRAGMA defer_foreign_keys').getSingle())
+          .read<int>('defer_foreign_keys'),
+      0,
+    );
   });
 
   test(
