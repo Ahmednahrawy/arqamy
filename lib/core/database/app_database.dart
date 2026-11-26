@@ -983,9 +983,7 @@ class AppDatabase extends _$AppDatabase {
     }),
   );
 
-  Future<void> _runMigrationAtomically(
-    Future<void> Function() migrate,
-  ) async {
+  Future<void> _runMigrationAtomically(Future<void> Function() migrate) async {
     await transaction(() async {
       final foreignKeysEnabled = (await customSelect(
         'PRAGMA foreign_keys',

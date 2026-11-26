@@ -103,9 +103,7 @@ void main() {
       'ok',
     );
     expect(
-      (await database
-              .customSelect('PRAGMA defer_foreign_keys')
-              .getSingle())
+      (await database.customSelect('PRAGMA defer_foreign_keys').getSingle())
           .read<int>('defer_foreign_keys'),
       0,
     );
