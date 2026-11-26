@@ -240,6 +240,87 @@ void main() {
   );
 
   test(
+    'rejects unresolved suggested matches and mismatched invoice identities',
+    () async {
+      final unresolvedPlan = LegacyPartyResolutionReport(
+        snapshotSha256: _snapshotHash,
+        resolutions: [
+          fixture.plan.resolutions.first,
+          LegacyPartyOccurrenceResolution(
+            sourceOccurrenceKey: fixture.keys[1],
+            sourceIndex: 1,
+            invoiceId: 'legacy-2',
+            status: LegacyPartyResolutionStatus.ambiguousName,
+            expectedRole: LedgerPartyRole.supplier,
+            partyId: 'supplier-1',
+            partyDisplayName: 'Supplier One',
+            candidatePartyIds: ['supplier-1', 'supplier-2'],
+          ),
+          fixture.plan.resolutions[2],
+        ],
+      );
+      await expectLater(
+        repository.createRun(
+          runId: 'unresolved-run',
+          snapshotManifestPath: 'legacy/snapshots/unresolved.json',
+          migrationVersion: 1,
+          occurrenceIdentityVersion: 1,
+          preflightVersion: 1,
+          createdByActorId: 'actor-1',
+          preflight: fixture.preflight,
+          plan: unresolvedPlan,
+        ),
+        throwsArgumentError,
+      );
+
+      final mismatchedInvoicePlan = LegacyPartyResolutionReport(
+        snapshotSha256: _snapshotHash,
+        resolutions: [
+          LegacyPartyOccurrenceResolution(
+            sourceOccurrenceKey: fixture.keys[0],
+            sourceIndex: 0,
+            invoiceId: 'different-invoice',
+            status: LegacyPartyResolutionStatus.resolvedByName,
+            expectedRole: LedgerPartyRole.customer,
+            partyId: 'customer-1',
+            partyDisplayName: 'Customer One',
+          ),
+          fixture.plan.resolutions[1],
+          fixture.plan.resolutions[2],
+        ],
+      );
+      await expectLater(
+        repository.createRun(
+          runId: 'mismatched-invoice-run',
+          snapshotManifestPath: 'legacy/snapshots/mismatched.json',
+          migrationVersion: 1,
+          occurrenceIdentityVersion: 1,
+          preflightVersion: 1,
+          createdByActorId: 'actor-1',
+          preflight: fixture.preflight,
+          plan: mismatchedInvoicePlan,
+        ),
+        throwsArgumentError,
+      );
+
+      final persistedRuns = await database
+          .customSelect(
+            "SELECT COUNT(*) AS count FROM legacy_migration_runs "
+            "WHERE run_id IN ('unresolved-run', 'mismatched-invoice-run')",
+          )
+          .getSingle();
+      final persistedOccurrences = await database
+          .customSelect(
+            "SELECT COUNT(*) AS count FROM legacy_migration_occurrences "
+            "WHERE run_id IN ('unresolved-run', 'mismatched-invoice-run')",
+          )
+          .getSingle();
+      expect(persistedRuns.read<int>('count'), 0);
+      expect(persistedOccurrences.read<int>('count'), 0);
+    },
+  );
+
+  test(
     'rejects wrong-role, wrong-snapshot, and unknown occurrence decisions',
     () async {
       await createRun();
