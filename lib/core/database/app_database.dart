@@ -931,13 +931,13 @@ class AppDatabase extends _$AppDatabase {
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
-    onCreate: (m) async {
+    onCreate: (m) => _runMigrationAtomically(() async {
       await m.createAll();
       await _createCashEventIndexesAndTriggers();
       await _createStage4IndexesAndTriggers();
       await _createLegacyPartyReviewJournalTriggers();
-    },
-    onUpgrade: (m, from, to) async {
+    }),
+    onUpgrade: (m, from, to) => _runMigrationAtomically(() async {
       if (from < 2) {
         await m.createAll();
         await _createCashEventIndexesAndTriggers();
@@ -961,9 +961,8 @@ class AppDatabase extends _$AppDatabase {
       }
 
       if (from >= 2 && from < 6) {
-        // Drift does not wrap migration callbacks in transactions by default.
-        // Keep the v6 journal schema and its triggers atomic so a failed
-        // upgrade can be retried safely without leaving a partial schema.
+        // This transaction is nested in the complete migration transaction.
+        // Drift uses a savepoint here, preserving the outer atomic boundary.
         await transaction(() async {
           await m.createTable(legacyMigrationRuns);
           await m.createTable(legacyMigrationOccurrences);
@@ -973,9 +972,7 @@ class AppDatabase extends _$AppDatabase {
       }
 
       if (from == 6 && to >= 7) {
-        // Existing v6 installations already have the original trigger.
-        // Replace only that validation trigger, atomically, while preserving
-        // all journal rows and every unrelated table and trigger.
+        // Replace only the v7 validation trigger while preserving journal rows.
         await transaction(() async {
           await customStatement(
             'DROP TRIGGER IF EXISTS legacy_party_review_decisions_validate_insert',
@@ -983,8 +980,67 @@ class AppDatabase extends _$AppDatabase {
           await _createLegacyPartyReviewJournalTriggers();
         });
       }
-    },
+    }),
   );
+
+  Future<void> _runMigrationAtomically(
+    Future<void> Function() migrate,
+  ) async {
+    await transaction(() async {
+      final foreignKeysEnabled = (await customSelect(
+        'PRAGMA foreign_keys',
+      ).getSingle()).read<int>('foreign_keys');
+      if (foreignKeysEnabled != 1) {
+        throw StateError(
+          'Foreign-key enforcement must be enabled before database migration.',
+        );
+      }
+
+      await customStatement('PRAGMA defer_foreign_keys = ON');
+      await migrate();
+
+      final foreignKeyViolations = await customSelect(
+        'PRAGMA foreign_key_check',
+      ).get();
+      if (foreignKeyViolations.isNotEmpty) {
+        throw StateError(
+          'Database migration left foreign-key violations: '
+          '$foreignKeyViolations',
+        );
+      }
+
+      final integrityResults = await customSelect(
+        'PRAGMA integrity_check',
+      ).get();
+      final integrityMessages = integrityResults
+          .map((row) => row.read<String>('integrity_check'))
+          .toList(growable: false);
+      if (integrityMessages.length != 1 || integrityMessages.single != 'ok') {
+        throw StateError(
+          'SQLite integrity check failed after database migration: '
+          '$integrityMessages',
+        );
+      }
+
+      // SQLite can retain a deferred-FK counter after a referenced parent
+      // table is rebuilt. Reset it only after the complete FK check succeeds.
+      // This does not disable foreign-key enforcement.
+      await customStatement('PRAGMA defer_foreign_keys = OFF');
+
+      final deferredForeignKeys = (await customSelect(
+        'PRAGMA defer_foreign_keys',
+      ).getSingle()).read<int>('defer_foreign_keys');
+      final foreignKeysStillEnabled = (await customSelect(
+        'PRAGMA foreign_keys',
+      ).getSingle()).read<int>('foreign_keys');
+      if (deferredForeignKeys != 0 || foreignKeysStillEnabled != 1) {
+        throw StateError(
+          'Database migration did not restore the expected SQLite '
+          'foreign-key enforcement state.',
+        );
+      }
+    });
+  }
 
   Future<void> _migrateV4ToV5() async {
     // SQLite requires foreign-key enforcement to be disabled before the
