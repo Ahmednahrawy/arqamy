@@ -191,84 +191,97 @@ Enforce tenant isolation in repositories, server authorization, and database con
 
 ### Phase 0 — Critical stabilization and security
 
-**Priority: Immediate**
+**Priority: Security remediation remains open**
 
-Tasks:
+The invoice cold-start overwrite mitigation and startup bootstrap are complete; see [`finished_tasks.md`](finished_tasks.md).
 
-1. Fix invoice cold-start data loss.
-2. Add mandatory invoice loading before any mutation.
-3. Add a regression test using pre-existing saved invoice data.
-4. Protect against corrupted or partially invalid invoice records.
-5. Rotate the exposed Android release-signing key.
-6. If applicable, coordinate the Google Play upload-key reset.
-7. Remove exposed signing material and passwords from Git history across relevant refs.
-8. Store signing credentials securely outside the repository.
-9. Verify release builds fail when signing is not configured.
-10. Verify the current HEAD with CI.
+Remaining tasks:
+
+1. Complete the Android upload-key reset with Google Play confirmation.
+2. Verify a release artifact using the replacement upload key after confirmation.
+3. Complete a reviewed Git-history cleanup plan and execute it only after explicit approval, preserving unique branch and open-PR work.
+4. Verify all relevant refs and reachable history after cleanup.
 
 **Acceptance criteria:**
 
-- Existing invoice history survives cold-start saves.
-- Failed writes do not replace valid stored data.
-- Regression tests cover the original failure.
-- Signing credentials are rotated and safely stored.
-- Current HEAD passes analysis and tests.
-
-No feature expansion before the critical data-loss issue is resolved.
+- Google Play confirms the replacement upload certificate is active.
+- A release artifact is signed with the accepted replacement upload key and its certificate is verified.
+- Exposed signing material is removed from reachable history to the extent supported by GitHub, with limitations documented.
+- No old compromised key is used for new releases.
 
 ### Phase 1 — Application foundation and architecture
 
-Tasks:
+**Status: Foundation partially implemented.**
 
-- Introduce an application bootstrap lifecycle.
-- Establish repository and use-case boundaries.
-- Define shared error handling and logging.
-- Standardize ID generation and timestamps.
-- Define money and decimal precision policies.
-- Define document identity and numbering rules.
-- Establish architecture decision records (ADRs).
-- Establish automated database migration testing.
+Completed bootstrap and regression work is tracked in [`finished_tasks.md`](finished_tasks.md).
+
+Remaining tasks:
+
+- Establish and enforce repository and use-case boundaries for the operational invoice workflow.
+- Define shared error handling and structured logging.
+- Standardize ID generation and timestamps across business records.
+- Define and test database migration conventions, including upgrade, rollback/recovery, and migration-fixture coverage.
+- Add formatting enforcement and relevant Android/Web build validation to CI.
+- Re-audit the current code and update `docs/AUDIT.md` against the current `main` baseline.
 
 **Acceptance criteria:**
 
 - Business initialization is centralized.
-- Data access is separated from presentation.
+- New business data access is separated from presentation.
 - Existing invoice workflows continue to function.
 - Architecture rules are documented and testable.
+- CI validates formatting, analysis, tests, and the agreed build targets.
 
 ### Phase 2 — Legacy data migration and Drift adoption
 
-Tasks:
+**Status: Design and review foundation implemented; production import and cutover remain incomplete.**
 
-1. Inventory all existing SharedPreferences business data.
-2. Back up the original invoice store.
-3. Use the legacy invoice readiness audit.
-4. Detect duplicate invoice IDs and inconsistent amounts.
-5. Preserve original JSON and source-record identity.
-6. Resolve customer identities through the migration planner.
-7. Map invoices and lines into Drift.
-8. Integrate invoice lifecycle and payment ledger repositories.
-9. Validate record counts, totals, relationships, and allocations.
-10. Implement retry-safe migration and recovery.
-11. Switch production reads and writes only after verification.
+Completed foundations are tracked in [`finished_tasks.md`](finished_tasks.md):
+
+- Verified raw snapshot capture and manifest.
+- Record-level legacy invoice preflight.
+- Deterministic source-occurrence identities.
+- Party-resolution planning and human review.
+- Persistent party-review journal (D3.2).
+
+Remaining tasks, in dependency order:
+
+1. Review and approve the updated [`DRIFT_MIGRATION_DESIGN.md`](DRIFT_MIGRATION_DESIGN.md) as the current design baseline.
+2. Add an independently recoverable/exportable snapshot path and a tested restore procedure.
+3. Design the **migration execution journal** separately from the already implemented party-review decision journal.
+4. Adapt invoice mapping and import idempotency to the complete source-occurrence key and immutable snapshot/migration version. Retire `saved_invoices/{invoice.id}` as the sole migration identity.
+5. Define handling for duplicate legacy IDs, malformed records, unknown actions, unsupported numeric precision, invalid totals, and unresolved party roles. Held records must remain traceable and recoverable.
+6. Implement invoice-plus-lines-plus-occurrence-mapping as one atomic transaction, with retry-safe execution and failure-injection tests.
+7. Reconcile every source occurrence, invoice, line, historical amount, party link, and database integrity result.
+8. Define and test post-cutover rollback/recovery for writes created after cutover.
+9. Implement a Drift-backed invoice repository behind an application-facing interface.
+10. Integrate all invoice lifecycle operations with one authoritative repository.
+11. Obtain explicit owner acceptance of reconciliation before a separately approved cutover.
+12. Retain the raw source snapshot and migration evidence for the agreed recovery period.
 
 **Migration rules:**
 
-- Never assume duplicate legacy IDs are unique record identities.
-- Preserve every source occurrence.
-- Never guess ambiguous customer mappings.
+- Never assume duplicate legacy IDs are unique source identities.
+- Preserve every source occurrence, including malformed records.
+- Never guess ambiguous customer/supplier mappings.
 - Never silently convert unresolved amounts into a currency.
 - Preserve historical financial values.
-- Keep legacy data until migration acceptance.
-- Make migration idempotent.
+- Never synthesize cash events, payment allocations, refunds, or accounting entries from invoice-level `paid`/`rest` aggregates.
+- Make import idempotent against the immutable occurrence identity and migration version.
+- Keep legacy data unchanged until acceptance and cutover approval.
+- Do not introduce uncontrolled dual-write between SharedPreferences and Drift.
 
 **Acceptance criteria:**
 
-- Migration can be repeated without duplicate records.
-- All source records are accounted for.
-- Financial totals reconcile.
-- Failed migrations can be recovered.
-- No legacy records are deleted before acceptance.
+- A byte-for-byte recoverable source snapshot is independently verified.
+- Every source occurrence has exactly one accounted-for status.
+- Every imported invoice maps to exactly one source occurrence.
+- Duplicate and malformed records are preserved and explicitly held.
+- Financial totals and line values reconcile under an approved precision policy.
+- No unsupported cash history is synthesized.
+- Repeating the same migration creates no additional business records.
+- Failed migrations can be resumed or safely recovered.
+- Cutover occurs only after reconciliation and explicit owner approval.
 
 ### Phase 3 — Identity, organizations, and business foundations
 
@@ -533,19 +546,19 @@ Do not create speculative infrastructure for future modules before a concrete de
 
 ---
 
-## 8. Immediate next implementation sequence
+## 8. Immediate next sequence
 
-After approval of this plan:
+The detailed migration design already exists and has been refreshed against the D3.2 implementation. The next work is **design review and gap closure**, not immediate import implementation.
 
-1. Resolve release-signing-key exposure and rotation.
-2. Fix invoice cold-start data loss.
-3. Add startup/bootstrap and persistence regression tests.
-4. Re-run the current CI pipeline.
-5. Review and update `docs/AUDIT.md`.
-6. Produce the detailed Drift adoption and legacy migration design.
-7. Implement the migration only after its design and rollback plan are approved.
+1. Review the updated `DRIFT_MIGRATION_DESIGN.md` and confirm the remaining design decisions.
+2. Specify the migration execution journal and occurrence-key import contract.
+3. Specify independently recoverable snapshot export/restore and post-cutover rollback.
+4. Update `AUDIT.md` with a full current-HEAD re-audit.
+5. Implement one approved migration foundation step at a time, with schema and behavior changes separately authorized.
 
-**First implementation milestone:** A stable application that cannot silently lose invoice history, has safe release signing, and has a verified data foundation for the SaaS transformation.
+Security-key remediation remains a parallel open risk and must not be represented as complete.
+
+**First migration milestone:** A fully specified, testable, recoverable import process that can account for every legacy invoice occurrence without altering the source.
 
 ---
 
