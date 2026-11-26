@@ -3,7 +3,7 @@
 **Repository:** Ahmednahrawy/arqamy  
 **Branch:** main  
 **Design status:** Proposal for owner review  
-**Implementation status:** Not authorized  
+**Implementation status:** Schema v8 implementation authorized; importer and production migration excluded  
 **Scope:** Durable execution, occurrence-key idempotency, retry/recovery, and import-state accounting for migration from SharedPreferences saved_invoices to Drift.
 
 ---
@@ -601,3 +601,14 @@ If two or more source occurrences contain the same legacy invoice `id`, but have
 - Use the stable source-occurrence key, not the legacy invoice ID, as the migration identity and idempotency basis.
 - Preserve each original legacy invoice ID as diagnostic historical metadata.
 - This policy does not override holds caused by other independently approved validation findings, and it does not authorize implementation or migration execution.
+
+
+## 14. Approved schema v8 status vocabularies
+
+On 2026-11-26, the owner approved and froze these database-enforced values:
+
+- Run status: `prepared, executing, execution_blocked, execution_complete, reconciling, reconciliation_failed, reconciled, accepted, aborted`.
+- Occurrence execution status: `preflighted, ready, held, excluded, claimed, imported, retryable_failure, permanent_failure, conflict, reconciled, reconciliation_failed`.
+- Attempt outcome: `imported, already_imported, retryable_failure, permanent_failure, conflict, abandoned`.
+
+These lists define allowed values only. Repository-level state-transition validation remains separate and must enforce the transition table before execution workflows are implemented. This approval authorizes schema v8, generated Drift code, and schema-focused tests only; it does not authorize the importer or production migration.
