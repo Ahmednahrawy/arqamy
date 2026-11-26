@@ -1,3 +1,4 @@
+import 'package:arqamy/core/helpers/invoice_discount.dart';
 import 'package:arqamy/features/orderscreen/providers/invoice_provider.dart';
 import 'package:material_ui/material_ui.dart';
 
@@ -10,10 +11,14 @@ import 'package:provider/provider.dart';
 class InvoiceSummaryBottomSheet extends StatelessWidget {
   final double paid;
   final double rest;
+  final double? subtotal;
+  final InvoiceDiscount? discount;
   const InvoiceSummaryBottomSheet({
     super.key,
     required this.paid,
     required this.rest,
+    this.subtotal,
+    this.discount,
   });
 
   @override
@@ -44,6 +49,16 @@ class InvoiceSummaryBottomSheet extends StatelessWidget {
                 Column(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
+                    if (discount != null) ...[
+                      Text(
+                        '${strings.subtotal}: '
+                        '${AppFormatters.currency(subtotal ?? totalCost, strings)}',
+                      ),
+                      Text(
+                        '${strings.discount}: '
+                        '- ${AppFormatters.currency(discount!.amount, strings)}',
+                      ),
+                    ],
                     Text(
                       '${strings.total_amount}: '
                       '${AppFormatters.currency(totalCost, strings)}',

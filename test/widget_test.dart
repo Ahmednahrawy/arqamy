@@ -213,6 +213,75 @@ void main() {
     expect(find.byType(CircularProgressIndicator), findsNothing);
   });
 
+  testWidgets('discount icon opens a switchable field and updates the invoice',
+      (
+    WidgetTester tester,
+  ) async {
+    SharedPreferences.setMockInitialValues({
+      'master_products': json.encode(['تمر سيوي']),
+    });
+    final invoiceProvider = InvoiceProvider()
+      ..setCustomerName('Test customer')
+      ..setInvoiceAction('شراء')
+      ..addProduct(
+        Product(
+          name: 'Rice',
+          weight: 5,
+          packageWeight: 0,
+          numberPackage: 0,
+          price: 10,
+        ),
+      );
+
+    await tester.pumpWidget(
+      MultiProvider(
+        providers: [
+          ChangeNotifierProvider(create: (_) => Language()),
+          ChangeNotifierProvider(create: (_) => ThemeProvider()),
+          ChangeNotifierProvider.value(value: invoiceProvider),
+          ChangeNotifierProvider(create: (_) => InvoiceSettingsProvider()),
+        ],
+        child: MyApp(appRouter: AppRouter()),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    expect(find.byTooltip('خصم'), findsOneWidget);
+    expect(find.byKey(const ValueKey('discount-value')), findsNothing);
+    await tester.ensureVisible(find.byTooltip('خصم'));
+    await tester.tap(find.byTooltip('خصم'));
+    await tester.pumpAndSettle();
+
+    expect(find.byKey(const ValueKey('discount-value')), findsOneWidget);
+    expect(find.byKey(const ValueKey('discount-mode-switch')), findsOneWidget);
+    await tester.tap(find.byTooltip('التبديل إلى نسبة'));
+    await tester.pumpAndSettle();
+
+    await tester.enterText(
+      find.byWidgetPredicate(
+        (widget) =>
+            widget is TextField && widget.decoration?.labelText == 'نسبة الخصم',
+      ),
+      '10',
+    );
+    await tester.pumpAndSettle();
+
+    expect(find.text('45.00 ج.م'), findsWidgets);
+    await tester.ensureVisible(find.text('حفظ'));
+    await tester.tap(find.widgetWithText(TextButton, 'حفظ'));
+    await tester.pumpAndSettle();
+
+    expect(invoiceProvider.invoices, hasLength(1));
+    final stored = invoiceProvider.invoices.single;
+    expect(stored.subtotalCost, 50);
+    expect(stored.totalCost, 45);
+    expect(stored.rest, 45);
+    expect(stored.discount!.type.name, 'percent');
+    expect(stored.discount!.value, 10);
+    expect(stored.discount!.amount, 5);
+    expect(tester.takeException(), isNull);
+  });
+
   testWidgets('payment controls are outside the invoice preview', (
     WidgetTester tester,
   ) async {

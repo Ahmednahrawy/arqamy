@@ -3,6 +3,7 @@ import 'dart:io';
 import 'dart:ui' show Locale;
 
 import 'package:arqamy/core/helpers/formatters.dart';
+import 'package:arqamy/core/helpers/invoice_discount.dart';
 import 'package:arqamy/core/helpers/utils.dart';
 import 'package:arqamy/features/orderscreen/data/models/product_model.dart';
 import 'package:arqamy/features/orderscreen/providers/invoice_provider.dart';
@@ -161,6 +162,45 @@ void main() {
       expect(String.fromCharCodes(arabic.take(5)), '%PDF-');
       expect(String.fromCharCodes(english.take(5)), '%PDF-');
       expect(arabic, isNot(equals(english)));
+    });
+
+    test('a percentage discount is included in the generated PDF', () async {
+      SharedPreferences.setMockInitialValues({});
+      final provider = InvoiceProvider()
+        ..addProduct(
+          Product(
+            name: 'Rice',
+            weight: 2,
+            packageWeight: 0,
+            numberPackage: 0,
+            price: 10,
+          ),
+        );
+      final settings = InvoiceSettingsProvider();
+      await settings.loadSettings();
+
+      final bytes = await generatePDF(
+        PdfPageFormat.a4,
+        provider,
+        settings,
+        'Customer',
+        18,
+        5,
+        13,
+        'Oct 28, 2026',
+        '12:34',
+        'sale',
+        '1002',
+        locale: 'en',
+        subtotalCost: 20,
+        discount: const InvoiceDiscount(
+          type: InvoiceDiscountType.percent,
+          value: 10,
+          amount: 2,
+        ),
+      );
+
+      expect(String.fromCharCodes(bytes.take(5)), '%PDF-');
     });
   });
 }

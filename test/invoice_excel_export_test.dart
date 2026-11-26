@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:arqamy/core/helpers/excel_labels.dart';
+import 'package:arqamy/core/helpers/invoice_discount.dart';
 import 'package:arqamy/core/helpers/money.dart';
 import 'package:arqamy/core/services/invoice_excel_export_service.dart';
 import 'package:arqamy/features/orderscreen/data/models/invoice.dart';
@@ -88,6 +89,39 @@ void main() {
     expect(_number(rows[4][11]), invoice.paid);
     expect(_text(rows[5][10]), ExcelLabels.en.remaining);
     expect(_number(rows[5][11]), invoice.rest);
+  });
+
+  test('exports subtotal and resolved discount when one was entered', () {
+    final base = _invoice();
+    final invoice = Invoice(
+      id: base.id,
+      customerName: base.customerName,
+      products: base.products,
+      totalCost: 227.24,
+      paid: 200,
+      rest: 27.24,
+      formattedDate: base.formattedDate,
+      formattedTime: base.formattedTime,
+      invoiceAction: base.invoiceAction,
+      invoiceSerial: base.invoiceSerial,
+      subtotalCost: 252.49,
+      discount: const InvoiceDiscount(
+        type: InvoiceDiscountType.percent,
+        value: 10,
+        amount: 25.25,
+      ),
+    );
+    final workbook = Excel.decodeBytes(
+      InvoiceExcelExportService.buildWorkbook(invoice, locale: 'en'),
+    );
+    final rows = workbook.tables['20261126-001']!.rows;
+
+    expect(_text(rows[3][10]), ExcelLabels.en.subtotal);
+    expect(_number(rows[3][11]), closeTo(252.49, 0.001));
+    expect(_text(rows[4][10]), '${ExcelLabels.en.discount} (10.00%)');
+    expect(_number(rows[4][11]), closeTo(25.25, 0.001));
+    expect(_text(rows[5][10]), ExcelLabels.en.invoiceTotal);
+    expect(_number(rows[5][11]), closeTo(227.24, 0.001));
   });
 
   test('Arabic export uses Arabic headers and an RTL sheet', () {

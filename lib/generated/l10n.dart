@@ -745,6 +745,51 @@ class S {
     return Intl.message('Collected', name: 'collected_amount_label', desc: '', args: []);
   }
 
+  /// `Discount`
+  String get discount {
+    return Intl.message('Discount', name: 'discount', desc: '', args: []);
+  }
+
+  /// `Discount amount`
+  String get discount_amount {
+    return Intl.message('Discount amount', name: 'discount_amount', desc: '', args: []);
+  }
+
+  /// `Discount percent`
+  String get discount_percent {
+    return Intl.message('Discount percent', name: 'discount_percent', desc: '', args: []);
+  }
+
+  /// `Switch to amount`
+  String get switch_to_amount {
+    return Intl.message('Switch to amount', name: 'switch_to_amount', desc: '', args: []);
+  }
+
+  /// `Switch to percent`
+  String get switch_to_percent {
+    return Intl.message('Switch to percent', name: 'switch_to_percent', desc: '', args: []);
+  }
+
+  /// `Clear discount`
+  String get clear_discount {
+    return Intl.message('Clear discount', name: 'clear_discount', desc: '', args: []);
+  }
+
+  /// `Discount cannot exceed the invoice total`
+  String get discount_exceeds_total {
+    return Intl.message('Discount cannot exceed the invoice total', name: 'discount_exceeds_total', desc: '', args: []);
+  }
+
+  /// `Percent must be between 0 and 100`
+  String get discount_percent_range {
+    return Intl.message('Percent must be between 0 and 100', name: 'discount_percent_range', desc: '', args: []);
+  }
+
+  /// `Subtotal`
+  String get subtotal {
+    return Intl.message('Subtotal', name: 'subtotal', desc: '', args: []);
+  }
+
   /// `Save`
   String get save {
     return Intl.message('Save', name: 'save', desc: '', args: []);

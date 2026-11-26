@@ -1,3 +1,4 @@
+import 'package:arqamy/core/helpers/invoice_discount.dart';
 import 'package:arqamy/features/orderscreen/data/models/invoice.dart';
 import 'package:arqamy/features/orderscreen/providers/invoice_provider.dart';
 import 'package:arqamy/core/services/invoice_service.dart';
@@ -20,6 +21,7 @@ import 'package:arqamy/core/widgets/app_snack_bar.dart';
 import 'package:arqamy/features/orderscreen/data/models/product_model.dart';
 import 'package:arqamy/features/drawer/ui/side_nav.dart';
 import 'package:arqamy/features/orderscreen/ui/widgets/customer_name.dart';
+import 'package:arqamy/features/orderscreen/ui/widgets/discount_input_field.dart';
 import 'package:arqamy/features/orderscreen/ui/widgets/my_data_table.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
@@ -45,6 +47,9 @@ class _OrderscreenState extends State<Orderscreen>
   final _payController = TextEditingController(text: "0");
   final _payKey = GlobalKey<FormState>();
   final _payFocusNode = FocusNode();
+  final _discountController = TextEditingController();
+  InvoiceDiscountType _discountType = InvoiceDiscount.lastUsedType;
+  bool _discountExpanded = false;
   String? _savedInvoiceId;
   Invoice? _savedInvoice;
   int _productFormVersion = 0;
@@ -82,6 +87,9 @@ class _OrderscreenState extends State<Orderscreen>
   double _rest(double totalCost) =>
       InvoiceProvider.calculateOutstandingBalance(totalCost, _paid);
 
+  InvoiceDiscount? _discountFor(double subtotal) =>
+      InvoiceDiscount.fromText(_discountController.text, _discountType, subtotal);
+
   // Centralized error/toast handling
   void _showToast(String message, {bool isError = false}) {
     showAppSnackBar(context, message, isError: isError);
@@ -103,6 +111,17 @@ class _OrderscreenState extends State<Orderscreen>
   // Generates and shares an invoice as a PDF file
   bool _validateInvoice(InvoiceProvider provider) {
     if (!(_payKey.currentState?.validate() ?? false)) return false;
+    final discountError = InvoiceDiscount.validateText(
+      _discountController.text,
+      _discountType,
+      provider.totalCost,
+    );
+    if (discountError != null) {
+      if (!_discountExpanded) setState(() => _discountExpanded = true);
+      _showToast(_discountErrorMessage(discountError, S.of(context)),
+          isError: true);
+      return false;
+    }
     if (provider.customerName == null ||
         provider.customerName!.isEmpty ||
         provider.customerName!.length < 4) {
@@ -112,22 +131,41 @@ class _OrderscreenState extends State<Orderscreen>
     return true;
   }
 
+  String _discountErrorMessage(
+    InvoiceDiscountValidationError error,
+    S strings,
+  ) {
+    return switch (error) {
+      InvoiceDiscountValidationError.percentOutOfRange =>
+        strings.discount_percent_range,
+      InvoiceDiscountValidationError.exceedsSubtotal =>
+        strings.discount_exceeds_total,
+      _ => strings.invalidNumber,
+    };
+  }
+
   Invoice _buildInvoice(InvoiceProvider provider) {
     if (_savedInvoice == null) {
       _selectDate(context);
     }
 
+    final subtotal = provider.totalCost;
+    final discount = _discountFor(subtotal);
+    final payableTotal = InvoiceDiscount.payableTotal(subtotal, discount);
+
     return Invoice(
       id: _savedInvoice?.id ?? provider.draftInvoiceId,
       customerName: provider.customerName!,
       products: List.from(provider.products),
-      totalCost: provider.totalCost,
+      totalCost: payableTotal,
       paid: _paid,
-      rest: _rest(provider.totalCost),
+      rest: _rest(payableTotal),
       formattedDate: _savedInvoice?.formattedDate ?? formattedDate!,
       formattedTime: _savedInvoice?.formattedTime ?? formattedTime!,
       invoiceAction: provider.invoiceAction,
       invoiceSerial: _savedInvoice?.invoiceSerial ?? _generateInvoiceSerial(),
+      subtotalCost: discount != null ? subtotal : null,
+      discount: discount,
     );
   }
 
@@ -179,6 +217,8 @@ class _OrderscreenState extends State<Orderscreen>
             customerName: invoice.customerName,
             invoiceId: invoice.id,
             totalCost: invoice.totalCost,
+            subtotalCost: invoice.subtotalCost,
+            discount: invoice.discount,
             paid: invoice.paid,
             rest: invoice.rest,
             formattedDate: invoice.formattedDate,
@@ -230,6 +270,8 @@ class _OrderscreenState extends State<Orderscreen>
     void resetDraft() {
       provider.clearInvoice();
       _payController.text = '0';
+      _discountController.clear();
+      _discountExpanded = false;
       setState(() {
         _savedInvoiceId = null;
         _savedInvoice = null;
@@ -313,6 +355,8 @@ class _OrderscreenState extends State<Orderscreen>
 
                 context.read<InvoiceProvider>().clearInvoice();
                 _payController.text = '0';
+                _discountController.clear();
+                _discountExpanded = false;
                 setState(() {
                   _savedInvoiceId = null;
                   _savedInvoice = null;
@@ -366,9 +410,16 @@ class _OrderscreenState extends State<Orderscreen>
                     ),
                     context: context,
                     builder: (BuildContext ctx) {
+                      final discount = _discountFor(provider.totalCost);
+                      final payable = InvoiceDiscount.payableTotal(
+                        provider.totalCost,
+                        discount,
+                      );
                       return InvoiceSummaryBottomSheet(
                         paid: _paid,
-                        rest: _rest(provider.totalCost),
+                        rest: _rest(payable),
+                        subtotal: provider.totalCost,
+                        discount: discount,
                       );
                     },
                   );
@@ -389,6 +440,7 @@ class _OrderscreenState extends State<Orderscreen>
     _animationController.dispose();
     _payFocusNode.dispose();
     _payController.dispose();
+    _discountController.dispose();
     super.dispose();
   }
 
@@ -505,7 +557,7 @@ class _OrderscreenState extends State<Orderscreen>
                               children: [
                                 const MyDataTable(),
                                 const Divider(height: 32),
-                                _buildTotalCostCard(provider.totalCost),
+                                _buildTotalCostCard(provider),
                                 verticalSpace(12),
                                 _buildPaymentControls(),
                               ],
@@ -571,33 +623,49 @@ class _OrderscreenState extends State<Orderscreen>
     var width = MediaQuery.of(context).size.width;
     final colors = Theme.of(context).colorScheme;
     final strings = S.of(context);
+    final subtotal = context.read<InvoiceProvider>().totalCost;
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 12),
       child: Column(
         children: [
           Form(
             key: _payKey,
-            child: AppTextFormField(
-              focusNode: _payFocusNode,
-              textDirection: TextDirection.ltr,
-              controller: _payController,
-              labelText: strings.collected_amount_label,
-              suffixText: strings.currency,
-              suffixIcon: _payController.text.isEmpty
-                  ? const SizedBox.shrink()
-                  : IconButton(
-                      onPressed: _payController.clear,
-                      icon: const Icon(Icons.clear),
-                    ),
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return strings.enter_collected_amount;
-                }
-                if (Money.tryParse(value) == null) {
-                  return strings.invalidNumber;
-                }
-                return null;
-              },
+            child: Column(
+              children: [
+                DiscountInputField(
+                  controller: _discountController,
+                  type: _discountType,
+                  subtotal: subtotal,
+                  expanded: _discountExpanded,
+                  onToggleExpanded: () =>
+                      setState(() => _discountExpanded = !_discountExpanded),
+                  onTypeChanged: (type) =>
+                      setState(() => _discountType = type),
+                  onChanged: (_) => setState(() {}),
+                ),
+                AppTextFormField(
+                  focusNode: _payFocusNode,
+                  textDirection: TextDirection.ltr,
+                  controller: _payController,
+                  labelText: strings.collected_amount_label,
+                  suffixText: strings.currency,
+                  suffixIcon: _payController.text.isEmpty
+                      ? const SizedBox.shrink()
+                      : IconButton(
+                          onPressed: _payController.clear,
+                          icon: const Icon(Icons.clear),
+                        ),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return strings.enter_collected_amount;
+                    }
+                    if (Money.tryParse(value) == null) {
+                      return strings.invalidNumber;
+                    }
+                    return null;
+                  },
+                ),
+              ],
             ),
           ),
           verticalSpace(10),
@@ -660,44 +728,82 @@ class _OrderscreenState extends State<Orderscreen>
     );
   }
 
-  Widget _buildTotalCostCard(double totalCost) {
+  Widget _buildTotalCostCard(InvoiceProvider provider) {
     final colors = Theme.of(context).colorScheme;
     final semanticColors = AppSemanticColors.of(context);
     final strings = S.of(context);
+    final subtotal = provider.totalCost;
+    final discount = _discountFor(subtotal);
+    final payable = InvoiceDiscount.payableTotal(subtotal, discount);
+
+    TextStyle labelStyle() => TextStyle(
+          color: colors.onSecondary,
+          fontSize: 16,
+          fontWeight: FontWeight.bold,
+        );
+    TextStyle valueStyle({bool large = false}) => TextStyle(
+          color: colors.onSecondary,
+          fontSize: large ? 20 : 16,
+          fontWeight: FontWeight.bold,
+        );
+
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: semanticColors.success,
         borderRadius: BorderRadius.circular(12),
       ),
-      child: LayoutBuilder(
-        builder: (context, constraints) {
-          final total = Text(
-            AppFormatters.currency(totalCost, strings),
-            style: TextStyle(
-              color: colors.onSecondary,
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          if (discount != null) ...[
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(strings.subtotal, style: labelStyle()),
+                Text(
+                  AppFormatters.currency(subtotal, strings),
+                  style: valueStyle(),
+                ),
+              ],
             ),
-          );
-          final label = Text(
-            strings.grand_total,
-            style: TextStyle(
-              color: colors.onSecondary,
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
+            const SizedBox(height: 6),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  discount.type == InvoiceDiscountType.percent
+                      ? '${strings.discount} (${discount.value.toStringAsFixed(2)}%)'
+                      : strings.discount,
+                  style: labelStyle(),
+                ),
+                Text(
+                  '- ${AppFormatters.currency(discount.amount, strings)}',
+                  style: valueStyle(),
+                ),
+              ],
             ),
-          );
-
-          if (constraints.maxWidth < 380) {
-            return Column(children: [label, const SizedBox(height: 4), total]);
-          }
-
-          return Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [label, total],
-          );
-        },
+            const Divider(height: 16),
+          ],
+          LayoutBuilder(
+            builder: (context, constraints) {
+              final label = Text(strings.grand_total, style: labelStyle());
+              final total = Text(
+                AppFormatters.currency(payable, strings),
+                style: valueStyle(large: true),
+              );
+              if (constraints.maxWidth < 380) {
+                return Column(
+                  children: [label, const SizedBox(height: 4), total],
+                );
+              }
+              return Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [label, total],
+              );
+            },
+          ),
+        ],
       ),
     );
   }

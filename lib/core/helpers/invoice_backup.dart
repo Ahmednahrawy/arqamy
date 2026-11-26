@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:arqamy/core/helpers/invoice_discount.dart';
 import 'package:arqamy/core/helpers/money.dart';
 import 'package:arqamy/features/orderscreen/data/models/invoice.dart';
 import 'package:arqamy/features/orderscreen/data/models/product_model.dart';
@@ -107,7 +108,12 @@ class InvoiceBackup {
     if (customerId != null &&
         (customerId is! String || customerId.trim().isEmpty)) {
       throw _invalid(number, 'customerId is not valid text');
-    }    final rawProducts = map['products'];
+    }
+    final subtotalCost = map.containsKey('subtotalCost')
+        ? _amount(map, 'subtotalCost', number)
+        : null;
+    final discount = _parseDiscount(map['discount'], number, subtotalCost);
+    final rawProducts = map['products'];
     if (rawProducts is! List) {
       throw _invalid(number, 'products is not a list');
     }
@@ -125,8 +131,46 @@ class InvoiceBackup {
       formattedTime: _text(map, 'formattedTime', number),
       invoiceAction: action as String?,
       invoiceSerial: _text(map, 'invoiceSerial', number),
+      subtotalCost: subtotalCost,
+      discount: discount,
       customerId: customerId as String?,
-    );  }
+    );
+  }
+
+  static InvoiceDiscount? _parseDiscount(
+    Object? raw,
+    int number,
+    double? subtotalCost,
+  ) {
+    if (raw == null) return null;
+    if (raw is! Map) {
+      throw _invalid(number, 'discount is not an object');
+    }
+    final map = Map<String, dynamic>.from(raw);
+    final typeValue = map['type'];
+    if (typeValue != 'amount' && typeValue != 'percent') {
+      throw _invalid(number, 'discount type is not supported');
+    }
+    final value = _amount(map, 'value', number);
+    final amount = _amount(map, 'amount', number);
+    if (value < 0 || amount < 0) {
+      throw _invalid(number, 'discount is negative');
+    }
+    if (typeValue == 'percent' && value > 100) {
+      throw _invalid(number, 'discount percent is out of range');
+    }
+    if (subtotalCost != null && amount > subtotalCost) {
+      throw _invalid(number, 'discount exceeds the invoice subtotal');
+    }
+    return InvoiceDiscount(
+      type:
+          typeValue == 'percent'
+              ? InvoiceDiscountType.percent
+              : InvoiceDiscountType.amount,
+      value: value,
+      amount: amount,
+    );
+  }
 
   static Product _parseProduct(Object? raw, int number) {
     if (raw is! Map) {

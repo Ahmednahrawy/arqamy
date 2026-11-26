@@ -2,6 +2,7 @@ import 'package:material_ui/material_ui.dart';
 import 'package:arqamy/config/theme/colors.dart';
 import 'package:arqamy/core/helpers/formatters.dart';
 import 'package:arqamy/core/helpers/invoice_action_l10n.dart';
+import 'package:arqamy/core/helpers/invoice_discount.dart';
 import 'package:arqamy/features/orderscreen/data/models/invoice.dart';
 import 'package:arqamy/features/orderscreen/providers/invoice_provider.dart';
 import 'package:arqamy/features/settingscreen/providers/invoice_setting_provider.dart';
@@ -122,6 +123,25 @@ class InvoiceDetailDialog extends StatelessWidget {
                       title: strings.financial_summary,
                       icon: Icons.attach_money,
                       children: [
+                        if (invoice.discount != null) ...[
+                          _buildInfoRow(
+                            context,
+                            strings.subtotal,
+                            AppFormatters.currency(
+                              invoice.subtotalCost ?? invoice.totalCost,
+                              strings,
+                            ),
+                          ),
+                          _buildInfoRow(
+                            context,
+                            invoice.discount!.type ==
+                                    InvoiceDiscountType.percent
+                                ? '${strings.discount} (${invoice.discount!.value.toStringAsFixed(2)}%)'
+                                : strings.discount,
+                            '- ${AppFormatters.currency(invoice.discount!.amount, strings)}',
+                            color: semanticColors.warning,
+                          ),
+                        ],
                         _buildInfoRow(
                           context,
                           strings.total_amount,

@@ -20,6 +20,7 @@ class AppTextFormField extends StatelessWidget {
   final TextInputAction? textInputAction;
   final FocusNode? focusNode;
   final Function()? onEditingComplete;
+  final ValueChanged<String>? onChanged;
   final TextDirection? textDirection;
   final bool digitsOnly;
 
@@ -42,6 +43,7 @@ class AppTextFormField extends StatelessWidget {
     this.textInputAction,
     this.focusNode,
     this.onEditingComplete,
+    this.onChanged,
     this.textDirection,
     this.digitsOnly = false,
   });
@@ -56,6 +58,7 @@ class AppTextFormField extends StatelessWidget {
       focusNode: focusNode,
       textInputAction: textInputAction,
       onEditingComplete: onEditingComplete,
+      onChanged: onChanged,
       decoration: InputDecoration(
         isDense: true,
         contentPadding: contentPadding ??

@@ -16,6 +16,8 @@ class PdfLabels {
     required this.invoiceTotal,
     required this.collected,
     required this.remaining,
+    required this.subtotal,
+    required this.discount,
     required this.currency,
     required this.purchaseTitle,
     required this.saleTitle,
@@ -41,6 +43,8 @@ class PdfLabels {
   final String invoiceTotal;
   final String collected;
   final String remaining;
+  final String subtotal;
+  final String discount;
   final String currency;
   final String purchaseTitle;
   final String saleTitle;
@@ -66,6 +70,8 @@ class PdfLabels {
     invoiceTotal: 'إجمالي الفاتورة',
     collected: 'تحصيل',
     remaining: 'الباقي',
+    subtotal: 'الإجمالي قبل الخصم',
+    discount: 'خصم',
     currency: 'ج.م',
     purchaseTitle: 'فاتورة مشتريات',
     saleTitle: 'فاتورة بيع',
@@ -92,6 +98,8 @@ class PdfLabels {
     invoiceTotal: 'Invoice total',
     collected: 'Collected',
     remaining: 'Remaining',
+    subtotal: 'Subtotal',
+    discount: 'Discount',
     currency: 'EGP',
     purchaseTitle: 'Purchase invoice',
     saleTitle: 'Sale invoice',

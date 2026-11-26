@@ -3,6 +3,7 @@ import 'dart:convert';
 
 import 'package:arqamy/core/helpers/product_list_constants.dart';
 import 'package:arqamy/core/helpers/money.dart';
+import 'package:arqamy/core/helpers/invoice_discount.dart';
 import 'package:arqamy/core/helpers/invoice_backup.dart';
 import 'package:arqamy/features/orderscreen/data/models/invoice.dart';
 import 'package:arqamy/core/helpers/invoice_action.dart';
@@ -81,6 +82,13 @@ class InvoiceProvider extends ChangeNotifier {
         Money.fromDouble(totalCost).abs() - Money.fromDouble(paid);
     return remaining.toDouble();
   }
+
+  /// Payable total after applying a resolved discount to the product subtotal.
+  static double calculatePayableTotal(
+    double subtotal,
+    InvoiceDiscount? discount,
+  ) =>
+      InvoiceDiscount.payableTotal(subtotal, discount);
 
   bool get hasPackageProducts {
     return _hasPackageProductsCache ??= _products.any(

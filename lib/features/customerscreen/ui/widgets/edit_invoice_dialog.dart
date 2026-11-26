@@ -1,11 +1,13 @@
 import 'package:arqamy/config/theme/colors.dart';
 import 'package:arqamy/core/helpers/invoice_action.dart';
 import 'package:arqamy/core/helpers/invoice_date_parser.dart';
+import 'package:arqamy/core/helpers/invoice_discount.dart';
 import 'package:arqamy/core/helpers/money.dart';
 import 'package:arqamy/core/widgets/app_snack_bar.dart';
 import 'package:arqamy/features/orderscreen/data/models/invoice.dart';
 import 'package:arqamy/features/orderscreen/data/models/product_model.dart';
 import 'package:arqamy/features/orderscreen/providers/invoice_provider.dart';
+import 'package:arqamy/features/orderscreen/ui/widgets/discount_input_field.dart';
 import 'package:arqamy/generated/l10n.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:intl/intl.dart' as intl;
@@ -24,6 +26,9 @@ class _EditInvoiceDialogState extends State<EditInvoiceDialog> {
   static final _actions = InvoiceAction.storedValues;
   final _formKey = GlobalKey<FormState>();
   late final TextEditingController _paidController;
+  late final TextEditingController _discountController;
+  late InvoiceDiscountType _discountType;
+  late bool _discountExpanded;
   late final TextEditingController _customerNameController;
   late final List<_ProductDraft> _products;
   late String? _invoiceAction;
@@ -32,6 +37,8 @@ class _EditInvoiceDialogState extends State<EditInvoiceDialog> {
   late DateTime? _selectedDate;
   late TimeOfDay? _selectedTime;
   bool _saving = false;
+  double? _previewSubtotal;
+  InvoiceDiscount? _previewDiscount;
   double? _previewTotal;
   double? _previewRest;
 
@@ -41,6 +48,12 @@ class _EditInvoiceDialogState extends State<EditInvoiceDialog> {
     _paidController = TextEditingController(
       text: widget.invoice.paid.toString(),
     );
+    final storedDiscount = widget.invoice.discount;
+    _discountController = TextEditingController(
+      text: storedDiscount?.value.toString() ?? '',
+    );
+    _discountType = storedDiscount?.type ?? InvoiceDiscount.lastUsedType;
+    _discountExpanded = storedDiscount != null;
     _customerNameController = TextEditingController(
       text: widget.invoice.customerName,
     );
@@ -50,6 +63,9 @@ class _EditInvoiceDialogState extends State<EditInvoiceDialog> {
     _formattedTime = widget.invoice.formattedTime;
     _selectedDate = _parseStoredDate(widget.invoice.formattedDate);
     _selectedTime = _parseStoredTime(widget.invoice.formattedTime);
+    _previewSubtotal =
+        widget.invoice.subtotalCost ?? widget.invoice.totalCost;
+    _previewDiscount = storedDiscount;
     _previewTotal = widget.invoice.totalCost;
     _previewRest = widget.invoice.rest;
   }
@@ -57,6 +73,7 @@ class _EditInvoiceDialogState extends State<EditInvoiceDialog> {
   @override
   void dispose() {
     _paidController.dispose();
+    _discountController.dispose();
     _customerNameController.dispose();
     for (final product in _products) {
       product.dispose();
@@ -103,10 +120,22 @@ class _EditInvoiceDialogState extends State<EditInvoiceDialog> {
   void _refreshPreview() {
     final products = _readProducts();
     final paid = Money.tryParse(_paidController.text)?.toDouble();
+    final subtotal = products == null
+        ? null
+        : InvoiceProvider.calculateInvoiceTotal(products);
+    final discount = subtotal == null
+        ? null
+        : InvoiceDiscount.fromText(
+            _discountController.text,
+            _discountType,
+            subtotal,
+          );
     setState(() {
-      _previewTotal = products == null
+      _previewSubtotal = subtotal;
+      _previewDiscount = discount;
+      _previewTotal = subtotal == null
           ? null
-          : InvoiceProvider.calculateInvoiceTotal(products);
+          : InvoiceDiscount.payableTotal(subtotal, discount);
       _previewRest = _previewTotal == null || paid == null
           ? null
           : InvoiceProvider.calculateOutstandingBalance(_previewTotal!, paid);
@@ -159,7 +188,29 @@ class _EditInvoiceDialogState extends State<EditInvoiceDialog> {
     }
 
     final paid = Money.tryParse(_paidController.text)!.toDouble();
-    final totalCost = InvoiceProvider.calculateInvoiceTotal(products);
+    final subtotal = InvoiceProvider.calculateInvoiceTotal(products);
+    final discountError = InvoiceDiscount.validateText(
+      _discountController.text,
+      _discountType,
+      subtotal,
+    );
+    if (discountError != null) {
+      final message = switch (discountError) {
+        InvoiceDiscountValidationError.percentOutOfRange =>
+          strings.discount_percent_range,
+        InvoiceDiscountValidationError.exceedsSubtotal =>
+          strings.discount_exceeds_total,
+        _ => strings.invalidNumber,
+      };
+      showAppSnackBar(context, message, isError: true);
+      return;
+    }
+    final discount = InvoiceDiscount.fromText(
+      _discountController.text,
+      _discountType,
+      subtotal,
+    );
+    final totalCost = InvoiceDiscount.payableTotal(subtotal, discount);
     final updatedInvoice = Invoice(
       id: widget.invoice.id,
       customerName: _customerNameController.text.trim(),
@@ -171,6 +222,8 @@ class _EditInvoiceDialogState extends State<EditInvoiceDialog> {
       formattedTime: _formattedTime,
       invoiceAction: _invoiceAction,
       invoiceSerial: widget.invoice.invoiceSerial,
+      subtotalCost: discount != null ? subtotal : null,
+      discount: discount,
       customerId: widget.invoice.customerId,
     );
     setState(() => _saving = true);
@@ -305,6 +358,21 @@ class _EditInvoiceDialogState extends State<EditInvoiceDialog> {
                       ),
                     ),
                     const SizedBox(height: 16),
+                    DiscountInputField(
+                      controller: _discountController,
+                      type: _discountType,
+                      subtotal: _previewSubtotal ?? 0,
+                      expanded: _discountExpanded,
+                      onToggleExpanded: () =>
+                          setState(() => _discountExpanded = !_discountExpanded),
+                      onTypeChanged: (type) {
+                        InvoiceDiscount.lastUsedType = type;
+                        setState(() => _discountType = type);
+                        _refreshPreview();
+                      },
+                      onChanged: (_) => _refreshPreview(),
+                    ),
+                    const SizedBox(height: 8),
                     TextFormField(
                       key: const ValueKey('paid-amount'),
                       controller: _paidController,
@@ -544,6 +612,17 @@ class _EditInvoiceDialogState extends State<EditInvoiceDialog> {
       ),
       child: Column(
         children: [
+          if (_previewDiscount != null) ...[
+            _previewRow(strings.subtotal, _previewSubtotal, colors),
+            const SizedBox(height: 8),
+            _previewRow(
+              strings.discount,
+              _previewDiscount!.amount,
+              colors,
+              valueColor: semanticColors.warning,
+            ),
+            const SizedBox(height: 8),
+          ],
           _previewRow(strings.invoiceTotal, _previewTotal, colors),
           const SizedBox(height: 8),
           _previewRow(

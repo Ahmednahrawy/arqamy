@@ -1226,6 +1226,14 @@ class _CustomerScreenState extends State<CustomerScreen> {
                             width: itemWidth,
                             colors: colors,
                           ),
+                          if (invoice.discount != null)
+                            _buildInvoiceAmount(
+                              label: strings.discount,
+                              amount: invoice.discount!.amount,
+                              strings: strings,
+                              width: itemWidth,
+                              colors: colors,
+                            ),
                           _buildInvoiceAmount(
                             label: strings.paidAmount,
                             amount: invoice.paid,

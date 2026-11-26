@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:arqamy/core/helpers/invoice_discount.dart';
 import 'package:arqamy/core/helpers/utils.dart';
 import 'package:arqamy/core/services/invoice_excel_export_service.dart';
 import 'package:arqamy/features/orderscreen/data/models/invoice.dart';
@@ -28,6 +29,8 @@ class InvoiceService {
     required String? formattedTime,
     required String? invoiceAction,
     required String invoiceSerial,
+    double? subtotalCost,
+    InvoiceDiscount? discount,
     String locale = 'ar',
   }) async {
     // Create PDF bytes
@@ -43,6 +46,8 @@ class InvoiceService {
       formattedTime,
       invoiceAction,
       invoiceSerial,
+      subtotalCost: subtotalCost,
+      discount: discount,
       locale: locale,
     );
 
@@ -87,6 +92,8 @@ class InvoiceService {
     required String? formattedTime,
     required String? invoiceAction,
     required String invoiceSerial,
+    double? subtotalCost,
+    InvoiceDiscount? discount,
     String locale = 'ar',
   }) async {
     final filePath = await generateAndSaveInvoice(
@@ -101,6 +108,8 @@ class InvoiceService {
       formattedTime: formattedTime,
       invoiceAction: invoiceAction,
       invoiceSerial: invoiceSerial,
+      subtotalCost: subtotalCost,
+      discount: discount,
       locale: locale,
     );
     await SharePlus.instance.share(ShareParams(files: [XFile(filePath)]));
@@ -119,6 +128,8 @@ class InvoiceService {
     required String? formattedTime,
     required String? invoiceAction,
     required String invoiceSerial,
+    double? subtotalCost,
+    InvoiceDiscount? discount,
     String locale = 'ar',
   }) async {
     final filePath = await generateAndSaveInvoice(
@@ -133,6 +144,8 @@ class InvoiceService {
       formattedTime: formattedTime,
       invoiceAction: invoiceAction,
       invoiceSerial: invoiceSerial,
+      subtotalCost: subtotalCost,
+      discount: discount,
       locale: locale,
     );
     if (defaultTargetPlatform == TargetPlatform.android) {
@@ -158,6 +171,8 @@ class InvoiceService {
       customerName: invoice.customerName,
       invoiceId: invoice.id,
       totalCost: invoice.totalCost,
+      subtotalCost: invoice.subtotalCost,
+      discount: invoice.discount,
       paid: invoice.paid,
       rest: invoice.rest,
       formattedDate: invoice.formattedDate,

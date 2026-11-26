@@ -1,3 +1,4 @@
+import 'package:arqamy/core/helpers/invoice_discount.dart';
 import 'package:arqamy/features/orderscreen/data/models/product_model.dart';
 import 'package:uuid/uuid.dart';
 
@@ -17,6 +18,11 @@ class Invoice {
   final String? invoiceAction;
   final String invoiceSerial;
 
+  /// Pre-discount sum of product lines. Null for invoices saved before
+  /// discounts existed; [totalCost] remains the payable total in that case.
+  final double? subtotalCost;
+  final InvoiceDiscount? discount;
+
   /// Stable customer identity (Decision 39). Null for invoices saved before
   /// customer IDs existed; those are mapped after the owner confirms them.
   final String? customerId;
@@ -32,6 +38,8 @@ class Invoice {
     required this.formattedTime,
     this.invoiceAction,
     required this.invoiceSerial,
+    this.subtotalCost,
+    this.discount,
     this.customerId,
   });
 
@@ -48,6 +56,8 @@ class Invoice {
       formattedTime: formattedTime,
       invoiceAction: invoiceAction,
       invoiceSerial: invoiceSerial,
+      subtotalCost: subtotalCost,
+      discount: discount,
       customerId: customerId,
     );
   }
@@ -64,6 +74,9 @@ class Invoice {
       'formattedTime': formattedTime,
       'invoiceAction': invoiceAction,
       'invoiceSerial': invoiceSerial,
+      if (discount != null && subtotalCost != null)
+        'subtotalCost': subtotalCost,
+      if (discount != null) 'discount': discount!.toJson(),
       if (customerId != null) 'customerId': customerId,
     };
   }
@@ -82,6 +95,8 @@ class Invoice {
       formattedTime: json['formattedTime'],
       invoiceAction: json['invoiceAction'],
       invoiceSerial: json['invoiceSerial'],
+      subtotalCost: (json['subtotalCost'] as num?)?.toDouble(),
+      discount: InvoiceDiscount.fromJson(json['discount']),
       customerId: json['customerId'],
     );
   }

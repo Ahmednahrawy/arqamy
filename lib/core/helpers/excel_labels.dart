@@ -21,6 +21,8 @@ class ExcelLabels {
     required this.invoiceTotal,
     required this.collected,
     required this.remaining,
+    required this.subtotal,
+    required this.discount,
     required this.purchase,
     required this.sale,
     required this.storage,
@@ -42,6 +44,8 @@ class ExcelLabels {
   final String invoiceTotal;
   final String collected;
   final String remaining;
+  final String subtotal;
+  final String discount;
   final String purchase;
   final String sale;
   final String storage;
@@ -63,6 +67,8 @@ class ExcelLabels {
     invoiceTotal: 'إجمالي الفاتورة',
     collected: 'تحصيل',
     remaining: 'الباقي',
+    subtotal: 'الإجمالي قبل الخصم',
+    discount: 'خصم',
     purchase: 'شراء',
     sale: 'بيع',
     storage: 'تخزين',
@@ -85,6 +91,8 @@ class ExcelLabels {
     invoiceTotal: 'Invoice total',
     collected: 'Collected',
     remaining: 'Remaining',
+    subtotal: 'Subtotal',
+    discount: 'Discount',
     purchase: 'Purchase',
     sale: 'Sale',
     storage: 'Storage',

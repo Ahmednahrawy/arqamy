@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:arqamy/core/helpers/excel_labels.dart';
 import 'package:arqamy/core/helpers/invoice_action.dart';
+import 'package:arqamy/core/helpers/invoice_discount.dart';
 import 'package:arqamy/features/orderscreen/data/models/invoice.dart';
 import 'package:excel_plus/excel_plus.dart';
 import 'package:path/path.dart' as p;
@@ -100,11 +101,23 @@ class InvoiceExcelExportService {
     }
 
     var totalsRowIndex = invoice.products.length + 1;
-    for (final entry in <MapEntry<String, double>>[
+    final totals = <MapEntry<String, double>>[];
+    if (invoice.discount != null) {
+      totals.add(
+        MapEntry(labels.subtotal, invoice.subtotalCost ?? invoice.totalCost),
+      );
+      final discount = invoice.discount!;
+      final discountLabel = discount.type == InvoiceDiscountType.percent
+          ? '${labels.discount} (${discount.value.toStringAsFixed(2)}%)'
+          : labels.discount;
+      totals.add(MapEntry(discountLabel, discount.amount));
+    }
+    totals.addAll([
       MapEntry(labels.invoiceTotal, invoice.totalCost),
       MapEntry(labels.collected, invoice.paid),
       MapEntry(labels.remaining, invoice.rest),
-    ]) {
+    ]);
+    for (final entry in totals) {
       final row = List<CellValue?>.filled(_columnCount, null);
       row[_priceColumn] = TextCellValue(entry.key);
       row[_totalColumn] = DoubleCellValue(entry.value);

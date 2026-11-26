@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:arqamy/core/helpers/formatters.dart';
 import 'package:arqamy/core/helpers/invoice_action_l10n.dart';
+import 'package:arqamy/core/helpers/invoice_discount.dart';
 import 'package:arqamy/core/helpers/pdf_labels.dart';
 import 'package:arqamy/features/orderscreen/providers/invoice_provider.dart';
 import 'package:arqamy/features/orderscreen/ui/widgets/pw_grouped_table.dart';
@@ -25,6 +26,8 @@ Future<Uint8List> generatePDF(
   final String? formattedTime,
   final String? invoiceAction,
   final String invoiceSerial, {
+  double? subtotalCost,
+  InvoiceDiscount? discount,
   String locale = 'ar',
 }) async {
   final labels = PdfLabels.forLocale(locale);
@@ -178,35 +181,58 @@ Future<Uint8List> generatePDF(
             pw.SizedBox(height: 10),
           ]);
         }
-        widgets.addAll([
-          pw.Row(
-            mainAxisAlignment: pw.MainAxisAlignment.start,
-            children: [
-              pw.Text(
-                '${labels.invoiceTotal} :\n'
-                '${AppFormatters.number(totalCost)} ${labels.currency}',
-                style: const pw.TextStyle(fontSize: 20),
-              ),
-              pw.SizedBox(width: 20),
-              pw.Text(
-                '${labels.collected} :\n'
-                '${AppFormatters.number(paid)} ${labels.currency}',
-                style: const pw.TextStyle(fontSize: 20),
-              ),
-              pw.SizedBox(width: 20),
-              pw.Text(
-                '${labels.remaining} :\n'
-                '${AppFormatters.number(rest)} ${labels.currency}',
-                style: const pw.TextStyle(fontSize: 20),
-              ),
-            ],
+        final totals = <pw.Widget>[];
+        if (discount != null) {
+          totals.addAll([
+            pw.Text(
+              '${labels.subtotal} :\n'
+              '${AppFormatters.number(subtotalCost ?? totalCost)} ${labels.currency}',
+              style: const pw.TextStyle(fontSize: 20),
+            ),
+            pw.Text(
+              '${labels.discount} :\n'
+              '${_discountText(discount, labels)}',
+              style: const pw.TextStyle(fontSize: 20),
+            ),
+          ]);
+        }
+        totals.addAll([
+          pw.Text(
+            '${labels.invoiceTotal} :\n'
+            '${AppFormatters.number(totalCost)} ${labels.currency}',
+            style: const pw.TextStyle(fontSize: 20),
+          ),
+          pw.Text(
+            '${labels.collected} :\n'
+            '${AppFormatters.number(paid)} ${labels.currency}',
+            style: const pw.TextStyle(fontSize: 20),
+          ),
+          pw.Text(
+            '${labels.remaining} :\n'
+            '${AppFormatters.number(rest)} ${labels.currency}',
+            style: const pw.TextStyle(fontSize: 20),
           ),
         ]);
+        widgets.add(
+          pw.Wrap(
+            spacing: 20,
+            runSpacing: 10,
+            children: totals,
+          ),
+        );
         return widgets;
       },
     ),
   );
   return doc.save();
+}
+
+String _discountText(InvoiceDiscount discount, PdfLabels labels) {
+  if (discount.type == InvoiceDiscountType.percent) {
+    return '${AppFormatters.number(discount.value)}% '
+        '(${AppFormatters.number(discount.amount)} ${labels.currency})';
+  }
+  return '${AppFormatters.number(discount.amount)} ${labels.currency}';
 }
 
 String _invoiceTitle(String? invoiceAction, PdfLabels labels) {
