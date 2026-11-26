@@ -573,3 +573,9 @@ The stable source-occurrence identity—not the serial—defines migration ident
 On 2026-11-26, the owner approved holding an invoice occurrence for human review whenever its legacy `customerId` is missing or null, regardless of whether `customerName` is populated.
 
 Do not use automatic name matching to select or infer a party, even if the display name appears unique. Preserve the original source evidence and record a stable validation finding. The occurrence may be released only after an explicit, authorized, attributable party-resolution decision and immediate revalidation that the selected party exists and has the required role for the invoice action. This is a design rule only; it does not authorize schema or importer implementation.
+
+## Owner-approved validation policy — customer ID references a nonexistent party
+
+On 2026-11-26, the owner approved holding an invoice occurrence for human review whenever its legacy `customerId` is populated but does not resolve to an existing party in the current database.
+
+Do not use `customerName` as an automatic fallback, create a replacement party, or silently alter the source ID. Preserve original source evidence and record a stable validation finding. Release is permitted only after an explicit, authorized, attributable party-resolution decision and immediate revalidation that the selected party exists and has the required role for the invoice action. This is a design rule only; it does not authorize schema or importer implementation.
