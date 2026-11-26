@@ -50,7 +50,7 @@ void main() {
       await _expectDatabaseHealthy(database);
 
       await database.customStatement('DROP TABLE legacy_migration_runs');
-      await _runProductionUpgrade(database, from: 5, to: 7);
+      await _runProductionUpgrade(database, from: 5, to: 8);
 
       expect(await _readUserVersion(database), 8);
       expect(await _readCurrencies(database), currenciesBeforeFailure);
@@ -151,9 +151,9 @@ Future<void> _expectD4JournalExists(AppDatabase database) async {
     [
       'legacy_invoice_import_attempts',
       'legacy_invoice_import_events',
+      'legacy_invoice_occurrence_mappings',
       'legacy_invoice_import_occurrences',
       'legacy_invoice_import_runs',
-      'legacy_invoice_occurrence_mappings',
     ],
   );
 }
