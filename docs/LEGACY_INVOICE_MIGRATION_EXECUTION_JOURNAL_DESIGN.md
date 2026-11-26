@@ -493,3 +493,12 @@ On 2026-11-26, the owner approved this rule: hold the entire invoice occurrence 
 Preserve the original `totalCost`, `paid`, and `rest` values in immutable source evidence and retain them as historical invoice aggregates. Do not clamp, cap, recalculate, overwrite, or silently correct these values. Emit stable findings for each failed condition. Any later correction must be an explicit, authorized, attributable, auditable action that leaves original source evidence unchanged.
 
 Historical `paid` and `rest` aggregates do not prove physical cash movement and must not be converted into cash events, payments, allocations, refunds, reversals, suspense entries, or accounting postings. This approval is design policy only; it does not authorize schema, importer, or production migration changes.
+
+
+## Owner-approved validation policy — zero-value invoice totals
+
+On 2026-11-26, the owner approved holding the entire invoice occurrence for human review when legacy `totalCost` is zero.
+
+Preflight must emit a stable validation finding. Preserve the exact original total and every product-line value in immutable source evidence. Do not assume the invoice is a valid free transaction, invent or infer a replacement amount, modify lines, or otherwise auto-correct the occurrence. A later disposition requires an explicit, authorized, attributable, auditable operator action and must not mutate source evidence.
+
+This is a defensive migration validation rule and does not imply that the current UI permits zero-value invoices. It is design policy only; schema, importer, and production migration implementation remain separately gated.
