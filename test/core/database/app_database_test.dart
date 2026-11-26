@@ -52,7 +52,7 @@ void main() {
   });
 
   test('initializes the ledger schema with version 6', () async {
-    expect(database.schemaVersion, 6);
+    expect(database.schemaVersion, 7);
     expect(await database.storedSchemaVersion, 7);
 
     final tables = await database
