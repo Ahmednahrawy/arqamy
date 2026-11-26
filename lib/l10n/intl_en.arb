@@ -145,6 +145,7 @@
   "switch_to_amount": "Switch to amount",
   "switch_to_percent": "Switch to percent",
   "clear_discount": "Clear discount",
+  "clear_field": "Double-tap to clear",
   "discount_exceeds_total": "Discount cannot exceed the invoice total",
   "discount_percent_range": "Percent must be between 0 and 100",
   "subtotal": "Subtotal",

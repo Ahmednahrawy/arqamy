@@ -167,6 +167,55 @@ void main() {
     },
   );
 
+  testWidgets('price and package weight clear icons need a double tap', (
+    WidgetTester tester,
+  ) async {
+    SharedPreferences.setMockInitialValues({});
+    await tester.pumpWidget(
+      MultiProvider(
+        providers: [
+          ChangeNotifierProvider(create: (_) => Language()),
+          ChangeNotifierProvider(create: (_) => ThemeProvider()),
+          ChangeNotifierProvider(create: (_) => InvoiceProvider()),
+          ChangeNotifierProvider(create: (_) => InvoiceSettingsProvider()),
+        ],
+        child: MyApp(appRouter: AppRouter()),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    Finder fieldWithLabel(String label) => find.byWidgetPredicate(
+      (widget) =>
+          widget is TextField && widget.decoration?.labelText == label,
+    );
+    Future<void> doubleTapClearIcon(String label) async {
+      final icon = find.descendant(
+        of: fieldWithLabel(label),
+        matching: find.byTooltip('انقر مرتين للمسح'),
+      );
+      expect(icon, findsOneWidget);
+      final center = tester.getCenter(icon);
+      await tester.tapAt(center);
+      await tester.tapAt(center);
+      await tester.pumpAndSettle();
+    }
+
+    await tester.enterText(fieldWithLabel('السعر'), '12.5');
+    await tester.pumpAndSettle();
+    await doubleTapClearIcon('السعر');
+    expect(
+      tester.widget<TextField>(fieldWithLabel('السعر')).controller!.text,
+      isEmpty,
+    );
+
+    await doubleTapClearIcon('وزن العبوة');
+    expect(
+      tester.widget<TextField>(fieldWithLabel('وزن العبوة')).controller!.text,
+      isEmpty,
+    );
+    expect(tester.takeException(), isNull);
+  });
+
   testWidgets('saving an invoice from the page does not share a PDF', (
     WidgetTester tester,
   ) async {

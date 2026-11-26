@@ -1245,6 +1245,16 @@ class S {
     );
   }
 
+  /// `Double-tap to clear`
+  String get clear_field {
+    return Intl.message(
+      'Double-tap to clear',
+      name: 'clear_field',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Discount cannot exceed the invoice total`
   String get discount_exceeds_total {
     return Intl.message(

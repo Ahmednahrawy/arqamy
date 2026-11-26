@@ -60,6 +60,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "clearInvoiceSearch": MessageLookupByLibrary.simpleMessage("Clear search"),
     "clear_discount": MessageLookupByLibrary.simpleMessage("Clear discount"),
+    "clear_field": MessageLookupByLibrary.simpleMessage("Double-tap to clear"),
     "clear_draft_message": MessageLookupByLibrary.simpleMessage(
       "Only the current invoice data will be cleared. Saved invoices will not be deleted.",
     ),

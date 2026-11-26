@@ -44,6 +44,7 @@ class _ProductInputFormState extends State<ProductInputForm> {
   final _packageWeightFocusNode = FocusNode();
   final _packageNumberFocusNode = FocusNode();
   FocusNode? _firstInvalidFocusNode;
+  final Map<TextEditingController, DateTime> _lastClearTaps = {};
   @override
   void initState() {
     super.initState();
@@ -140,6 +141,41 @@ class _ProductInputFormState extends State<ProductInputForm> {
 
   void _showErrorSnackBar(String message) {
     showAppSnackBar(context, message, isError: true);
+  }
+
+  Widget? _clearIcon(
+    TextEditingController controller,
+    FocusNode focusNode,
+    String tooltip,
+  ) {
+    if (controller.text.isEmpty) return null;
+    final colors = Theme.of(context).colorScheme;
+    return Tooltip(
+      message: tooltip,
+      child: GestureDetector(
+        behavior: HitTestBehavior.opaque,
+        onTap: () {
+          final now = DateTime.now();
+          final last = _lastClearTaps[controller];
+          if (last != null &&
+              now.difference(last) < const Duration(milliseconds: 500)) {
+            _lastClearTaps.remove(controller);
+            setState(controller.clear);
+            focusNode.requestFocus();
+            return;
+          }
+          _lastClearTaps[controller] = now;
+        },
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 6),
+          child: Icon(
+            Icons.close,
+            size: 16,
+            color: colors.onSurfaceVariant,
+          ),
+        ),
+      ),
+    );
   }
 
   Widget _actionSelector() {
@@ -348,6 +384,12 @@ class _ProductInputFormState extends State<ProductInputForm> {
                           _focusField(_packageWeightFocusNode),
                       labelText: strings.price,
                       hintText: strings.currency,
+                      suffixIcon: _clearIcon(
+                        _priceController,
+                        _priceFocusNode,
+                        strings.clear_field,
+                      ),
+                      onChanged: (_) => setState(() {}),
                       keyboardType: const TextInputType.numberWithOptions(
                         decimal: true,
                       ),
@@ -402,6 +444,12 @@ class _ProductInputFormState extends State<ProductInputForm> {
                           _focusField(_packageNumberFocusNode),
                       labelText: strings.packageWeight,
                       suffixText: strings.kilograms,
+                      suffixIcon: _clearIcon(
+                        _packageWeightController,
+                        _packageWeightFocusNode,
+                        strings.clear_field,
+                      ),
+                      onChanged: (_) => setState(() {}),
                       keyboardType: const TextInputType.numberWithOptions(
                         decimal: true,
                       ),

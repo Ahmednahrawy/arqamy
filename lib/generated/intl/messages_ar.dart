@@ -62,6 +62,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "clearInvoiceSearch": MessageLookupByLibrary.simpleMessage("مسح البحث"),
     "clear_discount": MessageLookupByLibrary.simpleMessage("إزالة الخصم"),
+    "clear_field": MessageLookupByLibrary.simpleMessage("انقر مرتين للمسح"),
     "clear_draft_message": MessageLookupByLibrary.simpleMessage(
       "سيتم مسح بيانات الفاتورة الحالية فقط. لن يتم حذف الفواتير المحفوظة.",
     ),
