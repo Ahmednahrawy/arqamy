@@ -133,8 +133,7 @@ Recommended occurrence states:
 
 | State | Meaning | Import eligibility |
 |---|---|---|
-| captured | Occurrence identity and raw evidence recorded | No |
-| preflighted | Record-level validation completed | Depends on classification |
+| preflighted | Occurrence identity and raw evidence are recorded and record-level validation is complete | Depends on classification |
 | ready | Valid under approved mapping contract and required party decision | Yes |
 | held | Requires human review or has a blocking finding | No |
 | excluded | Explicitly excluded by an authorized human decision, with reason | No |
@@ -148,7 +147,6 @@ Recommended occurrence states:
 
 State changes must be validated against an explicit transition table:
 
-- captured → preflighted only after snapshot integrity and preflight complete.
 - preflighted → ready only when all blocking validation and party-role requirements pass.
 - preflighted → held for malformed, duplicate, unresolved, unsupported, or financially inconsistent records.
 - held → ready only after explicit, auditable resolution and revalidation.
