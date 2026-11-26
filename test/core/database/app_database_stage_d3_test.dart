@@ -307,7 +307,7 @@ void main() {
         )
         .getSingle();
     expect(preservedParty.read<String>('display_name'), 'Rollback Party');
-    await inspector.customStatement('DROP TABLE legacy_migration_occurrences');
+    await inspector.customStatement('DROP VIEW legacy_migration_occurrences');
     await inspector.close();
 
     database = await AppDatabase.open(path: databasePath);
