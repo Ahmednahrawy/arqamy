@@ -273,3 +273,9 @@ This rule applies even if the individual inputs and calculated net weight pass t
 On 2026-11-26, the owner approved that duplicate legacy `invoiceSerial` values must not, by themselves, cause an invoice occurrence to be held or cause two occurrences to be merged.
 
 Each source occurrence remains a distinct migration candidate and is identified by its stable source-occurrence identity, not by `invoiceSerial`. Preserve the original serial on each imported invoice. Emit a duplicate-serial audit finding for visibility, but do not treat that finding alone as a blocking validation error. This rule does not override any other hold condition or authorize implementation.
+
+## Owner-approved validation policy — missing legacy customer ID
+
+On 2026-11-26, the owner approved holding the entire invoice occurrence for human review when the legacy `customerId` is missing or null, even if `customerName` is present and non-empty.
+
+Do not resolve the party automatically by matching the display name, including when a name appears to identify a unique existing party. Preserve the original source values and emit a stable finding. Release from hold only after an explicit, authorized, attributable party-resolution decision, followed by validation that the selected party exists and has the required role for the invoice action. This is design policy only; it does not authorize party, schema, or importer implementation.
