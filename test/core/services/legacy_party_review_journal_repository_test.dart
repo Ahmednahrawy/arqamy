@@ -321,6 +321,82 @@ void main() {
   );
 
   test(
+    'rejects resolved occurrences without a complete suggested party identity',
+    () async {
+      final original = fixture.plan.resolutions.first;
+      final incompleteResolutions = [
+        LegacyPartyOccurrenceResolution(
+          sourceOccurrenceKey: original.sourceOccurrenceKey,
+          sourceIndex: original.sourceIndex,
+          invoiceId: original.invoiceId,
+          status: LegacyPartyResolutionStatus.resolvedByName,
+          expectedRole: null,
+          partyId: 'customer-1',
+          partyDisplayName: 'Customer One',
+        ),
+        LegacyPartyOccurrenceResolution(
+          sourceOccurrenceKey: original.sourceOccurrenceKey,
+          sourceIndex: original.sourceIndex,
+          invoiceId: original.invoiceId,
+          status: LegacyPartyResolutionStatus.resolvedByExistingId,
+          expectedRole: LedgerPartyRole.customer,
+          partyId: null,
+          partyDisplayName: 'Customer One',
+        ),
+        LegacyPartyOccurrenceResolution(
+          sourceOccurrenceKey: original.sourceOccurrenceKey,
+          sourceIndex: original.sourceIndex,
+          invoiceId: original.invoiceId,
+          status: LegacyPartyResolutionStatus.resolvedByName,
+          expectedRole: LedgerPartyRole.customer,
+          partyId: 'customer-1',
+          partyDisplayName: '   ',
+        ),
+      ];
+
+      for (var index = 0; index < incompleteResolutions.length; index++) {
+        final runId = 'incomplete-resolved-run-$index';
+        final invalidPlan = LegacyPartyResolutionReport(
+          snapshotSha256: _snapshotHash,
+          resolutions: [
+            incompleteResolutions[index],
+            ...fixture.plan.resolutions.skip(1),
+          ],
+        );
+
+        expect(
+          () => repository.createRun(
+            runId: runId,
+            snapshotManifestPath: 'legacy/snapshots/$runId.json',
+            migrationVersion: 1,
+            occurrenceIdentityVersion: 1,
+            preflightVersion: 1,
+            createdByActorId: 'actor-1',
+            preflight: fixture.preflight,
+            plan: invalidPlan,
+          ),
+          throwsArgumentError,
+        );
+      }
+
+      final persistedRuns = await database
+          .customSelect(
+            "SELECT COUNT(*) AS count FROM legacy_migration_runs "
+            "WHERE run_id LIKE 'incomplete-resolved-run-%'",
+          )
+          .getSingle();
+      final persistedOccurrences = await database
+          .customSelect(
+            "SELECT COUNT(*) AS count FROM legacy_migration_occurrences "
+            "WHERE run_id LIKE 'incomplete-resolved-run-%'",
+          )
+          .getSingle();
+      expect(persistedRuns.read<int>('count'), 0);
+      expect(persistedOccurrences.read<int>('count'), 0);
+    },
+  );
+
+  test(
     'rejects wrong-role, wrong-snapshot, and unknown occurrence decisions',
     () async {
       await createRun();
