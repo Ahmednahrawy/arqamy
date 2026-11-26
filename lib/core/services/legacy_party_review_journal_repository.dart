@@ -1,7 +1,8 @@
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:arqamy/core/database/app_database.dart';
+import 'package:arqamy/core/database/app_database.dart' hide LegacyPartyReviewDecision;
+import 'package:arqamy/features/payment_ledger/data/ledger_foundation.dart';
 import 'package:arqamy/core/services/legacy_invoice_party_resolution_planner.dart';
 import 'package:arqamy/core/services/legacy_invoice_preflight_service.dart';
 import 'package:arqamy/core/services/legacy_invoice_party_resolution_review.dart';
@@ -139,8 +140,9 @@ class LegacyPartyReviewJournalRepository {
               variables: [Variable.withString(runId)],
             )
             .getSingleOrNull();
-        if (existing != null)
+        if (existing != null) {
           throw StateError('Migration run "$runId" already exists.');
+        }
 
         await _database.customStatement(
           'INSERT INTO legacy_migration_runs (run_id, snapshot_sha256, '
@@ -612,11 +614,14 @@ class LegacyPartyReviewJournalRepository {
       RegExp(r'^[a-fA-F0-9]{64}$').hasMatch(value);
 
   static void _validateText(String value, String name) {
-    if (value.trim().isEmpty)
+    if (value.trim().isEmpty) {
       throw ArgumentError.value(value, name, 'Must not be empty.');
+    }
   }
 
   static void _validatePositive(int value, String name) {
-    if (value <= 0) throw ArgumentError.value(value, name, 'Must be positive.');
+    if (value <= 0) {
+      throw ArgumentError.value(value, name, 'Must be positive.');
+    }
   }
 }
