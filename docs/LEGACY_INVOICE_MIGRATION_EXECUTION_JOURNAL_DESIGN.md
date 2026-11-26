@@ -485,3 +485,11 @@ On 2026-11-26, the owner approved this rule: if the legacy invoice `totalCost` d
 The migration must preserve the original `totalCost` and every original product-line value in immutable source evidence. It must not recalculate or overwrite the invoice total, alter line values, omit lines, or silently adjust rounding to force agreement. Emit a stable validation finding identifying the mismatch and retain the compared values in the audit evidence where safely representable. Any later correction must be an explicit, authorized, attributable, auditable action that leaves original source evidence unchanged.
 
 The exact arithmetic and precision contract for the comparison must be defined and tested before implementation. This approval is design policy only; it does not authorize schema, importer, or production migration changes.
+
+## Owner-approved validation policy — historical payment aggregates
+
+On 2026-11-26, the owner approved this rule: hold the entire invoice occurrence for human review if the legacy `paid` value is negative, exceeds the absolute invoice total, or if `rest` does not equal the absolute invoice total minus `paid`.
+
+Preserve the original `totalCost`, `paid`, and `rest` values in immutable source evidence and retain them as historical invoice aggregates. Do not clamp, cap, recalculate, overwrite, or silently correct these values. Emit stable findings for each failed condition. Any later correction must be an explicit, authorized, attributable, auditable action that leaves original source evidence unchanged.
+
+Historical `paid` and `rest` aggregates do not prove physical cash movement and must not be converted into cash events, payments, allocations, refunds, reversals, suspense entries, or accounting postings. This approval is design policy only; it does not authorize schema, importer, or production migration changes.
