@@ -1043,8 +1043,9 @@ class AppDatabase extends _$AppDatabase {
   }
 
   Future<void> _migrateV4ToV5() async {
-    // SQLite requires foreign-key enforcement to be disabled before the
-    // transaction that rebuilds a referenced parent table.
+    // This helper runs inside the outer migration transaction, so SQLite
+    // ignores foreign_keys toggles here. Deferred checks plus the final
+    // migration-wide foreign_key_check provide the validation boundary.
     await customStatement('PRAGMA foreign_keys = OFF');
     try {
       await transaction(() async {
@@ -1166,6 +1167,9 @@ class AppDatabase extends _$AppDatabase {
   }
 
   Future<void> _migrateV3ToV4(Migrator m) async {
+    // This helper runs inside the outer migration transaction, so SQLite
+    // ignores foreign_keys toggles here. Deferred checks plus the final
+    // migration-wide foreign_key_check provide the validation boundary.
     await customStatement('PRAGMA foreign_keys = OFF');
     try {
       await transaction(() async {
