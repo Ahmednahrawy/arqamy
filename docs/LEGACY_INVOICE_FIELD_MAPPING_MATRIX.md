@@ -190,3 +190,11 @@ This decision does not relax the approved hold policy for invalid or unrecognize
 Preserve the original `totalCost` and every original product-line value exactly in the immutable source snapshot. Do not recalculate or overwrite the invoice total, change line values, omit lines, or silently adjust rounding to force agreement. Emit a stable finding that identifies the invoice-total/line-total mismatch and includes the compared values in the audit report where safely representable. Any later correction, if supported, must be explicit, authorized, attributable, and auditable without mutating the original source evidence.
 
 This policy applies to the migration validation boundary; it does not authorize implementation. The mapping contract must still define the exact comparison arithmetic and precision before implementation, so the same source values produce deterministic findings.
+
+## 16. Owner decision — historical paid and remaining amounts
+
+**Decision approved by the owner on 2026-11-26: hold the entire occurrence for human review when historical payment aggregates fail validation.**
+
+Hold an invoice occurrence if `paid` is negative, `paid` exceeds the absolute invoice total, or `rest` does not equal the absolute invoice total minus `paid`. Preserve the original `totalCost`, `paid`, and `rest` values exactly in the immutable source snapshot and retain their original values as historical aggregates. Do not clamp, cap, recalculate, overwrite, or otherwise silently correct any of them. Emit stable, field-specific or relationship-specific findings identifying the failed condition. Any later correction, if supported, must be explicit, authorized, attributable, and auditable without mutating original source evidence.
+
+These values remain historical invoice aggregates only. They do not establish physical cash movement and must not generate cash events, payments, allocations, refunds, reversals, suspense entries, or accounting postings. This is a policy decision only; it does not authorize implementation.
