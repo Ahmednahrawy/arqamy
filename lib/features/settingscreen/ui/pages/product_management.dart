@@ -2,6 +2,7 @@ import 'package:material_ui/material_ui.dart';
 import 'package:provider/provider.dart';
 import 'package:arqamy/core/helpers/invoice_action.dart';
 import 'package:arqamy/core/helpers/invoice_action_l10n.dart';
+import 'package:arqamy/core/services/product_list_backup_service.dart';
 import 'package:arqamy/core/widgets/app_snack_bar.dart';
 import 'package:arqamy/features/orderscreen/providers/invoice_provider.dart';
 import 'package:arqamy/generated/l10n.dart';
@@ -72,6 +73,87 @@ class _ProductManagementScreenState extends State<ProductManagementScreen> {
         ),
       ),
     );
+  }
+
+  Future<void> _exportProducts() async {
+    final messenger = ScaffoldMessenger.of(context);
+    final strings = S.of(context);
+    final provider = context.read<InvoiceProvider>();
+    await provider.loadMasterProducts();
+    if (provider.masterProductList.isEmpty) {
+      showAppSnackBarOn(messenger, strings.products_export_empty);
+      return;
+    }
+    try {
+      await ProductListBackupService.shareBackup(
+        provider.masterProductList,
+        provider.masterProductPrices,
+      );
+    } catch (error) {
+      if (!mounted || !messenger.mounted) return;
+      showAppSnackBarOn(
+        messenger,
+        '${strings.products_export_failed}: $error',
+        isError: true,
+      );
+    }
+  }
+
+  Future<void> _importProducts() async {
+    final messenger = ScaffoldMessenger.of(context);
+    final strings = S.of(context);
+    try {
+      final backup = await ProductListBackupService.pickBackup();
+      if (backup == null) return;
+      if (backup.products.isEmpty) {
+        if (!mounted || !messenger.mounted) return;
+        showAppSnackBarOn(messenger, strings.products_import_empty);
+        return;
+      }
+      if (!mounted) return;
+      final confirmed = await showDialog<bool>(
+        context: context,
+        builder: (dialogContext) => AlertDialog(
+          title: Text(strings.import_products),
+          content: Text(strings.products_import_confirm),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(dialogContext, false),
+              child: Text(strings.cancel),
+            ),
+            ElevatedButton(
+              onPressed: () => Navigator.pop(dialogContext, true),
+              child: Text(strings.import_action),
+            ),
+          ],
+        ),
+      );
+      if (confirmed != true || !mounted) return;
+
+      await context.read<InvoiceProvider>().replaceMasterProducts(
+        backup.products,
+        backup.prices,
+      );
+      if (!mounted || !messenger.mounted) return;
+      showAppSnackBarOn(
+        messenger,
+        '${strings.products_imported}: ${backup.products.length}',
+      );
+    } on ProductListBackupFormatException catch (error) {
+      if (!mounted || !messenger.mounted) return;
+      showAppSnackBarOn(
+        messenger,
+        '${strings.products_import_failed}: ${error.message}',
+        isError: true,
+      );
+    } catch (error) {
+      if (!mounted || !messenger.mounted) return;
+      showAppSnackBarOn(
+        messenger,
+        '${strings.products_import_failed}: $error',
+        isError: true,
+      );
+    }
   }
 
   void _showAddDialog() {
@@ -304,6 +386,18 @@ class _ProductManagementScreenState extends State<ProductManagementScreen> {
       appBar: AppBar(
         title: Text(strings.product_management),
         actions: [
+          IconButton(
+            key: const ValueKey('export-products'),
+            onPressed: _exportProducts,
+            icon: const Icon(Icons.backup_outlined),
+            tooltip: strings.export_products,
+          ),
+          IconButton(
+            key: const ValueKey('import-products'),
+            onPressed: _importProducts,
+            icon: const Icon(Icons.restore_outlined),
+            tooltip: strings.import_products,
+          ),
           IconButton(
             onPressed: _showAddDialog,
             icon: const Icon(Icons.add),

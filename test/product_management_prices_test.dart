@@ -123,6 +123,27 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
+  testWidgets('product management exposes backup and restore buttons', (
+    WidgetTester tester,
+  ) async {
+    SharedPreferences.setMockInitialValues({
+      'master_products': json.encode([]),
+    });
+    await pumpScreen(tester, InvoiceProvider());
+
+    final exportButton = find.byKey(const ValueKey('export-products'));
+    final importButton = find.byKey(const ValueKey('import-products'));
+    expect(exportButton, findsOneWidget);
+    expect(importButton, findsOneWidget);
+    expect(find.byTooltip('Export products'), findsOneWidget);
+    expect(find.byTooltip('Import products'), findsOneWidget);
+
+    await tester.tap(exportButton);
+    await tester.pumpAndSettle();
+    expect(find.text('There are no products to export'), findsOneWidget);
+    expect(tester.takeException(), isNull);
+  });
+
   testWidgets('search filters products and clear restores the full list', (
     WidgetTester tester,
   ) async {

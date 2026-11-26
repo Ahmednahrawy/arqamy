@@ -560,6 +560,38 @@ class InvoiceProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  /// Replaces the whole master product list and its default prices, e.g. after
+  /// restoring a product backup. Duplicates and invalid prices are skipped.
+  Future<void> replaceMasterProducts(
+    List<String> products,
+    Map<String, Map<InvoiceAction, double>> prices,
+  ) async {
+    final names = <String>[];
+    for (final candidate in products) {
+      final name = candidate.trim();
+      if (name.isNotEmpty && !names.contains(name)) names.add(name);
+    }
+
+    final importedPrices = <String, Map<InvoiceAction, double>>{};
+    for (final entry in prices.entries) {
+      final name = entry.key.trim();
+      if (!names.contains(name)) continue;
+      final valid = {
+        for (final price in entry.value.entries)
+          if (_isValidDefaultPrice(price.value)) price.key: price.value,
+      };
+      if (valid.isNotEmpty) importedPrices[name] = valid;
+    }
+
+    _masterProductList = names;
+    _masterProductPrices
+      ..clear()
+      ..addAll(importedPrices);
+    await _saveMasterProducts();
+    await _saveMasterProductPrices();
+    notifyListeners();
+  }
+
   // Edit existing product
   Future<void> editMasterProduct(int index, String newName) async {
     final trimmedName = newName.trim();

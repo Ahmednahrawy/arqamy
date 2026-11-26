@@ -1195,6 +1195,51 @@ class S {
     return Intl.message('Could not delete the product', name: 'could_not_delete_product', desc: '', args: []);
   }
 
+  /// `Export products`
+  String get export_products {
+    return Intl.message('Export products', name: 'export_products', desc: '', args: []);
+  }
+
+  /// `Import products`
+  String get import_products {
+    return Intl.message('Import products', name: 'import_products', desc: '', args: []);
+  }
+
+  /// `There are no products to export`
+  String get products_export_empty {
+    return Intl.message('There are no products to export', name: 'products_export_empty', desc: '', args: []);
+  }
+
+  /// `Could not export products`
+  String get products_export_failed {
+    return Intl.message('Could not export products', name: 'products_export_failed', desc: '', args: []);
+  }
+
+  /// `Products restored`
+  String get products_imported {
+    return Intl.message('Products restored', name: 'products_imported', desc: '', args: []);
+  }
+
+  /// `Could not restore products`
+  String get products_import_failed {
+    return Intl.message('Could not restore products', name: 'products_import_failed', desc: '', args: []);
+  }
+
+  /// `The file contains no products`
+  String get products_import_empty {
+    return Intl.message('The file contains no products', name: 'products_import_empty', desc: '', args: []);
+  }
+
+  /// `Restoring will replace your current products and default prices. Continue?`
+  String get products_import_confirm {
+    return Intl.message('Restoring will replace your current products and default prices. Continue?', name: 'products_import_confirm', desc: '', args: []);
+  }
+
+  /// `Restore`
+  String get import_action {
+    return Intl.message('Restore', name: 'import_action', desc: '', args: []);
+  }
+
   /// `No products`
   String get no_products {
     return Intl.message('No products', name: 'no_products', desc: '', args: []);

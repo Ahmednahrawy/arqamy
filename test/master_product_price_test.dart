@@ -67,6 +67,35 @@ void main() {
     expect(reloaded.defaultProductPrice('Lentils', InvoiceAction.storage), 2);
   });
 
+  test('replaces all products and prices when restoring a backup', () async {
+    SharedPreferences.setMockInitialValues({
+      'master_products': json.encode(['Old']),
+      'master_product_prices': json.encode({
+        'Old': {'sale': 99},
+      }),
+    });
+    final provider = InvoiceProvider();
+    await provider.loadMasterProducts();
+
+    await provider.replaceMasterProducts(
+      ['Lentils', 'Corn'],
+      {
+        'Lentils': {InvoiceAction.purchase: 12},
+        'Corn': {InvoiceAction.sale: 7.5},
+        'Removed': {InvoiceAction.sale: 1},
+      },
+    );
+
+    expect(provider.masterProductList, ['Lentils', 'Corn']);
+    final reloaded = InvoiceProvider();
+    await reloaded.loadMasterProducts();
+    expect(reloaded.masterProductList, ['Lentils', 'Corn']);
+    expect(reloaded.defaultProductPrice('Lentils', InvoiceAction.purchase), 12);
+    expect(reloaded.defaultProductPrice('Corn', InvoiceAction.sale), 7.5);
+    expect(reloaded.defaultProductPrice('Old', InvoiceAction.sale), isNull);
+    expect(reloaded.masterProductPrices.containsKey('Removed'), isFalse);
+  });
+
   test('a legacy single price becomes the default for every action', () async {
     SharedPreferences.setMockInitialValues({
       'master_products': json.encode(['a', 'b']),
