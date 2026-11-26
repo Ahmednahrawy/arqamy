@@ -7,9 +7,9 @@ import 'package:flutter_test/flutter_test.dart';
 const _d4Tables = [
   'legacy_invoice_import_attempts',
   'legacy_invoice_import_events',
-  'legacy_invoice_occurrence_mappings',
   'legacy_invoice_import_occurrences',
   'legacy_invoice_import_runs',
+  'legacy_invoice_occurrence_mappings',
 ];
 
 void main() {
