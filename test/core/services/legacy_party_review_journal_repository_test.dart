@@ -259,8 +259,8 @@ void main() {
           fixture.plan.resolutions[2],
         ],
       );
-      await expectLater(
-        repository.createRun(
+      expect(
+        () => repository.createRun(
           runId: 'unresolved-run',
           snapshotManifestPath: 'legacy/snapshots/unresolved.json',
           migrationVersion: 1,
@@ -289,8 +289,8 @@ void main() {
           fixture.plan.resolutions[2],
         ],
       );
-      await expectLater(
-        repository.createRun(
+      expect(
+        () => repository.createRun(
           runId: 'mismatched-invoice-run',
           snapshotManifestPath: 'legacy/snapshots/mismatched.json',
           migrationVersion: 1,
