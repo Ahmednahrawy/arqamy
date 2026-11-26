@@ -241,3 +241,12 @@ On 2026-11-26, the owner approved holding the entire invoice occurrence for huma
 Preserve the original `totalCost`, `paid`, and `rest` values in the immutable source snapshot and retain them as historical aggregates. Do not clamp, cap, recalculate, overwrite, or silently correct these values. Emit stable findings identifying each failed condition. Any later correction must be explicit, authorized, attributable, and auditable without changing original source evidence.
 
 These aggregate values do not prove physical cash movement. The migration must not synthesize cash events, payments, allocations, refunds, reversals, suspense entries, or accounting postings from them. Design policy only; no implementation is authorized.
+
+
+## Owner-approved validation policy — zero-value invoice totals
+
+On 2026-11-26, the owner approved holding the entire invoice occurrence for human review when legacy `totalCost` is zero.
+
+Do not interpret zero as proof of a valid free transaction, infer a replacement amount, or auto-correct the record. Preserve the exact original total and product-line values in the immutable source snapshot and emit a stable finding for the zero total. Any later disposition must be explicit, authorized, attributable, and auditable without changing source evidence.
+
+This is a defensive migration rule, not a statement that the current UI permits zero-value invoices. It is policy documentation only and does not authorize code or schema changes.
