@@ -750,6 +750,11 @@ class S {
     return Intl.message('Discount', name: 'discount', desc: '', args: []);
   }
 
+  /// `Add discount`
+  String get add_discount {
+    return Intl.message('Add discount', name: 'add_discount', desc: '', args: []);
+  }
+
   /// `Discount amount`
   String get discount_amount {
     return Intl.message('Discount amount', name: 'discount_amount', desc: '', args: []);

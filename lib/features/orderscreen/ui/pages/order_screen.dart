@@ -87,8 +87,11 @@ class _OrderscreenState extends State<Orderscreen>
   double _rest(double totalCost) =>
       InvoiceProvider.calculateOutstandingBalance(totalCost, _paid);
 
-  InvoiceDiscount? _discountFor(double subtotal) =>
-      InvoiceDiscount.fromText(_discountController.text, _discountType, subtotal);
+  InvoiceDiscount? _discountFor(double subtotal) => InvoiceDiscount.fromText(
+    _discountController.text,
+    _discountType,
+    subtotal,
+  );
 
   // Centralized error/toast handling
   void _showToast(String message, {bool isError = false}) {
@@ -118,8 +121,10 @@ class _OrderscreenState extends State<Orderscreen>
     );
     if (discountError != null) {
       if (!_discountExpanded) setState(() => _discountExpanded = true);
-      _showToast(_discountErrorMessage(discountError, S.of(context)),
-          isError: true);
+      _showToast(
+        _discountErrorMessage(discountError, S.of(context)),
+        isError: true,
+      );
       return false;
     }
     if (provider.customerName == null ||
@@ -429,7 +434,6 @@ class _OrderscreenState extends State<Orderscreen>
             style: Theme.of(context).textTheme.labelLarge,
           ),
           icon: const Icon(Icons.preview),
-          backgroundColor: Theme.of(context).colorScheme.primary,
         ),
       ),
     );
@@ -639,10 +643,10 @@ class _OrderscreenState extends State<Orderscreen>
                   expanded: _discountExpanded,
                   onToggleExpanded: () =>
                       setState(() => _discountExpanded = !_discountExpanded),
-                  onTypeChanged: (type) =>
-                      setState(() => _discountType = type),
+                  onTypeChanged: (type) => setState(() => _discountType = type),
                   onChanged: (_) => setState(() {}),
                 ),
+                verticalSpace(10),
                 AppTextFormField(
                   focusNode: _payFocusNode,
                   textDirection: TextDirection.ltr,
@@ -737,15 +741,15 @@ class _OrderscreenState extends State<Orderscreen>
     final payable = InvoiceDiscount.payableTotal(subtotal, discount);
 
     TextStyle labelStyle() => TextStyle(
-          color: colors.onSecondary,
-          fontSize: 16,
-          fontWeight: FontWeight.bold,
-        );
+      color: colors.onSecondary,
+      fontSize: 16,
+      fontWeight: FontWeight.bold,
+    );
     TextStyle valueStyle({bool large = false}) => TextStyle(
-          color: colors.onSecondary,
-          fontSize: large ? 20 : 16,
-          fontWeight: FontWeight.bold,
-        );
+      color: colors.onSecondary,
+      fontSize: large ? 20 : 16,
+      fontWeight: FontWeight.bold,
+    );
 
     return Container(
       padding: const EdgeInsets.all(16),

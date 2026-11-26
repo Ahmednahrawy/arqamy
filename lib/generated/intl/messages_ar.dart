@@ -161,6 +161,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "preview": MessageLookupByLibrary.simpleMessage("معاينة"),
     "collected_amount_label": MessageLookupByLibrary.simpleMessage("تحصيل"),
     "discount": MessageLookupByLibrary.simpleMessage("خصم"),
+    "add_discount": MessageLookupByLibrary.simpleMessage("إضافة خصم"),
     "discount_amount": MessageLookupByLibrary.simpleMessage("مبلغ الخصم"),
     "discount_percent": MessageLookupByLibrary.simpleMessage("نسبة الخصم"),
     "switch_to_amount": MessageLookupByLibrary.simpleMessage("التبديل إلى مبلغ"),
