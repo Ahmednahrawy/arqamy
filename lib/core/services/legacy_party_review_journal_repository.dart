@@ -339,7 +339,8 @@ class LegacyPartyReviewJournalRepository {
     }
     final occurrence = await _database
         .customSelect(
-          'SELECT expected_role, suggested_party_id FROM legacy_migration_occurrences '
+          'SELECT resolution_status, expected_role, suggested_party_id '
+          'FROM legacy_migration_occurrences '
           'WHERE run_id = ? AND source_occurrence_key = ?',
           variables: [
             Variable.withString(request.runId),
