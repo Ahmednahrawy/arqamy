@@ -5,6 +5,32 @@ import 'package:drift/drift.dart';
 import 'package:drift/native.dart';
 import 'package:flutter_test/flutter_test.dart';
 
+class _Version1FixtureDatabase extends GeneratedDatabase {
+  _Version1FixtureDatabase(super.executor);
+
+  @override
+  int get schemaVersion => 1;
+
+  @override
+  Iterable<TableInfo> get allTables => const [];
+
+  @override
+  MigrationStrategy get migration => MigrationStrategy(onCreate: (_) async {});
+}
+
+class _Version2FixtureDatabase extends GeneratedDatabase {
+  _Version2FixtureDatabase(super.executor);
+
+  @override
+  int get schemaVersion => 2;
+
+  @override
+  Iterable<TableInfo> get allTables => const [];
+
+  @override
+  MigrationStrategy get migration => MigrationStrategy(onCreate: (_) async {});
+}
+
 class _Version3FixtureDatabase extends GeneratedDatabase {
   _Version3FixtureDatabase(super.executor);
 
@@ -47,6 +73,57 @@ void main() {
   tearDown(() async {
     await database?.close();
     await temporaryDirectory.delete(recursive: true);
+  });
+
+  test('upgrades a v1 empty database to schema v8', () async {
+    final fixture = _Version1FixtureDatabase(
+      NativeDatabase(
+        File(databasePath),
+        setup: (connection) => connection.execute('PRAGMA foreign_keys = ON'),
+      ),
+    );
+    await fixture.customStatement('PRAGMA user_version = 1');
+    await fixture.close();
+
+    database = await AppDatabase.open(path: databasePath);
+
+    expect(await database!.storedSchemaVersion, 8);
+    await _expectD4Tables(database!);
+    await _expectDatabaseHealthy(database!);
+  });
+
+  test('upgrades a v2 base schema to v8 and preserves existing rows', () async {
+    final fixture = _Version2FixtureDatabase(
+      NativeDatabase(
+        File(databasePath),
+        setup: (connection) => connection.execute('PRAGMA foreign_keys = ON'),
+      ),
+    );
+    await fixture.customStatement('PRAGMA user_version = 2');
+    await _createVersion3Schema(fixture, includePaymentLedger: false);
+    await fixture.customStatement(
+      "INSERT INTO currencies VALUES ('EGP', 2, 'Egyptian pound')",
+    );
+    await fixture.close();
+
+    database = await AppDatabase.open(path: databasePath);
+
+    expect(await database!.storedSchemaVersion, 8);
+    await _expectD4Tables(database!);
+    expect(
+      await database!
+          .customSelect('SELECT * FROM currencies ORDER BY currency_code')
+          .map((row) => row.data)
+          .get(),
+      [
+        {
+          'currency_code': 'EGP',
+          'minor_unit_scale': 2,
+          'display_name': 'Egyptian pound',
+        },
+      ],
+    );
+    await _expectDatabaseHealthy(database!);
   });
 
   test(
@@ -790,6 +867,30 @@ Future<int> _readUserVersion(GeneratedDatabase database) async =>
     (await database.customSelect('PRAGMA user_version').getSingle())
         .read<int>('user_version');
 
+Future<void> _expectD4Tables(GeneratedDatabase database) async {
+  final tables = await database
+      .customSelect(
+        "SELECT name FROM sqlite_master WHERE type = 'table' "
+        "AND name IN ('legacy_invoice_import_attempts', "
+        "'legacy_invoice_import_events', "
+        "'legacy_invoice_import_occurrences', "
+        "'legacy_invoice_import_runs', "
+        "'legacy_invoice_occurrence_mappings') ORDER BY name",
+      )
+      .map((row) => row.read<String>('name'))
+      .get();
+  expect(
+    tables,
+    [
+      'legacy_invoice_import_attempts',
+      'legacy_invoice_import_events',
+      'legacy_invoice_import_occurrences',
+      'legacy_invoice_import_runs',
+      'legacy_invoice_occurrence_mappings',
+    ],
+  );
+}
+
 Future<void> _expectDatabaseHealthy(GeneratedDatabase database) async {
   expect(
     (await database.customSelect('PRAGMA foreign_keys').getSingle())
@@ -1024,7 +1125,10 @@ Future<void> _convertAllocationReversalsToV4(AppDatabase database) async {
   }
 }
 
-Future<void> _createVersion3Schema(_Version3FixtureDatabase database) async {
+Future<void> _createVersion3Schema(
+  GeneratedDatabase database, {
+  bool includePaymentLedger = true,
+}) async {
   const statements = [
     '''
     CREATE TABLE currencies (
@@ -1319,9 +1423,14 @@ Future<void> _createVersion3Schema(_Version3FixtureDatabase database) async {
     'CREATE INDEX suspense_entries_account_currency ON suspense_entries (financial_account_id, currency_code)',
   ];
 
-  for (final statement in statements) {
+  final schemaStatements = includePaymentLedger
+      ? statements
+      : statements.take(6);
+  for (final statement in schemaStatements) {
     await database.customStatement(statement);
   }
+  if (!includePaymentLedger) return;
+
   for (final table in [
     'payment_identities',
     'cash_events',
