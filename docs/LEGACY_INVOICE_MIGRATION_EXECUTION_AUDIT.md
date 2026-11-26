@@ -114,7 +114,11 @@ The schema proposal should evaluate distinct execution structures for:
 
 The final table names, columns, foreign keys, indexes, triggers, and schema migration must be proposed against the complete current schema and then approved separately. This audit does not authorize any schema modification.
 
-## 6. Field-mapping audit still required
+## 6. Field-mapping matrix
+
+The initial field-level inspection is recorded in [LEGACY_INVOICE_FIELD_MAPPING_MATRIX.md](LEGACY_INVOICE_FIELD_MAPPING_MATRIX.md). It identifies structured mappings, source-evidence-only fields, current numeric behavior, and validation gaps. Owner decisions remain open for product measurement rules, date/time parsing, blank text values, and structured query requirements.
+
+## 7. Field-mapping audit still required
 
 This inspection confirms the current mapper covers core invoice and product fields, but it is not yet a complete source-to-destination mapping specification. Before schema implementation or importer changes, produce a field-by-field matrix covering:
 
@@ -131,7 +135,7 @@ This inspection confirms the current mapper covers core invoice and product fiel
 
 No financial ledger event, payment, allocation, refund, reversal, suspense entry, or accounting posting may be synthesized from invoice paid/rest aggregates.
 
-## 7. Approved D4 decisions applied to the audit
+## 8. Approved D4 decisions applied to the audit
 
 The owner approved:
 1. Single-worker initial execution.
@@ -144,7 +148,7 @@ The owner approved:
 
 These decisions approve the design direction only. They do not authorize schema or implementation changes.
 
-## 8. Recommended next step
+## 9. Recommended next step
 
 Complete the field-by-field legacy invoice/product mapping matrix and inspect the exact current schema migration/trigger behavior for the proposed execution constraints. Then prepare a separate D4 schema proposal containing:
 - exact table and column definitions;
