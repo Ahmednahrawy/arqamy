@@ -454,3 +454,14 @@ On 2026-11-26, the owner approved the following rule for legacy `formattedDate` 
 4. Populate Drift `issued_at` only after supported source formats and timezone semantics have been explicitly established and covered by tests.
 
 The exact persisted formats and timezone semantics remain an open mapping dependency. This policy is design-only and does not authorize schema or importer implementation.
+
+## Owner-approved field policy — invoice action
+
+On 2026-11-26, the owner approved this rule for historical invoice action validation:
+
+- Recognized legacy values are `شراء` (purchase), `بيع` (sale), and `تخزين` (storage).
+- A null, empty, or unrecognized `invoiceAction` holds the entire occurrence for human review and produces a stable validation finding.
+- Preserve the exact original value in the immutable source snapshot.
+- Never infer the action from the customer, products, or amounts, and never apply a default action.
+
+The current application UI requires the user to select an action when creating an invoice. This is a defensive migration rule for historical, older, alternate-path, malformed, or corrupted persisted records; it is not a claim that the current UI permits actionless invoice creation. Design only; implementation remains separately gated.
