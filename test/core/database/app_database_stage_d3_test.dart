@@ -413,6 +413,11 @@ void main() {
       'VALUES (?, ?, ?, ?)',
       ['party-rollback', 'Rollback Party', 100, 200],
     );
+    await database.customStatement('DROP TABLE legacy_invoice_occurrence_mappings');
+    await database.customStatement('DROP TABLE legacy_invoice_import_attempts');
+    await database.customStatement('DROP TABLE legacy_invoice_import_events');
+    await database.customStatement('DROP TABLE legacy_invoice_import_occurrences');
+    await database.customStatement('DROP TABLE legacy_invoice_import_runs');
     await database.customStatement('DROP TABLE legacy_party_review_decisions');
     await database.customStatement('DROP TABLE legacy_migration_occurrences');
     await database.customStatement('DROP TABLE legacy_migration_runs');
@@ -485,6 +490,11 @@ void main() {
       );
 
       // Remove only the v6 additions to form the actual v5 table layout.
+      await database.customStatement('DROP TABLE legacy_invoice_occurrence_mappings');
+      await database.customStatement('DROP TABLE legacy_invoice_import_attempts');
+      await database.customStatement('DROP TABLE legacy_invoice_import_events');
+      await database.customStatement('DROP TABLE legacy_invoice_import_occurrences');
+      await database.customStatement('DROP TABLE legacy_invoice_import_runs');
       await database.customStatement(
         'DROP TABLE legacy_party_review_decisions',
       );
