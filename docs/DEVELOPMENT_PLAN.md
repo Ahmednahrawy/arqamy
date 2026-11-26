@@ -548,17 +548,18 @@ Do not create speculative infrastructure for future modules before a concrete de
 
 ## 8. Immediate next sequence
 
-The detailed migration design already exists and has been refreshed against the D3.2 implementation. The next work is **design review and gap closure**, not immediate import implementation.
+The D4 execution-journal/import design has been approved by the owner. The repository audit is documented in [LEGACY_INVOICE_MIGRATION_EXECUTION_AUDIT.md](LEGACY_INVOICE_MIGRATION_EXECUTION_AUDIT.md). The next work is to complete mapping/schema design; implementation remains separately gated.
 
-1. Review the updated `DRIFT_MIGRATION_DESIGN.md` and confirm the remaining design decisions.
-2. Review [LEGACY_INVOICE_MIGRATION_EXECUTION_JOURNAL_DESIGN.md](LEGACY_INVOICE_MIGRATION_EXECUTION_JOURNAL_DESIGN.md), decide the open D4 items, and approve the execution-journal/import contract.
-3. Finalize independently recoverable snapshot export/restore and post-cutover recovery design against the D4 contract.
-4. Update `AUDIT.md` with a full current-HEAD re-audit.
-5. Implement one approved migration foundation step at a time, with schema and behavior changes separately authorized.
+1. Complete the field-by-field legacy invoice/product mapping matrix, including malformed/unknown fields and numeric/date conversion policy.
+2. Prepare a separate D4 schema proposal for run, occurrence, attempt, operator-event, and occurrence-mapping persistence, based on the current schema-v7 database.
+3. Specify the schema upgrade, indexes, uniqueness constraints, foreign keys, append-only triggers, transaction boundaries, claim-token rules, and rollback plan.
+4. Review the independent snapshot export/restore design and the post-cutover forward-recovery/replay design.
+5. Submit the schema proposal for explicit approval before changing `app_database.dart`, generated Drift files, or importer code.
+6. After schema approval, implement one small foundation step at a time on a feature branch, with tests and separate approval for importer and cutover behavior.
 
 Security-key remediation remains a parallel open risk and must not be represented as complete.
 
-**First migration milestone:** An owner-approved, fully specified, testable, recoverable import process that accounts for every legacy invoice occurrence without altering the source. D4 is a proposal only; no schema or implementation work is authorized yet.
+**First migration milestone:** An owner-approved, fully specified, testable, recoverable import process that accounts for every legacy invoice occurrence without altering the source. D4 design direction is approved; schema and implementation changes remain separately gated.
 
 ---
 
