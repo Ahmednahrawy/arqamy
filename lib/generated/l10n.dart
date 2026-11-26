@@ -67,7 +67,12 @@ class S {
 
   /// `Customers & suppliers`
   String get suppliers {
-    return Intl.message('Customers & suppliers', name: 'suppliers', desc: '', args: []);
+    return Intl.message(
+      'Customers & suppliers',
+      name: 'suppliers',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Customers`
@@ -82,22 +87,42 @@ class S {
 
   /// `Inventory items`
   String get inventory_items {
-    return Intl.message('Inventory items', name: 'inventory_items', desc: '', args: []);
+    return Intl.message(
+      'Inventory items',
+      name: 'inventory_items',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Items`
   String get inventory_total_items {
-    return Intl.message('Items', name: 'inventory_total_items', desc: '', args: []);
+    return Intl.message(
+      'Items',
+      name: 'inventory_total_items',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Low stock`
   String get inventory_low_stock {
-    return Intl.message('Low stock', name: 'inventory_low_stock', desc: '', args: []);
+    return Intl.message(
+      'Low stock',
+      name: 'inventory_low_stock',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Units`
   String get inventory_total_quantity {
-    return Intl.message('Units', name: 'inventory_total_quantity', desc: '', args: []);
+    return Intl.message(
+      'Units',
+      name: 'inventory_total_quantity',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Min`
@@ -107,7 +132,12 @@ class S {
 
   /// `No inventory items yet`
   String get inventory_empty {
-    return Intl.message('No inventory items yet', name: 'inventory_empty', desc: '', args: []);
+    return Intl.message(
+      'No inventory items yet',
+      name: 'inventory_empty',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Quantity`
@@ -147,7 +177,12 @@ class S {
 
   /// `Select Language`
   String get select_language {
-    return Intl.message('Select Language', name: 'select_language', desc: '', args: []);
+    return Intl.message(
+      'Select Language',
+      name: 'select_language',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Arabic`
@@ -172,7 +207,12 @@ class S {
 
   /// `Are you sure you want to log out?`
   String get are_you_sure_logout {
-    return Intl.message('Are you sure you want to log out?', name: 'are_you_sure_logout', desc: '', args: []);
+    return Intl.message(
+      'Are you sure you want to log out?',
+      name: 'are_you_sure_logout',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Yes`
@@ -192,12 +232,22 @@ class S {
 
   /// `Change Password`
   String get change_password {
-    return Intl.message('Change Password', name: 'change_password', desc: '', args: []);
+    return Intl.message(
+      'Change Password',
+      name: 'change_password',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Notifications`
   String get notifications {
-    return Intl.message('Notifications', name: 'notifications', desc: '', args: []);
+    return Intl.message(
+      'Notifications',
+      name: 'notifications',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Help`
@@ -212,12 +262,22 @@ class S {
 
   /// `Terms of Service`
   String get terms_of_service {
-    return Intl.message('Terms of Service', name: 'terms_of_service', desc: '', args: []);
+    return Intl.message(
+      'Terms of Service',
+      name: 'terms_of_service',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Privacy Policy`
   String get privacy_policy {
-    return Intl.message('Privacy Policy', name: 'privacy_policy', desc: '', args: []);
+    return Intl.message(
+      'Privacy Policy',
+      name: 'privacy_policy',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Contact Us`
@@ -232,7 +292,12 @@ class S {
 
   /// `No results found`
   String get no_results_found {
-    return Intl.message('No results found', name: 'no_results_found', desc: '', args: []);
+    return Intl.message(
+      'No results found',
+      name: 'no_results_found',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Loading...`
@@ -257,32 +322,62 @@ class S {
 
   /// `Page Not Found`
   String get page_not_found {
-    return Intl.message('Page Not Found', name: 'page_not_found', desc: '', args: []);
+    return Intl.message(
+      'Page Not Found',
+      name: 'page_not_found',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Please choose a customer before proceeding.`
   String get please_choose_customer {
-    return Intl.message('Please choose a customer before proceeding.', name: 'please_choose_customer', desc: '', args: []);
+    return Intl.message(
+      'Please choose a customer before proceeding.',
+      name: 'please_choose_customer',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Invoice sent successfully`
   String get invoice_sent_successfully {
-    return Intl.message('Invoice sent successfully', name: 'invoice_sent_successfully', desc: '', args: []);
+    return Intl.message(
+      'Invoice sent successfully',
+      name: 'invoice_sent_successfully',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Export Excel`
   String get exportToExcel {
-    return Intl.message('Export Excel', name: 'exportToExcel', desc: '', args: []);
+    return Intl.message(
+      'Export Excel',
+      name: 'exportToExcel',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Invoice exported to Excel`
   String get invoice_exported_to_excel {
-    return Intl.message('Invoice exported to Excel', name: 'invoice_exported_to_excel', desc: '', args: []);
+    return Intl.message(
+      'Invoice exported to Excel',
+      name: 'invoice_exported_to_excel',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Could not export the invoice to Excel`
   String get invoice_excel_export_failed {
-    return Intl.message('Could not export the invoice to Excel', name: 'invoice_excel_export_failed', desc: '', args: []);
+    return Intl.message(
+      'Could not export the invoice to Excel',
+      name: 'invoice_excel_export_failed',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Privacy`
@@ -292,122 +387,242 @@ class S {
 
   /// `Arqamy keeps your invoices and customer details on this device. We do not collect or share your data.`
   String get privacy_intro {
-    return Intl.message('Arqamy keeps your invoices and customer details on this device. We do not collect or share your data.', name: 'privacy_intro', desc: '', args: []);
+    return Intl.message(
+      'Arqamy keeps your invoices and customer details on this device. We do not collect or share your data.',
+      name: 'privacy_intro',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Data stored on your device`
   String get privacy_data_title {
-    return Intl.message('Data stored on your device', name: 'privacy_data_title', desc: '', args: []);
+    return Intl.message(
+      'Data stored on your device',
+      name: 'privacy_data_title',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Invoice details, customer names, products, and settings are saved locally on your device.`
   String get privacy_data_body {
-    return Intl.message('Invoice details, customer names, products, and settings are saved locally on your device.', name: 'privacy_data_body', desc: '', args: []);
+    return Intl.message(
+      'Invoice details, customer names, products, and settings are saved locally on your device.',
+      name: 'privacy_data_body',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `How we use your data`
   String get privacy_usage_title {
-    return Intl.message('How we use your data', name: 'privacy_usage_title', desc: '', args: []);
+    return Intl.message(
+      'How we use your data',
+      name: 'privacy_usage_title',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Your data is only used to display, organize, and back up your invoices inside the app.`
   String get privacy_usage_body {
-    return Intl.message('Your data is only used to display, organize, and back up your invoices inside the app.', name: 'privacy_usage_body', desc: '', args: []);
+    return Intl.message(
+      'Your data is only used to display, organize, and back up your invoices inside the app.',
+      name: 'privacy_usage_body',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Your choices`
   String get privacy_choices_title {
-    return Intl.message('Your choices', name: 'privacy_choices_title', desc: '', args: []);
+    return Intl.message(
+      'Your choices',
+      name: 'privacy_choices_title',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `You can back up or restore your invoices from Settings at any time, and clear app data through your device settings.`
   String get privacy_choices_body {
-    return Intl.message('You can back up or restore your invoices from Settings at any time, and clear app data through your device settings.', name: 'privacy_choices_body', desc: '', args: []);
+    return Intl.message(
+      'You can back up or restore your invoices from Settings at any time, and clear app data through your device settings.',
+      name: 'privacy_choices_body',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Find answers to common questions about using Arqamy.`
   String get help_intro {
-    return Intl.message('Find answers to common questions about using Arqamy.', name: 'help_intro', desc: '', args: []);
+    return Intl.message(
+      'Find answers to common questions about using Arqamy.',
+      name: 'help_intro',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Creating an invoice`
   String get help_create_invoice_title {
-    return Intl.message('Creating an invoice', name: 'help_create_invoice_title', desc: '', args: []);
+    return Intl.message(
+      'Creating an invoice',
+      name: 'help_create_invoice_title',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Open the home screen, choose a customer, add products, then save the invoice.`
   String get help_create_invoice_body {
-    return Intl.message('Open the home screen, choose a customer, add products, then save the invoice.', name: 'help_create_invoice_body', desc: '', args: []);
+    return Intl.message(
+      'Open the home screen, choose a customer, add products, then save the invoice.',
+      name: 'help_create_invoice_body',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Backing up invoices`
   String get help_backup_title {
-    return Intl.message('Backing up invoices', name: 'help_backup_title', desc: '', args: []);
+    return Intl.message(
+      'Backing up invoices',
+      name: 'help_backup_title',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `In Settings, open Invoice actions and choose Backup invoices to save a copy.`
   String get help_backup_body {
-    return Intl.message('In Settings, open Invoice actions and choose Backup invoices to save a copy.', name: 'help_backup_body', desc: '', args: []);
+    return Intl.message(
+      'In Settings, open Invoice actions and choose Backup invoices to save a copy.',
+      name: 'help_backup_body',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Restoring invoices`
   String get help_restore_title {
-    return Intl.message('Restoring invoices', name: 'help_restore_title', desc: '', args: []);
+    return Intl.message(
+      'Restoring invoices',
+      name: 'help_restore_title',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `In Settings, open Invoice actions and choose Restore from backup.`
   String get help_restore_body {
-    return Intl.message('In Settings, open Invoice actions and choose Restore from backup.', name: 'help_restore_body', desc: '', args: []);
+    return Intl.message(
+      'In Settings, open Invoice actions and choose Restore from backup.',
+      name: 'help_restore_body',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Changing the language`
   String get help_language_title {
-    return Intl.message('Changing the language', name: 'help_language_title', desc: '', args: []);
+    return Intl.message(
+      'Changing the language',
+      name: 'help_language_title',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Open the side menu and use the Language row to switch between Arabic and English.`
   String get help_language_body {
-    return Intl.message('Open the side menu and use the Language row to switch between Arabic and English.', name: 'help_language_body', desc: '', args: []);
+    return Intl.message(
+      'Open the side menu and use the Language row to switch between Arabic and English.',
+      name: 'help_language_body',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Need more help?`
   String get help_contact_title {
-    return Intl.message('Need more help?', name: 'help_contact_title', desc: '', args: []);
+    return Intl.message(
+      'Need more help?',
+      name: 'help_contact_title',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Contact the app support team for further assistance.`
   String get help_contact_body {
-    return Intl.message('Contact the app support team for further assistance.', name: 'help_contact_body', desc: '', args: []);
+    return Intl.message(
+      'Contact the app support team for further assistance.',
+      name: 'help_contact_body',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Invoice Management`
   String get invoice_management {
-    return Intl.message('Invoice Management', name: 'invoice_management', desc: '', args: []);
+    return Intl.message(
+      'Invoice Management',
+      name: 'invoice_management',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Invoice Templates`
   String get invoice_template {
-    return Intl.message('Invoice Templates', name: 'invoice_template', desc: '', args: []);
+    return Intl.message(
+      'Invoice Templates',
+      name: 'invoice_template',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Manage and customize invoice formats`
   String get invoice_templated_desc {
-    return Intl.message('Manage and customize invoice formats', name: 'invoice_templated_desc', desc: '', args: []);
+    return Intl.message(
+      'Manage and customize invoice formats',
+      name: 'invoice_templated_desc',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Edit invoice`
   String get editInvoice {
-    return Intl.message('Edit invoice', name: 'editInvoice', desc: '', args: []);
+    return Intl.message(
+      'Edit invoice',
+      name: 'editInvoice',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Customer name`
   String get customerName {
-    return Intl.message('Customer name', name: 'customerName', desc: '', args: []);
+    return Intl.message(
+      'Customer name',
+      name: 'customerName',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Invoice date and time`
   String get invoiceDateTime {
-    return Intl.message('Invoice date and time', name: 'invoiceDateTime', desc: '', args: []);
+    return Intl.message(
+      'Invoice date and time',
+      name: 'invoiceDateTime',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Date`
@@ -422,7 +637,12 @@ class S {
 
   /// `Invoice type`
   String get invoiceType {
-    return Intl.message('Invoice type', name: 'invoiceType', desc: '', args: []);
+    return Intl.message(
+      'Invoice type',
+      name: 'invoiceType',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Unspecified`
@@ -447,12 +667,22 @@ class S {
 
   /// `Remove product`
   String get removeProduct {
-    return Intl.message('Remove product', name: 'removeProduct', desc: '', args: []);
+    return Intl.message(
+      'Remove product',
+      name: 'removeProduct',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Product name`
   String get productName {
-    return Intl.message('Product name', name: 'productName', desc: '', args: []);
+    return Intl.message(
+      'Product name',
+      name: 'productName',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Weight`
@@ -462,12 +692,22 @@ class S {
 
   /// `Package weight`
   String get packageWeight {
-    return Intl.message('Package weight', name: 'packageWeight', desc: '', args: []);
+    return Intl.message(
+      'Package weight',
+      name: 'packageWeight',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Package count`
   String get packageCount {
-    return Intl.message('Package count', name: 'packageCount', desc: '', args: []);
+    return Intl.message(
+      'Package count',
+      name: 'packageCount',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Price`
@@ -477,7 +717,12 @@ class S {
 
   /// `Default price (optional)`
   String get default_price_optional {
-    return Intl.message('Default price (optional)', name: 'default_price_optional', desc: '', args: []);
+    return Intl.message(
+      'Default price (optional)',
+      name: 'default_price_optional',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Amount paid`
@@ -492,37 +737,72 @@ class S {
 
   /// `Invoice total`
   String get invoiceTotal {
-    return Intl.message('Invoice total', name: 'invoiceTotal', desc: '', args: []);
+    return Intl.message(
+      'Invoice total',
+      name: 'invoiceTotal',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Outstanding balance`
   String get outstandingBalance {
-    return Intl.message('Outstanding balance', name: 'outstandingBalance', desc: '', args: []);
+    return Intl.message(
+      'Outstanding balance',
+      name: 'outstandingBalance',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Enter a name`
   String get nameRequired {
-    return Intl.message('Enter a name', name: 'nameRequired', desc: '', args: []);
+    return Intl.message(
+      'Enter a name',
+      name: 'nameRequired',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Enter a valid finite number`
   String get invalidNumber {
-    return Intl.message('Enter a valid finite number', name: 'invalidNumber', desc: '', args: []);
+    return Intl.message(
+      'Enter a valid finite number',
+      name: 'invalidNumber',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Enter a whole number`
   String get invalidInteger {
-    return Intl.message('Enter a whole number', name: 'invalidInteger', desc: '', args: []);
+    return Intl.message(
+      'Enter a whole number',
+      name: 'invalidInteger',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Add at least one product before saving.`
   String get invoiceNeedsProduct {
-    return Intl.message('Add at least one product before saving.', name: 'invoiceNeedsProduct', desc: '', args: []);
+    return Intl.message(
+      'Add at least one product before saving.',
+      name: 'invoiceNeedsProduct',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `The stored date or time could not be parsed. Choose a replacement if needed.`
   String get legacyDatePickerHint {
-    return Intl.message('The stored date or time could not be parsed. Choose a replacement if needed.', name: 'legacyDatePickerHint', desc: '', args: []);
+    return Intl.message(
+      'The stored date or time could not be parsed. Choose a replacement if needed.',
+      name: 'legacyDatePickerHint',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Purchase`
@@ -542,27 +822,52 @@ class S {
 
   /// `Could not save invoice changes`
   String get couldNotSaveInvoice {
-    return Intl.message('Could not save invoice changes', name: 'couldNotSaveInvoice', desc: '', args: []);
+    return Intl.message(
+      'Could not save invoice changes',
+      name: 'couldNotSaveInvoice',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Save changes`
   String get saveChanges {
-    return Intl.message('Save changes', name: 'saveChanges', desc: '', args: []);
+    return Intl.message(
+      'Save changes',
+      name: 'saveChanges',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Storage value`
   String get storageInvoiceValue {
-    return Intl.message('Storage value', name: 'storageInvoiceValue', desc: '', args: []);
+    return Intl.message(
+      'Storage value',
+      name: 'storageInvoiceValue',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Stored net weight`
   String get storedNetWeight {
-    return Intl.message('Stored net weight', name: 'storedNetWeight', desc: '', args: []);
+    return Intl.message(
+      'Stored net weight',
+      name: 'storedNetWeight',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Storage invoices`
   String get storageInvoiceCount {
-    return Intl.message('Storage invoices', name: 'storageInvoiceCount', desc: '', args: []);
+    return Intl.message(
+      'Storage invoices',
+      name: 'storageInvoiceCount',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `EGP`
@@ -577,37 +882,72 @@ class S {
 
   /// `Search by serial or product name`
   String get customerInvoiceSearchHint {
-    return Intl.message('Search by serial or product name', name: 'customerInvoiceSearchHint', desc: '', args: []);
+    return Intl.message(
+      'Search by serial or product name',
+      name: 'customerInvoiceSearchHint',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Search by serial, product or customer`
   String get allInvoicesSearchHint {
-    return Intl.message('Search by serial, product or customer', name: 'allInvoicesSearchHint', desc: '', args: []);
+    return Intl.message(
+      'Search by serial, product or customer',
+      name: 'allInvoicesSearchHint',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Recent invoices`
   String get recentInvoices {
-    return Intl.message('Recent invoices', name: 'recentInvoices', desc: '', args: []);
+    return Intl.message(
+      'Recent invoices',
+      name: 'recentInvoices',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `No invoices yet`
   String get noRecentInvoices {
-    return Intl.message('No invoices yet', name: 'noRecentInvoices', desc: '', args: []);
+    return Intl.message(
+      'No invoices yet',
+      name: 'noRecentInvoices',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Clear search`
   String get clearInvoiceSearch {
-    return Intl.message('Clear search', name: 'clearInvoiceSearch', desc: '', args: []);
+    return Intl.message(
+      'Clear search',
+      name: 'clearInvoiceSearch',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `No invoices match your search`
   String get noInvoicesMatchSearch {
-    return Intl.message('No invoices match your search', name: 'noInvoicesMatchSearch', desc: '', args: []);
+    return Intl.message(
+      'No invoices match your search',
+      name: 'noInvoicesMatchSearch',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Invoice type`
   String get invoiceActionFilter {
-    return Intl.message('Invoice type', name: 'invoiceActionFilter', desc: '', args: []);
+    return Intl.message(
+      'Invoice type',
+      name: 'invoiceActionFilter',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Invoice #`
@@ -617,22 +957,42 @@ class S {
 
   /// `Date range`
   String get dateRangeFilter {
-    return Intl.message('Date range', name: 'dateRangeFilter', desc: '', args: []);
+    return Intl.message(
+      'Date range',
+      name: 'dateRangeFilter',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Select date range`
   String get selectDateRange {
-    return Intl.message('Select date range', name: 'selectDateRange', desc: '', args: []);
+    return Intl.message(
+      'Select date range',
+      name: 'selectDateRange',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Clear date filter`
   String get clearDateFilter {
-    return Intl.message('Clear date filter', name: 'clearDateFilter', desc: '', args: []);
+    return Intl.message(
+      'Clear date filter',
+      name: 'clearDateFilter',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Payment status`
   String get paymentStatusFilter {
-    return Intl.message('Payment status', name: 'paymentStatusFilter', desc: '', args: []);
+    return Intl.message(
+      'Payment status',
+      name: 'paymentStatusFilter',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `All`
@@ -647,7 +1007,12 @@ class S {
 
   /// `Partially paid`
   String get partiallyPaidStatus {
-    return Intl.message('Partially paid', name: 'partiallyPaidStatus', desc: '', args: []);
+    return Intl.message(
+      'Partially paid',
+      name: 'partiallyPaidStatus',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Unpaid`
@@ -657,12 +1022,22 @@ class S {
 
   /// `Reset filters`
   String get resetInvoiceFilters {
-    return Intl.message('Reset filters', name: 'resetInvoiceFilters', desc: '', args: []);
+    return Intl.message(
+      'Reset filters',
+      name: 'resetInvoiceFilters',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Invoice filters`
   String get invoiceFilters {
-    return Intl.message('Invoice filters', name: 'invoiceFilters', desc: '', args: []);
+    return Intl.message(
+      'Invoice filters',
+      name: 'invoiceFilters',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Apply`
@@ -672,12 +1047,22 @@ class S {
 
   /// `No invoices match the search or filters`
   String get noInvoicesMatchFilters {
-    return Intl.message('No invoices match the search or filters', name: 'noInvoicesMatchFilters', desc: '', args: []);
+    return Intl.message(
+      'No invoices match the search or filters',
+      name: 'noInvoicesMatchFilters',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Issue invoice`
   String get invoice_screen_title {
-    return Intl.message('Issue invoice', name: 'invoice_screen_title', desc: '', args: []);
+    return Intl.message(
+      'Issue invoice',
+      name: 'invoice_screen_title',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `New invoice`
@@ -692,47 +1077,92 @@ class S {
 
   /// `Delete saved invoice`
   String get delete_saved_invoice {
-    return Intl.message('Delete saved invoice', name: 'delete_saved_invoice', desc: '', args: []);
+    return Intl.message(
+      'Delete saved invoice',
+      name: 'delete_saved_invoice',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Only the current invoice data will be cleared. Saved invoices will not be deleted.`
   String get clear_draft_message {
-    return Intl.message('Only the current invoice data will be cleared. Saved invoices will not be deleted.', name: 'clear_draft_message', desc: '', args: []);
+    return Intl.message(
+      'Only the current invoice data will be cleared. Saved invoices will not be deleted.',
+      name: 'clear_draft_message',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Are you sure you want to delete the saved invoice? This action cannot be undone.`
   String get delete_saved_invoice_confirm {
-    return Intl.message('Are you sure you want to delete the saved invoice? This action cannot be undone.', name: 'delete_saved_invoice_confirm', desc: '', args: []);
+    return Intl.message(
+      'Are you sure you want to delete the saved invoice? This action cannot be undone.',
+      name: 'delete_saved_invoice_confirm',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `No saved invoice is open to delete`
   String get no_saved_invoice_to_delete {
-    return Intl.message('No saved invoice is open to delete', name: 'no_saved_invoice_to_delete', desc: '', args: []);
+    return Intl.message(
+      'No saved invoice is open to delete',
+      name: 'no_saved_invoice_to_delete',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `A new invoice is ready`
   String get new_invoice_ready {
-    return Intl.message('A new invoice is ready', name: 'new_invoice_ready', desc: '', args: []);
+    return Intl.message(
+      'A new invoice is ready',
+      name: 'new_invoice_ready',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Invoice deleted. A new invoice is ready`
   String get invoice_deleted_new_ready {
-    return Intl.message('Invoice deleted. A new invoice is ready', name: 'invoice_deleted_new_ready', desc: '', args: []);
+    return Intl.message(
+      'Invoice deleted. A new invoice is ready',
+      name: 'invoice_deleted_new_ready',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Could not save the invoice`
   String get save_invoice_failed {
-    return Intl.message('Could not save the invoice', name: 'save_invoice_failed', desc: '', args: []);
+    return Intl.message(
+      'Could not save the invoice',
+      name: 'save_invoice_failed',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `The invoice was saved, but sharing failed`
   String get share_invoice_failed {
-    return Intl.message('The invoice was saved, but sharing failed', name: 'share_invoice_failed', desc: '', args: []);
+    return Intl.message(
+      'The invoice was saved, but sharing failed',
+      name: 'share_invoice_failed',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Invoice saved successfully`
   String get invoice_saved_successfully {
-    return Intl.message('Invoice saved successfully', name: 'invoice_saved_successfully', desc: '', args: []);
+    return Intl.message(
+      'Invoice saved successfully',
+      name: 'invoice_saved_successfully',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Preview`
@@ -742,7 +1172,12 @@ class S {
 
   /// `Collected`
   String get collected_amount_label {
-    return Intl.message('Collected', name: 'collected_amount_label', desc: '', args: []);
+    return Intl.message(
+      'Collected',
+      name: 'collected_amount_label',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Discount`
@@ -752,42 +1187,82 @@ class S {
 
   /// `Add discount`
   String get add_discount {
-    return Intl.message('Add discount', name: 'add_discount', desc: '', args: []);
+    return Intl.message(
+      'Add discount',
+      name: 'add_discount',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Discount amount`
   String get discount_amount {
-    return Intl.message('Discount amount', name: 'discount_amount', desc: '', args: []);
+    return Intl.message(
+      'Discount amount',
+      name: 'discount_amount',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Discount percent`
   String get discount_percent {
-    return Intl.message('Discount percent', name: 'discount_percent', desc: '', args: []);
+    return Intl.message(
+      'Discount percent',
+      name: 'discount_percent',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Switch to amount`
   String get switch_to_amount {
-    return Intl.message('Switch to amount', name: 'switch_to_amount', desc: '', args: []);
+    return Intl.message(
+      'Switch to amount',
+      name: 'switch_to_amount',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Switch to percent`
   String get switch_to_percent {
-    return Intl.message('Switch to percent', name: 'switch_to_percent', desc: '', args: []);
+    return Intl.message(
+      'Switch to percent',
+      name: 'switch_to_percent',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Clear discount`
   String get clear_discount {
-    return Intl.message('Clear discount', name: 'clear_discount', desc: '', args: []);
+    return Intl.message(
+      'Clear discount',
+      name: 'clear_discount',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Discount cannot exceed the invoice total`
   String get discount_exceeds_total {
-    return Intl.message('Discount cannot exceed the invoice total', name: 'discount_exceeds_total', desc: '', args: []);
+    return Intl.message(
+      'Discount cannot exceed the invoice total',
+      name: 'discount_exceeds_total',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Percent must be between 0 and 100`
   String get discount_percent_range {
-    return Intl.message('Percent must be between 0 and 100', name: 'discount_percent_range', desc: '', args: []);
+    return Intl.message(
+      'Percent must be between 0 and 100',
+      name: 'discount_percent_range',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Subtotal`
@@ -807,12 +1282,22 @@ class S {
 
   /// `Share via WhatsApp`
   String get share_via_whatsapp {
-    return Intl.message('Share via WhatsApp', name: 'share_via_whatsapp', desc: '', args: []);
+    return Intl.message(
+      'Share via WhatsApp',
+      name: 'share_via_whatsapp',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Send PDF + Excel via WhatsApp`
   String get share_invoice_bundle_via_whatsapp {
-    return Intl.message('Send PDF + Excel via WhatsApp', name: 'share_invoice_bundle_via_whatsapp', desc: '', args: []);
+    return Intl.message(
+      'Send PDF + Excel via WhatsApp',
+      name: 'share_invoice_bundle_via_whatsapp',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Grand total`
@@ -822,22 +1307,42 @@ class S {
 
   /// `No products added`
   String get no_products_added {
-    return Intl.message('No products added', name: 'no_products_added', desc: '', args: []);
+    return Intl.message(
+      'No products added',
+      name: 'no_products_added',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Start adding products to the invoice`
   String get start_adding_products {
-    return Intl.message('Start adding products to the invoice', name: 'start_adding_products', desc: '', args: []);
+    return Intl.message(
+      'Start adding products to the invoice',
+      name: 'start_adding_products',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Please enter the collected amount`
   String get enter_collected_amount {
-    return Intl.message('Please enter the collected amount', name: 'enter_collected_amount', desc: '', args: []);
+    return Intl.message(
+      'Please enter the collected amount',
+      name: 'enter_collected_amount',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Product added successfully`
   String get product_added {
-    return Intl.message('Product added successfully', name: 'product_added', desc: '', args: []);
+    return Intl.message(
+      'Product added successfully',
+      name: 'product_added',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Delete`
@@ -847,17 +1352,32 @@ class S {
 
   /// `Please select the invoice type first`
   String get select_invoice_type_first {
-    return Intl.message('Please select the invoice type first', name: 'select_invoice_type_first', desc: '', args: []);
+    return Intl.message(
+      'Please select the invoice type first',
+      name: 'select_invoice_type_first',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Please select a product`
   String get select_product {
-    return Intl.message('Please select a product', name: 'select_product', desc: '', args: []);
+    return Intl.message(
+      'Please select a product',
+      name: 'select_product',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Could not access invoice data. Please try again.`
   String get data_unavailable {
-    return Intl.message('Could not access invoice data. Please try again.', name: 'data_unavailable', desc: '', args: []);
+    return Intl.message(
+      'Could not access invoice data. Please try again.',
+      name: 'data_unavailable',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Invoice`
@@ -867,72 +1387,142 @@ class S {
 
   /// `Change invoice type`
   String get change_invoice_type {
-    return Intl.message('Change invoice type', name: 'change_invoice_type', desc: '', args: []);
+    return Intl.message(
+      'Change invoice type',
+      name: 'change_invoice_type',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Select a product`
   String get select_product_hint {
-    return Intl.message('Select a product', name: 'select_product_hint', desc: '', args: []);
+    return Intl.message(
+      'Select a product',
+      name: 'select_product_hint',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Weight or count`
   String get weight_or_count {
-    return Intl.message('Weight or count', name: 'weight_or_count', desc: '', args: []);
+    return Intl.message(
+      'Weight or count',
+      name: 'weight_or_count',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Please enter the weight`
   String get weight_required {
-    return Intl.message('Please enter the weight', name: 'weight_required', desc: '', args: []);
+    return Intl.message(
+      'Please enter the weight',
+      name: 'weight_required',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Please enter the price`
   String get price_required {
-    return Intl.message('Please enter the price', name: 'price_required', desc: '', args: []);
+    return Intl.message(
+      'Please enter the price',
+      name: 'price_required',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Enter the package count first`
   String get package_count_required {
-    return Intl.message('Enter the package count first', name: 'package_count_required', desc: '', args: []);
+    return Intl.message(
+      'Enter the package count first',
+      name: 'package_count_required',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Enter the empty package weight`
   String get package_weight_required {
-    return Intl.message('Enter the empty package weight', name: 'package_weight_required', desc: '', args: []);
+    return Intl.message(
+      'Enter the empty package weight',
+      name: 'package_weight_required',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Enter at least 4 characters`
   String get customer_name_min_length {
-    return Intl.message('Enter at least 4 characters', name: 'customer_name_min_length', desc: '', args: []);
+    return Intl.message(
+      'Enter at least 4 characters',
+      name: 'customer_name_min_length',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Could not load suggestions`
   String get error_loading_suggestions {
-    return Intl.message('Could not load suggestions', name: 'error_loading_suggestions', desc: '', args: []);
+    return Intl.message(
+      'Could not load suggestions',
+      name: 'error_loading_suggestions',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Could not save suggestions`
   String get error_saving_suggestions {
-    return Intl.message('Could not save suggestions', name: 'error_saving_suggestions', desc: '', args: []);
+    return Intl.message(
+      'Could not save suggestions',
+      name: 'error_saving_suggestions',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Could not add the suggestion`
   String get error_adding_suggestions {
-    return Intl.message('Could not add the suggestion', name: 'error_adding_suggestions', desc: '', args: []);
+    return Intl.message(
+      'Could not add the suggestion',
+      name: 'error_adding_suggestions',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Could not submit the suggestion`
   String get error_submitting_suggestions {
-    return Intl.message('Could not submit the suggestion', name: 'error_submitting_suggestions', desc: '', args: []);
+    return Intl.message(
+      'Could not submit the suggestion',
+      name: 'error_submitting_suggestions',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Suggestion removed`
   String get suggestion_removed {
-    return Intl.message('Suggestion removed', name: 'suggestion_removed', desc: '', args: []);
+    return Intl.message(
+      'Suggestion removed',
+      name: 'suggestion_removed',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Weight details`
   String get weight_details {
-    return Intl.message('Weight details', name: 'weight_details', desc: '', args: []);
+    return Intl.message(
+      'Weight details',
+      name: 'weight_details',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Totals`
@@ -942,17 +1532,32 @@ class S {
 
   /// `Product details`
   String get product_details {
-    return Intl.message('Product details', name: 'product_details', desc: '', args: []);
+    return Intl.message(
+      'Product details',
+      name: 'product_details',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Confirm deletion`
   String get confirm_delete {
-    return Intl.message('Confirm deletion', name: 'confirm_delete', desc: '', args: []);
+    return Intl.message(
+      'Confirm deletion',
+      name: 'confirm_delete',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Are you sure you want to delete this product?`
   String get confirm_delete_product {
-    return Intl.message('Are you sure you want to delete this product?', name: 'confirm_delete_product', desc: '', args: []);
+    return Intl.message(
+      'Are you sure you want to delete this product?',
+      name: 'confirm_delete_product',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Net weight`
@@ -967,7 +1572,12 @@ class S {
 
   /// `Total amount`
   String get total_amount {
-    return Intl.message('Total amount', name: 'total_amount', desc: '', args: []);
+    return Intl.message(
+      'Total amount',
+      name: 'total_amount',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Remaining`
@@ -977,32 +1587,62 @@ class S {
 
   /// `Customers and suppliers`
   String get customers_and_suppliers {
-    return Intl.message('Customers and suppliers', name: 'customers_and_suppliers', desc: '', args: []);
+    return Intl.message(
+      'Customers and suppliers',
+      name: 'customers_and_suppliers',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Invoice history`
   String get invoice_history {
-    return Intl.message('Invoice history', name: 'invoice_history', desc: '', args: []);
+    return Intl.message(
+      'Invoice history',
+      name: 'invoice_history',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `No invoices for this customer`
   String get no_customer_invoices {
-    return Intl.message('No invoices for this customer', name: 'no_customer_invoices', desc: '', args: []);
+    return Intl.message(
+      'No invoices for this customer',
+      name: 'no_customer_invoices',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Net due to the customer`
   String get net_due_to_customer {
-    return Intl.message('Net due to the customer', name: 'net_due_to_customer', desc: '', args: []);
+    return Intl.message(
+      'Net due to the customer',
+      name: 'net_due_to_customer',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Net due to you`
   String get net_due_to_you {
-    return Intl.message('Net due to you', name: 'net_due_to_you', desc: '', args: []);
+    return Intl.message(
+      'Net due to you',
+      name: 'net_due_to_you',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Account balanced`
   String get account_balanced {
-    return Intl.message('Account balanced', name: 'account_balanced', desc: '', args: []);
+    return Intl.message(
+      'Account balanced',
+      name: 'account_balanced',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Purchases`
@@ -1017,7 +1657,12 @@ class S {
 
   /// `Invoice options`
   String get invoice_options {
-    return Intl.message('Invoice options', name: 'invoice_options', desc: '', args: []);
+    return Intl.message(
+      'Invoice options',
+      name: 'invoice_options',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Edit`
@@ -1030,39 +1675,74 @@ class S {
     return Intl.message('Share', name: 'share', desc: '', args: []);
   }
 
-  /// `Are you sure you want to delete this invoice? This action cannot be undone.`
+  /// `Are you sure you want to delete this invoice?\nThis action cannot be undone.`
   String get confirm_delete_invoice {
-    return Intl.message('Are you sure you want to delete this invoice?\nThis action cannot be undone.', name: 'confirm_delete_invoice', desc: '', args: []);
+    return Intl.message(
+      'Are you sure you want to delete this invoice?\nThis action cannot be undone.',
+      name: 'confirm_delete_invoice',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Could not delete the invoice`
   String get could_not_delete_invoice {
-    return Intl.message('Could not delete the invoice', name: 'could_not_delete_invoice', desc: '', args: []);
+    return Intl.message(
+      'Could not delete the invoice',
+      name: 'could_not_delete_invoice',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Could not load the invoice history`
   String get could_not_load_invoices {
-    return Intl.message('Could not load the invoice history', name: 'could_not_load_invoices', desc: '', args: []);
+    return Intl.message(
+      'Could not load the invoice history',
+      name: 'could_not_load_invoices',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Changes saved, but the invoice history could not be refreshed`
   String get invoice_saved_reload_failed {
-    return Intl.message('Changes saved, but the invoice history could not be refreshed', name: 'invoice_saved_reload_failed', desc: '', args: []);
+    return Intl.message(
+      'Changes saved, but the invoice history could not be refreshed',
+      name: 'invoice_saved_reload_failed',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Could not share the invoice`
   String get could_not_share_invoice {
-    return Intl.message('Could not share the invoice', name: 'could_not_share_invoice', desc: '', args: []);
+    return Intl.message(
+      'Could not share the invoice',
+      name: 'could_not_share_invoice',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `1 invoice`
   String get invoice_count_one {
-    return Intl.message('1 invoice', name: 'invoice_count_one', desc: '', args: []);
+    return Intl.message(
+      '1 invoice',
+      name: 'invoice_count_one',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `2 invoices`
   String get invoice_count_two {
-    return Intl.message('2 invoices', name: 'invoice_count_two', desc: '', args: []);
+    return Intl.message(
+      '2 invoices',
+      name: 'invoice_count_two',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `invoices`
@@ -1082,7 +1762,12 @@ class S {
 
   /// `Customer information`
   String get customer_info {
-    return Intl.message('Customer information', name: 'customer_info', desc: '', args: []);
+    return Intl.message(
+      'Customer information',
+      name: 'customer_info',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Name`
@@ -1092,7 +1777,12 @@ class S {
 
   /// `Financial summary`
   String get financial_summary {
-    return Intl.message('Financial summary', name: 'financial_summary', desc: '', args: []);
+    return Intl.message(
+      'Financial summary',
+      name: 'financial_summary',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Paid`
@@ -1107,17 +1797,32 @@ class S {
 
   /// `Price per kg`
   String get price_per_kg {
-    return Intl.message('Price per kg', name: 'price_per_kg', desc: '', args: []);
+    return Intl.message(
+      'Price per kg',
+      name: 'price_per_kg',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Empty packages`
   String get empty_packages {
-    return Intl.message('Empty packages', name: 'empty_packages', desc: '', args: []);
+    return Intl.message(
+      'Empty packages',
+      name: 'empty_packages',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Invoice settings`
   String get invoice_settings {
-    return Intl.message('Invoice settings', name: 'invoice_settings', desc: '', args: []);
+    return Intl.message(
+      'Invoice settings',
+      name: 'invoice_settings',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Choose logo`
@@ -1127,32 +1832,62 @@ class S {
 
   /// `Manager name`
   String get manager_name {
-    return Intl.message('Manager name', name: 'manager_name', desc: '', args: []);
+    return Intl.message(
+      'Manager name',
+      name: 'manager_name',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Enter the manager name`
   String get enter_manager_name {
-    return Intl.message('Enter the manager name', name: 'enter_manager_name', desc: '', args: []);
+    return Intl.message(
+      'Enter the manager name',
+      name: 'enter_manager_name',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Manager phone`
   String get manager_phone {
-    return Intl.message('Manager phone', name: 'manager_phone', desc: '', args: []);
+    return Intl.message(
+      'Manager phone',
+      name: 'manager_phone',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Enter the phone number`
   String get enter_phone {
-    return Intl.message('Enter the phone number', name: 'enter_phone', desc: '', args: []);
+    return Intl.message(
+      'Enter the phone number',
+      name: 'enter_phone',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Company name`
   String get company_name {
-    return Intl.message('Company name', name: 'company_name', desc: '', args: []);
+    return Intl.message(
+      'Company name',
+      name: 'company_name',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Company description`
   String get company_description {
-    return Intl.message('Company description', name: 'company_description', desc: '', args: []);
+    return Intl.message(
+      'Company description',
+      name: 'company_description',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `QR data`
@@ -1162,127 +1897,252 @@ class S {
 
   /// `Invoice settings saved`
   String get invoice_settings_saved {
-    return Intl.message('Invoice settings saved', name: 'invoice_settings_saved', desc: '', args: []);
+    return Intl.message(
+      'Invoice settings saved',
+      name: 'invoice_settings_saved',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Could not save invoice settings`
   String get could_not_save_settings {
-    return Intl.message('Could not save invoice settings', name: 'could_not_save_settings', desc: '', args: []);
+    return Intl.message(
+      'Could not save invoice settings',
+      name: 'could_not_save_settings',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Product management`
   String get product_management {
-    return Intl.message('Product management', name: 'product_management', desc: '', args: []);
+    return Intl.message(
+      'Product management',
+      name: 'product_management',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Add, edit, and delete products`
   String get product_management_desc {
-    return Intl.message('Add, edit, and delete products', name: 'product_management_desc', desc: '', args: []);
+    return Intl.message(
+      'Add, edit, and delete products',
+      name: 'product_management_desc',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Search products`
   String get productSearchHint {
-    return Intl.message('Search products', name: 'productSearchHint', desc: '', args: []);
+    return Intl.message(
+      'Search products',
+      name: 'productSearchHint',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `No products match your search`
   String get noProductsMatchSearch {
-    return Intl.message('No products match your search', name: 'noProductsMatchSearch', desc: '', args: []);
+    return Intl.message(
+      'No products match your search',
+      name: 'noProductsMatchSearch',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Add new product`
   String get add_new_product {
-    return Intl.message('Add new product', name: 'add_new_product', desc: '', args: []);
+    return Intl.message(
+      'Add new product',
+      name: 'add_new_product',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Edit product`
   String get edit_product {
-    return Intl.message('Edit product', name: 'edit_product', desc: '', args: []);
+    return Intl.message(
+      'Edit product',
+      name: 'edit_product',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Delete product`
   String get delete_product {
-    return Intl.message('Delete product', name: 'delete_product', desc: '', args: []);
+    return Intl.message(
+      'Delete product',
+      name: 'delete_product',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Product added successfully`
   String get product_added_successfully {
-    return Intl.message('Product added successfully', name: 'product_added_successfully', desc: '', args: []);
+    return Intl.message(
+      'Product added successfully',
+      name: 'product_added_successfully',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Product updated successfully`
   String get product_updated_successfully {
-    return Intl.message('Product updated successfully', name: 'product_updated_successfully', desc: '', args: []);
+    return Intl.message(
+      'Product updated successfully',
+      name: 'product_updated_successfully',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Product deleted`
   String get product_deleted_successfully {
-    return Intl.message('Product deleted', name: 'product_deleted_successfully', desc: '', args: []);
+    return Intl.message(
+      'Product deleted',
+      name: 'product_deleted_successfully',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Could not add the product`
   String get could_not_add_product {
-    return Intl.message('Could not add the product', name: 'could_not_add_product', desc: '', args: []);
+    return Intl.message(
+      'Could not add the product',
+      name: 'could_not_add_product',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `A product with this name already exists`
   String get product_already_exists {
-    return Intl.message('A product with this name already exists', name: 'product_already_exists', desc: '', args: []);
+    return Intl.message(
+      'A product with this name already exists',
+      name: 'product_already_exists',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Enter a default price of zero or more`
   String get invalid_default_price {
-    return Intl.message('Enter a default price of zero or more', name: 'invalid_default_price', desc: '', args: []);
+    return Intl.message(
+      'Enter a default price of zero or more',
+      name: 'invalid_default_price',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Could not update the product`
   String get could_not_update_product {
-    return Intl.message('Could not update the product', name: 'could_not_update_product', desc: '', args: []);
+    return Intl.message(
+      'Could not update the product',
+      name: 'could_not_update_product',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Could not delete the product`
   String get could_not_delete_product {
-    return Intl.message('Could not delete the product', name: 'could_not_delete_product', desc: '', args: []);
+    return Intl.message(
+      'Could not delete the product',
+      name: 'could_not_delete_product',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Export products`
   String get export_products {
-    return Intl.message('Export products', name: 'export_products', desc: '', args: []);
+    return Intl.message(
+      'Export products',
+      name: 'export_products',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Import products`
   String get import_products {
-    return Intl.message('Import products', name: 'import_products', desc: '', args: []);
+    return Intl.message(
+      'Import products',
+      name: 'import_products',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `There are no products to export`
   String get products_export_empty {
-    return Intl.message('There are no products to export', name: 'products_export_empty', desc: '', args: []);
+    return Intl.message(
+      'There are no products to export',
+      name: 'products_export_empty',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Could not export products`
   String get products_export_failed {
-    return Intl.message('Could not export products', name: 'products_export_failed', desc: '', args: []);
+    return Intl.message(
+      'Could not export products',
+      name: 'products_export_failed',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Products restored`
   String get products_imported {
-    return Intl.message('Products restored', name: 'products_imported', desc: '', args: []);
+    return Intl.message(
+      'Products restored',
+      name: 'products_imported',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Could not restore products`
   String get products_import_failed {
-    return Intl.message('Could not restore products', name: 'products_import_failed', desc: '', args: []);
+    return Intl.message(
+      'Could not restore products',
+      name: 'products_import_failed',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `The file contains no products`
   String get products_import_empty {
-    return Intl.message('The file contains no products', name: 'products_import_empty', desc: '', args: []);
+    return Intl.message(
+      'The file contains no products',
+      name: 'products_import_empty',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Restoring will replace your current products and default prices. Continue?`
   String get products_import_confirm {
-    return Intl.message('Restoring will replace your current products and default prices. Continue?', name: 'products_import_confirm', desc: '', args: []);
+    return Intl.message(
+      'Restoring will replace your current products and default prices. Continue?',
+      name: 'products_import_confirm',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Restore`
@@ -1297,42 +2157,82 @@ class S {
 
   /// `Tap + to add a new product`
   String get tap_to_add_product {
-    return Intl.message('Tap + to add a new product', name: 'tap_to_add_product', desc: '', args: []);
+    return Intl.message(
+      'Tap + to add a new product',
+      name: 'tap_to_add_product',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Check out the Arqamy app on Google Play`
   String get share_app_message {
-    return Intl.message('Check out the Arqamy app on Google Play', name: 'share_app_message', desc: '', args: []);
+    return Intl.message(
+      'Check out the Arqamy app on Google Play',
+      name: 'share_app_message',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Could not save the appearance setting`
   String get could_not_save_appearance {
-    return Intl.message('Could not save the appearance setting', name: 'could_not_save_appearance', desc: '', args: []);
+    return Intl.message(
+      'Could not save the appearance setting',
+      name: 'could_not_save_appearance',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Customer invoice`
   String get pdf_document_title {
-    return Intl.message('Customer invoice', name: 'pdf_document_title', desc: '', args: []);
+    return Intl.message(
+      'Customer invoice',
+      name: 'pdf_document_title',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Purchase invoice`
   String get pdf_purchase_invoice {
-    return Intl.message('Purchase invoice', name: 'pdf_purchase_invoice', desc: '', args: []);
+    return Intl.message(
+      'Purchase invoice',
+      name: 'pdf_purchase_invoice',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Sale invoice`
   String get pdf_sale_invoice {
-    return Intl.message('Sale invoice', name: 'pdf_sale_invoice', desc: '', args: []);
+    return Intl.message(
+      'Sale invoice',
+      name: 'pdf_sale_invoice',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Storage invoice`
   String get pdf_storage_invoice {
-    return Intl.message('Storage invoice', name: 'pdf_storage_invoice', desc: '', args: []);
+    return Intl.message(
+      'Storage invoice',
+      name: 'pdf_storage_invoice',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Management`
   String get pdf_management {
-    return Intl.message('Management', name: 'pdf_management', desc: '', args: []);
+    return Intl.message(
+      'Management',
+      name: 'pdf_management',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Tel`
@@ -1352,12 +2252,22 @@ class S {
 
   /// `Product summary`
   String get pdf_product_summary {
-    return Intl.message('Product summary', name: 'pdf_product_summary', desc: '', args: []);
+    return Intl.message(
+      'Product summary',
+      name: 'pdf_product_summary',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Invoice total`
   String get pdf_invoice_total {
-    return Intl.message('Invoice total', name: 'pdf_invoice_total', desc: '', args: []);
+    return Intl.message(
+      'Invoice total',
+      name: 'pdf_invoice_total',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Collected`
@@ -1377,12 +2287,22 @@ class S {
 
   /// `Package weight (kg)`
   String get package_weight_kg {
-    return Intl.message('Package weight (kg)', name: 'package_weight_kg', desc: '', args: []);
+    return Intl.message(
+      'Package weight (kg)',
+      name: 'package_weight_kg',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Net weight (kg)`
   String get net_weight_kg {
-    return Intl.message('Net weight (kg)', name: 'net_weight_kg', desc: '', args: []);
+    return Intl.message(
+      'Net weight (kg)',
+      name: 'net_weight_kg',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Price (EGP)`
@@ -1402,52 +2322,102 @@ class S {
 
   /// `Invoice actions`
   String get invoice_actions {
-    return Intl.message('Invoice actions', name: 'invoice_actions', desc: '', args: []);
+    return Intl.message(
+      'Invoice actions',
+      name: 'invoice_actions',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Back up invoices`
   String get backup_invoices {
-    return Intl.message('Back up invoices', name: 'backup_invoices', desc: '', args: []);
+    return Intl.message(
+      'Back up invoices',
+      name: 'backup_invoices',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Save all invoices to a file you can keep safe`
   String get backup_invoices_desc {
-    return Intl.message('Save all invoices to a file you can keep safe', name: 'backup_invoices_desc', desc: '', args: []);
+    return Intl.message(
+      'Save all invoices to a file you can keep safe',
+      name: 'backup_invoices_desc',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `There are no invoices to back up yet`
   String get backup_no_invoices {
-    return Intl.message('There are no invoices to back up yet', name: 'backup_no_invoices', desc: '', args: []);
+    return Intl.message(
+      'There are no invoices to back up yet',
+      name: 'backup_no_invoices',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Could not create the backup`
   String get backup_failed {
-    return Intl.message('Could not create the backup', name: 'backup_failed', desc: '', args: []);
+    return Intl.message(
+      'Could not create the backup',
+      name: 'backup_failed',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Restore from backup`
   String get restore_invoices {
-    return Intl.message('Restore from backup', name: 'restore_invoices', desc: '', args: []);
+    return Intl.message(
+      'Restore from backup',
+      name: 'restore_invoices',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Add invoices from a backup file`
   String get restore_invoices_desc {
-    return Intl.message('Add invoices from a backup file', name: 'restore_invoices_desc', desc: '', args: []);
+    return Intl.message(
+      'Add invoices from a backup file',
+      name: 'restore_invoices_desc',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Invoices from the backup will be merged with your saved invoices. A saved invoice with the same ID is replaced by the backup copy. All other saved invoices are kept.`
   String get restore_confirm_message {
-    return Intl.message('Invoices from the backup will be merged with your saved invoices. A saved invoice with the same ID is replaced by the backup copy. All other saved invoices are kept.', name: 'restore_confirm_message', desc: '', args: []);
+    return Intl.message(
+      'Invoices from the backup will be merged with your saved invoices. A saved invoice with the same ID is replaced by the backup copy. All other saved invoices are kept.',
+      name: 'restore_confirm_message',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `New invoices`
   String get restore_new_invoices {
-    return Intl.message('New invoices', name: 'restore_new_invoices', desc: '', args: []);
+    return Intl.message(
+      'New invoices',
+      name: 'restore_new_invoices',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Invoices to replace`
   String get restore_replaced_invoices {
-    return Intl.message('Invoices to replace', name: 'restore_replaced_invoices', desc: '', args: []);
+    return Intl.message(
+      'Invoices to replace',
+      name: 'restore_replaced_invoices',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Restore`
@@ -1457,132 +2427,262 @@ class S {
 
   /// `The backup contains no invoices`
   String get restore_empty_backup {
-    return Intl.message('The backup contains no invoices', name: 'restore_empty_backup', desc: '', args: []);
+    return Intl.message(
+      'The backup contains no invoices',
+      name: 'restore_empty_backup',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Backup restored`
   String get restore_done {
-    return Intl.message('Backup restored', name: 'restore_done', desc: '', args: []);
+    return Intl.message(
+      'Backup restored',
+      name: 'restore_done',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `This is not a valid invoice backup`
   String get restore_invalid_backup {
-    return Intl.message('This is not a valid invoice backup', name: 'restore_invalid_backup', desc: '', args: []);
+    return Intl.message(
+      'This is not a valid invoice backup',
+      name: 'restore_invalid_backup',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Could not restore the backup`
   String get restore_failed {
-    return Intl.message('Could not restore the backup', name: 'restore_failed', desc: '', args: []);
+    return Intl.message(
+      'Could not restore the backup',
+      name: 'restore_failed',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Link customers`
   String get link_customers {
-    return Intl.message('Link customers', name: 'link_customers', desc: '', args: []);
+    return Intl.message(
+      'Link customers',
+      name: 'link_customers',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Debug preview: give each customer a stable ID`
   String get link_customers_desc {
-    return Intl.message('Debug preview: give each customer a stable ID', name: 'link_customers_desc', desc: '', args: []);
+    return Intl.message(
+      'Debug preview: give each customer a stable ID',
+      name: 'link_customers_desc',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `A backup is saved first. Invoices whose customer name has a single spelling are linked to a customer record. Names with several spellings are left for you to confirm later.`
   String get link_customers_confirm {
-    return Intl.message('A backup is saved first. Invoices whose customer name has a single spelling are linked to a customer record. Names with several spellings are left for you to confirm later.', name: 'link_customers_confirm', desc: '', args: []);
+    return Intl.message(
+      'A backup is saved first. Invoices whose customer name has a single spelling are linked to a customer record. Names with several spellings are left for you to confirm later.',
+      name: 'link_customers_confirm',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Link`
   String get link_customers_action {
-    return Intl.message('Link', name: 'link_customers_action', desc: '', args: []);
+    return Intl.message(
+      'Link',
+      name: 'link_customers_action',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Invoices linked`
   String get link_customers_linked {
-    return Intl.message('Invoices linked', name: 'link_customers_linked', desc: '', args: []);
+    return Intl.message(
+      'Invoices linked',
+      name: 'link_customers_linked',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Customers created`
   String get link_customers_created {
-    return Intl.message('Customers created', name: 'link_customers_created', desc: '', args: []);
+    return Intl.message(
+      'Customers created',
+      name: 'link_customers_created',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Existing customers reused`
   String get link_customers_reused {
-    return Intl.message('Existing customers reused', name: 'link_customers_reused', desc: '', args: []);
+    return Intl.message(
+      'Existing customers reused',
+      name: 'link_customers_reused',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Customers needing confirmation`
   String get link_customers_need_confirmation {
-    return Intl.message('Customers needing confirmation', name: 'link_customers_need_confirmation', desc: '', args: []);
+    return Intl.message(
+      'Customers needing confirmation',
+      name: 'link_customers_need_confirmation',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Invoices without a name`
   String get link_customers_unnamed {
-    return Intl.message('Invoices without a name', name: 'link_customers_unnamed', desc: '', args: []);
+    return Intl.message(
+      'Invoices without a name',
+      name: 'link_customers_unnamed',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Could not link customers`
   String get link_customers_failed {
-    return Intl.message('Could not link customers', name: 'link_customers_failed', desc: '', args: []);
+    return Intl.message(
+      'Could not link customers',
+      name: 'link_customers_failed',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Import to ledger`
   String get ledger_import {
-    return Intl.message('Import to ledger', name: 'ledger_import', desc: '', args: []);
+    return Intl.message(
+      'Import to ledger',
+      name: 'ledger_import',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Debug preview: copy invoices into the payment ledger`
   String get ledger_import_desc {
-    return Intl.message('Debug preview: copy invoices into the payment ledger', name: 'ledger_import_desc', desc: '', args: []);
+    return Intl.message(
+      'Debug preview: copy invoices into the payment ledger',
+      name: 'ledger_import_desc',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `A backup is saved first. Invoices that are ready are copied into the ledger in Egyptian pounds (EGP). Your saved invoices are not changed, and invoices that need a decision are skipped.`
   String get ledger_import_confirm {
-    return Intl.message('A backup is saved first. Invoices that are ready are copied into the ledger in Egyptian pounds (EGP). Your saved invoices are not changed, and invoices that need a decision are skipped.', name: 'ledger_import_confirm', desc: '', args: []);
+    return Intl.message(
+      'A backup is saved first. Invoices that are ready are copied into the ledger in Egyptian pounds (EGP). Your saved invoices are not changed, and invoices that need a decision are skipped.',
+      name: 'ledger_import_confirm',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Ready to import`
   String get ledger_import_ready {
-    return Intl.message('Ready to import', name: 'ledger_import_ready', desc: '', args: []);
+    return Intl.message(
+      'Ready to import',
+      name: 'ledger_import_ready',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Held for a decision`
   String get ledger_import_held {
-    return Intl.message('Held for a decision', name: 'ledger_import_held', desc: '', args: []);
+    return Intl.message(
+      'Held for a decision',
+      name: 'ledger_import_held',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Import`
   String get ledger_import_action {
-    return Intl.message('Import', name: 'ledger_import_action', desc: '', args: []);
+    return Intl.message(
+      'Import',
+      name: 'ledger_import_action',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Invoices imported`
   String get ledger_import_imported {
-    return Intl.message('Invoices imported', name: 'ledger_import_imported', desc: '', args: []);
+    return Intl.message(
+      'Invoices imported',
+      name: 'ledger_import_imported',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Already imported`
   String get ledger_import_already {
-    return Intl.message('Already imported', name: 'ledger_import_already', desc: '', args: []);
+    return Intl.message(
+      'Already imported',
+      name: 'ledger_import_already',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Skipped: customer not found`
   String get ledger_import_missing_customer {
-    return Intl.message('Skipped: customer not found', name: 'ledger_import_missing_customer', desc: '', args: []);
+    return Intl.message(
+      'Skipped: customer not found',
+      name: 'ledger_import_missing_customer',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Accounts created`
   String get ledger_import_accounts {
-    return Intl.message('Accounts created', name: 'ledger_import_accounts', desc: '', args: []);
+    return Intl.message(
+      'Accounts created',
+      name: 'ledger_import_accounts',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `No invoices are ready to import. Link customers first, or check the held invoices.`
   String get ledger_import_nothing {
-    return Intl.message('No invoices are ready to import. Link customers first, or check the held invoices.', name: 'ledger_import_nothing', desc: '', args: []);
+    return Intl.message(
+      'No invoices are ready to import. Link customers first, or check the held invoices.',
+      name: 'ledger_import_nothing',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Could not import to the ledger`
   String get ledger_import_failed {
-    return Intl.message('Could not import to the ledger', name: 'ledger_import_failed', desc: '', args: []);
+    return Intl.message(
+      'Could not import to the ledger',
+      name: 'ledger_import_failed',
+      desc: '',
+      args: [],
+    );
   }
 }
 
