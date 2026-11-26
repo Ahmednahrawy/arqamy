@@ -465,3 +465,9 @@ On 2026-11-26, the owner approved this rule for historical invoice action valida
 - Never infer the action from the customer, products, or amounts, and never apply a default action.
 
 The current application UI requires the user to select an action when creating an invoice. This is a defensive migration rule for historical, older, alternate-path, malformed, or corrupted persisted records; it is not a claim that the current UI permits actionless invoice creation. Design only; implementation remains separately gated.
+
+## Owner-approved field mapping policy — original customer display name
+
+On 2026-11-26, the owner approved this treatment for the legacy invoice `customerName` field: the resolved `party_id` and `party_role` remain authoritative; preserve the exact original display name in the immutable source snapshot and retain it in normalized `source_json` as supporting evidence. Do not add a dedicated invoice column solely for this migration. Reconsider a structured column only if a separate business requirement requires historical-name search or reporting.
+
+This policy does not change the requirement to validate the effective party-review decision and current party role immediately before import. Design only; no schema or importer implementation is authorized.
