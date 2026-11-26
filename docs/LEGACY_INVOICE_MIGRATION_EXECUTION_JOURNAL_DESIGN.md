@@ -502,3 +502,17 @@ On 2026-11-26, the owner approved holding the entire invoice occurrence for huma
 Preflight must emit a stable validation finding. Preserve the exact original total and every product-line value in immutable source evidence. Do not assume the invoice is a valid free transaction, invent or infer a replacement amount, modify lines, or otherwise auto-correct the occurrence. A later disposition requires an explicit, authorized, attributable, auditable operator action and must not mutate source evidence.
 
 This is a defensive migration validation rule and does not imply that the current UI permits zero-value invoices. It is design policy only; schema, importer, and production migration implementation remain separately gated.
+
+## Owner-approved validation policy — product numeric range and precision
+
+On 2026-11-26, the owner approved this general D4 validation policy for legacy product numeric values:
+
+- Non-finite values (NaN, positive infinity, or negative infinity) in weight, packageWeight, or price must be rejected as invalid source values.
+- Hold the entire invoice occurrence for human review if any product value exceeds the supported numeric range of its destination field or cannot be safely represented by the approved mapping and arithmetic contract.
+- Hold the occurrence if weight, packageWeight, or price exceeds the decimal precision explicitly supported by that contract.
+- numberPackage must be an integer and fit the supported destination range.
+- Never silently round, truncate, clamp, take absolute values, substitute, or otherwise alter a source value to force it into the destination representation.
+
+Emit stable, field-specific findings identifying the source occurrence, product line, and field. Preserve exact original values in the immutable source snapshot. The exact destination bounds, decimal precision, business units, and safe arithmetic limits remain to be established and tested before implementation; this approval does not invent those thresholds. Negative values remain covered by the separate owner-approved negative-product rule.
+
+This approval is design policy only. It does not authorize schema changes, importer implementation, or production migration execution.
