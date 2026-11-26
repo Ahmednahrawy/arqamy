@@ -3,11 +3,13 @@ import 'package:arqamy/core/widgets/text_form_field.dart';
 import 'package:arqamy/generated/l10n.dart';
 import 'package:material_ui/material_ui.dart';
 
-/// Compact discount control used immediately before the collection field.
+/// Compact, labeled discount control used immediately before the collection
+/// field.
 ///
-/// The icon opens the field and stays small when closed. Once open, the inner
-/// icon switches between entering a fixed amount and a percentage. The active
-/// mode is remembered for the rest of the app session.
+/// The whole row is tappable and always says what it does, so the discount is
+/// discoverable without interpreting an icon. Once open, the inner icon
+/// switches between entering a fixed amount and a percentage. The active mode
+/// is remembered for the rest of the app session.
 class DiscountInputField extends StatelessWidget {
   const DiscountInputField({
     super.key,
@@ -33,36 +35,71 @@ class DiscountInputField extends StatelessWidget {
     final strings = S.of(context);
     final colors = Theme.of(context).colorScheme;
     final discount = InvoiceDiscount.fromText(controller.text, type, subtotal);
+    final label = discount == null ? strings.add_discount : strings.discount;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            IconButton.filledTonal(
-              key: const ValueKey('discount-toggle'),
-              tooltip: strings.discount,
-              visualDensity: VisualDensity.compact,
-              constraints: const BoxConstraints(minWidth: 40, minHeight: 36),
-              onPressed: () {
-                InvoiceDiscount.lastUsedType = type;
-                onToggleExpanded();
-              },
-              icon: const Icon(Icons.local_offer_outlined, size: 19),
-            ),
-            if (discount != null) ...[
-              const SizedBox(width: 8),
-              Text(
-                _summary(discount, strings),
-                style: TextStyle(
-                  color: colors.onSurfaceVariant,
-                  fontSize: 13,
-                  fontWeight: FontWeight.w600,
-                ),
+        Semantics(
+          button: true,
+          label: label,
+          child: InkWell(
+            key: const ValueKey('discount-toggle'),
+            borderRadius: BorderRadius.circular(16),
+            onTap: () {
+              InvoiceDiscount.lastUsedType = type;
+              onToggleExpanded();
+            },
+            child: Container(
+              constraints: const BoxConstraints(minHeight: 44),
+              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+              decoration: BoxDecoration(
+                color: colors.surface,
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(color: colors.outline),
               ),
-            ],
-          ],
+              child: Row(
+                children: [
+                  Icon(
+                    Icons.local_offer_outlined,
+                    size: 19,
+                    color: colors.primary,
+                  ),
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          label,
+                          style: TextStyle(
+                            color: colors.onSurface,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        if (discount != null) ...[
+                          const SizedBox(height: 2),
+                          Text(
+                            _summary(discount, strings),
+                            style: TextStyle(
+                              color: colors.onSurfaceVariant,
+                              fontSize: 12,
+                            ),
+                          ),
+                        ],
+                      ],
+                    ),
+                  ),
+                  Icon(
+                    expanded ? Icons.expand_less : Icons.expand_more,
+                    size: 20,
+                    color: colors.onSurfaceVariant,
+                  ),
+                ],
+              ),
+            ),
+          ),
         ),
         AnimatedSize(
           duration: const Duration(milliseconds: 180),

@@ -139,6 +139,7 @@
   "preview": "معاينة",
   "collected_amount_label": "تحصيل",
   "discount": "خصم",
+  "add_discount": "إضافة خصم",
   "discount_amount": "مبلغ الخصم",
   "discount_percent": "نسبة الخصم",
   "switch_to_amount": "التبديل إلى مبلغ",
