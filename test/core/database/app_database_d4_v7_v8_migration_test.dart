@@ -7,9 +7,9 @@ import 'package:flutter_test/flutter_test.dart';
 const _d4Tables = [
   'legacy_invoice_import_attempts',
   'legacy_invoice_import_events',
+  'legacy_invoice_occurrence_mappings',
   'legacy_invoice_import_occurrences',
   'legacy_invoice_import_runs',
-  'legacy_invoice_occurrence_mappings',
 ];
 
 void main() {
@@ -31,6 +31,7 @@ void main() {
   });
 
   test('creates all five D4 tables when upgrading v7 to v8', () async {
+    await _dropD4Schema(database);
     await database.customStatement(
       "INSERT INTO currencies VALUES ('EGP', 2, 'Egyptian pound')",
     );
@@ -40,6 +41,7 @@ void main() {
 
     expect(await _readUserVersion(database), 8);
     expect(await _readD4Tables(database), _d4Tables);
+    await _expectD4IndexesAndTriggers(database);
     expect(
       await _readCurrencies(database),
       [
@@ -85,9 +87,78 @@ void main() {
 
       expect(await _readUserVersion(database), 8);
       expect(await _readD4Tables(database), _d4Tables);
+      await _expectD4IndexesAndTriggers(database);
       expect(await _readCurrencies(database), currenciesBeforeFailure);
       await _expectDatabaseHealthy(database);
     },
+  );
+}
+
+
+Future<void> _dropD4Schema(AppDatabase database) async {
+  final triggers = await database
+      .customSelect(
+        "SELECT name FROM sqlite_master WHERE type = 'trigger' "
+        "AND tbl_name IN (${_d4Tables.map((name) => "'$name'").join(', ')})",
+      )
+      .map((row) => row.read<String>('name'))
+      .get();
+  for (final trigger in triggers) {
+    await database.customStatement('DROP TRIGGER "$trigger"');
+  }
+
+  for (final table in [
+    'legacy_invoice_occurrence_mappings',
+    'legacy_invoice_import_events',
+    'legacy_invoice_import_attempts',
+    'legacy_invoice_import_occurrences',
+    'legacy_invoice_import_runs',
+  ]) {
+    await database.customStatement('DROP TABLE "$table"');
+  }
+}
+
+Future<void> _expectD4IndexesAndTriggers(AppDatabase database) async {
+  final indexes = await database
+      .customSelect(
+        "SELECT name FROM sqlite_master WHERE type = 'index' "
+        "AND name LIKE 'legacy_invoice_%' ORDER BY name",
+      )
+      .map((row) => row.read<String>('name'))
+      .get();
+  expect(
+    indexes,
+    [
+      'legacy_invoice_import_events_run_time_index',
+      'legacy_invoice_import_occurrences_claim_expiry_index',
+      'legacy_invoice_import_occurrences_run_status_index',
+      'legacy_invoice_occurrence_mappings_run_index',
+    ],
+  );
+
+  final triggers = await database
+      .customSelect(
+        "SELECT name FROM sqlite_master WHERE type = 'trigger' "
+        "AND tbl_name IN (${_d4Tables.map((name) => "'$name'").join(', ')}) "
+        "ORDER BY name",
+      )
+      .map((row) => row.read<String>('name'))
+      .get();
+  expect(
+    triggers,
+    [
+      'legacy_invoice_import_attempts_immutable_delete',
+      'legacy_invoice_import_attempts_immutable_update',
+      'legacy_invoice_import_events_immutable_delete',
+      'legacy_invoice_import_events_immutable_update',
+      'legacy_invoice_import_occurrences_immutable_identity',
+      'legacy_invoice_import_occurrences_prevent_delete',
+      'legacy_invoice_import_runs_immutable_identity',
+      'legacy_invoice_import_runs_prevent_delete',
+      'legacy_invoice_occurrence_mappings_immutable_delete',
+      'legacy_invoice_occurrence_mappings_immutable_update',
+      'legacy_invoice_occurrence_mappings_validate_insert',
+    ],
   );
 }
 
