@@ -690,7 +690,35 @@ Future<void> _createPopulatedV4Fixture(String path) async {
   await _verifyStage4HistoryAndRelationships(database);
   await _insertAdditionalReversalMigrationRows(database);
   await _convertAllocationReversalsToV4(database);
+  await _removeD4Journal(database);
   await database.close();
+}
+
+Future<void> _removeD4Journal(AppDatabase database) async {
+  final triggers = await database
+      .customSelect(
+        "SELECT name FROM sqlite_master WHERE type = 'trigger' "
+        "AND tbl_name IN ('legacy_invoice_import_runs', "
+        "'legacy_invoice_import_occurrences', "
+        "'legacy_invoice_import_attempts', "
+        "'legacy_invoice_import_events', "
+        "'legacy_invoice_occurrence_mappings')",
+      )
+      .map((row) => row.read<String>('name'))
+      .get();
+  for (final trigger in triggers) {
+    await database.customStatement('DROP TRIGGER "$trigger"');
+  }
+
+  for (final table in [
+    'legacy_invoice_occurrence_mappings',
+    'legacy_invoice_import_events',
+    'legacy_invoice_import_attempts',
+    'legacy_invoice_import_occurrences',
+    'legacy_invoice_import_runs',
+  ]) {
+    await database.customStatement('DROP TABLE "$table"');
+  }
 }
 
 Future<void> _runProductionUpgradeInOuterTransaction(
