@@ -66,7 +66,7 @@ void main() {
 
       database = await AppDatabase.open(path: databasePath);
 
-      expect(await database!.storedSchemaVersion, 7);
+      expect(await database!.storedSchemaVersion, 8);
       expect(await _snapshotVersion3Tables(database!), before);
       expect(
         await database!
@@ -89,6 +89,11 @@ void main() {
           'invoice_lifecycle_events',
           'invoice_lines',
           'invoices',
+          'legacy_invoice_import_attempts',
+          'legacy_invoice_import_events',
+          'legacy_invoice_import_occurrences',
+          'legacy_invoice_import_runs',
+          'legacy_invoice_occurrence_mappings',
           'legacy_migration_occurrences',
           'legacy_migration_runs',
           'legacy_party_review_decisions',
@@ -120,7 +125,7 @@ void main() {
       final beforeReopen = await _snapshotVersion3Tables(database!);
       await database!.close();
       database = await AppDatabase.open(path: databasePath);
-      expect(await database!.storedSchemaVersion, 7);
+      expect(await database!.storedSchemaVersion, 8);
       expect(await _snapshotVersion3Tables(database!), beforeReopen);
     },
   );
@@ -202,7 +207,7 @@ void main() {
 
       database = await AppDatabase.open(path: databasePath);
 
-      expect(await database!.storedSchemaVersion, 7);
+      expect(await database!.storedSchemaVersion, 8);
       final migratedRows = await database!
           .customSelect(
             'SELECT * FROM allocation_reversals '
@@ -509,7 +514,7 @@ void main() {
       // Open AppDatabase without letting Drift migrate the legacy fixture.
       // AppDatabase has a private constructor, so temporarily advertise its
       // current version during open, then restore the real legacy version.
-      await fixture.customStatement('PRAGMA user_version = 7');
+      await fixture.customStatement('PRAGMA user_version = 8');
       await fixture.close();
       database = await AppDatabase.open(path: databasePath);
       await database!.customStatement('PRAGMA user_version = 3');
@@ -590,7 +595,7 @@ void main() {
       final dataBeforeFailure = await _snapshotAllTableData(fixture);
       final schemaBeforeFailure = await _snapshotSchemaObjects(fixture);
 
-      await fixture.customStatement('PRAGMA user_version = 7');
+      await fixture.customStatement('PRAGMA user_version = 8');
       await fixture.close();
       database = await AppDatabase.open(path: databasePath);
       await database!.customStatement('PRAGMA user_version = 4');

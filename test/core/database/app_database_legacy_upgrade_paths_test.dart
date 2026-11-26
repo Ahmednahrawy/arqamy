@@ -24,11 +24,12 @@ void main() {
   });
 
   test(
-    'upgrades a v5 journal-free database atomically and retries after collision',
+    'upgrades a v5 journal-free database through v8 atomically and retries after collision',
     () async {
       await database.customStatement(
         "INSERT INTO currencies VALUES ('EGP', 2, 'Egyptian pound')",
       );
+      await _removeD4Journal(database);
       await _removePartyReviewJournal(database);
       await database.customStatement('PRAGMA user_version = 5');
       await database.customStatement(
@@ -39,7 +40,7 @@ void main() {
       final currenciesBeforeFailure = await _readCurrencies(database);
 
       await expectLater(
-        _runProductionUpgrade(database, from: 5, to: 7),
+        _runProductionUpgrade(database, from: 5, to: 8),
         throwsA(anything),
       );
 
@@ -49,27 +50,30 @@ void main() {
       await _expectDatabaseHealthy(database);
 
       await database.customStatement('DROP TABLE legacy_migration_runs');
-      await _runProductionUpgrade(database, from: 5, to: 7);
+      await _runProductionUpgrade(database, from: 5, to: 8);
 
-      expect(await _readUserVersion(database), 7);
+      expect(await _readUserVersion(database), 8);
       expect(await _readCurrencies(database), currenciesBeforeFailure);
       await _expectPartyReviewJournalExists(database);
+      await _expectD4JournalExists(database);
       await _expectDatabaseHealthy(database);
     },
   );
 
-  test('runs the v6 to v7 validation-trigger replacement path', () async {
+  test('runs the v6 to v8 validation-trigger replacement path', () async {
     await database.customStatement(
       "INSERT INTO currencies VALUES ('EGP', 2, 'Egyptian pound')",
     );
+    await _removeD4Journal(database);
     final currenciesBefore = await _readCurrencies(database);
     await database.customStatement('PRAGMA user_version = 6');
 
-    await _runProductionUpgrade(database, from: 6, to: 7);
+    await _runProductionUpgrade(database, from: 6, to: 8);
 
-    expect(await _readUserVersion(database), 7);
+    expect(await _readUserVersion(database), 8);
     expect(await _readCurrencies(database), currenciesBefore);
     await _expectPartyReviewJournalExists(database);
+    await _expectD4JournalExists(database);
 
     final validationTrigger = await database
         .customSelect(
@@ -90,6 +94,7 @@ void main() {
       await database.customStatement(
         "INSERT INTO currencies VALUES ('EGP', 2, 'Egyptian pound')",
       );
+      await _removeD4Journal(database);
       final schemaBefore = await _snapshotSchemaObjects(database);
       final currenciesBefore = await _readCurrencies(database);
       await database.customStatement('PRAGMA user_version = 7');
@@ -101,6 +106,55 @@ void main() {
       expect(await _readCurrencies(database), currenciesBefore);
       await _expectDatabaseHealthy(database);
     },
+  );
+}
+
+Future<void> _removeD4Journal(AppDatabase database) async {
+  final triggers = await database
+      .customSelect(
+        "SELECT name FROM sqlite_master WHERE type = 'trigger' "
+        "AND tbl_name IN ('legacy_invoice_import_runs', "
+        "'legacy_invoice_import_occurrences', "
+        "'legacy_invoice_import_attempts', "
+        "'legacy_invoice_import_events', "
+        "'legacy_invoice_occurrence_mappings')",
+      )
+      .map((row) => row.read<String>('name'))
+      .get();
+  for (final trigger in triggers) {
+    await database.customStatement('DROP TRIGGER "$trigger"');
+  }
+
+  for (final table in [
+    'legacy_invoice_occurrence_mappings',
+    'legacy_invoice_import_events',
+    'legacy_invoice_import_attempts',
+    'legacy_invoice_import_occurrences',
+    'legacy_invoice_import_runs',
+  ]) {
+    await database.customStatement('DROP TABLE "$table"');
+  }
+}
+
+Future<void> _expectD4JournalExists(AppDatabase database) async {
+  final tables = await database
+      .customSelect(
+        "SELECT name FROM sqlite_master WHERE type = 'table' "
+        "AND (name LIKE 'legacy_invoice_import_%' "
+        "OR name = 'legacy_invoice_occurrence_mappings') "
+        "ORDER BY name",
+      )
+      .map((row) => row.read<String>('name'))
+      .get();
+  expect(
+    tables,
+    [
+      'legacy_invoice_import_attempts',
+      'legacy_invoice_import_events',
+      'legacy_invoice_import_occurrences',
+      'legacy_invoice_import_runs',
+      'legacy_invoice_occurrence_mappings',
+    ],
   );
 }
 

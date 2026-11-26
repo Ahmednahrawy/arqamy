@@ -895,6 +895,259 @@ class LegacyPartyReviewDecisions extends Table {
   ];
 }
 
+
+class LegacyInvoiceImportRuns extends Table {
+  @override
+  String get tableName => 'legacy_invoice_import_runs';
+
+  TextColumn get runId => text().named('run_id')();
+  TextColumn get parentRunId => text().named('parent_run_id').nullable()();
+  TextColumn get snapshotSha256 => text().named('snapshot_sha256')();
+  IntColumn get snapshotByteLength => integer().named('snapshot_byte_length')();
+  IntColumn get snapshotSourceExists => integer().named('snapshot_source_exists')();
+  IntColumn get snapshotFormatVersion => integer().named('snapshot_format_version')();
+  IntColumn get migrationVersion => integer().named('migration_version')();
+  IntColumn get occurrenceIdentityVersion =>
+      integer().named('occurrence_identity_version')();
+  IntColumn get preflightVersion => integer().named('preflight_version')();
+  IntColumn get mappingContractVersion =>
+      integer().named('mapping_contract_version')();
+  TextColumn get partyReviewRunId =>
+      text().named('party_review_run_id').nullable()();
+  TextColumn get exportManifestSha256 =>
+      text().named('export_manifest_sha256').nullable()();
+  IntColumn get createdAt => integer().named('created_at')();
+  TextColumn get createdByActorId =>
+      text().named('created_by_actor_id').nullable()();
+  TextColumn get createdByActorSource =>
+      text().named('created_by_actor_source')();
+  TextColumn get status => text().named('status')();
+  IntColumn get updatedAt => integer().named('updated_at')();
+
+  @override
+  Set<Column> get primaryKey => {runId};
+
+  @override
+  List<String> get customConstraints => [
+    "CHECK (length(trim(run_id)) > 0)",
+    "CHECK (parent_run_id IS NULL OR (length(trim(parent_run_id)) > 0 AND parent_run_id != run_id))",
+    "CHECK (length(snapshot_sha256) = 64 AND snapshot_sha256 NOT GLOB '*[^0-9a-fA-F]*')",
+    'CHECK (snapshot_byte_length >= 0)',
+    'CHECK (snapshot_source_exists IN (0, 1))',
+    'CHECK (snapshot_format_version > 0)',
+    'CHECK (migration_version > 0)',
+    'CHECK (occurrence_identity_version > 0)',
+    'CHECK (preflight_version > 0)',
+    'CHECK (mapping_contract_version > 0)',
+    "CHECK (export_manifest_sha256 IS NULL OR (length(export_manifest_sha256) = 64 AND export_manifest_sha256 NOT GLOB '*[^0-9a-fA-F]*'))",
+    "CHECK (created_by_actor_id IS NULL OR length(trim(created_by_actor_id)) > 0)",
+    "CHECK (created_by_actor_source IN ('authenticated', 'local_operator', 'system'))",
+    "CHECK (status IN ('prepared', 'executing', 'execution_blocked', 'execution_complete', 'reconciling', 'reconciliation_failed', 'reconciled', 'accepted', 'aborted'))",
+    'FOREIGN KEY (parent_run_id) REFERENCES legacy_invoice_import_runs (run_id)',
+    'FOREIGN KEY (party_review_run_id) REFERENCES legacy_migration_runs (run_id)',
+  ];
+}
+
+class LegacyInvoiceImportOccurrences extends Table {
+  @override
+  String get tableName => 'legacy_invoice_import_occurrences';
+
+  TextColumn get runId => text().named('run_id')();
+  TextColumn get sourceOccurrenceKey => text().named('source_occurrence_key')();
+  IntColumn get sourceIndex => integer().named('source_index')();
+  TextColumn get recordSha256 => text().named('record_sha256')();
+  TextColumn get legacyInvoiceId =>
+      text().named('legacy_invoice_id').nullable()();
+  TextColumn get legacyInvoiceSerial =>
+      text().named('legacy_invoice_serial').nullable()();
+  TextColumn get preflightClassification =>
+      text().named('preflight_classification')();
+  TextColumn get preflightFindingsJson =>
+      text().named('preflight_findings_json')();
+  TextColumn get partyReviewRunId =>
+      text().named('party_review_run_id').nullable()();
+  TextColumn get partyReviewDecisionId =>
+      text().named('party_review_decision_id').nullable()();
+  TextColumn get executionStatus => text().named('execution_status')();
+  TextColumn get destinationInvoiceId =>
+      text().named('destination_invoice_id').nullable()();
+  IntColumn get currentAttemptNumber =>
+      integer().named('current_attempt_number').withDefault(const Constant(0))();
+  TextColumn get activeClaimTokenHash =>
+      text().named('active_claim_token_hash').nullable()();
+  IntColumn get activeClaimExpiresAt =>
+      integer().named('active_claim_expires_at').nullable()();
+  IntColumn get activeAttemptStartedAt =>
+      integer().named('active_attempt_started_at').nullable()();
+  TextColumn get lastErrorCode => text().named('last_error_code').nullable()();
+  TextColumn get holdOrExclusionReason =>
+      text().named('hold_or_exclusion_reason').nullable()();
+  IntColumn get updatedAt => integer().named('updated_at')();
+
+  @override
+  Set<Column> get primaryKey => {runId, sourceOccurrenceKey};
+
+  @override
+  List<Set<Column>> get uniqueKeys => [
+    {runId, sourceIndex},
+  ];
+
+  @override
+  List<String> get customConstraints => [
+    "CHECK (length(trim(run_id)) > 0)",
+    "CHECK (length(trim(source_occurrence_key)) > 0)",
+    'CHECK (source_index >= 0)',
+    "CHECK (length(record_sha256) = 64 AND record_sha256 NOT GLOB '*[^0-9a-fA-F]*')",
+    "CHECK (length(trim(preflight_classification)) > 0)",
+    'CHECK (json_valid(preflight_findings_json))',
+    'CHECK (party_review_decision_id IS NULL OR party_review_run_id IS NOT NULL)',
+    "CHECK (party_review_run_id IS NULL OR length(trim(party_review_run_id)) > 0)",
+    "CHECK (party_review_decision_id IS NULL OR length(trim(party_review_decision_id)) > 0)",
+    "CHECK (execution_status IN ('preflighted', 'ready', 'held', 'excluded', 'claimed', 'imported', 'retryable_failure', 'permanent_failure', 'conflict', 'reconciled', 'reconciliation_failed'))",
+    'CHECK (current_attempt_number >= 0)',
+    "CHECK (active_claim_token_hash IS NULL OR length(trim(active_claim_token_hash)) > 0)",
+    'FOREIGN KEY (run_id) REFERENCES legacy_invoice_import_runs (run_id)',
+    'FOREIGN KEY (party_review_run_id, source_occurrence_key) REFERENCES legacy_migration_occurrences (run_id, source_occurrence_key)',
+    'FOREIGN KEY (party_review_decision_id, party_review_run_id, source_occurrence_key) REFERENCES legacy_party_review_decisions (decision_id, run_id, source_occurrence_key)',
+    'FOREIGN KEY (destination_invoice_id) REFERENCES invoices (invoice_id)',
+  ];
+}
+
+class LegacyInvoiceImportAttempts extends Table {
+  @override
+  String get tableName => 'legacy_invoice_import_attempts';
+
+  TextColumn get attemptId => text().named('attempt_id')();
+  TextColumn get runId => text().named('run_id')();
+  TextColumn get sourceOccurrenceKey => text().named('source_occurrence_key')();
+  IntColumn get attemptNumber => integer().named('attempt_number')();
+  TextColumn get attemptIdempotencyKey =>
+      text().named('attempt_idempotency_key')();
+  TextColumn get claimTokenHash => text().named('claim_token_hash')();
+  TextColumn get workerId => text().named('worker_id')();
+  IntColumn get startedAt => integer().named('started_at')();
+  IntColumn get completedAt => integer().named('completed_at')();
+  TextColumn get outcome => text().named('outcome')();
+  TextColumn get errorCode => text().named('error_code').nullable()();
+  TextColumn get diagnostic => text().named('diagnostic').nullable()();
+  TextColumn get destinationInvoiceId =>
+      text().named('destination_invoice_id').nullable()();
+  TextColumn get destinationFingerprint =>
+      text().named('destination_fingerprint').nullable()();
+
+  @override
+  Set<Column> get primaryKey => {attemptId};
+
+  @override
+  List<Set<Column>> get uniqueKeys => [
+    {runId, sourceOccurrenceKey, attemptNumber},
+    {attemptIdempotencyKey},
+  ];
+
+  @override
+  List<String> get customConstraints => [
+    "CHECK (length(trim(attempt_id)) > 0)",
+    "CHECK (length(trim(run_id)) > 0)",
+    "CHECK (length(trim(source_occurrence_key)) > 0)",
+    'CHECK (attempt_number > 0)',
+    "CHECK (length(trim(attempt_idempotency_key)) > 0)",
+    "CHECK (length(trim(claim_token_hash)) > 0)",
+    "CHECK (length(trim(worker_id)) > 0)",
+    'CHECK (completed_at >= started_at)',
+    "CHECK (outcome IN ('imported', 'already_imported', 'retryable_failure', 'permanent_failure', 'conflict', 'abandoned'))",
+    'FOREIGN KEY (run_id, source_occurrence_key) REFERENCES legacy_invoice_import_occurrences (run_id, source_occurrence_key)',
+    'FOREIGN KEY (destination_invoice_id) REFERENCES invoices (invoice_id)',
+  ];
+}
+
+class LegacyInvoiceImportEvents extends Table {
+  @override
+  String get tableName => 'legacy_invoice_import_events';
+
+  TextColumn get eventId => text().named('event_id')();
+  TextColumn get runId => text().named('run_id')();
+  TextColumn get sourceOccurrenceKey =>
+      text().named('source_occurrence_key').nullable()();
+  TextColumn get eventType => text().named('event_type')();
+  TextColumn get actorId => text().named('actor_id').nullable()();
+  TextColumn get actorSource => text().named('actor_source')();
+  IntColumn get occurredAt => integer().named('occurred_at')();
+  TextColumn get reason => text().named('reason').nullable()();
+  TextColumn get detailsJson => text().named('details_json')();
+  TextColumn get requestIdempotencyKey =>
+      text().named('request_idempotency_key').nullable()();
+
+  @override
+  Set<Column> get primaryKey => {eventId};
+
+  @override
+  List<Set<Column>> get uniqueKeys => [
+    {requestIdempotencyKey},
+  ];
+
+  @override
+  List<String> get customConstraints => [
+    "CHECK (length(trim(event_id)) > 0)",
+    "CHECK (length(trim(run_id)) > 0)",
+    "CHECK (source_occurrence_key IS NULL OR length(trim(source_occurrence_key)) > 0)",
+    "CHECK (event_type IN ('hold', 'release_hold', 'exclude', 'retry_requested', 'conflict_resolution', 'reconciliation_started', 'reconciliation_passed', 'reconciliation_failed', 'accepted', 'rejected', 'aborted'))",
+    "CHECK (actor_id IS NULL OR length(trim(actor_id)) > 0)",
+    "CHECK (actor_source IN ('authenticated', 'local_operator', 'system'))",
+    'CHECK (json_valid(details_json))',
+    "CHECK (request_idempotency_key IS NULL OR length(trim(request_idempotency_key)) > 0)",
+    'FOREIGN KEY (run_id) REFERENCES legacy_invoice_import_runs (run_id)',
+    'FOREIGN KEY (run_id, source_occurrence_key) REFERENCES legacy_invoice_import_occurrences (run_id, source_occurrence_key)',
+  ];
+}
+
+class LegacyInvoiceOccurrenceMappings extends Table {
+  @override
+  String get tableName => 'legacy_invoice_occurrence_mappings';
+
+  TextColumn get sourceOccurrenceKey =>
+      text().named('source_occurrence_key')();
+  TextColumn get sourceSnapshotSha256 =>
+      text().named('source_snapshot_sha256')();
+  IntColumn get occurrenceIdentityVersion =>
+      integer().named('occurrence_identity_version')();
+  IntColumn get sourceIndex => integer().named('source_index')();
+  TextColumn get recordSha256 => text().named('record_sha256')();
+  IntColumn get migrationVersion => integer().named('migration_version')();
+  IntColumn get mappingContractVersion =>
+      integer().named('mapping_contract_version')();
+  TextColumn get importRunId => text().named('import_run_id')();
+  TextColumn get destinationInvoiceId =>
+      text().named('destination_invoice_id')();
+  TextColumn get destinationFingerprint =>
+      text().named('destination_fingerprint')();
+  IntColumn get importedAt => integer().named('imported_at')();
+
+  @override
+  Set<Column> get primaryKey => {sourceOccurrenceKey};
+
+  @override
+  List<Set<Column>> get uniqueKeys => [
+    {destinationInvoiceId},
+  ];
+
+  @override
+  List<String> get customConstraints => [
+    "CHECK (length(trim(source_occurrence_key)) > 0)",
+    "CHECK (length(source_snapshot_sha256) = 64 AND source_snapshot_sha256 NOT GLOB '*[^0-9a-fA-F]*')",
+    'CHECK (occurrence_identity_version > 0)',
+    'CHECK (source_index >= 0)',
+    "CHECK (length(record_sha256) = 64 AND record_sha256 NOT GLOB '*[^0-9a-fA-F]*')",
+    'CHECK (migration_version > 0)',
+    'CHECK (mapping_contract_version > 0)',
+    "CHECK (length(trim(import_run_id)) > 0)",
+    "CHECK (length(trim(destination_invoice_id)) > 0)",
+    "CHECK (length(trim(destination_fingerprint)) > 0)",
+    'FOREIGN KEY (import_run_id) REFERENCES legacy_invoice_import_runs (run_id)',
+    'FOREIGN KEY (import_run_id, source_occurrence_key) REFERENCES legacy_invoice_import_occurrences (run_id, source_occurrence_key)',
+    'FOREIGN KEY (destination_invoice_id) REFERENCES invoices (invoice_id)',
+  ];
+}
+
 @DriftDatabase(
   tables: [
     Currencies,
@@ -921,13 +1174,18 @@ class LegacyPartyReviewDecisions extends Table {
     LegacyMigrationRuns,
     LegacyMigrationOccurrences,
     LegacyPartyReviewDecisions,
+    LegacyInvoiceImportRuns,
+    LegacyInvoiceImportOccurrences,
+    LegacyInvoiceImportAttempts,
+    LegacyInvoiceImportEvents,
+    LegacyInvoiceOccurrenceMappings,
   ],
 )
 class AppDatabase extends _$AppDatabase {
   AppDatabase._(super.executor);
 
   @override
-  int get schemaVersion => 7;
+  int get schemaVersion => 8;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -936,6 +1194,7 @@ class AppDatabase extends _$AppDatabase {
       await _createCashEventIndexesAndTriggers();
       await _createStage4IndexesAndTriggers();
       await _createLegacyPartyReviewJournalTriggers();
+      await _createLegacyInvoiceImportJournalIndexesAndTriggers();
     }),
     onUpgrade: (m, from, to) => _runMigrationAtomically(() async {
       if (from < 2) {
@@ -979,6 +1238,19 @@ class AppDatabase extends _$AppDatabase {
           );
           await _createLegacyPartyReviewJournalTriggers();
         });
+      }
+
+      // Databases upgraded from v2-v7 already have their D3.2 dependencies.
+      // Fresh/very old databases create every table through createAll() above.
+      if (to >= 8) {
+        if (from >= 2 && from < 8) {
+          await m.createTable(legacyInvoiceImportRuns);
+          await m.createTable(legacyInvoiceImportOccurrences);
+          await m.createTable(legacyInvoiceImportAttempts);
+          await m.createTable(legacyInvoiceImportEvents);
+          await m.createTable(legacyInvoiceOccurrenceMappings);
+        }
+        await _createLegacyInvoiceImportJournalIndexesAndTriggers();
       }
     }),
   );
@@ -1231,6 +1503,136 @@ class AppDatabase extends _$AppDatabase {
         [for (final column in columns) row[column]],
       );
     }
+  }
+
+
+  Future<void> _createLegacyInvoiceImportJournalIndexesAndTriggers() async {
+    await customStatement(
+      'CREATE INDEX IF NOT EXISTS legacy_invoice_import_occurrences_run_status_index '
+      'ON legacy_invoice_import_occurrences (run_id, execution_status, source_index)',
+    );
+    await customStatement(
+      'CREATE INDEX IF NOT EXISTS legacy_invoice_import_occurrences_claim_expiry_index '
+      'ON legacy_invoice_import_occurrences (execution_status, active_claim_expires_at)',
+    );
+    await customStatement(
+      'CREATE INDEX IF NOT EXISTS legacy_invoice_import_events_run_time_index '
+      'ON legacy_invoice_import_events (run_id, occurred_at)',
+    );
+    await customStatement(
+      'CREATE INDEX IF NOT EXISTS legacy_invoice_occurrence_mappings_run_index '
+      'ON legacy_invoice_occurrence_mappings (import_run_id)',
+    );
+
+    await customStatement('''
+      CREATE TRIGGER IF NOT EXISTS legacy_invoice_import_runs_immutable_identity
+      BEFORE UPDATE ON legacy_invoice_import_runs
+      WHEN NEW.run_id IS NOT OLD.run_id
+        OR NEW.parent_run_id IS NOT OLD.parent_run_id
+        OR NEW.snapshot_sha256 IS NOT OLD.snapshot_sha256
+        OR NEW.snapshot_byte_length IS NOT OLD.snapshot_byte_length
+        OR NEW.snapshot_source_exists IS NOT OLD.snapshot_source_exists
+        OR NEW.snapshot_format_version IS NOT OLD.snapshot_format_version
+        OR NEW.migration_version IS NOT OLD.migration_version
+        OR NEW.occurrence_identity_version IS NOT OLD.occurrence_identity_version
+        OR NEW.preflight_version IS NOT OLD.preflight_version
+        OR NEW.mapping_contract_version IS NOT OLD.mapping_contract_version
+        OR NEW.party_review_run_id IS NOT OLD.party_review_run_id
+        OR NEW.export_manifest_sha256 IS NOT OLD.export_manifest_sha256
+        OR NEW.created_at IS NOT OLD.created_at
+        OR NEW.created_by_actor_id IS NOT OLD.created_by_actor_id
+        OR NEW.created_by_actor_source IS NOT OLD.created_by_actor_source
+      BEGIN
+        SELECT RAISE(ABORT, 'legacy_invoice_import_runs identity is immutable');
+      END
+    ''');
+
+    await customStatement('''
+      CREATE TRIGGER IF NOT EXISTS legacy_invoice_import_runs_prevent_delete
+      BEFORE DELETE ON legacy_invoice_import_runs BEGIN
+        SELECT RAISE(ABORT, 'legacy_invoice_import_runs cannot be deleted');
+      END
+    ''');
+
+    await customStatement('''
+      CREATE TRIGGER IF NOT EXISTS legacy_invoice_import_occurrences_immutable_identity
+      BEFORE UPDATE ON legacy_invoice_import_occurrences
+      WHEN NEW.run_id IS NOT OLD.run_id
+        OR NEW.source_occurrence_key IS NOT OLD.source_occurrence_key
+        OR NEW.source_index IS NOT OLD.source_index
+        OR NEW.record_sha256 IS NOT OLD.record_sha256
+        OR NEW.legacy_invoice_id IS NOT OLD.legacy_invoice_id
+        OR NEW.legacy_invoice_serial IS NOT OLD.legacy_invoice_serial
+        OR NEW.preflight_classification IS NOT OLD.preflight_classification
+        OR NEW.preflight_findings_json IS NOT OLD.preflight_findings_json
+        OR NEW.party_review_run_id IS NOT OLD.party_review_run_id
+        OR NEW.party_review_decision_id IS NOT OLD.party_review_decision_id
+      BEGIN
+        SELECT RAISE(ABORT, 'legacy_invoice_import_occurrences identity is immutable');
+      END
+    ''');
+
+    await customStatement('''
+      CREATE TRIGGER IF NOT EXISTS legacy_invoice_import_occurrences_prevent_delete
+      BEFORE DELETE ON legacy_invoice_import_occurrences BEGIN
+        SELECT RAISE(ABORT, 'legacy_invoice_import_occurrences cannot be deleted');
+      END
+    ''');
+
+    for (final table in [
+      'legacy_invoice_import_attempts',
+      'legacy_invoice_import_events',
+      'legacy_invoice_occurrence_mappings',
+    ]) {
+      await customStatement(
+        'CREATE TRIGGER IF NOT EXISTS ${table}_immutable_update '
+        'BEFORE UPDATE ON $table BEGIN '
+        "SELECT RAISE(ABORT, '$table is append-only'); END",
+      );
+      await customStatement(
+        'CREATE TRIGGER IF NOT EXISTS ${table}_immutable_delete '
+        'BEFORE DELETE ON $table BEGIN '
+        "SELECT RAISE(ABORT, '$table is append-only'); END",
+      );
+    }
+
+    await customStatement('''
+      CREATE TRIGGER IF NOT EXISTS legacy_invoice_occurrence_mappings_validate_insert
+      BEFORE INSERT ON legacy_invoice_occurrence_mappings
+      WHEN NOT EXISTS (
+        SELECT 1
+        FROM legacy_invoice_import_runs r
+        JOIN legacy_invoice_import_occurrences o
+          ON o.run_id = r.run_id
+        WHERE r.run_id = NEW.import_run_id
+          AND o.source_occurrence_key = NEW.source_occurrence_key
+          AND r.snapshot_sha256 = NEW.source_snapshot_sha256
+          AND r.occurrence_identity_version = NEW.occurrence_identity_version
+          AND r.migration_version = NEW.migration_version
+          AND r.mapping_contract_version = NEW.mapping_contract_version
+          AND o.source_index = NEW.source_index
+          AND o.record_sha256 = NEW.record_sha256
+          AND o.execution_status = 'imported'
+          AND o.destination_invoice_id = NEW.destination_invoice_id
+      )
+      OR NOT EXISTS (
+        SELECT 1
+        FROM legacy_invoice_import_attempts a
+        WHERE a.run_id = NEW.import_run_id
+          AND a.source_occurrence_key = NEW.source_occurrence_key
+          AND a.outcome = 'imported'
+          AND a.destination_invoice_id = NEW.destination_invoice_id
+      )
+      OR NOT EXISTS (
+        SELECT 1
+        FROM invoices i
+        WHERE i.invoice_id = NEW.destination_invoice_id
+          AND i.legacy_record_key = NEW.source_occurrence_key
+      )
+      BEGIN
+        SELECT RAISE(ABORT, 'Invalid legacy invoice occurrence mapping');
+      END
+    ''');
   }
 
   Future<void> _createLegacyPartyReviewJournalTriggers() async {
