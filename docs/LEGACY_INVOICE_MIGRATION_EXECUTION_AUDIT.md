@@ -250,3 +250,17 @@ On 2026-11-26, the owner approved holding the entire invoice occurrence for huma
 Do not interpret zero as proof of a valid free transaction, infer a replacement amount, or auto-correct the record. Preserve the exact original total and product-line values in the immutable source snapshot and emit a stable finding for the zero total. Any later disposition must be explicit, authorized, attributable, and auditable without changing source evidence.
 
 This is a defensive migration rule, not a statement that the current UI permits zero-value invoices. It is policy documentation only and does not authorize code or schema changes.
+
+## Owner-approved validation policy — non-finite, out-of-range, and over-precision product values
+
+On 2026-11-26, the owner approved the following general rule for legacy product numeric fields:
+
+1. Reject non-finite values (NaN, positive infinity, and negative infinity) in weight, packageWeight, and price.
+2. Hold the entire invoice occurrence for human review if a product value exceeds the supported numeric range of its destination field or cannot be safely represented by the eventual mapping and arithmetic contract.
+3. Hold the occurrence when weight, packageWeight, or price exceeds the decimal precision explicitly supported by that contract.
+4. Require numberPackage to be an integer within the supported destination range.
+5. Do not silently round, truncate, clamp, take absolute values, substitute, or otherwise change source values to make them fit.
+
+Preflight findings must be stable and field-specific, identifying the source occurrence, product line, and field. Preserve exact original values in the immutable source snapshot. The destination range, supported decimal precision, and safe arithmetic limits must be explicitly established and tested before implementation; this approval does not define arbitrary numeric thresholds. Negative values remain governed by the separate approved negative-product policy.
+
+This is policy documentation only. It does not authorize code, schema, or production migration changes.
