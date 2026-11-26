@@ -151,7 +151,8 @@ void main() {
           partyRole: 'customer',
         ),
         throwsA(anything),
-        reason: 'an ambiguous occurrence must never be approved as a suggestion',
+        reason:
+            'an ambiguous occurrence must never be approved as a suggestion',
       );
 
       await expectLater(
@@ -364,7 +365,8 @@ void main() {
           partyRole: 'customer',
         ),
         throwsA(anything),
-        reason: 'the v7 trigger must reject approval of an ambiguous resolution',
+        reason:
+            'the v7 trigger must reject approval of an ambiguous resolution',
       );
 
       await _insertDecision(
@@ -526,9 +528,7 @@ void main() {
   );
 }
 
-Future<void> _createV6PartyReviewDecisionTrigger(
-  AppDatabase database,
-) {
+Future<void> _createV6PartyReviewDecisionTrigger(AppDatabase database) {
   return database.customStatement('''
     CREATE TRIGGER legacy_party_review_decisions_validate_insert
     BEFORE INSERT ON legacy_party_review_decisions
