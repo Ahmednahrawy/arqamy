@@ -296,3 +296,14 @@ When `customerId` resolves to an existing party with the required role, but the 
 - Treat the discrepancy as a non-blocking audit finding. Do not hold or exclude the occurrence solely because these names differ.
 - Do not mutate the party's display name or the invoice's source name to make them match.
 - This is a design policy only; it does not authorize implementation or migration execution.
+
+
+## Owner-approved policy — duplicate legacy invoice IDs
+
+If two or more source occurrences contain the same legacy invoice `id`, but have distinct stable source-occurrence identities:
+
+- Treat each source occurrence as a separate migration occurrence and preserve it independently.
+- Do not merge, deduplicate, overwrite, or hold an occurrence solely because its legacy invoice ID duplicates another occurrence's ID.
+- Use the stable source-occurrence key, not the legacy invoice ID, as the migration identity and idempotency basis.
+- Preserve each original legacy invoice ID as diagnostic historical metadata.
+- This policy does not override holds caused by other independently approved validation findings, and it does not authorize implementation or migration execution.
