@@ -181,3 +181,12 @@ On 2026-11-26, the owner approved holding an entire invoice occurrence for human
 Preflight must produce a stable, field-specific finding that identifies the product line and offending field. The importer must not clamp to zero, take an absolute value, omit a line, or otherwise auto-correct the value. The exact original value remains available in the immutable source snapshot. Any later correction must be explicit, authorized, attributable, and auditable without modifying source evidence.
 
 The rule applies even where the current Drift schema already rejects the value (notably negative package count); validation must classify the occurrence as held before attempting insertion. Non-negative upper bounds and precision rules remain unresolved. This is a design decision only; no implementation is authorized.
+
+
+## 18. Owner-approved field validation rule — party existence and role
+
+On 2026-11-26, the owner approved holding an invoice occurrence for human review whenever the referenced party is missing, lacks the required role, has a role inconsistent with the invoice action/effective review decision, or no longer matches the current effective party-review decision at import time.
+
+The migration must not create parties, add missing roles, change roles, or infer replacement parties. A held occurrence may be released only through an explicit, authorized, attributable, immutable review decision, followed by revalidation immediately before import. The exact source snapshot remains unchanged.
+
+This rule also means the current import behavior that automatically adds party roles is prohibited for the D4 migration path. This is a design decision only; no party, schema, or importer implementation is authorized.
