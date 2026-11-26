@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "675216111545",
+    "project_id": "arqamy-8396d",
+    "storage_bucket": "arqamy-8396d.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:675216111545:android:3a460d6e6a942199eae868",
+        "android_client_info": {
+          "package_name": "com.nahro.arqamy"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "675216111545-7np0vvkk0i0ume6j6rt7uogk99rdj7f4.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDzRFwWl_5jOvXXyskhm3uqSqzknQSI3Y4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "675216111545-7np0vvkk0i0ume6j6rt7uogk99rdj7f4.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
