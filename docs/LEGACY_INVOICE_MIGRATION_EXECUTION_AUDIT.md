@@ -272,3 +272,11 @@ On 2026-11-26, the owner approved this D4 rule: hold the entire invoice occurren
 Emit a stable finding identifying the source occurrence and product line. Preserve the exact original component values in the immutable source snapshot. Do not clamp the calculated net weight to zero, change source values, omit the line, or silently correct the calculation. Any later correction or disposition requires an explicit, authorized, attributable, auditable action that leaves original source evidence unchanged.
 
 This check is required even when each individual input is non-negative. The calculation must also be evaluated under the separately approved safe numeric-range and precision contract. This is policy documentation only; it does not authorize code, schema, or production migration changes.
+
+## Owner-approved validation policy — zero calculated net product weight
+
+On 2026-11-26, the owner approved holding the entire invoice occurrence for human review if any product line's calculated net weight is zero, using `weight - (packageWeight * numberPackage)`.
+
+Emit a stable finding identifying the source occurrence and affected product line. Preserve exact original component values in the immutable source snapshot. Do not assume the line is a valid zero-quantity product, remove or omit it, substitute values, or silently change the calculation. Any later disposition must be explicit, authorized, attributable, and auditable without mutating original source evidence.
+
+This rule is distinct from the negative-net-weight rule. It is policy documentation only and does not authorize code, schema, or production migration changes.
