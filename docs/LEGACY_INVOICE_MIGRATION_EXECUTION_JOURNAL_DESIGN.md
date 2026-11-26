@@ -424,3 +424,12 @@ On 2026-11-26, the owner approved the following migration rule: an occurrence mu
 Preflight must emit stable, field-specific findings. The exact original values remain preserved in the immutable source snapshot. The importer must not invent replacement values, silently substitute normalized values, discard the affected fields, or treat the occurrence as ready. Any later correction must be explicit, authorized, attributable, and auditable without changing the original source evidence.
 
 This rule resolves the corresponding open question in the field-mapping matrix. Other field-mapping questions remain open. This is a design decision only; it does not authorize implementation.
+
+
+## 17. Owner-approved field validation rule — negative product values
+
+On 2026-11-26, the owner approved this D4 validation rule: hold an entire invoice occurrence for human review if any product line has a negative `weight`, `packageWeight`, `numberPackage`, or `price`.
+
+Preflight must emit a stable finding identifying the source occurrence, product line, and field. No clamping, absolute-value conversion, line omission, or other silent correction is permitted. Preserve the original value in the immutable source snapshot. A later correction requires an explicit, authorized, attributable, auditable operator action and must not mutate source evidence.
+
+Apply this check before database insertion, including negative package counts rejected by the current Drift schema. This approval does not define non-negative upper bounds or precision limits. It is a design decision only; schema and importer implementation remain separately gated and are not authorized by this approval.
