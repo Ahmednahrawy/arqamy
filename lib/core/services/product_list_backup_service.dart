@@ -2,9 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:arqamy/core/helpers/invoice_action.dart';
-import 'package:flutter/foundation.dart';
-import 'package:flutter/services.dart';
-import 'package:file_picker/file_picker.dart';
+import 'package:arqamy/core/services/backup_file_picker.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
@@ -35,7 +33,6 @@ class ProductListBackupService {
   const ProductListBackupService._();
 
   static const String format = 'arqamy-products';
-  static const _backupChannel = MethodChannel('com.nahro.arqamy/backup');
   static const int version = 1;
   static const int maxBackupBytes = 50 * 1024 * 1024;
 
@@ -179,19 +176,11 @@ class ProductListBackupService {
   /// Lets the user choose a backup file and returns its strict contents.
   ///
   /// On Android a native app chooser is used (Drive, Files, Dropbox, ...)
-  /// instead of filtering by MIME type, which limited the picker to Drive.
+  /// instead of the system document picker, which only offered Drive here.
   static Future<ProductListBackup?> pickBackup() async {
-    if (defaultTargetPlatform == TargetPlatform.android) {
-      final path = await _backupChannel.invokeMethod<String?>('pickBackupFile');
-      if (path == null) return null;
-      return decodeProducts(
-        backupTextFromBytes(await File(path).readAsBytes()),
-      );
-    }
-
-    final file = await FilePicker.pickFile();
-    if (file == null) return null;
-    return decodeProducts(backupTextFromBytes(await file.readAsBytes()));
+    final bytes = await BackupFilePicker.pickBytes();
+    if (bytes == null) return null;
+    return decodeProducts(backupTextFromBytes(bytes));
   }
 
   static Future<String> generateAndSaveBackup(

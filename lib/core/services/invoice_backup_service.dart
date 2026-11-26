@@ -2,8 +2,8 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:arqamy/core/helpers/invoice_backup.dart';
+import 'package:arqamy/core/services/backup_file_picker.dart';
 import 'package:arqamy/features/orderscreen/providers/invoice_provider.dart';
-import 'package:file_picker/file_picker.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
@@ -63,10 +63,13 @@ class InvoiceBackupService {
   static const int maxBackupBytes = 50 * 1024 * 1024;
 
   /// Lets the user choose a file and returns its text, or null if cancelled.
+  ///
+  /// Uses the same Android app chooser as product restore so the user can pick
+  /// a backup from Drive, Files, Dropbox, etc.
   static Future<String?> pickBackupText() async {
-    final file = await FilePicker.pickFile();
-    if (file == null) return null;
-    return backupTextFromBytes(await file.readAsBytes());
+    final bytes = await BackupFilePicker.pickBytes();
+    if (bytes == null) return null;
+    return backupTextFromBytes(bytes);
   }
 
   /// Turns the bytes of a chosen file into backup text.

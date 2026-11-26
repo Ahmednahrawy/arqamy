@@ -60,13 +60,17 @@ class MainActivity : FlutterActivity() {
                 return@setMethodCallHandler
             }
             pendingBackupResult = result
-            val chooser = Intent.createChooser(
-                Intent(Intent.ACTION_GET_CONTENT).apply {
-                    type = "*/*"
-                    addCategory(Intent.CATEGORY_OPENABLE)
-                },
-                "Choose backup file",
-            )
+            val openDocument = Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
+                type = "*/*"
+                addCategory(Intent.CATEGORY_OPENABLE)
+            }
+            val getContent = Intent(Intent.ACTION_GET_CONTENT).apply {
+                type = "*/*"
+                addCategory(Intent.CATEGORY_OPENABLE)
+            }
+            val chooser = Intent.createChooser(openDocument, "Choose backup file").apply {
+                putExtra(Intent.EXTRA_INITIAL_INTENTS, arrayOf(getContent))
+            }
             try {
                 startActivityForResult(chooser, PICK_BACKUP_REQUEST_CODE)
             } catch (_: ActivityNotFoundException) {
