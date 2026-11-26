@@ -165,11 +165,15 @@ class _OrderscreenState extends State<Orderscreen>
             invoice,
             locale: locale,
           );
+        } else if (shareTarget == _InvoiceShareTarget.whatsapp) {
+          await InvoiceService.generateAndShareInvoiceBundleToWhatsApp(
+            provider: provider,
+            settings: context.read<InvoiceSettingsProvider>(),
+            invoice: invoice,
+            locale: locale,
+          );
         } else {
-          final shareInvoice = shareTarget == _InvoiceShareTarget.whatsapp
-              ? InvoiceService.generateAndShareInvoiceToWhatsApp
-              : InvoiceService.generateAndShareInvoice;
-          await shareInvoice(
+          await InvoiceService.generateAndShareInvoice(
             provider: provider,
             settings: context.read<InvoiceSettingsProvider>(),
             customerName: invoice.customerName,
@@ -627,7 +631,7 @@ class _OrderscreenState extends State<Orderscreen>
               ),
               SizedBox(width: width < 400 ? 14 : 22),
               IconButton.filled(
-                tooltip: strings.share_via_whatsapp,
+                tooltip: strings.share_invoice_bundle_via_whatsapp,
                 onPressed: _sendInvoiceToWhatsApp,
                 style: IconButton.styleFrom(
                   backgroundColor: const Color(0xFF25D366),

@@ -250,7 +250,7 @@ void main() {
     expect(
       find.descendant(
         of: preview,
-        matching: find.byTooltip('مشاركة عبر واتساب'),
+        matching: find.byTooltip('إرسال PDF وإكسل عبر واتساب'),
       ),
       findsNothing,
     );
@@ -268,7 +268,7 @@ void main() {
     await tester.pumpAndSettle();
     expect(tester.getRect(find.text('حفظ')).bottom, lessThanOrEqualTo(776));
     expect(
-      tester.getRect(find.byTooltip('مشاركة عبر واتساب')).bottom,
+      tester.getRect(find.byTooltip('إرسال PDF وإكسل عبر واتساب')).bottom,
       lessThanOrEqualTo(776),
     );
     expect(tester.takeException(), isNull);
@@ -349,7 +349,7 @@ void main() {
     expect(sendRect.left, greaterThanOrEqualTo(paymentRowRect.left));
     expect(sendRect.right, lessThanOrEqualTo(paymentRowRect.right));
     expect(saveRect.width, closeTo(sendRect.width, 1));
-    expect(find.byTooltip('مشاركة عبر واتساب'), findsOneWidget);
+    expect(find.byTooltip('إرسال PDF وإكسل عبر واتساب'), findsOneWidget);
     expect(saveRect.left, greaterThanOrEqualTo(0));
     expect(sendRect.right, lessThanOrEqualTo(360));
     expect(tester.takeException(), isNull);

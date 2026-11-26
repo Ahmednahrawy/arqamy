@@ -1,6 +1,8 @@
 import 'dart:io';
 
 import 'package:arqamy/core/helpers/utils.dart';
+import 'package:arqamy/core/services/invoice_excel_export_service.dart';
+import 'package:arqamy/features/orderscreen/data/models/invoice.dart';
 import 'package:arqamy/features/orderscreen/providers/invoice_provider.dart';
 import 'package:arqamy/features/settingscreen/providers/invoice_setting_provider.dart';
 import 'package:flutter/foundation.dart';
@@ -134,14 +136,51 @@ class InvoiceService {
       locale: locale,
     );
     if (defaultTargetPlatform == TargetPlatform.android) {
-      await _whatsappChannel.invokeMethod<void>(
-        'sharePdfToWhatsApp',
-        {'filePath': filePath},
-      );
+      await _whatsappChannel.invokeMethod<void>('sharePdfToWhatsApp', {
+        'filePath': filePath,
+      });
       return;
     }
 
     await SharePlus.instance.share(ShareParams(files: [XFile(filePath)]));
+  }
+
+  /// Generates the PDF and the XLSX and sends both in one WhatsApp message.
+  static Future<void> generateAndShareInvoiceBundleToWhatsApp({
+    required InvoiceProvider provider,
+    required InvoiceSettingsProvider settings,
+    required Invoice invoice,
+    String locale = 'ar',
+  }) async {
+    final pdfPath = await generateAndSaveInvoice(
+      provider: provider,
+      settings: settings,
+      customerName: invoice.customerName,
+      invoiceId: invoice.id,
+      totalCost: invoice.totalCost,
+      paid: invoice.paid,
+      rest: invoice.rest,
+      formattedDate: invoice.formattedDate,
+      formattedTime: invoice.formattedTime,
+      invoiceAction: invoice.invoiceAction,
+      invoiceSerial: invoice.invoiceSerial,
+      locale: locale,
+    );
+    final excelPath = await InvoiceExcelExportService.generateAndSaveInvoice(
+      invoice,
+      locale: locale,
+    );
+
+    if (defaultTargetPlatform == TargetPlatform.android) {
+      await _whatsappChannel.invokeMethod<void>('shareFilesToWhatsApp', {
+        'filePaths': [pdfPath, excelPath],
+      });
+      return;
+    }
+
+    await SharePlus.instance.share(
+      ShareParams(files: [XFile(pdfPath), XFile(excelPath)]),
+    );
   }
 
   static String _sanitizeFileNamePart(

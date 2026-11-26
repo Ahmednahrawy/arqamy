@@ -141,6 +141,7 @@
   "save": "حفظ",
   "send": "إرسال",
   "share_via_whatsapp": "مشاركة عبر واتساب",
+  "share_invoice_bundle_via_whatsapp": "إرسال PDF وإكسل عبر واتساب",
   "grand_total": "الإجمالي الكلي",
   "no_products_added": "لا توجد منتجات مضافة",
   "start_adding_products": "ابدأ بإضافة منتجات للفاتورة",

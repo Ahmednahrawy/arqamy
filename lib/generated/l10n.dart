@@ -760,6 +760,11 @@ class S {
     return Intl.message('Share via WhatsApp', name: 'share_via_whatsapp', desc: '', args: []);
   }
 
+  /// `Send PDF + Excel via WhatsApp`
+  String get share_invoice_bundle_via_whatsapp {
+    return Intl.message('Send PDF + Excel via WhatsApp', name: 'share_invoice_bundle_via_whatsapp', desc: '', args: []);
+  }
+
   /// `Grand total`
   String get grand_total {
     return Intl.message('Grand total', name: 'grand_total', desc: '', args: []);

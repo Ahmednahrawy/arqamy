@@ -163,6 +163,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "save": MessageLookupByLibrary.simpleMessage("Save"),
     "send": MessageLookupByLibrary.simpleMessage("Send"),
     "share_via_whatsapp": MessageLookupByLibrary.simpleMessage("Share via WhatsApp"),
+    "share_invoice_bundle_via_whatsapp": MessageLookupByLibrary.simpleMessage("Send PDF + Excel via WhatsApp"),
     "grand_total": MessageLookupByLibrary.simpleMessage("Grand total"),
     "no_products_added": MessageLookupByLibrary.simpleMessage("No products added"),
     "start_adding_products": MessageLookupByLibrary.simpleMessage("Start adding products to the invoice"),

@@ -163,6 +163,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "save": MessageLookupByLibrary.simpleMessage("حفظ"),
     "send": MessageLookupByLibrary.simpleMessage("إرسال"),
     "share_via_whatsapp": MessageLookupByLibrary.simpleMessage("مشاركة عبر واتساب"),
+    "share_invoice_bundle_via_whatsapp": MessageLookupByLibrary.simpleMessage("إرسال PDF وإكسل عبر واتساب"),
     "grand_total": MessageLookupByLibrary.simpleMessage("الإجمالي الكلي"),
     "no_products_added": MessageLookupByLibrary.simpleMessage("لا توجد منتجات مضافة"),
     "start_adding_products": MessageLookupByLibrary.simpleMessage("ابدأ بإضافة منتجات للفاتورة"),
