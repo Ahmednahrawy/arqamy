@@ -780,15 +780,16 @@ class InvoiceLifecycleEvents extends Table {
   ];
 }
 
-
 class LegacyMigrationRuns extends Table {
   @override
   String get tableName => 'legacy_migration_runs';
   TextColumn get runId => text().named('run_id')();
   TextColumn get snapshotSha256 => text().named('snapshot_sha256')();
-  TextColumn get snapshotManifestPath => text().named('snapshot_manifest_path')();
+  TextColumn get snapshotManifestPath =>
+      text().named('snapshot_manifest_path')();
   IntColumn get migrationVersion => integer().named('migration_version')();
-  IntColumn get occurrenceIdentityVersion => integer().named('occurrence_identity_version')();
+  IntColumn get occurrenceIdentityVersion =>
+      integer().named('occurrence_identity_version')();
   IntColumn get preflightVersion => integer().named('preflight_version')();
   IntColumn get createdAt => integer().named('created_at')();
   TextColumn get createdByActorId => text().named('created_by_actor_id')();
@@ -813,13 +814,18 @@ class LegacyMigrationOccurrences extends Table {
   TextColumn get sourceOccurrenceKey => text().named('source_occurrence_key')();
   IntColumn get sourceIndex => integer().named('source_index')();
   TextColumn get recordSha256 => text().named('record_sha256')();
-  TextColumn get legacyInvoiceId => text().named('legacy_invoice_id').nullable()();
-  TextColumn get preflightClassification => text().named('preflight_classification')();
+  TextColumn get legacyInvoiceId =>
+      text().named('legacy_invoice_id').nullable()();
+  TextColumn get preflightClassification =>
+      text().named('preflight_classification')();
   TextColumn get resolutionStatus => text().named('resolution_status')();
   TextColumn get expectedRole => text().named('expected_role').nullable()();
-  TextColumn get suggestedPartyId => text().named('suggested_party_id').nullable()();
-  TextColumn get suggestedPartyName => text().named('suggested_party_name').nullable()();
-  TextColumn get candidatePartyIdsJson => text().named('candidate_party_ids_json')();
+  TextColumn get suggestedPartyId =>
+      text().named('suggested_party_id').nullable()();
+  TextColumn get suggestedPartyName =>
+      text().named('suggested_party_name').nullable()();
+  TextColumn get candidatePartyIdsJson =>
+      text().named('candidate_party_ids_json')();
   TextColumn get findingsJson => text().named('findings_json')();
   @override
   Set<Column> get primaryKey => {runId, sourceOccurrenceKey};
@@ -849,12 +855,16 @@ class LegacyPartyReviewDecisions extends Table {
   TextColumn get runId => text().named('run_id')();
   TextColumn get sourceOccurrenceKey => text().named('source_occurrence_key')();
   IntColumn get sequence => integer().named('sequence')();
-  TextColumn get previousDecisionId => text().named('previous_decision_id').nullable()();
+  TextColumn get previousDecisionId =>
+      text().named('previous_decision_id').nullable()();
   TextColumn get action => text().named('action')();
   TextColumn get expectedRole => text().named('expected_role').nullable()();
-  TextColumn get resolvedPartyId => text().named('resolved_party_id').nullable()();
-  TextColumn get resolvedPartyName => text().named('resolved_party_name').nullable()();
-  TextColumn get resolvedPartyRole => text().named('resolved_party_role').nullable()();
+  TextColumn get resolvedPartyId =>
+      text().named('resolved_party_id').nullable()();
+  TextColumn get resolvedPartyName =>
+      text().named('resolved_party_name').nullable()();
+  TextColumn get resolvedPartyRole =>
+      text().named('resolved_party_role').nullable()();
   TextColumn get reviewerId => text().named('reviewer_id')();
   IntColumn get decidedAt => integer().named('decided_at')();
   TextColumn get reviewNote => text().named('review_note').nullable()();
@@ -1147,7 +1157,6 @@ class AppDatabase extends _$AppDatabase {
       );
     }
   }
-
 
   Future<void> _createLegacyPartyReviewJournalTriggers() async {
     for (final table in [
