@@ -232,3 +232,13 @@ On 2026-11-26, the owner approved holding the entire invoice occurrence for huma
 Preflight must emit a stable finding identifying the source occurrence and product line. Preserve the exact original `weight`, `packageWeight`, and `numberPackage` values in the immutable source snapshot. Do not clamp net weight to zero, modify any source value, omit the line, or silently correct the calculation. Any later correction or disposition must be explicit, authorized, attributable, and auditable without mutating original source evidence.
 
 This rule applies even when the individual source values are each non-negative. The calculation's safe numeric range and precision must follow the separately approved mapping/arithmetic contract. This is design policy only; it does not authorize implementation.
+
+## 19. Owner-approved validation policy — zero calculated net product weight
+
+On 2026-11-26, the owner approved holding the entire invoice occurrence for human review when any product line has a calculated net weight equal to zero:
+
+`netWeight = weight - (packageWeight * numberPackage)`
+
+Preflight must emit a stable finding identifying the source occurrence and affected product line. Preserve the exact original component values in the immutable source snapshot. Do not assume the line is a valid zero-quantity product, remove or omit it, replace its values, or silently alter the calculation. Any later disposition must be explicit, authorized, attributable, and auditable without mutating original source evidence.
+
+This rule is separate from the negative-net-weight rule and is design policy only; it does not authorize implementation.
