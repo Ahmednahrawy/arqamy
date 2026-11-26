@@ -477,3 +477,11 @@ This policy does not change the requirement to validate the effective party-revi
 On 2026-11-26, the owner approved this destination strategy for legacy invoice date/time: preserve the exact original `formattedDate` and `formattedTime` strings in the immutable source snapshot. Once the supported source formats and timezone semantics have been established and tested, convert the combined value into the existing Drift `issued_at` field. Do not add separate structured date or time columns solely for this migration; reconsider only if a separate business requirement justifies them.
 
 Invalid or unrecognized values remain held, and ambiguous values must not be guessed or automatically converted. Design only; no schema or importer implementation is authorized.
+
+## Owner-approved validation policy — invoice total and calculated line totals
+
+On 2026-11-26, the owner approved this rule: if the legacy invoice `totalCost` differs from the sum of its calculated product line totals, hold the entire occurrence for human review.
+
+The migration must preserve the original `totalCost` and every original product-line value in immutable source evidence. It must not recalculate or overwrite the invoice total, alter line values, omit lines, or silently adjust rounding to force agreement. Emit a stable validation finding identifying the mismatch and retain the compared values in the audit evidence where safely representable. Any later correction must be an explicit, authorized, attributable, auditable action that leaves original source evidence unchanged.
+
+The exact arithmetic and precision contract for the comparison must be defined and tested before implementation. This approval is design policy only; it does not authorize schema, importer, or production migration changes.
