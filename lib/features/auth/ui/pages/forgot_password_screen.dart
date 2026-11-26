@@ -2,7 +2,6 @@ import 'package:arqamy/features/auth/domain/auth_validators.dart';
 import 'package:arqamy/features/auth/providers/auth_provider.dart';
 import 'package:arqamy/features/auth/ui/auth_messages.dart';
 import 'package:arqamy/generated/l10n.dart';
-import 'package:flutter/services.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:provider/provider.dart';
 
