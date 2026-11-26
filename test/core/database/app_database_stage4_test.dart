@@ -689,7 +689,6 @@ Future<void> _createPopulatedV4Fixture(String path) async {
   await database.close();
 }
 
-
 Future<void> _runProductionUpgradeInOuterTransaction(
   AppDatabase database, {
   required int from,
