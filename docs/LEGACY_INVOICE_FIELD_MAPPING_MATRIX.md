@@ -207,3 +207,18 @@ These values remain historical invoice aggregates only. They do not establish ph
 Do not assume that a zero-total invoice represents a valid free transaction, and do not replace the value, infer a non-zero amount, or otherwise auto-correct it. Preserve the exact original total and all product-line values in the immutable source snapshot. Emit a stable validation finding identifying the zero total. Any later disposition must be explicit, authorized, attributable, and auditable without mutating original source evidence.
 
 This is a defensive migration validation policy; it does not assert that the current UI permits zero-value invoices. It is design-only and does not authorize implementation.
+
+## 17. Owner-approved validation policy — non-negative product range and precision
+
+On 2026-11-26, the owner approved this general validation policy for legacy product values:
+
+- Reject non-finite numeric values (NaN, positive infinity, or negative infinity) for weight, packageWeight, and price.
+- Hold the entire invoice occurrence for human review if a product value exceeds the supported numeric range of its destination field or cannot be safely represented by the approved mapping/arithmetic contract.
+- Hold the occurrence if weight, packageWeight, or price exceeds the decimal precision explicitly supported by the approved mapping contract.
+- numberPackage must remain an integer and must fit the supported destination range.
+- Do not silently round, truncate, clamp, take an absolute value, substitute, or otherwise alter an out-of-range or over-precision source value.
+- Preserve exact original values in the immutable source snapshot and emit stable, field-specific findings identifying the product line and field.
+
+The exact non-negative upper bounds and decimal precision for weight, packageWeight, numberPackage, and price remain to be established from the destination schema, safe arithmetic requirements, and approved business units before implementation. This policy does not invent numeric limits. Negative values are separately covered by the owner-approved negative-product rule.
+
+This is design policy only; it does not authorize schema, importer, or production migration implementation.
