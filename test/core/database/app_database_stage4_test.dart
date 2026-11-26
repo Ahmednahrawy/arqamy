@@ -659,7 +659,6 @@ void main() {
       await _expectDatabaseHealthy(database!);
     },
   );
-
 }
 
 _Version4FixtureDatabase _openVersion4Fixture(String path) =>
