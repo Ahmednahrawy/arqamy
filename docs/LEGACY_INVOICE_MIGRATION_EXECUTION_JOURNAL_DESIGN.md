@@ -516,3 +516,13 @@ On 2026-11-26, the owner approved this general D4 validation policy for legacy p
 Emit stable, field-specific findings identifying the source occurrence, product line, and field. Preserve exact original values in the immutable source snapshot. The exact destination bounds, decimal precision, business units, and safe arithmetic limits remain to be established and tested before implementation; this approval does not invent those thresholds. Negative values remain covered by the separate owner-approved negative-product rule.
 
 This approval is design policy only. It does not authorize schema changes, importer implementation, or production migration execution.
+
+## Owner-approved validation policy — calculated net product weight
+
+On 2026-11-26, the owner approved this D4 validation rule: hold the entire invoice occurrence for human review if any product line has a negative calculated net weight:
+
+`netWeight = weight - (packageWeight * numberPackage)`
+
+Preflight must emit a stable finding identifying the source occurrence and affected product line. Preserve the exact original input values in the immutable source snapshot. Never clamp net weight to zero, alter the source inputs, omit the line, or silently correct the calculation. A later correction or disposition must be explicit, authorized, attributable, and auditable without mutating original source evidence.
+
+This rule applies even when all individual inputs are non-negative. Calculation must respect the separately approved numeric-range and precision contract. This approval is design policy only; it does not authorize schema changes, importer implementation, or production migration execution.
