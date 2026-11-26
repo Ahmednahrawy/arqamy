@@ -126,9 +126,11 @@ class LegacyPartyReviewJournalRepository {
     }
     for (final resolution in plan.resolutions) {
       final item = byKey[resolution.sourceOccurrenceKey];
-      if (item == null || item.sourceIndex != resolution.sourceIndex) {
+      if (item == null ||
+          item.sourceIndex != resolution.sourceIndex ||
+          item.invoiceId != resolution.invoiceId) {
         throw ArgumentError(
-          'Party plan keys and source indexes must match preflight.',
+          'Party plan keys, source indexes, and invoice IDs must match preflight.',
         );
       }
     }
@@ -358,6 +360,14 @@ class LegacyPartyReviewJournalRepository {
         if (decision.selectedPartyId != null) {
           throw ArgumentError(
             'acceptSuggestedMatch must not supply a party ID.',
+          );
+        }
+        final resolutionStatus =
+            occurrence.data['resolution_status'] as String?;
+        if (resolutionStatus != 'resolvedByName' &&
+            resolutionStatus != 'resolvedByExistingId') {
+          throw ArgumentError(
+            'Only a resolved suggested match can be accepted.',
           );
         }
         final suggestedId = occurrence.data['suggested_party_id'] as String?;
