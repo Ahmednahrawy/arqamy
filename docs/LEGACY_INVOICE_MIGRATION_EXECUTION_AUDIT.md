@@ -172,3 +172,12 @@ On 2026-11-26, the owner approved holding any occurrence for human review when i
 The preflight/import contract must emit stable field-specific findings and preserve the exact source value in the immutable snapshot. It must not invent replacements, silently normalize a substitute value, discard the field, or import the occurrence as ready. Any later correction must be explicit, authorized, attributable, and auditable, while retaining the original source evidence.
 
 This resolves the blank-text policy question identified in the field-mapping audit. It does not authorize code or schema changes.
+
+
+## 17. Owner-approved field validation rule — negative product values
+
+On 2026-11-26, the owner approved holding an entire invoice occurrence for human review if any product line has a negative `weight`, `packageWeight`, `numberPackage`, or `price`.
+
+Preflight must produce a stable, field-specific finding that identifies the product line and offending field. The importer must not clamp to zero, take an absolute value, omit a line, or otherwise auto-correct the value. The exact original value remains available in the immutable source snapshot. Any later correction must be explicit, authorized, attributable, and auditable without modifying source evidence.
+
+The rule applies even where the current Drift schema already rejects the value (notably negative package count); validation must classify the occurrence as held before attempting insertion. Non-negative upper bounds and precision rules remain unresolved. This is a design decision only; no implementation is authorized.
