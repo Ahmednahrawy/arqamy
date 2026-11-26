@@ -85,6 +85,8 @@ The existing `LedgerImportPlanner`, `LedgerImportExecutor`, party registry, occu
 
 ## 5. Stage A — immutable raw source snapshot
 
+**Implementation status:** Raw snapshot capture, content-addressed file writing, manifest creation, and raw-file SHA-256/byte-length verification are implemented. Independent export and restore are not.
+
 ### 5.1 Capture
 
 Before decoding, read the exact string stored under SharedPreferences key `saved_invoices`. Capture:
@@ -110,6 +112,8 @@ If capture, write, read-back, or hash verification fails, stop. No preflight imp
 
 ## 6. Stage B — read-only record-level preflight
 
+**Implementation status:** Implemented as a read-only preflight service. The service verifies the snapshot, validates top-level JSON, parses record occurrences independently, and reports malformed, duplicate, review-required, and ready records.
+
 A dedicated decoder should inspect the raw snapshot without changing it or relying on the current all-or-nothing `Invoice.fromJson()` path.
 
 It should validate the top-level JSON shape and then validate each source occurrence independently. For each occurrence, retain its original array index, exact raw fragment when available, decoded representation when valid, validation findings, and classification.
@@ -133,6 +137,8 @@ If the top-level JSON is invalid and safe record boundaries cannot be establishe
 Preflight must produce a deterministic report and must not write business invoices, parties, accounts, payment events, or other ledger records.
 
 ## 7. Stage C — deterministic source-occurrence identity
+
+**Implementation status:** Identity format version 1 is implemented. It is not yet the key used by the existing invoice import planner/executor.
 
 The source occurrence identity must be distinct from the legacy invoice ID, invoice serial, and destination Drift primary key.
 
@@ -161,6 +167,8 @@ The existing `saved_invoices/{invoice.id}` key is insufficient for duplicate occ
 For duplicate legacy IDs, preserve all occurrences in migration staging/quarantine. Do not import one arbitrarily. A human-reviewed resolution must decide whether the records are separate business documents, duplicate copies, or a conflict requiring correction. The original records remain preserved regardless of the decision.
 
 ## 8. Stage D — party identity and role resolution
+
+**Implementation status:** Read-only party-resolution planning, explicit review decisions, and persistent review journaling are implemented. The journal does not create parties, assign roles, or link invoices.
 
 Reuse the existing customer registry and linking workflow, including the customer-linking service and linker. Extend it only if supplier-role handling or occurrence-level reporting requires it.
 
@@ -213,6 +221,8 @@ Therefore migration must preserve `paid` and `rest` as historical values and mus
 Any later opening-balance or historical-payment reconstruction requires a separate evidence-backed business process and explicit approval.
 
 ## 10. Stage F — migration journal and transactional import
+
+**Implementation status:** The party-review journal exists in schema v7. The separate import-execution journal and occurrence-key-based invoice importer remain design work.
 
 A persistent **party-review journal** is implemented in schema version 7. It records a run bound to a snapshot digest and processing versions, frozen occurrence/preflight/resolution data, and append-only decisions with idempotency and supersession history.
 
