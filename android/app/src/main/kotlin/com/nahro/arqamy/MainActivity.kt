@@ -1,16 +1,25 @@
 package com.nahro.arqamy
 
+import android.app.Activity
 import android.content.ActivityNotFoundException
 import android.content.ClipData
 import android.content.Intent
 import android.net.Uri
+import android.provider.OpenableColumns
 import androidx.core.content.FileProvider
 import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodChannel
 import java.io.File
+import java.io.FileOutputStream
 
 class MainActivity : FlutterActivity() {
+    companion object {
+        private const val PICK_BACKUP_REQUEST_CODE = 4242
+    }
+
+    private var pendingBackupResult: MethodChannel.Result? = null
+
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
         MethodChannel(
@@ -37,6 +46,84 @@ class MainActivity : FlutterActivity() {
                 else -> result.notImplemented()
             }
         }
+
+        MethodChannel(
+            flutterEngine.dartExecutor.binaryMessenger,
+            "com.nahro.arqamy/backup"
+        ).setMethodCallHandler { call, result ->
+            if (call.method != "pickBackupFile") {
+                result.notImplemented()
+                return@setMethodCallHandler
+            }
+            if (pendingBackupResult != null) {
+                result.error("PICK_IN_PROGRESS", "A file picker is already open.", null)
+                return@setMethodCallHandler
+            }
+            pendingBackupResult = result
+            val chooser = Intent.createChooser(
+                Intent(Intent.ACTION_GET_CONTENT).apply {
+                    type = "*/*"
+                    addCategory(Intent.CATEGORY_OPENABLE)
+                },
+                "Choose backup file",
+            )
+            try {
+                startActivityForResult(chooser, PICK_BACKUP_REQUEST_CODE)
+            } catch (_: ActivityNotFoundException) {
+                pendingBackupResult = null
+                result.error(
+                    "NO_FILE_APP",
+                    "No app can choose a file.",
+                    null,
+                )
+            }
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode != PICK_BACKUP_REQUEST_CODE) return
+
+        val result = pendingBackupResult ?: return
+        pendingBackupResult = null
+        if (resultCode != Activity.RESULT_OK || data?.data == null) {
+            result.success(null)
+            return
+        }
+        try {
+            result.success(copyPickedFileToCache(data.data!!))
+        } catch (error: Exception) {
+            result.error("BACKUP_READ_FAILED", error.message, null)
+        }
+    }
+
+    private fun copyPickedFileToCache(uri: Uri): String {
+        var displayName = "restore-backup.json"
+        val cursor = contentResolver.query(uri, null, null, null, null)
+        try {
+            if (cursor != null && cursor.moveToFirst()) {
+                val nameIndex = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME)
+                if (nameIndex >= 0) {
+                    cursor.getString(nameIndex)?.let {
+                        if (it.isNotBlank()) displayName = it
+                    }
+                }
+            }
+        } finally {
+            cursor?.close()
+        }
+
+        val safeName = displayName
+            .substringAfterLast('/')
+            .replace(Regex("[^A-Za-z0-9._-]"), "_")
+            .take(100)
+        val file = File(cacheDir, "picked-$safeName")
+        val input = contentResolver.openInputStream(uri)
+            ?: throw IllegalStateException("The selected file could not be opened.")
+        input.use { source ->
+            FileOutputStream(file).use { target -> source.copyTo(target) }
+        }
+        return file.path
     }
 
     private fun shareFiles(

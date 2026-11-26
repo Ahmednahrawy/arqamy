@@ -5,6 +5,8 @@
 // gestures. You can also use WidgetTester to find child widgets in the widget
 // tree, read text, and verify that the values of widget properties are correct.
 
+import 'dart:convert';
+
 import 'package:arqamy/core/providers/language.dart';
 import 'package:arqamy/core/providers/theme.dart';
 import 'package:arqamy/features/orderscreen/providers/invoice_provider.dart';
@@ -19,9 +21,12 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
-  testWidgets('selecting a product allows adding it to the invoice',
-      (WidgetTester tester) async {
-    SharedPreferences.setMockInitialValues({});
+  testWidgets('selecting a product allows adding it to the invoice', (
+    WidgetTester tester,
+  ) async {
+    SharedPreferences.setMockInitialValues({
+      'master_products': json.encode(['تمر سيوي']),
+    });
     final invoiceProvider = InvoiceProvider();
 
     await tester.pumpWidget(
@@ -97,67 +102,77 @@ void main() {
     expect(invoiceProvider.products, isEmpty);
   });
 
-  testWidgets('adding an incomplete product focuses and advances input fields',
-      (WidgetTester tester) async {
-    SharedPreferences.setMockInitialValues({});
-    final invoiceProvider = InvoiceProvider();
-    await tester.pumpWidget(
-      MultiProvider(
-        providers: [
-          ChangeNotifierProvider(create: (_) => Language()),
-          ChangeNotifierProvider(create: (_) => ThemeProvider()),
-          ChangeNotifierProvider.value(value: invoiceProvider),
-          ChangeNotifierProvider(create: (_) => InvoiceSettingsProvider()),
-        ],
-        child: MyApp(appRouter: AppRouter()),
-      ),
-    );
-    await tester.pumpAndSettle();
-    await tester.tap(find.text('شراء'));
-    await tester.pumpAndSettle();
-    await tester.tap(find.text('اختر منتج'));
-    await tester.pumpAndSettle();
-    await tester.tap(
-      find
-          .ancestor(
-            of: find.text('تمر سيوي').last,
-            matching: find.byType(ListTile),
-          )
-          .last,
-      warnIfMissed: false,
-    );
-    await tester.pumpAndSettle();
-    await tester.tap(find.text('أضف منتج'));
-    await tester.pump();
-    Finder fieldWithLabel(String label) => find.byWidgetPredicate(
-          (widget) =>
-              widget is TextField && widget.decoration?.labelText == label,
-        );
-    bool isFocused(String label) =>
-        (tester.widget<TextField>(fieldWithLabel(label)).focusNode?.hasFocus ??
-            false);
-    expect(isFocused('الوزن أو العدد'), isTrue);
-    await tester.enterText(fieldWithLabel('الوزن أو العدد'), '5');
-    await tester.testTextInput.receiveAction(TextInputAction.next);
-    await tester.pump();
-    expect(isFocused('السعر'), isTrue);
-    await tester.enterText(fieldWithLabel('السعر'), '10');
-    await tester.testTextInput.receiveAction(TextInputAction.next);
-    await tester.pump();
-    expect(isFocused('وزن العبوة'), isTrue);
-    await tester.testTextInput.receiveAction(TextInputAction.next);
-    await tester.pump();
-    expect(isFocused('عدد العبوات'), isTrue);
-    await tester.enterText(fieldWithLabel('عدد العبوات'), '0');
-    await tester.testTextInput.receiveAction(TextInputAction.done);
-    await tester.pumpAndSettle();
-    expect(invoiceProvider.products, hasLength(1));
-    expect(tester.takeException(), isNull);
-  });
+  testWidgets(
+    'adding an incomplete product focuses and advances input fields',
+    (WidgetTester tester) async {
+      SharedPreferences.setMockInitialValues({
+        'master_products': json.encode(['تمر سيوي']),
+      });
+      final invoiceProvider = InvoiceProvider();
+      await tester.pumpWidget(
+        MultiProvider(
+          providers: [
+            ChangeNotifierProvider(create: (_) => Language()),
+            ChangeNotifierProvider(create: (_) => ThemeProvider()),
+            ChangeNotifierProvider.value(value: invoiceProvider),
+            ChangeNotifierProvider(create: (_) => InvoiceSettingsProvider()),
+          ],
+          child: MyApp(appRouter: AppRouter()),
+        ),
+      );
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('شراء'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('اختر منتج'));
+      await tester.pumpAndSettle();
+      await tester.tap(
+        find
+            .ancestor(
+              of: find.text('تمر سيوي').last,
+              matching: find.byType(ListTile),
+            )
+            .last,
+        warnIfMissed: false,
+      );
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('أضف منتج'));
+      await tester.pump();
+      Finder fieldWithLabel(String label) => find.byWidgetPredicate(
+        (widget) =>
+            widget is TextField && widget.decoration?.labelText == label,
+      );
+      bool isFocused(String label) =>
+          (tester
+              .widget<TextField>(fieldWithLabel(label))
+              .focusNode
+              ?.hasFocus ??
+          false);
+      expect(isFocused('الوزن أو العدد'), isTrue);
+      await tester.enterText(fieldWithLabel('الوزن أو العدد'), '5');
+      await tester.testTextInput.receiveAction(TextInputAction.next);
+      await tester.pump();
+      expect(isFocused('السعر'), isTrue);
+      await tester.enterText(fieldWithLabel('السعر'), '10');
+      await tester.testTextInput.receiveAction(TextInputAction.next);
+      await tester.pump();
+      expect(isFocused('وزن العبوة'), isTrue);
+      await tester.testTextInput.receiveAction(TextInputAction.next);
+      await tester.pump();
+      expect(isFocused('عدد العبوات'), isTrue);
+      await tester.enterText(fieldWithLabel('عدد العبوات'), '0');
+      await tester.testTextInput.receiveAction(TextInputAction.done);
+      await tester.pumpAndSettle();
+      expect(invoiceProvider.products, hasLength(1));
+      expect(tester.takeException(), isNull);
+    },
+  );
 
-  testWidgets('saving an invoice from the page does not share a PDF',
-      (WidgetTester tester) async {
-    SharedPreferences.setMockInitialValues({});
+  testWidgets('saving an invoice from the page does not share a PDF', (
+    WidgetTester tester,
+  ) async {
+    SharedPreferences.setMockInitialValues({
+      'master_products': json.encode(['تمر سيوي']),
+    });
     final invoiceProvider = InvoiceProvider()
       ..setCustomerName('Test customer')
       ..setInvoiceAction('شراء')
@@ -198,15 +213,18 @@ void main() {
     expect(find.byType(CircularProgressIndicator), findsNothing);
   });
 
-  testWidgets('payment controls are outside the invoice preview',
-      (WidgetTester tester) async {
+  testWidgets('payment controls are outside the invoice preview', (
+    WidgetTester tester,
+  ) async {
     tester.view.devicePixelRatio = 1;
     tester.view.physicalSize = const Size(360, 800);
     tester.view.viewPadding = const FakeViewPadding(bottom: 24);
     addTearDown(tester.view.resetDevicePixelRatio);
     addTearDown(tester.view.resetPhysicalSize);
     addTearDown(tester.view.resetViewPadding);
-    SharedPreferences.setMockInitialValues({});
+    SharedPreferences.setMockInitialValues({
+      'master_products': json.encode(['تمر سيوي']),
+    });
     final invoiceProvider = InvoiceProvider()..setInvoiceAction('شراء');
     for (var index = 0; index < 8; index++) {
       invoiceProvider.addProduct(
@@ -274,13 +292,16 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
-  testWidgets('invoice preview shows the current payment amount and actions',
-      (WidgetTester tester) async {
+  testWidgets('invoice preview shows the current payment amount and actions', (
+    WidgetTester tester,
+  ) async {
     tester.view.devicePixelRatio = 1;
     tester.view.physicalSize = const Size(360, 800);
     addTearDown(tester.view.resetDevicePixelRatio);
     addTearDown(tester.view.resetPhysicalSize);
-    SharedPreferences.setMockInitialValues({});
+    SharedPreferences.setMockInitialValues({
+      'master_products': json.encode(['تمر سيوي']),
+    });
     final invoiceProvider = InvoiceProvider()
       ..setInvoiceAction('شراء')
       ..addProduct(
@@ -355,13 +376,16 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
-  testWidgets('invoice summary can be dismissed by dragging its handle down',
-      (WidgetTester tester) async {
+  testWidgets('invoice summary can be dismissed by dragging its handle down', (
+    WidgetTester tester,
+  ) async {
     tester.view.devicePixelRatio = 1;
     tester.view.physicalSize = const Size(360, 800);
     addTearDown(tester.view.resetDevicePixelRatio);
     addTearDown(tester.view.resetPhysicalSize);
-    SharedPreferences.setMockInitialValues({});
+    SharedPreferences.setMockInitialValues({
+      'master_products': json.encode(['تمر سيوي']),
+    });
     final invoiceProvider = InvoiceProvider()
       ..setInvoiceAction('شراء')
       ..addProduct(
@@ -401,13 +425,16 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
-  testWidgets('order entry fits tablet screens without clipping',
-      (WidgetTester tester) async {
+  testWidgets('order entry fits tablet screens without clipping', (
+    WidgetTester tester,
+  ) async {
     tester.view.devicePixelRatio = 1;
     tester.view.physicalSize = const Size(1280, 800);
     addTearDown(tester.view.resetDevicePixelRatio);
     addTearDown(tester.view.resetPhysicalSize);
-    SharedPreferences.setMockInitialValues({});
+    SharedPreferences.setMockInitialValues({
+      'master_products': json.encode(['تمر سيوي']),
+    });
 
     await tester.pumpWidget(
       MultiProvider(
@@ -435,47 +462,51 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
-  testWidgets('order entry keeps the table and button text readable on mobile',
-      (WidgetTester tester) async {
-    tester.view.devicePixelRatio = 1;
-    tester.view.physicalSize = const Size(360, 800);
-    addTearDown(tester.view.resetDevicePixelRatio);
-    addTearDown(tester.view.resetPhysicalSize);
-    SharedPreferences.setMockInitialValues({});
-    final invoiceProvider = InvoiceProvider()
-      ..setInvoiceAction('شراء')
-      ..addProduct(
-        Product(
-          name: 'Rice',
-          weight: 5,
-          packageWeight: 0,
-          numberPackage: 0,
-          price: 10,
+  testWidgets(
+    'order entry keeps the table and button text readable on mobile',
+    (WidgetTester tester) async {
+      tester.view.devicePixelRatio = 1;
+      tester.view.physicalSize = const Size(360, 800);
+      addTearDown(tester.view.resetDevicePixelRatio);
+      addTearDown(tester.view.resetPhysicalSize);
+      SharedPreferences.setMockInitialValues({
+        'master_products': json.encode(['تمر سيوي']),
+      });
+      final invoiceProvider = InvoiceProvider()
+        ..setInvoiceAction('شراء')
+        ..addProduct(
+          Product(
+            name: 'Rice',
+            weight: 5,
+            packageWeight: 0,
+            numberPackage: 0,
+            price: 10,
+          ),
+        );
+      await tester.pumpWidget(
+        MultiProvider(
+          providers: [
+            ChangeNotifierProvider(create: (_) => Language()),
+            ChangeNotifierProvider(create: (_) => ThemeProvider()),
+            ChangeNotifierProvider.value(value: invoiceProvider),
+            ChangeNotifierProvider(create: (_) => InvoiceSettingsProvider()),
+          ],
+          child: MyApp(appRouter: AppRouter()),
         ),
       );
-    await tester.pumpWidget(
-      MultiProvider(
-        providers: [
-          ChangeNotifierProvider(create: (_) => Language()),
-          ChangeNotifierProvider(create: (_) => ThemeProvider()),
-          ChangeNotifierProvider.value(value: invoiceProvider),
-          ChangeNotifierProvider(create: (_) => InvoiceSettingsProvider()),
-        ],
-        child: MyApp(appRouter: AppRouter()),
-      ),
-    );
-    await tester.pumpAndSettle();
-    final tableSize = tester.getSize(find.byType(DataTable).first);
-    final addButtonText = tester.getRect(find.text('أضف منتج'));
-    final addButton = tester.getRect(
-      find.ancestor(
-        of: find.text('أضف منتج'),
-        matching: find.byType(TextButton),
-      ),
-    );
-    expect(tableSize.width, greaterThanOrEqualTo(320));
-    expect(addButton.contains(addButtonText.topLeft), isTrue);
-    expect(addButton.contains(addButtonText.bottomRight), isTrue);
-    expect(tester.takeException(), isNull);
-  });
+      await tester.pumpAndSettle();
+      final tableSize = tester.getSize(find.byType(DataTable).first);
+      final addButtonText = tester.getRect(find.text('أضف منتج'));
+      final addButton = tester.getRect(
+        find.ancestor(
+          of: find.text('أضف منتج'),
+          matching: find.byType(TextButton),
+        ),
+      );
+      expect(tableSize.width, greaterThanOrEqualTo(320));
+      expect(addButton.contains(addButtonText.topLeft), isTrue);
+      expect(addButton.contains(addButtonText.bottomRight), isTrue);
+      expect(tester.takeException(), isNull);
+    },
+  );
 }

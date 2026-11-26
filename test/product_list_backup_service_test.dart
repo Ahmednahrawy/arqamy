@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:arqamy/core/helpers/invoice_action.dart';
 import 'package:arqamy/core/services/product_list_backup_service.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:path/path.dart' as p;
@@ -102,6 +103,45 @@ void main() {
     final backup = ProductListBackupService.decodeProducts('\uFEFF$json');
     expect(backup.products, ['Rice']);
     expect(backup.prices, isEmpty);
+  });
+
+  test('Android restore uses the app chooser channel', () async {
+    final directory = await Directory.systemTemp.createTemp(
+      'arqamy_pick_backup_test_',
+    );
+    addTearDown(() => directory.delete(recursive: true));
+    final backupPath = p.join(directory.path, 'chosen.json');
+    await File(backupPath).writeAsString(
+      ProductListBackupService.encodeProducts(
+        ['Rice'],
+        {
+          'Rice': {InvoiceAction.sale: 7.5},
+        },
+      ),
+    );
+
+    String? pickedPath = backupPath;
+    String? calledMethod;
+    final messenger =
+        TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger;
+    const channel = MethodChannel('com.nahro.arqamy/backup');
+    messenger.setMockMethodCallHandler(channel, (call) async {
+      calledMethod = call.method;
+      return pickedPath;
+    });
+    addTearDown(() {
+      messenger.setMockMethodCallHandler(channel, null);
+      debugDefaultTargetPlatformOverride = null;
+    });
+    debugDefaultTargetPlatformOverride = TargetPlatform.android;
+
+    final chosen = await ProductListBackupService.pickBackup();
+    expect(calledMethod, 'pickBackupFile');
+    expect(chosen!.products, ['Rice']);
+    expect(chosen.prices['Rice']?[InvoiceAction.sale], 7.5);
+
+    pickedPath = null;
+    expect(await ProductListBackupService.pickBackup(), isNull);
   });
 
   test('saves the backup into the temporary directory', () async {

@@ -18,6 +18,7 @@ void main() {
     String actionLabel,
   ) async {
     SharedPreferences.setMockInitialValues({
+      'master_products': json.encode(['تمر سيوي']),
       'master_product_prices': json.encode({
         'تمر سيوي': {'purchase': 12.5, 'sale': 15.0, 'storage': 2.0},
       }),
