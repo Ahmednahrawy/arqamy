@@ -219,7 +219,8 @@ void main() {
     expect(loaded.occurrences[1].latestDecision!.decisionId, held.decisionId);
     final summary = await repository.getSummary('run-1');
     expect(summary.approvedCount, 1);
-    expect(summary.heldCount, 2);
+    expect(summary.heldCount, 1);
+    expect(summary.staleCount, 0);
     expect(summary.reviewedCount, 2);
     expect(summary.unreviewedCount, 1);
   });
@@ -279,6 +280,64 @@ void main() {
       ),
       isEmpty,
     );
+  });
+
+  test('rolls back every decision when one item in a batch is invalid', () async {
+    await createRun();
+    await expectLater(
+      repository.recordDecisions([
+        RecordLegacyPartyReviewDecisionRequest(
+          runId: 'run-1',
+          decision: decision(0, LegacyPartyReviewAction.acceptSuggestedMatch),
+          idempotencyKey: 'batch-valid-first',
+        ),
+        RecordLegacyPartyReviewDecisionRequest(
+          runId: 'run-1',
+          decision: decision(
+            1,
+            LegacyPartyReviewAction.selectParty,
+            selectedPartyId: 'customer-1',
+          ),
+          idempotencyKey: 'batch-invalid-second',
+        ),
+      ]),
+      throwsArgumentError,
+    );
+    expect(
+      await repository.getDecisionHistory(
+        runId: 'run-1',
+        sourceOccurrenceKey: fixture.keys[0],
+      ),
+      isEmpty,
+    );
+  });
+
+  test('reports a previously approved decision as stale after its role is removed', () async {
+    await createRun();
+    await repository.recordDecision(
+      RecordLegacyPartyReviewDecisionRequest(
+        runId: 'run-1',
+        decision: decision(0, LegacyPartyReviewAction.acceptSuggestedMatch),
+        idempotencyKey: 'accept-before-role-change',
+      ),
+    );
+    await database.customStatement(
+      'DELETE FROM party_roles WHERE party_id = ? AND role = ?',
+      ['customer-1', 'customer'],
+    );
+
+    final summary = await repository.getSummary('run-1');
+    expect(summary.approvedCount, 0);
+    expect(summary.heldCount, 0);
+    expect(summary.staleCount, 1);
+    expect(summary.reviewedCount, 1);
+    expect(summary.unreviewedCount, 2);
+    final history = await repository.getDecisionHistory(
+      runId: 'run-1',
+      sourceOccurrenceKey: fixture.keys[0],
+    );
+    expect(history, hasLength(1));
+    expect(history.single.resolvedPartyName, 'Customer One');
   });
 
   test('rolls back the whole run when an occurrence cannot be inserted', () async {
