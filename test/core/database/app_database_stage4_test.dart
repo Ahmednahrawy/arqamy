@@ -482,6 +482,184 @@ void main() {
     );
     await afterFailure.close();
   });
+
+  test(
+    'runs the actual v3 to v8 migration callback atomically and retries cleanly',
+    () async {
+      final fixture = _Version3FixtureDatabase(
+        NativeDatabase(
+          File(databasePath),
+          setup: (connection) => connection.execute('PRAGMA foreign_keys = ON'),
+        ),
+      );
+      await fixture.customStatement('PRAGMA user_version = 3');
+      await _createVersion3Schema(fixture);
+      await _insertVersion3Rows(fixture);
+
+      final legacyRows = await _snapshotVersion3Tables(fixture);
+      await fixture.customStatement(
+        'DROP INDEX financial_transactions_event_time',
+      );
+      await fixture.customStatement(
+        'CREATE TABLE financial_transactions_event_time (unexpected TEXT)',
+      );
+      final dataBeforeFailure = await _snapshotAllTableData(fixture);
+      final schemaBeforeFailure = await _snapshotSchemaObjects(fixture);
+
+      // Open AppDatabase without letting Drift migrate the legacy fixture.
+      // AppDatabase has a private constructor, so temporarily advertise its
+      // current version during open, then restore the real legacy version.
+      await fixture.customStatement('PRAGMA user_version = 7');
+      await fixture.close();
+      database = await AppDatabase.open(path: databasePath);
+      await database!.customStatement('PRAGMA user_version = 3');
+
+      await expectLater(
+        _runProductionUpgradeInOuterTransaction(database!, from: 3),
+        throwsA(anything),
+      );
+
+      expect(await _readUserVersion(database!), 3);
+      expect(await _snapshotAllTableData(database!), dataBeforeFailure);
+      expect(await _snapshotSchemaObjects(database!), schemaBeforeFailure);
+      await _expectDatabaseHealthy(database!);
+
+      await database!.customStatement(
+        'DROP TABLE financial_transactions_event_time',
+      );
+      await _runProductionUpgradeInOuterTransaction(database!, from: 3);
+
+      expect(await _readUserVersion(database!), 8);
+      expect(await _snapshotVersion3Tables(database!), legacyRows);
+      expect(
+        await database!
+            .customSelect(
+              "SELECT name FROM sqlite_master WHERE type = 'table' "
+              "AND name IN ('legacy_migration_runs', "
+              "'legacy_migration_occurrences', "
+              "'legacy_party_review_decisions') ORDER BY name",
+            )
+            .map((row) => row.read<String>('name'))
+            .get(),
+        [
+          'legacy_migration_occurrences',
+          'legacy_migration_runs',
+          'legacy_party_review_decisions',
+        ],
+      );
+      final rebuiltIndex = await database!
+          .customSelect(
+            "SELECT type FROM sqlite_master "
+            "WHERE name = 'financial_transactions_event_time'",
+          )
+          .getSingle();
+      expect(rebuiltIndex.read<String>('type'), 'index');
+      await _expectDatabaseHealthy(database!);
+    },
+  );
+
+  test(
+    'runs the actual v4 to v8 migration callback atomically and retries cleanly',
+    () async {
+      await _createPopulatedV4Fixture(databasePath);
+      final fixture = _openVersion4Fixture(databasePath);
+
+      final legacyReversals = await fixture
+          .customSelect(
+            'SELECT rowid AS migration_rowid, * FROM allocation_reversals '
+            'ORDER BY allocation_id, rowid',
+          )
+          .get();
+      final childTriggerBefore = (await fixture
+              .customSelect(
+                "SELECT sql FROM sqlite_master WHERE type = 'trigger' "
+                "AND name = 'refund_allocation_reversals_validate_insert'",
+              )
+              .getSingle())
+          .read<String>('sql');
+
+      // The v4 fixture already has this index. Replace it with a same-name
+      // table so the production CREATE INDEX fails after the parent rebuild
+      // has begun. The refund validation trigger is intentionally preserved.
+      await fixture.customStatement(
+        'DROP INDEX allocation_reversals_allocation',
+      );
+      await fixture.customStatement(
+        'CREATE TABLE allocation_reversals_allocation (unexpected TEXT)',
+      );
+      final dataBeforeFailure = await _snapshotAllTableData(fixture);
+      final schemaBeforeFailure = await _snapshotSchemaObjects(fixture);
+
+      await fixture.customStatement('PRAGMA user_version = 7');
+      await fixture.close();
+      database = await AppDatabase.open(path: databasePath);
+      await database!.customStatement('PRAGMA user_version = 4');
+
+      await expectLater(
+        _runProductionUpgradeInOuterTransaction(database!, from: 4),
+        throwsA(anything),
+      );
+
+      expect(await _readUserVersion(database!), 4);
+      expect(await _snapshotAllTableData(database!), dataBeforeFailure);
+      expect(await _snapshotSchemaObjects(database!), schemaBeforeFailure);
+      await _expectDatabaseHealthy(database!);
+
+      await database!.customStatement(
+        'DROP TABLE allocation_reversals_allocation',
+      );
+      await _runProductionUpgradeInOuterTransaction(database!, from: 4);
+
+      expect(await _readUserVersion(database!), 8);
+      final migratedReversals = await database!
+          .customSelect(
+            'SELECT allocation_reversal_id, allocation_id, amount_minor, '
+            'sequence FROM allocation_reversals '
+            'ORDER BY allocation_id, sequence',
+          )
+          .get();
+      expect(migratedReversals, hasLength(legacyReversals.length));
+
+      final expectedSequences = <String, int>{};
+      for (var index = 0; index < legacyReversals.length; index++) {
+        final legacy = legacyReversals[index];
+        final allocationId = legacy.read<String>('allocation_id');
+        final sequence = (expectedSequences[allocationId] ?? 0) + 1;
+        expectedSequences[allocationId] = sequence;
+        expect(
+          migratedReversals[index].read<String>('allocation_reversal_id'),
+          legacy.read<String>('allocation_reversal_id'),
+        );
+        expect(
+          migratedReversals[index].read<int>('amount_minor'),
+          legacy.read<int>('amount_minor'),
+        );
+        expect(
+          migratedReversals[index].read<int>('sequence'),
+          sequence,
+        );
+      }
+
+      final childTriggerAfter = (await database!
+              .customSelect(
+                "SELECT sql FROM sqlite_master WHERE type = 'trigger' "
+                "AND name = 'refund_allocation_reversals_validate_insert'",
+              )
+              .getSingle())
+          .read<String>('sql');
+      expect(childTriggerAfter, childTriggerBefore);
+      final rebuiltIndex = await database!
+          .customSelect(
+            "SELECT type, tbl_name FROM sqlite_master "
+            "WHERE name = 'allocation_reversals_allocation'",
+          )
+          .getSingle();
+      expect(rebuiltIndex.read<String>('type'), 'index');
+      expect(rebuiltIndex.read<String>('tbl_name'), 'allocation_reversals');
+      await _expectDatabaseHealthy(database!);
+    },
+  );
+
 }
 
 _Version4FixtureDatabase _openVersion4Fixture(String path) =>
@@ -509,6 +687,88 @@ Future<void> _createPopulatedV4Fixture(String path) async {
   await _insertAdditionalReversalMigrationRows(database);
   await _convertAllocationReversalsToV4(database);
   await database.close();
+}
+
+
+Future<void> _runProductionUpgradeInOuterTransaction(
+  AppDatabase database, {
+  required int from,
+}) async {
+  await database.transaction(() async {
+    await database.customStatement('PRAGMA defer_foreign_keys = ON');
+    expect(
+      (await database.customSelect('PRAGMA defer_foreign_keys').getSingle())
+          .read<int>('defer_foreign_keys'),
+      1,
+    );
+    expect(
+      (await database.customSelect('PRAGMA foreign_keys').getSingle())
+          .read<int>('foreign_keys'),
+      1,
+    );
+
+    // Invoke the exact callback configured by AppDatabase. This exercises the
+    // production migration helpers without copying them or changing production
+    // visibility. Migrator's constructor is public in the pinned Drift API.
+    await database.migration.onUpgrade(Migrator(database), from, 8);
+
+    // Direct callback invocation bypasses Drift's automatic user_version
+    // update. Emulate that final part of opening a migrated database.
+    await database.customStatement('PRAGMA user_version = 8');
+  });
+}
+
+Future<int> _readUserVersion(GeneratedDatabase database) async =>
+    (await database.customSelect('PRAGMA user_version').getSingle())
+        .read<int>('user_version');
+
+Future<void> _expectDatabaseHealthy(GeneratedDatabase database) async {
+  expect(
+    (await database.customSelect('PRAGMA foreign_keys').getSingle())
+        .read<int>('foreign_keys'),
+    1,
+  );
+  expect(
+    await database.customSelect('PRAGMA foreign_key_check').get(),
+    isEmpty,
+  );
+  expect(
+    (await database.customSelect('PRAGMA integrity_check').getSingle())
+        .read<String>('integrity_check'),
+    'ok',
+  );
+}
+
+Future<List<Map<String, Object?>>> _snapshotSchemaObjects(
+  GeneratedDatabase database,
+) async {
+  final rows = await database
+      .customSelect(
+        "SELECT type, name, tbl_name, sql FROM sqlite_master "
+        "WHERE name NOT LIKE 'sqlite_%' ORDER BY type, name",
+      )
+      .get();
+  return rows.map((row) => row.data).toList();
+}
+
+Future<Map<String, List<Map<String, Object?>>>> _snapshotAllTableData(
+  GeneratedDatabase database,
+) async {
+  final tableNames = await database
+      .customSelect(
+        "SELECT name FROM sqlite_master WHERE type = 'table' "
+        "AND name NOT LIKE 'sqlite_%' ORDER BY name",
+      )
+      .map((row) => row.read<String>('name'))
+      .get();
+  final snapshot = <String, List<Map<String, Object?>>>{};
+  for (final tableName in tableNames) {
+    final rows = await database
+        .customSelect('SELECT * FROM "$tableName" ORDER BY rowid')
+        .get();
+    snapshot[tableName] = rows.map((row) => row.data).toList();
+  }
+  return snapshot;
 }
 
 Future<void> _insertAdditionalReversalMigrationRows(
