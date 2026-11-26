@@ -8,4 +8,3 @@ echo "#########Testing..."
 flutter test
 
 echo All commands executed successfully!
-pause
