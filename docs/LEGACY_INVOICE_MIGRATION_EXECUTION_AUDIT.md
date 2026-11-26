@@ -190,3 +190,15 @@ On 2026-11-26, the owner approved holding an invoice occurrence for human review
 The migration must not create parties, add missing roles, change roles, or infer replacement parties. A held occurrence may be released only through an explicit, authorized, attributable, immutable review decision, followed by revalidation immediately before import. The exact source snapshot remains unchanged.
 
 This rule also means the current import behavior that automatically adds party roles is prohibited for the D4 migration path. This is a design decision only; no party, schema, or importer implementation is authorized.
+
+
+## 19. Owner-approved field validation rule — date and time
+
+On 2026-11-26, the owner approved the following D4 policy for legacy `formattedDate` and `formattedTime` values:
+
+- Preserve the exact original strings in the immutable source snapshot.
+- Hold an invoice occurrence if either value has an invalid or unrecognized format.
+- Do not guess date order, locale, timezone, or automatically convert ambiguous date/time values.
+- Populate Drift `issued_at` only after the supported source formats and timezone semantics have been explicitly established and covered by tests.
+
+The actual source formats and timezone semantics remain to be established from representative source values. This policy is a design decision only; it does not authorize implementation.
