@@ -51,9 +51,9 @@ void main() {
     await temporaryDirectory.delete(recursive: true);
   });
 
-  test('initializes the ledger schema with version 7', () async {
-    expect(database.schemaVersion, 7);
-    expect(await database.storedSchemaVersion, 7);
+  test('initializes the ledger schema with version 8', () async {
+    expect(database.schemaVersion, 8);
+    expect(await database.storedSchemaVersion, 8);
 
     final tables = await database
         .customSelect(
@@ -78,6 +78,11 @@ void main() {
       'legacy_migration_occurrences',
       'legacy_migration_runs',
       'legacy_party_review_decisions',
+      'legacy_invoice_import_attempts',
+      'legacy_invoice_import_events',
+      'legacy_invoice_import_occurrences',
+      'legacy_invoice_import_runs',
+      'legacy_invoice_occurrence_mappings',
       'parties',
       'party_roles',
       'payment_identities',
@@ -256,7 +261,7 @@ void main() {
 
     database = await AppDatabase.open(path: databasePath);
 
-    expect(await database.storedSchemaVersion, 7);
+    expect(await database.storedSchemaVersion, 8);
     final tables = await database
         .customSelect(
           "SELECT COUNT(*) AS count FROM sqlite_master "
@@ -268,10 +273,13 @@ void main() {
           "'invoice_allocations', 'allocation_reversals', "
           "'allocation_status_history', 'payment_refunds', "
           "'refund_allocation_reversals', 'refund_financial_transactions', "
-          "'invoice_lifecycle_events', 'legacy_migration_runs', 'legacy_migration_occurrences', 'legacy_party_review_decisions')",
+          "'invoice_lifecycle_events', 'legacy_migration_runs', 'legacy_migration_occurrences', 'legacy_party_review_decisions', "
+          "'legacy_invoice_import_runs', 'legacy_invoice_import_occurrences', "
+          "'legacy_invoice_import_attempts', 'legacy_invoice_import_events', "
+          "'legacy_invoice_occurrence_mappings')",
         )
         .getSingle();
-    expect(tables.read<int>('count'), 24);
+    expect(tables.read<int>('count'), 29);
   });
 
   test('migrates a genuine Stage 2 database without losing records', () async {
@@ -361,7 +369,7 @@ void main() {
 
     database = await AppDatabase.open(path: databasePath);
 
-    expect(await database.storedSchemaVersion, 7);
+    expect(await database.storedSchemaVersion, 8);
     expect(
       await database
           .customSelect('SELECT * FROM currencies')
@@ -544,6 +552,8 @@ void main() {
           'legacy_migration_occurrences',
           'legacy_party_review_decisions',
         ]) ...['${table}_immutable_delete', '${table}_immutable_update'],
+        'legacy_invoice_import_runs_immutable_identity',
+        'legacy_invoice_import_occurrences_immutable_identity',
       ]),
     );
 
