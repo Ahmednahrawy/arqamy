@@ -57,11 +57,11 @@ v1:{snapshotSha256}:{sourceIndex}:{recordSha256}
 
 The inputs are the immutable snapshot digest, original array index, and digest of the exact raw record fragment. Store the exact key unchanged; do not re-derive it from a decoded invoice object.
 
-The complete idempotency scope is the tuple (migration_version, source_occurrence_key). The run also binds the mapping, preflight, and identity versions. A run cannot reuse a key under a different contract merely because the legacy invoice ID matches.
+The complete idempotency scope is the tuple (migration_version, mapping_contract_version, occurrence_identity_version, source_occurrence_key). The run also binds the preflight and snapshot-format versions. A changed mapping contract must either increment the migration version or remain isolated by the mapping-contract version in the uniqueness key; it must never collide with an earlier import merely because the legacy invoice ID matches.
 
 Recommended stable import idempotency key:
 
-legacy-invoice-import:{migration_version}:{source_occurrence_key}
+legacy-invoice-import:{migration_version}:{mapping_contract_version}:{occurrence_identity_version}:{source_occurrence_key}
 
 If the repository uses a hashed or length-limited key, hash the canonical UTF-8 representation of that full tuple and retain the original components in separate columns for audit. Do not include a retry-attempt number in the business idempotency key: retries must converge on the same destination mapping.
 
@@ -77,7 +77,7 @@ Each successfully imported occurrence must have exactly one durable mapping to i
 - mapping-contract version;
 - destination content fingerprint or equivalent verification value.
 
-The database must enforce uniqueness for the migration-version/source-occurrence identity and uniqueness of the destination mapping where appropriate. Check exact constraints against the current schema before implementation.
+The database must enforce uniqueness for the full migration-version/mapping-contract-version/occurrence-identity-version/source-occurrence identity and uniqueness of the destination mapping where appropriate. Check exact constraints against the current schema before implementation.
 
 Do not add a unique constraint to the legacy invoice ID or serial merely to make migration easier. Multiple source occurrences may legitimately share either value.
 
