@@ -293,3 +293,15 @@ The calculation is:
 Preflight must emit a stable finding identifying the source occurrence and affected product line. Preserve the exact original input values in the immutable source snapshot. Do not clamp the result, modify inputs, omit the line, or silently change the calculation. Any later correction or disposition must be explicit, authorized, attributable, and auditable without mutating source evidence.
 
 This check is additional to the individual input, net-weight, invoice-total, and numeric-range/precision checks. Apply the approved safe arithmetic contract; its exact limits and precision must be defined and tested before implementation. Design policy only; no schema, importer, or production migration implementation is authorized.
+
+## Owner-approved validation policy — zero calculated product line total
+
+On 2026-11-26, the owner approved holding the entire invoice occurrence for human review if any calculated product line total equals zero.
+
+The calculated value is:
+
+`lineTotal = (weight - (packageWeight * numberPackage)) * price`
+
+Preflight must emit a stable finding identifying the source occurrence and affected product line. Preserve exact original component values in immutable source evidence. Do not assume the line is intentionally free, remove or omit it, substitute values, clamp the result, or silently alter the calculation. Any later disposition must be explicit, authorized, attributable, and auditable without mutating original source evidence.
+
+This rule applies even if the individual inputs and calculated net weight pass their separate validations. Use the approved safe arithmetic/range/precision contract, which must be defined and tested before implementation. Design only; this does not authorize schema changes, importer implementation, or production migration execution.
