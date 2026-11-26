@@ -64,6 +64,7 @@ dependencies:
   # open_file: ^3.3.2
 
   cupertino_ui: any
+  firebase_auth: ^7.1.0
 dev_dependencies:
   flutter_launcher_icons: ^0.14.1
   build_runner: ^2.14.0
