@@ -551,14 +551,14 @@ Do not create speculative infrastructure for future modules before a concrete de
 The detailed migration design already exists and has been refreshed against the D3.2 implementation. The next work is **design review and gap closure**, not immediate import implementation.
 
 1. Review the updated `DRIFT_MIGRATION_DESIGN.md` and confirm the remaining design decisions.
-2. Specify the migration execution journal and occurrence-key import contract.
-3. Specify independently recoverable snapshot export/restore and post-cutover rollback.
+2. Review [LEGACY_INVOICE_MIGRATION_EXECUTION_JOURNAL_DESIGN.md](LEGACY_INVOICE_MIGRATION_EXECUTION_JOURNAL_DESIGN.md), decide the open D4 items, and approve the execution-journal/import contract.
+3. Finalize independently recoverable snapshot export/restore and post-cutover recovery design against the D4 contract.
 4. Update `AUDIT.md` with a full current-HEAD re-audit.
 5. Implement one approved migration foundation step at a time, with schema and behavior changes separately authorized.
 
 Security-key remediation remains a parallel open risk and must not be represented as complete.
 
-**First migration milestone:** A fully specified, testable, recoverable import process that can account for every legacy invoice occurrence without altering the source.
+**First migration milestone:** An owner-approved, fully specified, testable, recoverable import process that accounts for every legacy invoice occurrence without altering the source. D4 is a proposal only; no schema or implementation work is authorized yet.
 
 ---
 
