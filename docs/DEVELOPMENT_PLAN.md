@@ -551,8 +551,8 @@ Do not create speculative infrastructure for future modules before a concrete de
 The D4 execution-journal/import design has been approved by the owner. The repository audit is documented in [LEGACY_INVOICE_MIGRATION_EXECUTION_AUDIT.md](LEGACY_INVOICE_MIGRATION_EXECUTION_AUDIT.md). The next work is to complete mapping/schema design; implementation remains separately gated.
 
 1. Review the [legacy invoice/product field-mapping matrix](LEGACY_INVOICE_FIELD_MAPPING_MATRIX.md) and resolve its open business rules (date/time semantics, measurement sign/precision/range, blank text, and party-role behavior).
-2. Prepare a separate D4 schema proposal for run, occurrence, attempt, operator-event, and occurrence-mapping persistence, based on the current schema-v7 database.
-3. Specify the schema upgrade, indexes, uniqueness constraints, foreign keys, append-only triggers, transaction boundaries, claim-token rules, and rollback plan.
+2. Review the proposed [D4 execution-journal schema](LEGACY_INVOICE_MIGRATION_EXECUTION_SCHEMA_PROPOSAL.md), which defines the run, occurrence, attempt, operator-event, and global occurrence-mapping tables against schema v7.
+3. Resolve the schema proposal's open dependencies: field-mapping business rules, final state transitions, actor metadata, export/restore manifest, and old-importer collision inventory. Then approve or revise the v7-to-v8 migration plan.
 4. Review the independent snapshot export/restore design and the post-cutover forward-recovery/replay design.
 5. Submit the schema proposal for explicit approval before changing `app_database.dart`, generated Drift files, or importer code.
 6. After schema approval, implement one small foundation step at a time on a feature branch, with tests and separate approval for importer and cutover behavior.
