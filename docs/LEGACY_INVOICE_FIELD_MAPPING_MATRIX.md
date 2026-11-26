@@ -222,3 +222,13 @@ On 2026-11-26, the owner approved this general validation policy for legacy prod
 The exact non-negative upper bounds and decimal precision for weight, packageWeight, numberPackage, and price remain to be established from the destination schema, safe arithmetic requirements, and approved business units before implementation. This policy does not invent numeric limits. Negative values are separately covered by the owner-approved negative-product rule.
 
 This is design policy only; it does not authorize schema, importer, or production migration implementation.
+
+## 18. Owner-approved validation policy — calculated net product weight
+
+On 2026-11-26, the owner approved holding the entire invoice occurrence for human review when a product line's calculated net weight is negative:
+
+`netWeight = weight - (packageWeight * numberPackage)`
+
+Preflight must emit a stable finding identifying the source occurrence and product line. Preserve the exact original `weight`, `packageWeight`, and `numberPackage` values in the immutable source snapshot. Do not clamp net weight to zero, modify any source value, omit the line, or silently correct the calculation. Any later correction or disposition must be explicit, authorized, attributable, and auditable without mutating original source evidence.
+
+This rule applies even when the individual source values are each non-negative. The calculation's safe numeric range and precision must follow the separately approved mapping/arithmetic contract. This is design policy only; it does not authorize implementation.
