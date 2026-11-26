@@ -317,3 +317,9 @@ Keep each source occurrence separate using its stable source-occurrence identity
 On 2026-11-26, the owner approved that a legacy invoice occurrence must be held for human review when `customerId` is missing or null, even if `customerName` is present.
 
 The migration must not infer or resolve the party by automatic display-name matching, even when the name appears unique. Preserve the exact source evidence and emit a stable finding. Release requires an explicit, authorized, attributable party-resolution decision, followed by revalidation of party existence and the required role against the invoice action immediately before import. This policy does not authorize implementation.
+
+## Owner-approved validation policy — customer ID references a nonexistent party
+
+On 2026-11-26, the owner approved that an invoice occurrence must be held for human review when its legacy `customerId` is present but no party with that ID exists in the current database.
+
+The migration must not fall back to automatic `customerName` matching, create a replacement party, or silently rewrite the source ID. Preserve the exact source evidence and emit a stable finding for the missing party reference. Release requires an explicit, authorized, attributable party-resolution decision, followed by revalidation that the selected party exists and has the required role for the invoice action immediately before import. This policy does not authorize implementation.
