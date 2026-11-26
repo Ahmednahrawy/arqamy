@@ -270,6 +270,21 @@ class S {
     return Intl.message('Invoice sent successfully', name: 'invoice_sent_successfully', desc: '', args: []);
   }
 
+  /// `Export Excel`
+  String get exportToExcel {
+    return Intl.message('Export Excel', name: 'exportToExcel', desc: '', args: []);
+  }
+
+  /// `Invoice exported to Excel`
+  String get invoice_exported_to_excel {
+    return Intl.message('Invoice exported to Excel', name: 'invoice_exported_to_excel', desc: '', args: []);
+  }
+
+  /// `Could not export the invoice to Excel`
+  String get invoice_excel_export_failed {
+    return Intl.message('Could not export the invoice to Excel', name: 'invoice_excel_export_failed', desc: '', args: []);
+  }
+
   /// `Privacy`
   String get privacy {
     return Intl.message('Privacy', name: 'privacy', desc: '', args: []);

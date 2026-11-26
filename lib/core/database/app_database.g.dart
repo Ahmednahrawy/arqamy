@@ -13667,6 +13667,2310 @@ class InvoiceLifecycleEventsCompanion
   }
 }
 
+class $LegacyMigrationRunsTable extends LegacyMigrationRuns
+    with TableInfo<$LegacyMigrationRunsTable, LegacyMigrationRun> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $LegacyMigrationRunsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _runIdMeta = const VerificationMeta('runId');
+  @override
+  late final GeneratedColumn<String> runId = GeneratedColumn<String>(
+    'run_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _snapshotSha256Meta = const VerificationMeta(
+    'snapshotSha256',
+  );
+  @override
+  late final GeneratedColumn<String> snapshotSha256 = GeneratedColumn<String>(
+    'snapshot_sha256',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _snapshotManifestPathMeta =
+      const VerificationMeta('snapshotManifestPath');
+  @override
+  late final GeneratedColumn<String> snapshotManifestPath =
+      GeneratedColumn<String>(
+        'snapshot_manifest_path',
+        aliasedName,
+        false,
+        type: DriftSqlType.string,
+        requiredDuringInsert: true,
+      );
+  static const VerificationMeta _migrationVersionMeta = const VerificationMeta(
+    'migrationVersion',
+  );
+  @override
+  late final GeneratedColumn<int> migrationVersion = GeneratedColumn<int>(
+    'migration_version',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _occurrenceIdentityVersionMeta =
+      const VerificationMeta('occurrenceIdentityVersion');
+  @override
+  late final GeneratedColumn<int> occurrenceIdentityVersion =
+      GeneratedColumn<int>(
+        'occurrence_identity_version',
+        aliasedName,
+        false,
+        type: DriftSqlType.int,
+        requiredDuringInsert: true,
+      );
+  static const VerificationMeta _preflightVersionMeta = const VerificationMeta(
+    'preflightVersion',
+  );
+  @override
+  late final GeneratedColumn<int> preflightVersion = GeneratedColumn<int>(
+    'preflight_version',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
+  );
+  @override
+  late final GeneratedColumn<int> createdAt = GeneratedColumn<int>(
+    'created_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _createdByActorIdMeta = const VerificationMeta(
+    'createdByActorId',
+  );
+  @override
+  late final GeneratedColumn<String> createdByActorId = GeneratedColumn<String>(
+    'created_by_actor_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    runId,
+    snapshotSha256,
+    snapshotManifestPath,
+    migrationVersion,
+    occurrenceIdentityVersion,
+    preflightVersion,
+    createdAt,
+    createdByActorId,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'legacy_migration_runs';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<LegacyMigrationRun> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('run_id')) {
+      context.handle(
+        _runIdMeta,
+        runId.isAcceptableOrUnknown(data['run_id']!, _runIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_runIdMeta);
+    }
+    if (data.containsKey('snapshot_sha256')) {
+      context.handle(
+        _snapshotSha256Meta,
+        snapshotSha256.isAcceptableOrUnknown(
+          data['snapshot_sha256']!,
+          _snapshotSha256Meta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_snapshotSha256Meta);
+    }
+    if (data.containsKey('snapshot_manifest_path')) {
+      context.handle(
+        _snapshotManifestPathMeta,
+        snapshotManifestPath.isAcceptableOrUnknown(
+          data['snapshot_manifest_path']!,
+          _snapshotManifestPathMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_snapshotManifestPathMeta);
+    }
+    if (data.containsKey('migration_version')) {
+      context.handle(
+        _migrationVersionMeta,
+        migrationVersion.isAcceptableOrUnknown(
+          data['migration_version']!,
+          _migrationVersionMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_migrationVersionMeta);
+    }
+    if (data.containsKey('occurrence_identity_version')) {
+      context.handle(
+        _occurrenceIdentityVersionMeta,
+        occurrenceIdentityVersion.isAcceptableOrUnknown(
+          data['occurrence_identity_version']!,
+          _occurrenceIdentityVersionMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_occurrenceIdentityVersionMeta);
+    }
+    if (data.containsKey('preflight_version')) {
+      context.handle(
+        _preflightVersionMeta,
+        preflightVersion.isAcceptableOrUnknown(
+          data['preflight_version']!,
+          _preflightVersionMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_preflightVersionMeta);
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_createdAtMeta);
+    }
+    if (data.containsKey('created_by_actor_id')) {
+      context.handle(
+        _createdByActorIdMeta,
+        createdByActorId.isAcceptableOrUnknown(
+          data['created_by_actor_id']!,
+          _createdByActorIdMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_createdByActorIdMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {runId};
+  @override
+  LegacyMigrationRun map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return LegacyMigrationRun(
+      runId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}run_id'],
+      )!,
+      snapshotSha256: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}snapshot_sha256'],
+      )!,
+      snapshotManifestPath: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}snapshot_manifest_path'],
+      )!,
+      migrationVersion: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}migration_version'],
+      )!,
+      occurrenceIdentityVersion: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}occurrence_identity_version'],
+      )!,
+      preflightVersion: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}preflight_version'],
+      )!,
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}created_at'],
+      )!,
+      createdByActorId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}created_by_actor_id'],
+      )!,
+    );
+  }
+
+  @override
+  $LegacyMigrationRunsTable createAlias(String alias) {
+    return $LegacyMigrationRunsTable(attachedDatabase, alias);
+  }
+}
+
+class LegacyMigrationRun extends DataClass
+    implements Insertable<LegacyMigrationRun> {
+  final String runId;
+  final String snapshotSha256;
+  final String snapshotManifestPath;
+  final int migrationVersion;
+  final int occurrenceIdentityVersion;
+  final int preflightVersion;
+  final int createdAt;
+  final String createdByActorId;
+  const LegacyMigrationRun({
+    required this.runId,
+    required this.snapshotSha256,
+    required this.snapshotManifestPath,
+    required this.migrationVersion,
+    required this.occurrenceIdentityVersion,
+    required this.preflightVersion,
+    required this.createdAt,
+    required this.createdByActorId,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['run_id'] = Variable<String>(runId);
+    map['snapshot_sha256'] = Variable<String>(snapshotSha256);
+    map['snapshot_manifest_path'] = Variable<String>(snapshotManifestPath);
+    map['migration_version'] = Variable<int>(migrationVersion);
+    map['occurrence_identity_version'] = Variable<int>(
+      occurrenceIdentityVersion,
+    );
+    map['preflight_version'] = Variable<int>(preflightVersion);
+    map['created_at'] = Variable<int>(createdAt);
+    map['created_by_actor_id'] = Variable<String>(createdByActorId);
+    return map;
+  }
+
+  LegacyMigrationRunsCompanion toCompanion(bool nullToAbsent) {
+    return LegacyMigrationRunsCompanion(
+      runId: Value(runId),
+      snapshotSha256: Value(snapshotSha256),
+      snapshotManifestPath: Value(snapshotManifestPath),
+      migrationVersion: Value(migrationVersion),
+      occurrenceIdentityVersion: Value(occurrenceIdentityVersion),
+      preflightVersion: Value(preflightVersion),
+      createdAt: Value(createdAt),
+      createdByActorId: Value(createdByActorId),
+    );
+  }
+
+  factory LegacyMigrationRun.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return LegacyMigrationRun(
+      runId: serializer.fromJson<String>(json['runId']),
+      snapshotSha256: serializer.fromJson<String>(json['snapshotSha256']),
+      snapshotManifestPath: serializer.fromJson<String>(
+        json['snapshotManifestPath'],
+      ),
+      migrationVersion: serializer.fromJson<int>(json['migrationVersion']),
+      occurrenceIdentityVersion: serializer.fromJson<int>(
+        json['occurrenceIdentityVersion'],
+      ),
+      preflightVersion: serializer.fromJson<int>(json['preflightVersion']),
+      createdAt: serializer.fromJson<int>(json['createdAt']),
+      createdByActorId: serializer.fromJson<String>(json['createdByActorId']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'runId': serializer.toJson<String>(runId),
+      'snapshotSha256': serializer.toJson<String>(snapshotSha256),
+      'snapshotManifestPath': serializer.toJson<String>(snapshotManifestPath),
+      'migrationVersion': serializer.toJson<int>(migrationVersion),
+      'occurrenceIdentityVersion': serializer.toJson<int>(
+        occurrenceIdentityVersion,
+      ),
+      'preflightVersion': serializer.toJson<int>(preflightVersion),
+      'createdAt': serializer.toJson<int>(createdAt),
+      'createdByActorId': serializer.toJson<String>(createdByActorId),
+    };
+  }
+
+  LegacyMigrationRun copyWith({
+    String? runId,
+    String? snapshotSha256,
+    String? snapshotManifestPath,
+    int? migrationVersion,
+    int? occurrenceIdentityVersion,
+    int? preflightVersion,
+    int? createdAt,
+    String? createdByActorId,
+  }) => LegacyMigrationRun(
+    runId: runId ?? this.runId,
+    snapshotSha256: snapshotSha256 ?? this.snapshotSha256,
+    snapshotManifestPath: snapshotManifestPath ?? this.snapshotManifestPath,
+    migrationVersion: migrationVersion ?? this.migrationVersion,
+    occurrenceIdentityVersion:
+        occurrenceIdentityVersion ?? this.occurrenceIdentityVersion,
+    preflightVersion: preflightVersion ?? this.preflightVersion,
+    createdAt: createdAt ?? this.createdAt,
+    createdByActorId: createdByActorId ?? this.createdByActorId,
+  );
+  LegacyMigrationRun copyWithCompanion(LegacyMigrationRunsCompanion data) {
+    return LegacyMigrationRun(
+      runId: data.runId.present ? data.runId.value : this.runId,
+      snapshotSha256: data.snapshotSha256.present
+          ? data.snapshotSha256.value
+          : this.snapshotSha256,
+      snapshotManifestPath: data.snapshotManifestPath.present
+          ? data.snapshotManifestPath.value
+          : this.snapshotManifestPath,
+      migrationVersion: data.migrationVersion.present
+          ? data.migrationVersion.value
+          : this.migrationVersion,
+      occurrenceIdentityVersion: data.occurrenceIdentityVersion.present
+          ? data.occurrenceIdentityVersion.value
+          : this.occurrenceIdentityVersion,
+      preflightVersion: data.preflightVersion.present
+          ? data.preflightVersion.value
+          : this.preflightVersion,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      createdByActorId: data.createdByActorId.present
+          ? data.createdByActorId.value
+          : this.createdByActorId,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('LegacyMigrationRun(')
+          ..write('runId: $runId, ')
+          ..write('snapshotSha256: $snapshotSha256, ')
+          ..write('snapshotManifestPath: $snapshotManifestPath, ')
+          ..write('migrationVersion: $migrationVersion, ')
+          ..write('occurrenceIdentityVersion: $occurrenceIdentityVersion, ')
+          ..write('preflightVersion: $preflightVersion, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('createdByActorId: $createdByActorId')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    runId,
+    snapshotSha256,
+    snapshotManifestPath,
+    migrationVersion,
+    occurrenceIdentityVersion,
+    preflightVersion,
+    createdAt,
+    createdByActorId,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is LegacyMigrationRun &&
+          other.runId == this.runId &&
+          other.snapshotSha256 == this.snapshotSha256 &&
+          other.snapshotManifestPath == this.snapshotManifestPath &&
+          other.migrationVersion == this.migrationVersion &&
+          other.occurrenceIdentityVersion == this.occurrenceIdentityVersion &&
+          other.preflightVersion == this.preflightVersion &&
+          other.createdAt == this.createdAt &&
+          other.createdByActorId == this.createdByActorId);
+}
+
+class LegacyMigrationRunsCompanion extends UpdateCompanion<LegacyMigrationRun> {
+  final Value<String> runId;
+  final Value<String> snapshotSha256;
+  final Value<String> snapshotManifestPath;
+  final Value<int> migrationVersion;
+  final Value<int> occurrenceIdentityVersion;
+  final Value<int> preflightVersion;
+  final Value<int> createdAt;
+  final Value<String> createdByActorId;
+  final Value<int> rowid;
+  const LegacyMigrationRunsCompanion({
+    this.runId = const Value.absent(),
+    this.snapshotSha256 = const Value.absent(),
+    this.snapshotManifestPath = const Value.absent(),
+    this.migrationVersion = const Value.absent(),
+    this.occurrenceIdentityVersion = const Value.absent(),
+    this.preflightVersion = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.createdByActorId = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  LegacyMigrationRunsCompanion.insert({
+    required String runId,
+    required String snapshotSha256,
+    required String snapshotManifestPath,
+    required int migrationVersion,
+    required int occurrenceIdentityVersion,
+    required int preflightVersion,
+    required int createdAt,
+    required String createdByActorId,
+    this.rowid = const Value.absent(),
+  }) : runId = Value(runId),
+       snapshotSha256 = Value(snapshotSha256),
+       snapshotManifestPath = Value(snapshotManifestPath),
+       migrationVersion = Value(migrationVersion),
+       occurrenceIdentityVersion = Value(occurrenceIdentityVersion),
+       preflightVersion = Value(preflightVersion),
+       createdAt = Value(createdAt),
+       createdByActorId = Value(createdByActorId);
+  static Insertable<LegacyMigrationRun> custom({
+    Expression<String>? runId,
+    Expression<String>? snapshotSha256,
+    Expression<String>? snapshotManifestPath,
+    Expression<int>? migrationVersion,
+    Expression<int>? occurrenceIdentityVersion,
+    Expression<int>? preflightVersion,
+    Expression<int>? createdAt,
+    Expression<String>? createdByActorId,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (runId != null) 'run_id': runId,
+      if (snapshotSha256 != null) 'snapshot_sha256': snapshotSha256,
+      if (snapshotManifestPath != null)
+        'snapshot_manifest_path': snapshotManifestPath,
+      if (migrationVersion != null) 'migration_version': migrationVersion,
+      if (occurrenceIdentityVersion != null)
+        'occurrence_identity_version': occurrenceIdentityVersion,
+      if (preflightVersion != null) 'preflight_version': preflightVersion,
+      if (createdAt != null) 'created_at': createdAt,
+      if (createdByActorId != null) 'created_by_actor_id': createdByActorId,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  LegacyMigrationRunsCompanion copyWith({
+    Value<String>? runId,
+    Value<String>? snapshotSha256,
+    Value<String>? snapshotManifestPath,
+    Value<int>? migrationVersion,
+    Value<int>? occurrenceIdentityVersion,
+    Value<int>? preflightVersion,
+    Value<int>? createdAt,
+    Value<String>? createdByActorId,
+    Value<int>? rowid,
+  }) {
+    return LegacyMigrationRunsCompanion(
+      runId: runId ?? this.runId,
+      snapshotSha256: snapshotSha256 ?? this.snapshotSha256,
+      snapshotManifestPath: snapshotManifestPath ?? this.snapshotManifestPath,
+      migrationVersion: migrationVersion ?? this.migrationVersion,
+      occurrenceIdentityVersion:
+          occurrenceIdentityVersion ?? this.occurrenceIdentityVersion,
+      preflightVersion: preflightVersion ?? this.preflightVersion,
+      createdAt: createdAt ?? this.createdAt,
+      createdByActorId: createdByActorId ?? this.createdByActorId,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (runId.present) {
+      map['run_id'] = Variable<String>(runId.value);
+    }
+    if (snapshotSha256.present) {
+      map['snapshot_sha256'] = Variable<String>(snapshotSha256.value);
+    }
+    if (snapshotManifestPath.present) {
+      map['snapshot_manifest_path'] = Variable<String>(
+        snapshotManifestPath.value,
+      );
+    }
+    if (migrationVersion.present) {
+      map['migration_version'] = Variable<int>(migrationVersion.value);
+    }
+    if (occurrenceIdentityVersion.present) {
+      map['occurrence_identity_version'] = Variable<int>(
+        occurrenceIdentityVersion.value,
+      );
+    }
+    if (preflightVersion.present) {
+      map['preflight_version'] = Variable<int>(preflightVersion.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<int>(createdAt.value);
+    }
+    if (createdByActorId.present) {
+      map['created_by_actor_id'] = Variable<String>(createdByActorId.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('LegacyMigrationRunsCompanion(')
+          ..write('runId: $runId, ')
+          ..write('snapshotSha256: $snapshotSha256, ')
+          ..write('snapshotManifestPath: $snapshotManifestPath, ')
+          ..write('migrationVersion: $migrationVersion, ')
+          ..write('occurrenceIdentityVersion: $occurrenceIdentityVersion, ')
+          ..write('preflightVersion: $preflightVersion, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('createdByActorId: $createdByActorId, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $LegacyMigrationOccurrencesTable extends LegacyMigrationOccurrences
+    with
+        TableInfo<$LegacyMigrationOccurrencesTable, LegacyMigrationOccurrence> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $LegacyMigrationOccurrencesTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _runIdMeta = const VerificationMeta('runId');
+  @override
+  late final GeneratedColumn<String> runId = GeneratedColumn<String>(
+    'run_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _sourceOccurrenceKeyMeta =
+      const VerificationMeta('sourceOccurrenceKey');
+  @override
+  late final GeneratedColumn<String> sourceOccurrenceKey =
+      GeneratedColumn<String>(
+        'source_occurrence_key',
+        aliasedName,
+        false,
+        type: DriftSqlType.string,
+        requiredDuringInsert: true,
+      );
+  static const VerificationMeta _sourceIndexMeta = const VerificationMeta(
+    'sourceIndex',
+  );
+  @override
+  late final GeneratedColumn<int> sourceIndex = GeneratedColumn<int>(
+    'source_index',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _recordSha256Meta = const VerificationMeta(
+    'recordSha256',
+  );
+  @override
+  late final GeneratedColumn<String> recordSha256 = GeneratedColumn<String>(
+    'record_sha256',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _legacyInvoiceIdMeta = const VerificationMeta(
+    'legacyInvoiceId',
+  );
+  @override
+  late final GeneratedColumn<String> legacyInvoiceId = GeneratedColumn<String>(
+    'legacy_invoice_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _preflightClassificationMeta =
+      const VerificationMeta('preflightClassification');
+  @override
+  late final GeneratedColumn<String> preflightClassification =
+      GeneratedColumn<String>(
+        'preflight_classification',
+        aliasedName,
+        false,
+        type: DriftSqlType.string,
+        requiredDuringInsert: true,
+      );
+  static const VerificationMeta _resolutionStatusMeta = const VerificationMeta(
+    'resolutionStatus',
+  );
+  @override
+  late final GeneratedColumn<String> resolutionStatus = GeneratedColumn<String>(
+    'resolution_status',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _expectedRoleMeta = const VerificationMeta(
+    'expectedRole',
+  );
+  @override
+  late final GeneratedColumn<String> expectedRole = GeneratedColumn<String>(
+    'expected_role',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _suggestedPartyIdMeta = const VerificationMeta(
+    'suggestedPartyId',
+  );
+  @override
+  late final GeneratedColumn<String> suggestedPartyId = GeneratedColumn<String>(
+    'suggested_party_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _suggestedPartyNameMeta =
+      const VerificationMeta('suggestedPartyName');
+  @override
+  late final GeneratedColumn<String> suggestedPartyName =
+      GeneratedColumn<String>(
+        'suggested_party_name',
+        aliasedName,
+        true,
+        type: DriftSqlType.string,
+        requiredDuringInsert: false,
+      );
+  static const VerificationMeta _candidatePartyIdsJsonMeta =
+      const VerificationMeta('candidatePartyIdsJson');
+  @override
+  late final GeneratedColumn<String> candidatePartyIdsJson =
+      GeneratedColumn<String>(
+        'candidate_party_ids_json',
+        aliasedName,
+        false,
+        type: DriftSqlType.string,
+        requiredDuringInsert: true,
+      );
+  static const VerificationMeta _findingsJsonMeta = const VerificationMeta(
+    'findingsJson',
+  );
+  @override
+  late final GeneratedColumn<String> findingsJson = GeneratedColumn<String>(
+    'findings_json',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    runId,
+    sourceOccurrenceKey,
+    sourceIndex,
+    recordSha256,
+    legacyInvoiceId,
+    preflightClassification,
+    resolutionStatus,
+    expectedRole,
+    suggestedPartyId,
+    suggestedPartyName,
+    candidatePartyIdsJson,
+    findingsJson,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'legacy_migration_occurrences';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<LegacyMigrationOccurrence> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('run_id')) {
+      context.handle(
+        _runIdMeta,
+        runId.isAcceptableOrUnknown(data['run_id']!, _runIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_runIdMeta);
+    }
+    if (data.containsKey('source_occurrence_key')) {
+      context.handle(
+        _sourceOccurrenceKeyMeta,
+        sourceOccurrenceKey.isAcceptableOrUnknown(
+          data['source_occurrence_key']!,
+          _sourceOccurrenceKeyMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_sourceOccurrenceKeyMeta);
+    }
+    if (data.containsKey('source_index')) {
+      context.handle(
+        _sourceIndexMeta,
+        sourceIndex.isAcceptableOrUnknown(
+          data['source_index']!,
+          _sourceIndexMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_sourceIndexMeta);
+    }
+    if (data.containsKey('record_sha256')) {
+      context.handle(
+        _recordSha256Meta,
+        recordSha256.isAcceptableOrUnknown(
+          data['record_sha256']!,
+          _recordSha256Meta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_recordSha256Meta);
+    }
+    if (data.containsKey('legacy_invoice_id')) {
+      context.handle(
+        _legacyInvoiceIdMeta,
+        legacyInvoiceId.isAcceptableOrUnknown(
+          data['legacy_invoice_id']!,
+          _legacyInvoiceIdMeta,
+        ),
+      );
+    }
+    if (data.containsKey('preflight_classification')) {
+      context.handle(
+        _preflightClassificationMeta,
+        preflightClassification.isAcceptableOrUnknown(
+          data['preflight_classification']!,
+          _preflightClassificationMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_preflightClassificationMeta);
+    }
+    if (data.containsKey('resolution_status')) {
+      context.handle(
+        _resolutionStatusMeta,
+        resolutionStatus.isAcceptableOrUnknown(
+          data['resolution_status']!,
+          _resolutionStatusMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_resolutionStatusMeta);
+    }
+    if (data.containsKey('expected_role')) {
+      context.handle(
+        _expectedRoleMeta,
+        expectedRole.isAcceptableOrUnknown(
+          data['expected_role']!,
+          _expectedRoleMeta,
+        ),
+      );
+    }
+    if (data.containsKey('suggested_party_id')) {
+      context.handle(
+        _suggestedPartyIdMeta,
+        suggestedPartyId.isAcceptableOrUnknown(
+          data['suggested_party_id']!,
+          _suggestedPartyIdMeta,
+        ),
+      );
+    }
+    if (data.containsKey('suggested_party_name')) {
+      context.handle(
+        _suggestedPartyNameMeta,
+        suggestedPartyName.isAcceptableOrUnknown(
+          data['suggested_party_name']!,
+          _suggestedPartyNameMeta,
+        ),
+      );
+    }
+    if (data.containsKey('candidate_party_ids_json')) {
+      context.handle(
+        _candidatePartyIdsJsonMeta,
+        candidatePartyIdsJson.isAcceptableOrUnknown(
+          data['candidate_party_ids_json']!,
+          _candidatePartyIdsJsonMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_candidatePartyIdsJsonMeta);
+    }
+    if (data.containsKey('findings_json')) {
+      context.handle(
+        _findingsJsonMeta,
+        findingsJson.isAcceptableOrUnknown(
+          data['findings_json']!,
+          _findingsJsonMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_findingsJsonMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {runId, sourceOccurrenceKey};
+  @override
+  LegacyMigrationOccurrence map(
+    Map<String, dynamic> data, {
+    String? tablePrefix,
+  }) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return LegacyMigrationOccurrence(
+      runId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}run_id'],
+      )!,
+      sourceOccurrenceKey: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}source_occurrence_key'],
+      )!,
+      sourceIndex: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}source_index'],
+      )!,
+      recordSha256: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}record_sha256'],
+      )!,
+      legacyInvoiceId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}legacy_invoice_id'],
+      ),
+      preflightClassification: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}preflight_classification'],
+      )!,
+      resolutionStatus: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}resolution_status'],
+      )!,
+      expectedRole: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}expected_role'],
+      ),
+      suggestedPartyId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}suggested_party_id'],
+      ),
+      suggestedPartyName: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}suggested_party_name'],
+      ),
+      candidatePartyIdsJson: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}candidate_party_ids_json'],
+      )!,
+      findingsJson: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}findings_json'],
+      )!,
+    );
+  }
+
+  @override
+  $LegacyMigrationOccurrencesTable createAlias(String alias) {
+    return $LegacyMigrationOccurrencesTable(attachedDatabase, alias);
+  }
+}
+
+class LegacyMigrationOccurrence extends DataClass
+    implements Insertable<LegacyMigrationOccurrence> {
+  final String runId;
+  final String sourceOccurrenceKey;
+  final int sourceIndex;
+  final String recordSha256;
+  final String? legacyInvoiceId;
+  final String preflightClassification;
+  final String resolutionStatus;
+  final String? expectedRole;
+  final String? suggestedPartyId;
+  final String? suggestedPartyName;
+  final String candidatePartyIdsJson;
+  final String findingsJson;
+  const LegacyMigrationOccurrence({
+    required this.runId,
+    required this.sourceOccurrenceKey,
+    required this.sourceIndex,
+    required this.recordSha256,
+    this.legacyInvoiceId,
+    required this.preflightClassification,
+    required this.resolutionStatus,
+    this.expectedRole,
+    this.suggestedPartyId,
+    this.suggestedPartyName,
+    required this.candidatePartyIdsJson,
+    required this.findingsJson,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['run_id'] = Variable<String>(runId);
+    map['source_occurrence_key'] = Variable<String>(sourceOccurrenceKey);
+    map['source_index'] = Variable<int>(sourceIndex);
+    map['record_sha256'] = Variable<String>(recordSha256);
+    if (!nullToAbsent || legacyInvoiceId != null) {
+      map['legacy_invoice_id'] = Variable<String>(legacyInvoiceId);
+    }
+    map['preflight_classification'] = Variable<String>(preflightClassification);
+    map['resolution_status'] = Variable<String>(resolutionStatus);
+    if (!nullToAbsent || expectedRole != null) {
+      map['expected_role'] = Variable<String>(expectedRole);
+    }
+    if (!nullToAbsent || suggestedPartyId != null) {
+      map['suggested_party_id'] = Variable<String>(suggestedPartyId);
+    }
+    if (!nullToAbsent || suggestedPartyName != null) {
+      map['suggested_party_name'] = Variable<String>(suggestedPartyName);
+    }
+    map['candidate_party_ids_json'] = Variable<String>(candidatePartyIdsJson);
+    map['findings_json'] = Variable<String>(findingsJson);
+    return map;
+  }
+
+  LegacyMigrationOccurrencesCompanion toCompanion(bool nullToAbsent) {
+    return LegacyMigrationOccurrencesCompanion(
+      runId: Value(runId),
+      sourceOccurrenceKey: Value(sourceOccurrenceKey),
+      sourceIndex: Value(sourceIndex),
+      recordSha256: Value(recordSha256),
+      legacyInvoiceId: legacyInvoiceId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(legacyInvoiceId),
+      preflightClassification: Value(preflightClassification),
+      resolutionStatus: Value(resolutionStatus),
+      expectedRole: expectedRole == null && nullToAbsent
+          ? const Value.absent()
+          : Value(expectedRole),
+      suggestedPartyId: suggestedPartyId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(suggestedPartyId),
+      suggestedPartyName: suggestedPartyName == null && nullToAbsent
+          ? const Value.absent()
+          : Value(suggestedPartyName),
+      candidatePartyIdsJson: Value(candidatePartyIdsJson),
+      findingsJson: Value(findingsJson),
+    );
+  }
+
+  factory LegacyMigrationOccurrence.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return LegacyMigrationOccurrence(
+      runId: serializer.fromJson<String>(json['runId']),
+      sourceOccurrenceKey: serializer.fromJson<String>(
+        json['sourceOccurrenceKey'],
+      ),
+      sourceIndex: serializer.fromJson<int>(json['sourceIndex']),
+      recordSha256: serializer.fromJson<String>(json['recordSha256']),
+      legacyInvoiceId: serializer.fromJson<String?>(json['legacyInvoiceId']),
+      preflightClassification: serializer.fromJson<String>(
+        json['preflightClassification'],
+      ),
+      resolutionStatus: serializer.fromJson<String>(json['resolutionStatus']),
+      expectedRole: serializer.fromJson<String?>(json['expectedRole']),
+      suggestedPartyId: serializer.fromJson<String?>(json['suggestedPartyId']),
+      suggestedPartyName: serializer.fromJson<String?>(
+        json['suggestedPartyName'],
+      ),
+      candidatePartyIdsJson: serializer.fromJson<String>(
+        json['candidatePartyIdsJson'],
+      ),
+      findingsJson: serializer.fromJson<String>(json['findingsJson']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'runId': serializer.toJson<String>(runId),
+      'sourceOccurrenceKey': serializer.toJson<String>(sourceOccurrenceKey),
+      'sourceIndex': serializer.toJson<int>(sourceIndex),
+      'recordSha256': serializer.toJson<String>(recordSha256),
+      'legacyInvoiceId': serializer.toJson<String?>(legacyInvoiceId),
+      'preflightClassification': serializer.toJson<String>(
+        preflightClassification,
+      ),
+      'resolutionStatus': serializer.toJson<String>(resolutionStatus),
+      'expectedRole': serializer.toJson<String?>(expectedRole),
+      'suggestedPartyId': serializer.toJson<String?>(suggestedPartyId),
+      'suggestedPartyName': serializer.toJson<String?>(suggestedPartyName),
+      'candidatePartyIdsJson': serializer.toJson<String>(candidatePartyIdsJson),
+      'findingsJson': serializer.toJson<String>(findingsJson),
+    };
+  }
+
+  LegacyMigrationOccurrence copyWith({
+    String? runId,
+    String? sourceOccurrenceKey,
+    int? sourceIndex,
+    String? recordSha256,
+    Value<String?> legacyInvoiceId = const Value.absent(),
+    String? preflightClassification,
+    String? resolutionStatus,
+    Value<String?> expectedRole = const Value.absent(),
+    Value<String?> suggestedPartyId = const Value.absent(),
+    Value<String?> suggestedPartyName = const Value.absent(),
+    String? candidatePartyIdsJson,
+    String? findingsJson,
+  }) => LegacyMigrationOccurrence(
+    runId: runId ?? this.runId,
+    sourceOccurrenceKey: sourceOccurrenceKey ?? this.sourceOccurrenceKey,
+    sourceIndex: sourceIndex ?? this.sourceIndex,
+    recordSha256: recordSha256 ?? this.recordSha256,
+    legacyInvoiceId: legacyInvoiceId.present
+        ? legacyInvoiceId.value
+        : this.legacyInvoiceId,
+    preflightClassification:
+        preflightClassification ?? this.preflightClassification,
+    resolutionStatus: resolutionStatus ?? this.resolutionStatus,
+    expectedRole: expectedRole.present ? expectedRole.value : this.expectedRole,
+    suggestedPartyId: suggestedPartyId.present
+        ? suggestedPartyId.value
+        : this.suggestedPartyId,
+    suggestedPartyName: suggestedPartyName.present
+        ? suggestedPartyName.value
+        : this.suggestedPartyName,
+    candidatePartyIdsJson: candidatePartyIdsJson ?? this.candidatePartyIdsJson,
+    findingsJson: findingsJson ?? this.findingsJson,
+  );
+  LegacyMigrationOccurrence copyWithCompanion(
+    LegacyMigrationOccurrencesCompanion data,
+  ) {
+    return LegacyMigrationOccurrence(
+      runId: data.runId.present ? data.runId.value : this.runId,
+      sourceOccurrenceKey: data.sourceOccurrenceKey.present
+          ? data.sourceOccurrenceKey.value
+          : this.sourceOccurrenceKey,
+      sourceIndex: data.sourceIndex.present
+          ? data.sourceIndex.value
+          : this.sourceIndex,
+      recordSha256: data.recordSha256.present
+          ? data.recordSha256.value
+          : this.recordSha256,
+      legacyInvoiceId: data.legacyInvoiceId.present
+          ? data.legacyInvoiceId.value
+          : this.legacyInvoiceId,
+      preflightClassification: data.preflightClassification.present
+          ? data.preflightClassification.value
+          : this.preflightClassification,
+      resolutionStatus: data.resolutionStatus.present
+          ? data.resolutionStatus.value
+          : this.resolutionStatus,
+      expectedRole: data.expectedRole.present
+          ? data.expectedRole.value
+          : this.expectedRole,
+      suggestedPartyId: data.suggestedPartyId.present
+          ? data.suggestedPartyId.value
+          : this.suggestedPartyId,
+      suggestedPartyName: data.suggestedPartyName.present
+          ? data.suggestedPartyName.value
+          : this.suggestedPartyName,
+      candidatePartyIdsJson: data.candidatePartyIdsJson.present
+          ? data.candidatePartyIdsJson.value
+          : this.candidatePartyIdsJson,
+      findingsJson: data.findingsJson.present
+          ? data.findingsJson.value
+          : this.findingsJson,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('LegacyMigrationOccurrence(')
+          ..write('runId: $runId, ')
+          ..write('sourceOccurrenceKey: $sourceOccurrenceKey, ')
+          ..write('sourceIndex: $sourceIndex, ')
+          ..write('recordSha256: $recordSha256, ')
+          ..write('legacyInvoiceId: $legacyInvoiceId, ')
+          ..write('preflightClassification: $preflightClassification, ')
+          ..write('resolutionStatus: $resolutionStatus, ')
+          ..write('expectedRole: $expectedRole, ')
+          ..write('suggestedPartyId: $suggestedPartyId, ')
+          ..write('suggestedPartyName: $suggestedPartyName, ')
+          ..write('candidatePartyIdsJson: $candidatePartyIdsJson, ')
+          ..write('findingsJson: $findingsJson')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    runId,
+    sourceOccurrenceKey,
+    sourceIndex,
+    recordSha256,
+    legacyInvoiceId,
+    preflightClassification,
+    resolutionStatus,
+    expectedRole,
+    suggestedPartyId,
+    suggestedPartyName,
+    candidatePartyIdsJson,
+    findingsJson,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is LegacyMigrationOccurrence &&
+          other.runId == this.runId &&
+          other.sourceOccurrenceKey == this.sourceOccurrenceKey &&
+          other.sourceIndex == this.sourceIndex &&
+          other.recordSha256 == this.recordSha256 &&
+          other.legacyInvoiceId == this.legacyInvoiceId &&
+          other.preflightClassification == this.preflightClassification &&
+          other.resolutionStatus == this.resolutionStatus &&
+          other.expectedRole == this.expectedRole &&
+          other.suggestedPartyId == this.suggestedPartyId &&
+          other.suggestedPartyName == this.suggestedPartyName &&
+          other.candidatePartyIdsJson == this.candidatePartyIdsJson &&
+          other.findingsJson == this.findingsJson);
+}
+
+class LegacyMigrationOccurrencesCompanion
+    extends UpdateCompanion<LegacyMigrationOccurrence> {
+  final Value<String> runId;
+  final Value<String> sourceOccurrenceKey;
+  final Value<int> sourceIndex;
+  final Value<String> recordSha256;
+  final Value<String?> legacyInvoiceId;
+  final Value<String> preflightClassification;
+  final Value<String> resolutionStatus;
+  final Value<String?> expectedRole;
+  final Value<String?> suggestedPartyId;
+  final Value<String?> suggestedPartyName;
+  final Value<String> candidatePartyIdsJson;
+  final Value<String> findingsJson;
+  final Value<int> rowid;
+  const LegacyMigrationOccurrencesCompanion({
+    this.runId = const Value.absent(),
+    this.sourceOccurrenceKey = const Value.absent(),
+    this.sourceIndex = const Value.absent(),
+    this.recordSha256 = const Value.absent(),
+    this.legacyInvoiceId = const Value.absent(),
+    this.preflightClassification = const Value.absent(),
+    this.resolutionStatus = const Value.absent(),
+    this.expectedRole = const Value.absent(),
+    this.suggestedPartyId = const Value.absent(),
+    this.suggestedPartyName = const Value.absent(),
+    this.candidatePartyIdsJson = const Value.absent(),
+    this.findingsJson = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  LegacyMigrationOccurrencesCompanion.insert({
+    required String runId,
+    required String sourceOccurrenceKey,
+    required int sourceIndex,
+    required String recordSha256,
+    this.legacyInvoiceId = const Value.absent(),
+    required String preflightClassification,
+    required String resolutionStatus,
+    this.expectedRole = const Value.absent(),
+    this.suggestedPartyId = const Value.absent(),
+    this.suggestedPartyName = const Value.absent(),
+    required String candidatePartyIdsJson,
+    required String findingsJson,
+    this.rowid = const Value.absent(),
+  }) : runId = Value(runId),
+       sourceOccurrenceKey = Value(sourceOccurrenceKey),
+       sourceIndex = Value(sourceIndex),
+       recordSha256 = Value(recordSha256),
+       preflightClassification = Value(preflightClassification),
+       resolutionStatus = Value(resolutionStatus),
+       candidatePartyIdsJson = Value(candidatePartyIdsJson),
+       findingsJson = Value(findingsJson);
+  static Insertable<LegacyMigrationOccurrence> custom({
+    Expression<String>? runId,
+    Expression<String>? sourceOccurrenceKey,
+    Expression<int>? sourceIndex,
+    Expression<String>? recordSha256,
+    Expression<String>? legacyInvoiceId,
+    Expression<String>? preflightClassification,
+    Expression<String>? resolutionStatus,
+    Expression<String>? expectedRole,
+    Expression<String>? suggestedPartyId,
+    Expression<String>? suggestedPartyName,
+    Expression<String>? candidatePartyIdsJson,
+    Expression<String>? findingsJson,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (runId != null) 'run_id': runId,
+      if (sourceOccurrenceKey != null)
+        'source_occurrence_key': sourceOccurrenceKey,
+      if (sourceIndex != null) 'source_index': sourceIndex,
+      if (recordSha256 != null) 'record_sha256': recordSha256,
+      if (legacyInvoiceId != null) 'legacy_invoice_id': legacyInvoiceId,
+      if (preflightClassification != null)
+        'preflight_classification': preflightClassification,
+      if (resolutionStatus != null) 'resolution_status': resolutionStatus,
+      if (expectedRole != null) 'expected_role': expectedRole,
+      if (suggestedPartyId != null) 'suggested_party_id': suggestedPartyId,
+      if (suggestedPartyName != null)
+        'suggested_party_name': suggestedPartyName,
+      if (candidatePartyIdsJson != null)
+        'candidate_party_ids_json': candidatePartyIdsJson,
+      if (findingsJson != null) 'findings_json': findingsJson,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  LegacyMigrationOccurrencesCompanion copyWith({
+    Value<String>? runId,
+    Value<String>? sourceOccurrenceKey,
+    Value<int>? sourceIndex,
+    Value<String>? recordSha256,
+    Value<String?>? legacyInvoiceId,
+    Value<String>? preflightClassification,
+    Value<String>? resolutionStatus,
+    Value<String?>? expectedRole,
+    Value<String?>? suggestedPartyId,
+    Value<String?>? suggestedPartyName,
+    Value<String>? candidatePartyIdsJson,
+    Value<String>? findingsJson,
+    Value<int>? rowid,
+  }) {
+    return LegacyMigrationOccurrencesCompanion(
+      runId: runId ?? this.runId,
+      sourceOccurrenceKey: sourceOccurrenceKey ?? this.sourceOccurrenceKey,
+      sourceIndex: sourceIndex ?? this.sourceIndex,
+      recordSha256: recordSha256 ?? this.recordSha256,
+      legacyInvoiceId: legacyInvoiceId ?? this.legacyInvoiceId,
+      preflightClassification:
+          preflightClassification ?? this.preflightClassification,
+      resolutionStatus: resolutionStatus ?? this.resolutionStatus,
+      expectedRole: expectedRole ?? this.expectedRole,
+      suggestedPartyId: suggestedPartyId ?? this.suggestedPartyId,
+      suggestedPartyName: suggestedPartyName ?? this.suggestedPartyName,
+      candidatePartyIdsJson:
+          candidatePartyIdsJson ?? this.candidatePartyIdsJson,
+      findingsJson: findingsJson ?? this.findingsJson,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (runId.present) {
+      map['run_id'] = Variable<String>(runId.value);
+    }
+    if (sourceOccurrenceKey.present) {
+      map['source_occurrence_key'] = Variable<String>(
+        sourceOccurrenceKey.value,
+      );
+    }
+    if (sourceIndex.present) {
+      map['source_index'] = Variable<int>(sourceIndex.value);
+    }
+    if (recordSha256.present) {
+      map['record_sha256'] = Variable<String>(recordSha256.value);
+    }
+    if (legacyInvoiceId.present) {
+      map['legacy_invoice_id'] = Variable<String>(legacyInvoiceId.value);
+    }
+    if (preflightClassification.present) {
+      map['preflight_classification'] = Variable<String>(
+        preflightClassification.value,
+      );
+    }
+    if (resolutionStatus.present) {
+      map['resolution_status'] = Variable<String>(resolutionStatus.value);
+    }
+    if (expectedRole.present) {
+      map['expected_role'] = Variable<String>(expectedRole.value);
+    }
+    if (suggestedPartyId.present) {
+      map['suggested_party_id'] = Variable<String>(suggestedPartyId.value);
+    }
+    if (suggestedPartyName.present) {
+      map['suggested_party_name'] = Variable<String>(suggestedPartyName.value);
+    }
+    if (candidatePartyIdsJson.present) {
+      map['candidate_party_ids_json'] = Variable<String>(
+        candidatePartyIdsJson.value,
+      );
+    }
+    if (findingsJson.present) {
+      map['findings_json'] = Variable<String>(findingsJson.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('LegacyMigrationOccurrencesCompanion(')
+          ..write('runId: $runId, ')
+          ..write('sourceOccurrenceKey: $sourceOccurrenceKey, ')
+          ..write('sourceIndex: $sourceIndex, ')
+          ..write('recordSha256: $recordSha256, ')
+          ..write('legacyInvoiceId: $legacyInvoiceId, ')
+          ..write('preflightClassification: $preflightClassification, ')
+          ..write('resolutionStatus: $resolutionStatus, ')
+          ..write('expectedRole: $expectedRole, ')
+          ..write('suggestedPartyId: $suggestedPartyId, ')
+          ..write('suggestedPartyName: $suggestedPartyName, ')
+          ..write('candidatePartyIdsJson: $candidatePartyIdsJson, ')
+          ..write('findingsJson: $findingsJson, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $LegacyPartyReviewDecisionsTable extends LegacyPartyReviewDecisions
+    with
+        TableInfo<$LegacyPartyReviewDecisionsTable, LegacyPartyReviewDecision> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $LegacyPartyReviewDecisionsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _decisionIdMeta = const VerificationMeta(
+    'decisionId',
+  );
+  @override
+  late final GeneratedColumn<String> decisionId = GeneratedColumn<String>(
+    'decision_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _runIdMeta = const VerificationMeta('runId');
+  @override
+  late final GeneratedColumn<String> runId = GeneratedColumn<String>(
+    'run_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _sourceOccurrenceKeyMeta =
+      const VerificationMeta('sourceOccurrenceKey');
+  @override
+  late final GeneratedColumn<String> sourceOccurrenceKey =
+      GeneratedColumn<String>(
+        'source_occurrence_key',
+        aliasedName,
+        false,
+        type: DriftSqlType.string,
+        requiredDuringInsert: true,
+      );
+  static const VerificationMeta _sequenceMeta = const VerificationMeta(
+    'sequence',
+  );
+  @override
+  late final GeneratedColumn<int> sequence = GeneratedColumn<int>(
+    'sequence',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _previousDecisionIdMeta =
+      const VerificationMeta('previousDecisionId');
+  @override
+  late final GeneratedColumn<String> previousDecisionId =
+      GeneratedColumn<String>(
+        'previous_decision_id',
+        aliasedName,
+        true,
+        type: DriftSqlType.string,
+        requiredDuringInsert: false,
+      );
+  static const VerificationMeta _actionMeta = const VerificationMeta('action');
+  @override
+  late final GeneratedColumn<String> action = GeneratedColumn<String>(
+    'action',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _expectedRoleMeta = const VerificationMeta(
+    'expectedRole',
+  );
+  @override
+  late final GeneratedColumn<String> expectedRole = GeneratedColumn<String>(
+    'expected_role',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _resolvedPartyIdMeta = const VerificationMeta(
+    'resolvedPartyId',
+  );
+  @override
+  late final GeneratedColumn<String> resolvedPartyId = GeneratedColumn<String>(
+    'resolved_party_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _resolvedPartyNameMeta = const VerificationMeta(
+    'resolvedPartyName',
+  );
+  @override
+  late final GeneratedColumn<String> resolvedPartyName =
+      GeneratedColumn<String>(
+        'resolved_party_name',
+        aliasedName,
+        true,
+        type: DriftSqlType.string,
+        requiredDuringInsert: false,
+      );
+  static const VerificationMeta _resolvedPartyRoleMeta = const VerificationMeta(
+    'resolvedPartyRole',
+  );
+  @override
+  late final GeneratedColumn<String> resolvedPartyRole =
+      GeneratedColumn<String>(
+        'resolved_party_role',
+        aliasedName,
+        true,
+        type: DriftSqlType.string,
+        requiredDuringInsert: false,
+      );
+  static const VerificationMeta _reviewerIdMeta = const VerificationMeta(
+    'reviewerId',
+  );
+  @override
+  late final GeneratedColumn<String> reviewerId = GeneratedColumn<String>(
+    'reviewer_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _decidedAtMeta = const VerificationMeta(
+    'decidedAt',
+  );
+  @override
+  late final GeneratedColumn<int> decidedAt = GeneratedColumn<int>(
+    'decided_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _reviewNoteMeta = const VerificationMeta(
+    'reviewNote',
+  );
+  @override
+  late final GeneratedColumn<String> reviewNote = GeneratedColumn<String>(
+    'review_note',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _idempotencyKeyMeta = const VerificationMeta(
+    'idempotencyKey',
+  );
+  @override
+  late final GeneratedColumn<String> idempotencyKey = GeneratedColumn<String>(
+    'idempotency_key',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _requestFingerprintMeta =
+      const VerificationMeta('requestFingerprint');
+  @override
+  late final GeneratedColumn<String> requestFingerprint =
+      GeneratedColumn<String>(
+        'request_fingerprint',
+        aliasedName,
+        false,
+        type: DriftSqlType.string,
+        requiredDuringInsert: true,
+      );
+  @override
+  List<GeneratedColumn> get $columns => [
+    decisionId,
+    runId,
+    sourceOccurrenceKey,
+    sequence,
+    previousDecisionId,
+    action,
+    expectedRole,
+    resolvedPartyId,
+    resolvedPartyName,
+    resolvedPartyRole,
+    reviewerId,
+    decidedAt,
+    reviewNote,
+    idempotencyKey,
+    requestFingerprint,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'legacy_party_review_decisions';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<LegacyPartyReviewDecision> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('decision_id')) {
+      context.handle(
+        _decisionIdMeta,
+        decisionId.isAcceptableOrUnknown(data['decision_id']!, _decisionIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_decisionIdMeta);
+    }
+    if (data.containsKey('run_id')) {
+      context.handle(
+        _runIdMeta,
+        runId.isAcceptableOrUnknown(data['run_id']!, _runIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_runIdMeta);
+    }
+    if (data.containsKey('source_occurrence_key')) {
+      context.handle(
+        _sourceOccurrenceKeyMeta,
+        sourceOccurrenceKey.isAcceptableOrUnknown(
+          data['source_occurrence_key']!,
+          _sourceOccurrenceKeyMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_sourceOccurrenceKeyMeta);
+    }
+    if (data.containsKey('sequence')) {
+      context.handle(
+        _sequenceMeta,
+        sequence.isAcceptableOrUnknown(data['sequence']!, _sequenceMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_sequenceMeta);
+    }
+    if (data.containsKey('previous_decision_id')) {
+      context.handle(
+        _previousDecisionIdMeta,
+        previousDecisionId.isAcceptableOrUnknown(
+          data['previous_decision_id']!,
+          _previousDecisionIdMeta,
+        ),
+      );
+    }
+    if (data.containsKey('action')) {
+      context.handle(
+        _actionMeta,
+        action.isAcceptableOrUnknown(data['action']!, _actionMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_actionMeta);
+    }
+    if (data.containsKey('expected_role')) {
+      context.handle(
+        _expectedRoleMeta,
+        expectedRole.isAcceptableOrUnknown(
+          data['expected_role']!,
+          _expectedRoleMeta,
+        ),
+      );
+    }
+    if (data.containsKey('resolved_party_id')) {
+      context.handle(
+        _resolvedPartyIdMeta,
+        resolvedPartyId.isAcceptableOrUnknown(
+          data['resolved_party_id']!,
+          _resolvedPartyIdMeta,
+        ),
+      );
+    }
+    if (data.containsKey('resolved_party_name')) {
+      context.handle(
+        _resolvedPartyNameMeta,
+        resolvedPartyName.isAcceptableOrUnknown(
+          data['resolved_party_name']!,
+          _resolvedPartyNameMeta,
+        ),
+      );
+    }
+    if (data.containsKey('resolved_party_role')) {
+      context.handle(
+        _resolvedPartyRoleMeta,
+        resolvedPartyRole.isAcceptableOrUnknown(
+          data['resolved_party_role']!,
+          _resolvedPartyRoleMeta,
+        ),
+      );
+    }
+    if (data.containsKey('reviewer_id')) {
+      context.handle(
+        _reviewerIdMeta,
+        reviewerId.isAcceptableOrUnknown(data['reviewer_id']!, _reviewerIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_reviewerIdMeta);
+    }
+    if (data.containsKey('decided_at')) {
+      context.handle(
+        _decidedAtMeta,
+        decidedAt.isAcceptableOrUnknown(data['decided_at']!, _decidedAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_decidedAtMeta);
+    }
+    if (data.containsKey('review_note')) {
+      context.handle(
+        _reviewNoteMeta,
+        reviewNote.isAcceptableOrUnknown(data['review_note']!, _reviewNoteMeta),
+      );
+    }
+    if (data.containsKey('idempotency_key')) {
+      context.handle(
+        _idempotencyKeyMeta,
+        idempotencyKey.isAcceptableOrUnknown(
+          data['idempotency_key']!,
+          _idempotencyKeyMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_idempotencyKeyMeta);
+    }
+    if (data.containsKey('request_fingerprint')) {
+      context.handle(
+        _requestFingerprintMeta,
+        requestFingerprint.isAcceptableOrUnknown(
+          data['request_fingerprint']!,
+          _requestFingerprintMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_requestFingerprintMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {decisionId};
+  @override
+  List<Set<GeneratedColumn>> get uniqueKeys => [
+    {runId, sourceOccurrenceKey, sequence},
+    {idempotencyKey},
+    {decisionId, runId, sourceOccurrenceKey},
+  ];
+  @override
+  LegacyPartyReviewDecision map(
+    Map<String, dynamic> data, {
+    String? tablePrefix,
+  }) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return LegacyPartyReviewDecision(
+      decisionId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}decision_id'],
+      )!,
+      runId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}run_id'],
+      )!,
+      sourceOccurrenceKey: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}source_occurrence_key'],
+      )!,
+      sequence: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}sequence'],
+      )!,
+      previousDecisionId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}previous_decision_id'],
+      ),
+      action: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}action'],
+      )!,
+      expectedRole: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}expected_role'],
+      ),
+      resolvedPartyId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}resolved_party_id'],
+      ),
+      resolvedPartyName: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}resolved_party_name'],
+      ),
+      resolvedPartyRole: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}resolved_party_role'],
+      ),
+      reviewerId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}reviewer_id'],
+      )!,
+      decidedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}decided_at'],
+      )!,
+      reviewNote: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}review_note'],
+      ),
+      idempotencyKey: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}idempotency_key'],
+      )!,
+      requestFingerprint: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}request_fingerprint'],
+      )!,
+    );
+  }
+
+  @override
+  $LegacyPartyReviewDecisionsTable createAlias(String alias) {
+    return $LegacyPartyReviewDecisionsTable(attachedDatabase, alias);
+  }
+}
+
+class LegacyPartyReviewDecision extends DataClass
+    implements Insertable<LegacyPartyReviewDecision> {
+  final String decisionId;
+  final String runId;
+  final String sourceOccurrenceKey;
+  final int sequence;
+  final String? previousDecisionId;
+  final String action;
+  final String? expectedRole;
+  final String? resolvedPartyId;
+  final String? resolvedPartyName;
+  final String? resolvedPartyRole;
+  final String reviewerId;
+  final int decidedAt;
+  final String? reviewNote;
+  final String idempotencyKey;
+  final String requestFingerprint;
+  const LegacyPartyReviewDecision({
+    required this.decisionId,
+    required this.runId,
+    required this.sourceOccurrenceKey,
+    required this.sequence,
+    this.previousDecisionId,
+    required this.action,
+    this.expectedRole,
+    this.resolvedPartyId,
+    this.resolvedPartyName,
+    this.resolvedPartyRole,
+    required this.reviewerId,
+    required this.decidedAt,
+    this.reviewNote,
+    required this.idempotencyKey,
+    required this.requestFingerprint,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['decision_id'] = Variable<String>(decisionId);
+    map['run_id'] = Variable<String>(runId);
+    map['source_occurrence_key'] = Variable<String>(sourceOccurrenceKey);
+    map['sequence'] = Variable<int>(sequence);
+    if (!nullToAbsent || previousDecisionId != null) {
+      map['previous_decision_id'] = Variable<String>(previousDecisionId);
+    }
+    map['action'] = Variable<String>(action);
+    if (!nullToAbsent || expectedRole != null) {
+      map['expected_role'] = Variable<String>(expectedRole);
+    }
+    if (!nullToAbsent || resolvedPartyId != null) {
+      map['resolved_party_id'] = Variable<String>(resolvedPartyId);
+    }
+    if (!nullToAbsent || resolvedPartyName != null) {
+      map['resolved_party_name'] = Variable<String>(resolvedPartyName);
+    }
+    if (!nullToAbsent || resolvedPartyRole != null) {
+      map['resolved_party_role'] = Variable<String>(resolvedPartyRole);
+    }
+    map['reviewer_id'] = Variable<String>(reviewerId);
+    map['decided_at'] = Variable<int>(decidedAt);
+    if (!nullToAbsent || reviewNote != null) {
+      map['review_note'] = Variable<String>(reviewNote);
+    }
+    map['idempotency_key'] = Variable<String>(idempotencyKey);
+    map['request_fingerprint'] = Variable<String>(requestFingerprint);
+    return map;
+  }
+
+  LegacyPartyReviewDecisionsCompanion toCompanion(bool nullToAbsent) {
+    return LegacyPartyReviewDecisionsCompanion(
+      decisionId: Value(decisionId),
+      runId: Value(runId),
+      sourceOccurrenceKey: Value(sourceOccurrenceKey),
+      sequence: Value(sequence),
+      previousDecisionId: previousDecisionId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(previousDecisionId),
+      action: Value(action),
+      expectedRole: expectedRole == null && nullToAbsent
+          ? const Value.absent()
+          : Value(expectedRole),
+      resolvedPartyId: resolvedPartyId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(resolvedPartyId),
+      resolvedPartyName: resolvedPartyName == null && nullToAbsent
+          ? const Value.absent()
+          : Value(resolvedPartyName),
+      resolvedPartyRole: resolvedPartyRole == null && nullToAbsent
+          ? const Value.absent()
+          : Value(resolvedPartyRole),
+      reviewerId: Value(reviewerId),
+      decidedAt: Value(decidedAt),
+      reviewNote: reviewNote == null && nullToAbsent
+          ? const Value.absent()
+          : Value(reviewNote),
+      idempotencyKey: Value(idempotencyKey),
+      requestFingerprint: Value(requestFingerprint),
+    );
+  }
+
+  factory LegacyPartyReviewDecision.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return LegacyPartyReviewDecision(
+      decisionId: serializer.fromJson<String>(json['decisionId']),
+      runId: serializer.fromJson<String>(json['runId']),
+      sourceOccurrenceKey: serializer.fromJson<String>(
+        json['sourceOccurrenceKey'],
+      ),
+      sequence: serializer.fromJson<int>(json['sequence']),
+      previousDecisionId: serializer.fromJson<String?>(
+        json['previousDecisionId'],
+      ),
+      action: serializer.fromJson<String>(json['action']),
+      expectedRole: serializer.fromJson<String?>(json['expectedRole']),
+      resolvedPartyId: serializer.fromJson<String?>(json['resolvedPartyId']),
+      resolvedPartyName: serializer.fromJson<String?>(
+        json['resolvedPartyName'],
+      ),
+      resolvedPartyRole: serializer.fromJson<String?>(
+        json['resolvedPartyRole'],
+      ),
+      reviewerId: serializer.fromJson<String>(json['reviewerId']),
+      decidedAt: serializer.fromJson<int>(json['decidedAt']),
+      reviewNote: serializer.fromJson<String?>(json['reviewNote']),
+      idempotencyKey: serializer.fromJson<String>(json['idempotencyKey']),
+      requestFingerprint: serializer.fromJson<String>(
+        json['requestFingerprint'],
+      ),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'decisionId': serializer.toJson<String>(decisionId),
+      'runId': serializer.toJson<String>(runId),
+      'sourceOccurrenceKey': serializer.toJson<String>(sourceOccurrenceKey),
+      'sequence': serializer.toJson<int>(sequence),
+      'previousDecisionId': serializer.toJson<String?>(previousDecisionId),
+      'action': serializer.toJson<String>(action),
+      'expectedRole': serializer.toJson<String?>(expectedRole),
+      'resolvedPartyId': serializer.toJson<String?>(resolvedPartyId),
+      'resolvedPartyName': serializer.toJson<String?>(resolvedPartyName),
+      'resolvedPartyRole': serializer.toJson<String?>(resolvedPartyRole),
+      'reviewerId': serializer.toJson<String>(reviewerId),
+      'decidedAt': serializer.toJson<int>(decidedAt),
+      'reviewNote': serializer.toJson<String?>(reviewNote),
+      'idempotencyKey': serializer.toJson<String>(idempotencyKey),
+      'requestFingerprint': serializer.toJson<String>(requestFingerprint),
+    };
+  }
+
+  LegacyPartyReviewDecision copyWith({
+    String? decisionId,
+    String? runId,
+    String? sourceOccurrenceKey,
+    int? sequence,
+    Value<String?> previousDecisionId = const Value.absent(),
+    String? action,
+    Value<String?> expectedRole = const Value.absent(),
+    Value<String?> resolvedPartyId = const Value.absent(),
+    Value<String?> resolvedPartyName = const Value.absent(),
+    Value<String?> resolvedPartyRole = const Value.absent(),
+    String? reviewerId,
+    int? decidedAt,
+    Value<String?> reviewNote = const Value.absent(),
+    String? idempotencyKey,
+    String? requestFingerprint,
+  }) => LegacyPartyReviewDecision(
+    decisionId: decisionId ?? this.decisionId,
+    runId: runId ?? this.runId,
+    sourceOccurrenceKey: sourceOccurrenceKey ?? this.sourceOccurrenceKey,
+    sequence: sequence ?? this.sequence,
+    previousDecisionId: previousDecisionId.present
+        ? previousDecisionId.value
+        : this.previousDecisionId,
+    action: action ?? this.action,
+    expectedRole: expectedRole.present ? expectedRole.value : this.expectedRole,
+    resolvedPartyId: resolvedPartyId.present
+        ? resolvedPartyId.value
+        : this.resolvedPartyId,
+    resolvedPartyName: resolvedPartyName.present
+        ? resolvedPartyName.value
+        : this.resolvedPartyName,
+    resolvedPartyRole: resolvedPartyRole.present
+        ? resolvedPartyRole.value
+        : this.resolvedPartyRole,
+    reviewerId: reviewerId ?? this.reviewerId,
+    decidedAt: decidedAt ?? this.decidedAt,
+    reviewNote: reviewNote.present ? reviewNote.value : this.reviewNote,
+    idempotencyKey: idempotencyKey ?? this.idempotencyKey,
+    requestFingerprint: requestFingerprint ?? this.requestFingerprint,
+  );
+  LegacyPartyReviewDecision copyWithCompanion(
+    LegacyPartyReviewDecisionsCompanion data,
+  ) {
+    return LegacyPartyReviewDecision(
+      decisionId: data.decisionId.present
+          ? data.decisionId.value
+          : this.decisionId,
+      runId: data.runId.present ? data.runId.value : this.runId,
+      sourceOccurrenceKey: data.sourceOccurrenceKey.present
+          ? data.sourceOccurrenceKey.value
+          : this.sourceOccurrenceKey,
+      sequence: data.sequence.present ? data.sequence.value : this.sequence,
+      previousDecisionId: data.previousDecisionId.present
+          ? data.previousDecisionId.value
+          : this.previousDecisionId,
+      action: data.action.present ? data.action.value : this.action,
+      expectedRole: data.expectedRole.present
+          ? data.expectedRole.value
+          : this.expectedRole,
+      resolvedPartyId: data.resolvedPartyId.present
+          ? data.resolvedPartyId.value
+          : this.resolvedPartyId,
+      resolvedPartyName: data.resolvedPartyName.present
+          ? data.resolvedPartyName.value
+          : this.resolvedPartyName,
+      resolvedPartyRole: data.resolvedPartyRole.present
+          ? data.resolvedPartyRole.value
+          : this.resolvedPartyRole,
+      reviewerId: data.reviewerId.present
+          ? data.reviewerId.value
+          : this.reviewerId,
+      decidedAt: data.decidedAt.present ? data.decidedAt.value : this.decidedAt,
+      reviewNote: data.reviewNote.present
+          ? data.reviewNote.value
+          : this.reviewNote,
+      idempotencyKey: data.idempotencyKey.present
+          ? data.idempotencyKey.value
+          : this.idempotencyKey,
+      requestFingerprint: data.requestFingerprint.present
+          ? data.requestFingerprint.value
+          : this.requestFingerprint,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('LegacyPartyReviewDecision(')
+          ..write('decisionId: $decisionId, ')
+          ..write('runId: $runId, ')
+          ..write('sourceOccurrenceKey: $sourceOccurrenceKey, ')
+          ..write('sequence: $sequence, ')
+          ..write('previousDecisionId: $previousDecisionId, ')
+          ..write('action: $action, ')
+          ..write('expectedRole: $expectedRole, ')
+          ..write('resolvedPartyId: $resolvedPartyId, ')
+          ..write('resolvedPartyName: $resolvedPartyName, ')
+          ..write('resolvedPartyRole: $resolvedPartyRole, ')
+          ..write('reviewerId: $reviewerId, ')
+          ..write('decidedAt: $decidedAt, ')
+          ..write('reviewNote: $reviewNote, ')
+          ..write('idempotencyKey: $idempotencyKey, ')
+          ..write('requestFingerprint: $requestFingerprint')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    decisionId,
+    runId,
+    sourceOccurrenceKey,
+    sequence,
+    previousDecisionId,
+    action,
+    expectedRole,
+    resolvedPartyId,
+    resolvedPartyName,
+    resolvedPartyRole,
+    reviewerId,
+    decidedAt,
+    reviewNote,
+    idempotencyKey,
+    requestFingerprint,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is LegacyPartyReviewDecision &&
+          other.decisionId == this.decisionId &&
+          other.runId == this.runId &&
+          other.sourceOccurrenceKey == this.sourceOccurrenceKey &&
+          other.sequence == this.sequence &&
+          other.previousDecisionId == this.previousDecisionId &&
+          other.action == this.action &&
+          other.expectedRole == this.expectedRole &&
+          other.resolvedPartyId == this.resolvedPartyId &&
+          other.resolvedPartyName == this.resolvedPartyName &&
+          other.resolvedPartyRole == this.resolvedPartyRole &&
+          other.reviewerId == this.reviewerId &&
+          other.decidedAt == this.decidedAt &&
+          other.reviewNote == this.reviewNote &&
+          other.idempotencyKey == this.idempotencyKey &&
+          other.requestFingerprint == this.requestFingerprint);
+}
+
+class LegacyPartyReviewDecisionsCompanion
+    extends UpdateCompanion<LegacyPartyReviewDecision> {
+  final Value<String> decisionId;
+  final Value<String> runId;
+  final Value<String> sourceOccurrenceKey;
+  final Value<int> sequence;
+  final Value<String?> previousDecisionId;
+  final Value<String> action;
+  final Value<String?> expectedRole;
+  final Value<String?> resolvedPartyId;
+  final Value<String?> resolvedPartyName;
+  final Value<String?> resolvedPartyRole;
+  final Value<String> reviewerId;
+  final Value<int> decidedAt;
+  final Value<String?> reviewNote;
+  final Value<String> idempotencyKey;
+  final Value<String> requestFingerprint;
+  final Value<int> rowid;
+  const LegacyPartyReviewDecisionsCompanion({
+    this.decisionId = const Value.absent(),
+    this.runId = const Value.absent(),
+    this.sourceOccurrenceKey = const Value.absent(),
+    this.sequence = const Value.absent(),
+    this.previousDecisionId = const Value.absent(),
+    this.action = const Value.absent(),
+    this.expectedRole = const Value.absent(),
+    this.resolvedPartyId = const Value.absent(),
+    this.resolvedPartyName = const Value.absent(),
+    this.resolvedPartyRole = const Value.absent(),
+    this.reviewerId = const Value.absent(),
+    this.decidedAt = const Value.absent(),
+    this.reviewNote = const Value.absent(),
+    this.idempotencyKey = const Value.absent(),
+    this.requestFingerprint = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  LegacyPartyReviewDecisionsCompanion.insert({
+    required String decisionId,
+    required String runId,
+    required String sourceOccurrenceKey,
+    required int sequence,
+    this.previousDecisionId = const Value.absent(),
+    required String action,
+    this.expectedRole = const Value.absent(),
+    this.resolvedPartyId = const Value.absent(),
+    this.resolvedPartyName = const Value.absent(),
+    this.resolvedPartyRole = const Value.absent(),
+    required String reviewerId,
+    required int decidedAt,
+    this.reviewNote = const Value.absent(),
+    required String idempotencyKey,
+    required String requestFingerprint,
+    this.rowid = const Value.absent(),
+  }) : decisionId = Value(decisionId),
+       runId = Value(runId),
+       sourceOccurrenceKey = Value(sourceOccurrenceKey),
+       sequence = Value(sequence),
+       action = Value(action),
+       reviewerId = Value(reviewerId),
+       decidedAt = Value(decidedAt),
+       idempotencyKey = Value(idempotencyKey),
+       requestFingerprint = Value(requestFingerprint);
+  static Insertable<LegacyPartyReviewDecision> custom({
+    Expression<String>? decisionId,
+    Expression<String>? runId,
+    Expression<String>? sourceOccurrenceKey,
+    Expression<int>? sequence,
+    Expression<String>? previousDecisionId,
+    Expression<String>? action,
+    Expression<String>? expectedRole,
+    Expression<String>? resolvedPartyId,
+    Expression<String>? resolvedPartyName,
+    Expression<String>? resolvedPartyRole,
+    Expression<String>? reviewerId,
+    Expression<int>? decidedAt,
+    Expression<String>? reviewNote,
+    Expression<String>? idempotencyKey,
+    Expression<String>? requestFingerprint,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (decisionId != null) 'decision_id': decisionId,
+      if (runId != null) 'run_id': runId,
+      if (sourceOccurrenceKey != null)
+        'source_occurrence_key': sourceOccurrenceKey,
+      if (sequence != null) 'sequence': sequence,
+      if (previousDecisionId != null)
+        'previous_decision_id': previousDecisionId,
+      if (action != null) 'action': action,
+      if (expectedRole != null) 'expected_role': expectedRole,
+      if (resolvedPartyId != null) 'resolved_party_id': resolvedPartyId,
+      if (resolvedPartyName != null) 'resolved_party_name': resolvedPartyName,
+      if (resolvedPartyRole != null) 'resolved_party_role': resolvedPartyRole,
+      if (reviewerId != null) 'reviewer_id': reviewerId,
+      if (decidedAt != null) 'decided_at': decidedAt,
+      if (reviewNote != null) 'review_note': reviewNote,
+      if (idempotencyKey != null) 'idempotency_key': idempotencyKey,
+      if (requestFingerprint != null) 'request_fingerprint': requestFingerprint,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  LegacyPartyReviewDecisionsCompanion copyWith({
+    Value<String>? decisionId,
+    Value<String>? runId,
+    Value<String>? sourceOccurrenceKey,
+    Value<int>? sequence,
+    Value<String?>? previousDecisionId,
+    Value<String>? action,
+    Value<String?>? expectedRole,
+    Value<String?>? resolvedPartyId,
+    Value<String?>? resolvedPartyName,
+    Value<String?>? resolvedPartyRole,
+    Value<String>? reviewerId,
+    Value<int>? decidedAt,
+    Value<String?>? reviewNote,
+    Value<String>? idempotencyKey,
+    Value<String>? requestFingerprint,
+    Value<int>? rowid,
+  }) {
+    return LegacyPartyReviewDecisionsCompanion(
+      decisionId: decisionId ?? this.decisionId,
+      runId: runId ?? this.runId,
+      sourceOccurrenceKey: sourceOccurrenceKey ?? this.sourceOccurrenceKey,
+      sequence: sequence ?? this.sequence,
+      previousDecisionId: previousDecisionId ?? this.previousDecisionId,
+      action: action ?? this.action,
+      expectedRole: expectedRole ?? this.expectedRole,
+      resolvedPartyId: resolvedPartyId ?? this.resolvedPartyId,
+      resolvedPartyName: resolvedPartyName ?? this.resolvedPartyName,
+      resolvedPartyRole: resolvedPartyRole ?? this.resolvedPartyRole,
+      reviewerId: reviewerId ?? this.reviewerId,
+      decidedAt: decidedAt ?? this.decidedAt,
+      reviewNote: reviewNote ?? this.reviewNote,
+      idempotencyKey: idempotencyKey ?? this.idempotencyKey,
+      requestFingerprint: requestFingerprint ?? this.requestFingerprint,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (decisionId.present) {
+      map['decision_id'] = Variable<String>(decisionId.value);
+    }
+    if (runId.present) {
+      map['run_id'] = Variable<String>(runId.value);
+    }
+    if (sourceOccurrenceKey.present) {
+      map['source_occurrence_key'] = Variable<String>(
+        sourceOccurrenceKey.value,
+      );
+    }
+    if (sequence.present) {
+      map['sequence'] = Variable<int>(sequence.value);
+    }
+    if (previousDecisionId.present) {
+      map['previous_decision_id'] = Variable<String>(previousDecisionId.value);
+    }
+    if (action.present) {
+      map['action'] = Variable<String>(action.value);
+    }
+    if (expectedRole.present) {
+      map['expected_role'] = Variable<String>(expectedRole.value);
+    }
+    if (resolvedPartyId.present) {
+      map['resolved_party_id'] = Variable<String>(resolvedPartyId.value);
+    }
+    if (resolvedPartyName.present) {
+      map['resolved_party_name'] = Variable<String>(resolvedPartyName.value);
+    }
+    if (resolvedPartyRole.present) {
+      map['resolved_party_role'] = Variable<String>(resolvedPartyRole.value);
+    }
+    if (reviewerId.present) {
+      map['reviewer_id'] = Variable<String>(reviewerId.value);
+    }
+    if (decidedAt.present) {
+      map['decided_at'] = Variable<int>(decidedAt.value);
+    }
+    if (reviewNote.present) {
+      map['review_note'] = Variable<String>(reviewNote.value);
+    }
+    if (idempotencyKey.present) {
+      map['idempotency_key'] = Variable<String>(idempotencyKey.value);
+    }
+    if (requestFingerprint.present) {
+      map['request_fingerprint'] = Variable<String>(requestFingerprint.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('LegacyPartyReviewDecisionsCompanion(')
+          ..write('decisionId: $decisionId, ')
+          ..write('runId: $runId, ')
+          ..write('sourceOccurrenceKey: $sourceOccurrenceKey, ')
+          ..write('sequence: $sequence, ')
+          ..write('previousDecisionId: $previousDecisionId, ')
+          ..write('action: $action, ')
+          ..write('expectedRole: $expectedRole, ')
+          ..write('resolvedPartyId: $resolvedPartyId, ')
+          ..write('resolvedPartyName: $resolvedPartyName, ')
+          ..write('resolvedPartyRole: $resolvedPartyRole, ')
+          ..write('reviewerId: $reviewerId, ')
+          ..write('decidedAt: $decidedAt, ')
+          ..write('reviewNote: $reviewNote, ')
+          ..write('idempotencyKey: $idempotencyKey, ')
+          ..write('requestFingerprint: $requestFingerprint, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(e);
   $AppDatabaseManager get managers => $AppDatabaseManager(this);
@@ -13705,6 +16009,12 @@ abstract class _$AppDatabase extends GeneratedDatabase {
       $RefundAllocationReversalsTable(this);
   late final $InvoiceLifecycleEventsTable invoiceLifecycleEvents =
       $InvoiceLifecycleEventsTable(this);
+  late final $LegacyMigrationRunsTable legacyMigrationRuns =
+      $LegacyMigrationRunsTable(this);
+  late final $LegacyMigrationOccurrencesTable legacyMigrationOccurrences =
+      $LegacyMigrationOccurrencesTable(this);
+  late final $LegacyPartyReviewDecisionsTable legacyPartyReviewDecisions =
+      $LegacyPartyReviewDecisionsTable(this);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
@@ -13731,6 +16041,9 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     refundFinancialTransactions,
     refundAllocationReversals,
     invoiceLifecycleEvents,
+    legacyMigrationRuns,
+    legacyMigrationOccurrences,
+    legacyPartyReviewDecisions,
   ];
 }
 
@@ -20537,6 +22850,1131 @@ typedef $$InvoiceLifecycleEventsTableProcessedTableManager =
       InvoiceLifecycleEvent,
       PrefetchHooks Function()
     >;
+typedef $$LegacyMigrationRunsTableCreateCompanionBuilder =
+    LegacyMigrationRunsCompanion Function({
+      required String runId,
+      required String snapshotSha256,
+      required String snapshotManifestPath,
+      required int migrationVersion,
+      required int occurrenceIdentityVersion,
+      required int preflightVersion,
+      required int createdAt,
+      required String createdByActorId,
+      Value<int> rowid,
+    });
+typedef $$LegacyMigrationRunsTableUpdateCompanionBuilder =
+    LegacyMigrationRunsCompanion Function({
+      Value<String> runId,
+      Value<String> snapshotSha256,
+      Value<String> snapshotManifestPath,
+      Value<int> migrationVersion,
+      Value<int> occurrenceIdentityVersion,
+      Value<int> preflightVersion,
+      Value<int> createdAt,
+      Value<String> createdByActorId,
+      Value<int> rowid,
+    });
+
+class $$LegacyMigrationRunsTableFilterComposer
+    extends Composer<_$AppDatabase, $LegacyMigrationRunsTable> {
+  $$LegacyMigrationRunsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get runId => $composableBuilder(
+    column: $table.runId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get snapshotSha256 => $composableBuilder(
+    column: $table.snapshotSha256,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get snapshotManifestPath => $composableBuilder(
+    column: $table.snapshotManifestPath,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get migrationVersion => $composableBuilder(
+    column: $table.migrationVersion,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get occurrenceIdentityVersion => $composableBuilder(
+    column: $table.occurrenceIdentityVersion,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get preflightVersion => $composableBuilder(
+    column: $table.preflightVersion,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get createdByActorId => $composableBuilder(
+    column: $table.createdByActorId,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$LegacyMigrationRunsTableOrderingComposer
+    extends Composer<_$AppDatabase, $LegacyMigrationRunsTable> {
+  $$LegacyMigrationRunsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get runId => $composableBuilder(
+    column: $table.runId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get snapshotSha256 => $composableBuilder(
+    column: $table.snapshotSha256,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get snapshotManifestPath => $composableBuilder(
+    column: $table.snapshotManifestPath,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get migrationVersion => $composableBuilder(
+    column: $table.migrationVersion,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get occurrenceIdentityVersion => $composableBuilder(
+    column: $table.occurrenceIdentityVersion,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get preflightVersion => $composableBuilder(
+    column: $table.preflightVersion,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get createdByActorId => $composableBuilder(
+    column: $table.createdByActorId,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$LegacyMigrationRunsTableAnnotationComposer
+    extends Composer<_$AppDatabase, $LegacyMigrationRunsTable> {
+  $$LegacyMigrationRunsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get runId =>
+      $composableBuilder(column: $table.runId, builder: (column) => column);
+
+  GeneratedColumn<String> get snapshotSha256 => $composableBuilder(
+    column: $table.snapshotSha256,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get snapshotManifestPath => $composableBuilder(
+    column: $table.snapshotManifestPath,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get migrationVersion => $composableBuilder(
+    column: $table.migrationVersion,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get occurrenceIdentityVersion => $composableBuilder(
+    column: $table.occurrenceIdentityVersion,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get preflightVersion => $composableBuilder(
+    column: $table.preflightVersion,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  GeneratedColumn<String> get createdByActorId => $composableBuilder(
+    column: $table.createdByActorId,
+    builder: (column) => column,
+  );
+}
+
+class $$LegacyMigrationRunsTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $LegacyMigrationRunsTable,
+          LegacyMigrationRun,
+          $$LegacyMigrationRunsTableFilterComposer,
+          $$LegacyMigrationRunsTableOrderingComposer,
+          $$LegacyMigrationRunsTableAnnotationComposer,
+          $$LegacyMigrationRunsTableCreateCompanionBuilder,
+          $$LegacyMigrationRunsTableUpdateCompanionBuilder,
+          (
+            LegacyMigrationRun,
+            BaseReferences<
+              _$AppDatabase,
+              $LegacyMigrationRunsTable,
+              LegacyMigrationRun
+            >,
+          ),
+          LegacyMigrationRun,
+          PrefetchHooks Function()
+        > {
+  $$LegacyMigrationRunsTableTableManager(
+    _$AppDatabase db,
+    $LegacyMigrationRunsTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$LegacyMigrationRunsTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$LegacyMigrationRunsTableOrderingComposer(
+                $db: db,
+                $table: table,
+              ),
+          createComputedFieldComposer: () =>
+              $$LegacyMigrationRunsTableAnnotationComposer(
+                $db: db,
+                $table: table,
+              ),
+          updateCompanionCallback:
+              ({
+                Value<String> runId = const Value.absent(),
+                Value<String> snapshotSha256 = const Value.absent(),
+                Value<String> snapshotManifestPath = const Value.absent(),
+                Value<int> migrationVersion = const Value.absent(),
+                Value<int> occurrenceIdentityVersion = const Value.absent(),
+                Value<int> preflightVersion = const Value.absent(),
+                Value<int> createdAt = const Value.absent(),
+                Value<String> createdByActorId = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => LegacyMigrationRunsCompanion(
+                runId: runId,
+                snapshotSha256: snapshotSha256,
+                snapshotManifestPath: snapshotManifestPath,
+                migrationVersion: migrationVersion,
+                occurrenceIdentityVersion: occurrenceIdentityVersion,
+                preflightVersion: preflightVersion,
+                createdAt: createdAt,
+                createdByActorId: createdByActorId,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String runId,
+                required String snapshotSha256,
+                required String snapshotManifestPath,
+                required int migrationVersion,
+                required int occurrenceIdentityVersion,
+                required int preflightVersion,
+                required int createdAt,
+                required String createdByActorId,
+                Value<int> rowid = const Value.absent(),
+              }) => LegacyMigrationRunsCompanion.insert(
+                runId: runId,
+                snapshotSha256: snapshotSha256,
+                snapshotManifestPath: snapshotManifestPath,
+                migrationVersion: migrationVersion,
+                occurrenceIdentityVersion: occurrenceIdentityVersion,
+                preflightVersion: preflightVersion,
+                createdAt: createdAt,
+                createdByActorId: createdByActorId,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable<$LegacyMigrationRunsTable, LegacyMigrationRun>(
+                    table,
+                  ),
+                  BaseReferences<
+                    _$AppDatabase,
+                    $LegacyMigrationRunsTable,
+                    LegacyMigrationRun
+                  >(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$LegacyMigrationRunsTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $LegacyMigrationRunsTable,
+      LegacyMigrationRun,
+      $$LegacyMigrationRunsTableFilterComposer,
+      $$LegacyMigrationRunsTableOrderingComposer,
+      $$LegacyMigrationRunsTableAnnotationComposer,
+      $$LegacyMigrationRunsTableCreateCompanionBuilder,
+      $$LegacyMigrationRunsTableUpdateCompanionBuilder,
+      (
+        LegacyMigrationRun,
+        BaseReferences<
+          _$AppDatabase,
+          $LegacyMigrationRunsTable,
+          LegacyMigrationRun
+        >,
+      ),
+      LegacyMigrationRun,
+      PrefetchHooks Function()
+    >;
+typedef $$LegacyMigrationOccurrencesTableCreateCompanionBuilder =
+    LegacyMigrationOccurrencesCompanion Function({
+      required String runId,
+      required String sourceOccurrenceKey,
+      required int sourceIndex,
+      required String recordSha256,
+      Value<String?> legacyInvoiceId,
+      required String preflightClassification,
+      required String resolutionStatus,
+      Value<String?> expectedRole,
+      Value<String?> suggestedPartyId,
+      Value<String?> suggestedPartyName,
+      required String candidatePartyIdsJson,
+      required String findingsJson,
+      Value<int> rowid,
+    });
+typedef $$LegacyMigrationOccurrencesTableUpdateCompanionBuilder =
+    LegacyMigrationOccurrencesCompanion Function({
+      Value<String> runId,
+      Value<String> sourceOccurrenceKey,
+      Value<int> sourceIndex,
+      Value<String> recordSha256,
+      Value<String?> legacyInvoiceId,
+      Value<String> preflightClassification,
+      Value<String> resolutionStatus,
+      Value<String?> expectedRole,
+      Value<String?> suggestedPartyId,
+      Value<String?> suggestedPartyName,
+      Value<String> candidatePartyIdsJson,
+      Value<String> findingsJson,
+      Value<int> rowid,
+    });
+
+class $$LegacyMigrationOccurrencesTableFilterComposer
+    extends Composer<_$AppDatabase, $LegacyMigrationOccurrencesTable> {
+  $$LegacyMigrationOccurrencesTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get runId => $composableBuilder(
+    column: $table.runId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get sourceOccurrenceKey => $composableBuilder(
+    column: $table.sourceOccurrenceKey,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get sourceIndex => $composableBuilder(
+    column: $table.sourceIndex,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get recordSha256 => $composableBuilder(
+    column: $table.recordSha256,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get legacyInvoiceId => $composableBuilder(
+    column: $table.legacyInvoiceId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get preflightClassification => $composableBuilder(
+    column: $table.preflightClassification,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get resolutionStatus => $composableBuilder(
+    column: $table.resolutionStatus,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get expectedRole => $composableBuilder(
+    column: $table.expectedRole,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get suggestedPartyId => $composableBuilder(
+    column: $table.suggestedPartyId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get suggestedPartyName => $composableBuilder(
+    column: $table.suggestedPartyName,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get candidatePartyIdsJson => $composableBuilder(
+    column: $table.candidatePartyIdsJson,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get findingsJson => $composableBuilder(
+    column: $table.findingsJson,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$LegacyMigrationOccurrencesTableOrderingComposer
+    extends Composer<_$AppDatabase, $LegacyMigrationOccurrencesTable> {
+  $$LegacyMigrationOccurrencesTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get runId => $composableBuilder(
+    column: $table.runId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get sourceOccurrenceKey => $composableBuilder(
+    column: $table.sourceOccurrenceKey,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get sourceIndex => $composableBuilder(
+    column: $table.sourceIndex,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get recordSha256 => $composableBuilder(
+    column: $table.recordSha256,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get legacyInvoiceId => $composableBuilder(
+    column: $table.legacyInvoiceId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get preflightClassification => $composableBuilder(
+    column: $table.preflightClassification,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get resolutionStatus => $composableBuilder(
+    column: $table.resolutionStatus,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get expectedRole => $composableBuilder(
+    column: $table.expectedRole,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get suggestedPartyId => $composableBuilder(
+    column: $table.suggestedPartyId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get suggestedPartyName => $composableBuilder(
+    column: $table.suggestedPartyName,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get candidatePartyIdsJson => $composableBuilder(
+    column: $table.candidatePartyIdsJson,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get findingsJson => $composableBuilder(
+    column: $table.findingsJson,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$LegacyMigrationOccurrencesTableAnnotationComposer
+    extends Composer<_$AppDatabase, $LegacyMigrationOccurrencesTable> {
+  $$LegacyMigrationOccurrencesTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get runId =>
+      $composableBuilder(column: $table.runId, builder: (column) => column);
+
+  GeneratedColumn<String> get sourceOccurrenceKey => $composableBuilder(
+    column: $table.sourceOccurrenceKey,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get sourceIndex => $composableBuilder(
+    column: $table.sourceIndex,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get recordSha256 => $composableBuilder(
+    column: $table.recordSha256,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get legacyInvoiceId => $composableBuilder(
+    column: $table.legacyInvoiceId,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get preflightClassification => $composableBuilder(
+    column: $table.preflightClassification,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get resolutionStatus => $composableBuilder(
+    column: $table.resolutionStatus,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get expectedRole => $composableBuilder(
+    column: $table.expectedRole,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get suggestedPartyId => $composableBuilder(
+    column: $table.suggestedPartyId,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get suggestedPartyName => $composableBuilder(
+    column: $table.suggestedPartyName,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get candidatePartyIdsJson => $composableBuilder(
+    column: $table.candidatePartyIdsJson,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get findingsJson => $composableBuilder(
+    column: $table.findingsJson,
+    builder: (column) => column,
+  );
+}
+
+class $$LegacyMigrationOccurrencesTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $LegacyMigrationOccurrencesTable,
+          LegacyMigrationOccurrence,
+          $$LegacyMigrationOccurrencesTableFilterComposer,
+          $$LegacyMigrationOccurrencesTableOrderingComposer,
+          $$LegacyMigrationOccurrencesTableAnnotationComposer,
+          $$LegacyMigrationOccurrencesTableCreateCompanionBuilder,
+          $$LegacyMigrationOccurrencesTableUpdateCompanionBuilder,
+          (
+            LegacyMigrationOccurrence,
+            BaseReferences<
+              _$AppDatabase,
+              $LegacyMigrationOccurrencesTable,
+              LegacyMigrationOccurrence
+            >,
+          ),
+          LegacyMigrationOccurrence,
+          PrefetchHooks Function()
+        > {
+  $$LegacyMigrationOccurrencesTableTableManager(
+    _$AppDatabase db,
+    $LegacyMigrationOccurrencesTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$LegacyMigrationOccurrencesTableFilterComposer(
+                $db: db,
+                $table: table,
+              ),
+          createOrderingComposer: () =>
+              $$LegacyMigrationOccurrencesTableOrderingComposer(
+                $db: db,
+                $table: table,
+              ),
+          createComputedFieldComposer: () =>
+              $$LegacyMigrationOccurrencesTableAnnotationComposer(
+                $db: db,
+                $table: table,
+              ),
+          updateCompanionCallback:
+              ({
+                Value<String> runId = const Value.absent(),
+                Value<String> sourceOccurrenceKey = const Value.absent(),
+                Value<int> sourceIndex = const Value.absent(),
+                Value<String> recordSha256 = const Value.absent(),
+                Value<String?> legacyInvoiceId = const Value.absent(),
+                Value<String> preflightClassification = const Value.absent(),
+                Value<String> resolutionStatus = const Value.absent(),
+                Value<String?> expectedRole = const Value.absent(),
+                Value<String?> suggestedPartyId = const Value.absent(),
+                Value<String?> suggestedPartyName = const Value.absent(),
+                Value<String> candidatePartyIdsJson = const Value.absent(),
+                Value<String> findingsJson = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => LegacyMigrationOccurrencesCompanion(
+                runId: runId,
+                sourceOccurrenceKey: sourceOccurrenceKey,
+                sourceIndex: sourceIndex,
+                recordSha256: recordSha256,
+                legacyInvoiceId: legacyInvoiceId,
+                preflightClassification: preflightClassification,
+                resolutionStatus: resolutionStatus,
+                expectedRole: expectedRole,
+                suggestedPartyId: suggestedPartyId,
+                suggestedPartyName: suggestedPartyName,
+                candidatePartyIdsJson: candidatePartyIdsJson,
+                findingsJson: findingsJson,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String runId,
+                required String sourceOccurrenceKey,
+                required int sourceIndex,
+                required String recordSha256,
+                Value<String?> legacyInvoiceId = const Value.absent(),
+                required String preflightClassification,
+                required String resolutionStatus,
+                Value<String?> expectedRole = const Value.absent(),
+                Value<String?> suggestedPartyId = const Value.absent(),
+                Value<String?> suggestedPartyName = const Value.absent(),
+                required String candidatePartyIdsJson,
+                required String findingsJson,
+                Value<int> rowid = const Value.absent(),
+              }) => LegacyMigrationOccurrencesCompanion.insert(
+                runId: runId,
+                sourceOccurrenceKey: sourceOccurrenceKey,
+                sourceIndex: sourceIndex,
+                recordSha256: recordSha256,
+                legacyInvoiceId: legacyInvoiceId,
+                preflightClassification: preflightClassification,
+                resolutionStatus: resolutionStatus,
+                expectedRole: expectedRole,
+                suggestedPartyId: suggestedPartyId,
+                suggestedPartyName: suggestedPartyName,
+                candidatePartyIdsJson: candidatePartyIdsJson,
+                findingsJson: findingsJson,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable<
+                    $LegacyMigrationOccurrencesTable,
+                    LegacyMigrationOccurrence
+                  >(table),
+                  BaseReferences<
+                    _$AppDatabase,
+                    $LegacyMigrationOccurrencesTable,
+                    LegacyMigrationOccurrence
+                  >(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$LegacyMigrationOccurrencesTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $LegacyMigrationOccurrencesTable,
+      LegacyMigrationOccurrence,
+      $$LegacyMigrationOccurrencesTableFilterComposer,
+      $$LegacyMigrationOccurrencesTableOrderingComposer,
+      $$LegacyMigrationOccurrencesTableAnnotationComposer,
+      $$LegacyMigrationOccurrencesTableCreateCompanionBuilder,
+      $$LegacyMigrationOccurrencesTableUpdateCompanionBuilder,
+      (
+        LegacyMigrationOccurrence,
+        BaseReferences<
+          _$AppDatabase,
+          $LegacyMigrationOccurrencesTable,
+          LegacyMigrationOccurrence
+        >,
+      ),
+      LegacyMigrationOccurrence,
+      PrefetchHooks Function()
+    >;
+typedef $$LegacyPartyReviewDecisionsTableCreateCompanionBuilder =
+    LegacyPartyReviewDecisionsCompanion Function({
+      required String decisionId,
+      required String runId,
+      required String sourceOccurrenceKey,
+      required int sequence,
+      Value<String?> previousDecisionId,
+      required String action,
+      Value<String?> expectedRole,
+      Value<String?> resolvedPartyId,
+      Value<String?> resolvedPartyName,
+      Value<String?> resolvedPartyRole,
+      required String reviewerId,
+      required int decidedAt,
+      Value<String?> reviewNote,
+      required String idempotencyKey,
+      required String requestFingerprint,
+      Value<int> rowid,
+    });
+typedef $$LegacyPartyReviewDecisionsTableUpdateCompanionBuilder =
+    LegacyPartyReviewDecisionsCompanion Function({
+      Value<String> decisionId,
+      Value<String> runId,
+      Value<String> sourceOccurrenceKey,
+      Value<int> sequence,
+      Value<String?> previousDecisionId,
+      Value<String> action,
+      Value<String?> expectedRole,
+      Value<String?> resolvedPartyId,
+      Value<String?> resolvedPartyName,
+      Value<String?> resolvedPartyRole,
+      Value<String> reviewerId,
+      Value<int> decidedAt,
+      Value<String?> reviewNote,
+      Value<String> idempotencyKey,
+      Value<String> requestFingerprint,
+      Value<int> rowid,
+    });
+
+class $$LegacyPartyReviewDecisionsTableFilterComposer
+    extends Composer<_$AppDatabase, $LegacyPartyReviewDecisionsTable> {
+  $$LegacyPartyReviewDecisionsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get decisionId => $composableBuilder(
+    column: $table.decisionId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get runId => $composableBuilder(
+    column: $table.runId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get sourceOccurrenceKey => $composableBuilder(
+    column: $table.sourceOccurrenceKey,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get sequence => $composableBuilder(
+    column: $table.sequence,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get previousDecisionId => $composableBuilder(
+    column: $table.previousDecisionId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get action => $composableBuilder(
+    column: $table.action,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get expectedRole => $composableBuilder(
+    column: $table.expectedRole,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get resolvedPartyId => $composableBuilder(
+    column: $table.resolvedPartyId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get resolvedPartyName => $composableBuilder(
+    column: $table.resolvedPartyName,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get resolvedPartyRole => $composableBuilder(
+    column: $table.resolvedPartyRole,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get reviewerId => $composableBuilder(
+    column: $table.reviewerId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get decidedAt => $composableBuilder(
+    column: $table.decidedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get reviewNote => $composableBuilder(
+    column: $table.reviewNote,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get idempotencyKey => $composableBuilder(
+    column: $table.idempotencyKey,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get requestFingerprint => $composableBuilder(
+    column: $table.requestFingerprint,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$LegacyPartyReviewDecisionsTableOrderingComposer
+    extends Composer<_$AppDatabase, $LegacyPartyReviewDecisionsTable> {
+  $$LegacyPartyReviewDecisionsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get decisionId => $composableBuilder(
+    column: $table.decisionId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get runId => $composableBuilder(
+    column: $table.runId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get sourceOccurrenceKey => $composableBuilder(
+    column: $table.sourceOccurrenceKey,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get sequence => $composableBuilder(
+    column: $table.sequence,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get previousDecisionId => $composableBuilder(
+    column: $table.previousDecisionId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get action => $composableBuilder(
+    column: $table.action,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get expectedRole => $composableBuilder(
+    column: $table.expectedRole,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get resolvedPartyId => $composableBuilder(
+    column: $table.resolvedPartyId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get resolvedPartyName => $composableBuilder(
+    column: $table.resolvedPartyName,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get resolvedPartyRole => $composableBuilder(
+    column: $table.resolvedPartyRole,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get reviewerId => $composableBuilder(
+    column: $table.reviewerId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get decidedAt => $composableBuilder(
+    column: $table.decidedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get reviewNote => $composableBuilder(
+    column: $table.reviewNote,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get idempotencyKey => $composableBuilder(
+    column: $table.idempotencyKey,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get requestFingerprint => $composableBuilder(
+    column: $table.requestFingerprint,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$LegacyPartyReviewDecisionsTableAnnotationComposer
+    extends Composer<_$AppDatabase, $LegacyPartyReviewDecisionsTable> {
+  $$LegacyPartyReviewDecisionsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get decisionId => $composableBuilder(
+    column: $table.decisionId,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get runId =>
+      $composableBuilder(column: $table.runId, builder: (column) => column);
+
+  GeneratedColumn<String> get sourceOccurrenceKey => $composableBuilder(
+    column: $table.sourceOccurrenceKey,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get sequence =>
+      $composableBuilder(column: $table.sequence, builder: (column) => column);
+
+  GeneratedColumn<String> get previousDecisionId => $composableBuilder(
+    column: $table.previousDecisionId,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get action =>
+      $composableBuilder(column: $table.action, builder: (column) => column);
+
+  GeneratedColumn<String> get expectedRole => $composableBuilder(
+    column: $table.expectedRole,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get resolvedPartyId => $composableBuilder(
+    column: $table.resolvedPartyId,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get resolvedPartyName => $composableBuilder(
+    column: $table.resolvedPartyName,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get resolvedPartyRole => $composableBuilder(
+    column: $table.resolvedPartyRole,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get reviewerId => $composableBuilder(
+    column: $table.reviewerId,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get decidedAt =>
+      $composableBuilder(column: $table.decidedAt, builder: (column) => column);
+
+  GeneratedColumn<String> get reviewNote => $composableBuilder(
+    column: $table.reviewNote,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get idempotencyKey => $composableBuilder(
+    column: $table.idempotencyKey,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get requestFingerprint => $composableBuilder(
+    column: $table.requestFingerprint,
+    builder: (column) => column,
+  );
+}
+
+class $$LegacyPartyReviewDecisionsTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $LegacyPartyReviewDecisionsTable,
+          LegacyPartyReviewDecision,
+          $$LegacyPartyReviewDecisionsTableFilterComposer,
+          $$LegacyPartyReviewDecisionsTableOrderingComposer,
+          $$LegacyPartyReviewDecisionsTableAnnotationComposer,
+          $$LegacyPartyReviewDecisionsTableCreateCompanionBuilder,
+          $$LegacyPartyReviewDecisionsTableUpdateCompanionBuilder,
+          (
+            LegacyPartyReviewDecision,
+            BaseReferences<
+              _$AppDatabase,
+              $LegacyPartyReviewDecisionsTable,
+              LegacyPartyReviewDecision
+            >,
+          ),
+          LegacyPartyReviewDecision,
+          PrefetchHooks Function()
+        > {
+  $$LegacyPartyReviewDecisionsTableTableManager(
+    _$AppDatabase db,
+    $LegacyPartyReviewDecisionsTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$LegacyPartyReviewDecisionsTableFilterComposer(
+                $db: db,
+                $table: table,
+              ),
+          createOrderingComposer: () =>
+              $$LegacyPartyReviewDecisionsTableOrderingComposer(
+                $db: db,
+                $table: table,
+              ),
+          createComputedFieldComposer: () =>
+              $$LegacyPartyReviewDecisionsTableAnnotationComposer(
+                $db: db,
+                $table: table,
+              ),
+          updateCompanionCallback:
+              ({
+                Value<String> decisionId = const Value.absent(),
+                Value<String> runId = const Value.absent(),
+                Value<String> sourceOccurrenceKey = const Value.absent(),
+                Value<int> sequence = const Value.absent(),
+                Value<String?> previousDecisionId = const Value.absent(),
+                Value<String> action = const Value.absent(),
+                Value<String?> expectedRole = const Value.absent(),
+                Value<String?> resolvedPartyId = const Value.absent(),
+                Value<String?> resolvedPartyName = const Value.absent(),
+                Value<String?> resolvedPartyRole = const Value.absent(),
+                Value<String> reviewerId = const Value.absent(),
+                Value<int> decidedAt = const Value.absent(),
+                Value<String?> reviewNote = const Value.absent(),
+                Value<String> idempotencyKey = const Value.absent(),
+                Value<String> requestFingerprint = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => LegacyPartyReviewDecisionsCompanion(
+                decisionId: decisionId,
+                runId: runId,
+                sourceOccurrenceKey: sourceOccurrenceKey,
+                sequence: sequence,
+                previousDecisionId: previousDecisionId,
+                action: action,
+                expectedRole: expectedRole,
+                resolvedPartyId: resolvedPartyId,
+                resolvedPartyName: resolvedPartyName,
+                resolvedPartyRole: resolvedPartyRole,
+                reviewerId: reviewerId,
+                decidedAt: decidedAt,
+                reviewNote: reviewNote,
+                idempotencyKey: idempotencyKey,
+                requestFingerprint: requestFingerprint,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String decisionId,
+                required String runId,
+                required String sourceOccurrenceKey,
+                required int sequence,
+                Value<String?> previousDecisionId = const Value.absent(),
+                required String action,
+                Value<String?> expectedRole = const Value.absent(),
+                Value<String?> resolvedPartyId = const Value.absent(),
+                Value<String?> resolvedPartyName = const Value.absent(),
+                Value<String?> resolvedPartyRole = const Value.absent(),
+                required String reviewerId,
+                required int decidedAt,
+                Value<String?> reviewNote = const Value.absent(),
+                required String idempotencyKey,
+                required String requestFingerprint,
+                Value<int> rowid = const Value.absent(),
+              }) => LegacyPartyReviewDecisionsCompanion.insert(
+                decisionId: decisionId,
+                runId: runId,
+                sourceOccurrenceKey: sourceOccurrenceKey,
+                sequence: sequence,
+                previousDecisionId: previousDecisionId,
+                action: action,
+                expectedRole: expectedRole,
+                resolvedPartyId: resolvedPartyId,
+                resolvedPartyName: resolvedPartyName,
+                resolvedPartyRole: resolvedPartyRole,
+                reviewerId: reviewerId,
+                decidedAt: decidedAt,
+                reviewNote: reviewNote,
+                idempotencyKey: idempotencyKey,
+                requestFingerprint: requestFingerprint,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable<
+                    $LegacyPartyReviewDecisionsTable,
+                    LegacyPartyReviewDecision
+                  >(table),
+                  BaseReferences<
+                    _$AppDatabase,
+                    $LegacyPartyReviewDecisionsTable,
+                    LegacyPartyReviewDecision
+                  >(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$LegacyPartyReviewDecisionsTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $LegacyPartyReviewDecisionsTable,
+      LegacyPartyReviewDecision,
+      $$LegacyPartyReviewDecisionsTableFilterComposer,
+      $$LegacyPartyReviewDecisionsTableOrderingComposer,
+      $$LegacyPartyReviewDecisionsTableAnnotationComposer,
+      $$LegacyPartyReviewDecisionsTableCreateCompanionBuilder,
+      $$LegacyPartyReviewDecisionsTableUpdateCompanionBuilder,
+      (
+        LegacyPartyReviewDecision,
+        BaseReferences<
+          _$AppDatabase,
+          $LegacyPartyReviewDecisionsTable,
+          LegacyPartyReviewDecision
+        >,
+      ),
+      LegacyPartyReviewDecision,
+      PrefetchHooks Function()
+    >;
 
 class $AppDatabaseManager {
   final _$AppDatabase _db;
@@ -20595,5 +24033,19 @@ class $AppDatabaseManager {
       $$InvoiceLifecycleEventsTableTableManager(
         _db,
         _db.invoiceLifecycleEvents,
+      );
+  $$LegacyMigrationRunsTableTableManager get legacyMigrationRuns =>
+      $$LegacyMigrationRunsTableTableManager(_db, _db.legacyMigrationRuns);
+  $$LegacyMigrationOccurrencesTableTableManager
+  get legacyMigrationOccurrences =>
+      $$LegacyMigrationOccurrencesTableTableManager(
+        _db,
+        _db.legacyMigrationOccurrences,
+      );
+  $$LegacyPartyReviewDecisionsTableTableManager
+  get legacyPartyReviewDecisions =>
+      $$LegacyPartyReviewDecisionsTableTableManager(
+        _db,
+        _db.legacyPartyReviewDecisions,
       );
 }

@@ -51,9 +51,9 @@ void main() {
     await temporaryDirectory.delete(recursive: true);
   });
 
-  test('initializes the ledger schema with version 5', () async {
-    expect(database.schemaVersion, 5);
-    expect(await database.storedSchemaVersion, 5);
+  test('initializes the ledger schema with version 6', () async {
+    expect(database.schemaVersion, 6);
+    expect(await database.storedSchemaVersion, 6);
 
     final tables = await database
         .customSelect(
@@ -75,6 +75,9 @@ void main() {
       'invoice_lifecycle_events',
       'invoice_lines',
       'invoices',
+      'legacy_migration_occurrences',
+      'legacy_migration_runs',
+      'legacy_party_review_decisions',
       'parties',
       'party_roles',
       'payment_identities',
@@ -211,6 +214,9 @@ void main() {
       'refund_allocation_reversals',
       'payment_refunds',
       'invoice_lifecycle_events',
+      'legacy_party_review_decisions',
+      'legacy_migration_occurrences',
+      'legacy_migration_runs',
       'allocation_status_history',
       'allocation_reversals',
       'invoice_allocations',
@@ -236,7 +242,7 @@ void main() {
 
     database = await AppDatabase.open(path: databasePath);
 
-    expect(await database.storedSchemaVersion, 5);
+    expect(await database.storedSchemaVersion, 6);
     final tables = await database
         .customSelect(
           "SELECT COUNT(*) AS count FROM sqlite_master "
@@ -248,10 +254,10 @@ void main() {
           "'invoice_allocations', 'allocation_reversals', "
           "'allocation_status_history', 'payment_refunds', "
           "'refund_allocation_reversals', 'refund_financial_transactions', "
-          "'invoice_lifecycle_events')",
+          "'invoice_lifecycle_events', 'legacy_migration_runs', 'legacy_migration_occurrences', 'legacy_party_review_decisions')",
         )
         .getSingle();
-    expect(tables.read<int>('count'), 21);
+    expect(tables.read<int>('count'), 24);
   });
 
   test('migrates a genuine Stage 2 database without losing records', () async {
@@ -341,7 +347,7 @@ void main() {
 
     database = await AppDatabase.open(path: databasePath);
 
-    expect(await database.storedSchemaVersion, 5);
+    expect(await database.storedSchemaVersion, 6);
     expect(
       await database
           .customSelect('SELECT * FROM currencies')
@@ -520,6 +526,9 @@ void main() {
           'refund_allocation_reversals',
           'suspense_entries',
           'suspense_resolutions',
+          'legacy_migration_runs',
+          'legacy_migration_occurrences',
+          'legacy_party_review_decisions',
         ]) ...['${table}_immutable_delete', '${table}_immutable_update'],
       ]),
     );

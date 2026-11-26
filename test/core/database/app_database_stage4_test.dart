@@ -66,7 +66,7 @@ void main() {
 
       database = await AppDatabase.open(path: databasePath);
 
-      expect(await database!.storedSchemaVersion, 5);
+      expect(await database!.storedSchemaVersion, 6);
       expect(await _snapshotVersion3Tables(database!), before);
       expect(
         await database!
@@ -89,6 +89,9 @@ void main() {
           'invoice_lifecycle_events',
           'invoice_lines',
           'invoices',
+          'legacy_migration_occurrences',
+          'legacy_migration_runs',
+          'legacy_party_review_decisions',
           'parties',
           'party_roles',
           'payment_identities',
@@ -117,7 +120,7 @@ void main() {
       final beforeReopen = await _snapshotVersion3Tables(database!);
       await database!.close();
       database = await AppDatabase.open(path: databasePath);
-      expect(await database!.storedSchemaVersion, 5);
+      expect(await database!.storedSchemaVersion, 6);
       expect(await _snapshotVersion3Tables(database!), beforeReopen);
     },
   );
@@ -199,7 +202,7 @@ void main() {
 
       database = await AppDatabase.open(path: databasePath);
 
-      expect(await database!.storedSchemaVersion, 5);
+      expect(await database!.storedSchemaVersion, 6);
       final migratedRows = await database!
           .customSelect(
             'SELECT * FROM allocation_reversals '

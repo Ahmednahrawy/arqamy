@@ -780,6 +780,121 @@ class InvoiceLifecycleEvents extends Table {
   ];
 }
 
+class LegacyMigrationRuns extends Table {
+  @override
+  String get tableName => 'legacy_migration_runs';
+  TextColumn get runId => text().named('run_id')();
+  TextColumn get snapshotSha256 => text().named('snapshot_sha256')();
+  TextColumn get snapshotManifestPath =>
+      text().named('snapshot_manifest_path')();
+  IntColumn get migrationVersion => integer().named('migration_version')();
+  IntColumn get occurrenceIdentityVersion =>
+      integer().named('occurrence_identity_version')();
+  IntColumn get preflightVersion => integer().named('preflight_version')();
+  IntColumn get createdAt => integer().named('created_at')();
+  TextColumn get createdByActorId => text().named('created_by_actor_id')();
+  @override
+  Set<Column> get primaryKey => {runId};
+  @override
+  List<String> get customConstraints => [
+    "CHECK (length(trim(run_id)) > 0)",
+    "CHECK (length(snapshot_sha256) = 64 AND snapshot_sha256 NOT GLOB '*[^0-9a-fA-F]*')",
+    "CHECK (length(trim(snapshot_manifest_path)) > 0)",
+    'CHECK (migration_version > 0)',
+    'CHECK (occurrence_identity_version > 0)',
+    'CHECK (preflight_version > 0)',
+    "CHECK (length(trim(created_by_actor_id)) > 0)",
+  ];
+}
+
+class LegacyMigrationOccurrences extends Table {
+  @override
+  String get tableName => 'legacy_migration_occurrences';
+  TextColumn get runId => text().named('run_id')();
+  TextColumn get sourceOccurrenceKey => text().named('source_occurrence_key')();
+  IntColumn get sourceIndex => integer().named('source_index')();
+  TextColumn get recordSha256 => text().named('record_sha256')();
+  TextColumn get legacyInvoiceId =>
+      text().named('legacy_invoice_id').nullable()();
+  TextColumn get preflightClassification =>
+      text().named('preflight_classification')();
+  TextColumn get resolutionStatus => text().named('resolution_status')();
+  TextColumn get expectedRole => text().named('expected_role').nullable()();
+  TextColumn get suggestedPartyId =>
+      text().named('suggested_party_id').nullable()();
+  TextColumn get suggestedPartyName =>
+      text().named('suggested_party_name').nullable()();
+  TextColumn get candidatePartyIdsJson =>
+      text().named('candidate_party_ids_json')();
+  TextColumn get findingsJson => text().named('findings_json')();
+  @override
+  Set<Column> get primaryKey => {runId, sourceOccurrenceKey};
+  @override
+  List<String> get customConstraints => [
+    "CHECK (length(trim(source_occurrence_key)) > 0)",
+    'CHECK (source_index >= 0)',
+    "CHECK (length(record_sha256) = 64 AND record_sha256 NOT GLOB '*[^0-9a-fA-F]*')",
+    "CHECK (length(trim(preflight_classification)) > 0)",
+    "CHECK (length(trim(resolution_status)) > 0)",
+    "CHECK (expected_role IS NULL OR expected_role IN ('customer', 'supplier'))",
+    'CHECK (suggested_party_id IS NULL OR length(trim(suggested_party_id)) > 0)',
+    'CHECK (suggested_party_name IS NULL OR length(trim(suggested_party_name)) > 0)',
+    'CHECK ((suggested_party_id IS NULL AND suggested_party_name IS NULL) OR '
+        '(suggested_party_id IS NOT NULL AND suggested_party_name IS NOT NULL))',
+    'CHECK (json_valid(candidate_party_ids_json))',
+    'CHECK (json_valid(findings_json))',
+    'FOREIGN KEY (run_id) REFERENCES legacy_migration_runs (run_id)',
+    'FOREIGN KEY (suggested_party_id) REFERENCES parties (party_id)',
+  ];
+}
+
+class LegacyPartyReviewDecisions extends Table {
+  @override
+  String get tableName => 'legacy_party_review_decisions';
+  TextColumn get decisionId => text().named('decision_id')();
+  TextColumn get runId => text().named('run_id')();
+  TextColumn get sourceOccurrenceKey => text().named('source_occurrence_key')();
+  IntColumn get sequence => integer().named('sequence')();
+  TextColumn get previousDecisionId =>
+      text().named('previous_decision_id').nullable()();
+  TextColumn get action => text().named('action')();
+  TextColumn get expectedRole => text().named('expected_role').nullable()();
+  TextColumn get resolvedPartyId =>
+      text().named('resolved_party_id').nullable()();
+  TextColumn get resolvedPartyName =>
+      text().named('resolved_party_name').nullable()();
+  TextColumn get resolvedPartyRole =>
+      text().named('resolved_party_role').nullable()();
+  TextColumn get reviewerId => text().named('reviewer_id')();
+  IntColumn get decidedAt => integer().named('decided_at')();
+  TextColumn get reviewNote => text().named('review_note').nullable()();
+  TextColumn get idempotencyKey => text().named('idempotency_key')();
+  TextColumn get requestFingerprint => text().named('request_fingerprint')();
+  @override
+  Set<Column> get primaryKey => {decisionId};
+  @override
+  List<Set<Column>> get uniqueKeys => [
+    {runId, sourceOccurrenceKey, sequence},
+    {idempotencyKey},
+    {decisionId, runId, sourceOccurrenceKey},
+  ];
+  @override
+  List<String> get customConstraints => [
+    "CHECK (length(trim(decision_id)) > 0)",
+    'CHECK (sequence > 0)',
+    "CHECK (action IN ('acceptSuggestedMatch', 'selectParty', 'keepHeld'))",
+    "CHECK (expected_role IS NULL OR expected_role IN ('customer', 'supplier'))",
+    "CHECK (resolved_party_role IS NULL OR resolved_party_role IN ('customer', 'supplier'))",
+    "CHECK (length(trim(reviewer_id)) > 0)",
+    "CHECK (length(trim(idempotency_key)) > 0)",
+    "CHECK (length(trim(request_fingerprint)) > 0)",
+    "CHECK (action != 'keepHeld' OR (resolved_party_id IS NULL AND resolved_party_name IS NULL AND resolved_party_role IS NULL))",
+    "CHECK (action = 'keepHeld' OR (expected_role IS NOT NULL AND resolved_party_id IS NOT NULL AND length(trim(resolved_party_name)) > 0 AND resolved_party_role = expected_role))",
+    'FOREIGN KEY (run_id, source_occurrence_key) REFERENCES legacy_migration_occurrences (run_id, source_occurrence_key)',
+    'FOREIGN KEY (previous_decision_id, run_id, source_occurrence_key) REFERENCES legacy_party_review_decisions (decision_id, run_id, source_occurrence_key)',
+  ];
+}
+
 @DriftDatabase(
   tables: [
     Currencies,
@@ -803,13 +918,16 @@ class InvoiceLifecycleEvents extends Table {
     RefundFinancialTransactions,
     RefundAllocationReversals,
     InvoiceLifecycleEvents,
+    LegacyMigrationRuns,
+    LegacyMigrationOccurrences,
+    LegacyPartyReviewDecisions,
   ],
 )
 class AppDatabase extends _$AppDatabase {
   AppDatabase._(super.executor);
 
   @override
-  int get schemaVersion => 5;
+  int get schemaVersion => 6;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -817,12 +935,14 @@ class AppDatabase extends _$AppDatabase {
       await m.createAll();
       await _createCashEventIndexesAndTriggers();
       await _createStage4IndexesAndTriggers();
+      await _createLegacyPartyReviewJournalTriggers();
     },
     onUpgrade: (m, from, to) async {
       if (from < 2) {
         await m.createAll();
         await _createCashEventIndexesAndTriggers();
         await _createStage4IndexesAndTriggers();
+        await _createLegacyPartyReviewJournalTriggers();
       } else if (from < 3) {
         await m.createTable(paymentIdentities);
         await m.createTable(cashEvents);
@@ -838,6 +958,18 @@ class AppDatabase extends _$AppDatabase {
         await _migrateV3ToV4(m);
       } else if (from < 5) {
         await _migrateV4ToV5();
+      }
+
+      if (from >= 2 && from < 6) {
+        // Drift does not wrap migration callbacks in transactions by default.
+        // Keep the v6 journal schema and its triggers atomic so a failed
+        // upgrade can be retried safely without leaving a partial schema.
+        await transaction(() async {
+          await m.createTable(legacyMigrationRuns);
+          await m.createTable(legacyMigrationOccurrences);
+          await m.createTable(legacyPartyReviewDecisions);
+          await _createLegacyPartyReviewJournalTriggers();
+        });
       }
     },
   );
@@ -1029,6 +1161,93 @@ class AppDatabase extends _$AppDatabase {
         [for (final column in columns) row[column]],
       );
     }
+  }
+
+  Future<void> _createLegacyPartyReviewJournalTriggers() async {
+    for (final table in [
+      'legacy_migration_runs',
+      'legacy_migration_occurrences',
+      'legacy_party_review_decisions',
+    ]) {
+      await customStatement(
+        'CREATE TRIGGER IF NOT EXISTS ${table}_immutable_update '
+        'BEFORE UPDATE ON $table BEGIN '
+        "SELECT RAISE(ABORT, '$table is append-only'); END",
+      );
+      await customStatement(
+        'CREATE TRIGGER IF NOT EXISTS ${table}_immutable_delete '
+        'BEFORE DELETE ON $table BEGIN '
+        "SELECT RAISE(ABORT, '$table is append-only'); END",
+      );
+    }
+
+    await customStatement('''
+      CREATE TRIGGER IF NOT EXISTS legacy_migration_occurrences_validate_insert
+      BEFORE INSERT ON legacy_migration_occurrences
+      WHEN NOT EXISTS (
+        SELECT 1 FROM legacy_migration_runs r WHERE r.run_id = NEW.run_id
+      )
+      OR EXISTS (
+        SELECT 1 FROM legacy_party_review_decisions d
+        WHERE d.run_id = NEW.run_id
+      )
+      OR (NEW.suggested_party_id IS NOT NULL AND NOT EXISTS (
+        SELECT 1 FROM parties p WHERE p.party_id = NEW.suggested_party_id
+      ))
+      BEGIN
+        SELECT RAISE(ABORT, 'Invalid or already reviewed legacy occurrence');
+      END
+    ''');
+
+    await customStatement('''
+      CREATE TRIGGER IF NOT EXISTS legacy_party_review_decisions_validate_insert
+      BEFORE INSERT ON legacy_party_review_decisions
+      WHEN NOT EXISTS (
+        SELECT 1
+        FROM legacy_migration_occurrences o
+        WHERE o.run_id = NEW.run_id
+          AND o.source_occurrence_key = NEW.source_occurrence_key
+          AND o.expected_role IS NEW.expected_role
+      )
+      OR (NEW.sequence = 1 AND NEW.previous_decision_id IS NOT NULL)
+      OR (NEW.sequence > 1 AND NOT EXISTS (
+        SELECT 1
+        FROM legacy_party_review_decisions previous
+        WHERE previous.decision_id = NEW.previous_decision_id
+          AND previous.run_id = NEW.run_id
+          AND previous.source_occurrence_key = NEW.source_occurrence_key
+          AND previous.sequence = NEW.sequence - 1
+      ))
+      OR NEW.sequence != (
+        SELECT COALESCE(MAX(existing.sequence), 0) + 1
+        FROM legacy_party_review_decisions existing
+        WHERE existing.run_id = NEW.run_id
+          AND existing.source_occurrence_key = NEW.source_occurrence_key
+      )
+      OR (NEW.action = 'acceptSuggestedMatch' AND NOT EXISTS (
+        SELECT 1
+        FROM legacy_migration_occurrences o
+        JOIN parties p ON p.party_id = o.suggested_party_id
+        JOIN party_roles pr ON pr.party_id = p.party_id
+        WHERE o.run_id = NEW.run_id
+          AND o.source_occurrence_key = NEW.source_occurrence_key
+          AND o.suggested_party_id = NEW.resolved_party_id
+          AND pr.role = NEW.expected_role
+          AND NEW.resolved_party_role = NEW.expected_role
+      ))
+      OR (NEW.action = 'selectParty' AND NOT EXISTS (
+        SELECT 1
+        FROM parties p
+        JOIN party_roles pr ON pr.party_id = p.party_id
+        WHERE p.party_id = NEW.resolved_party_id
+          AND p.display_name = NEW.resolved_party_name
+          AND pr.role = NEW.expected_role
+          AND NEW.resolved_party_role = NEW.expected_role
+      ))
+      BEGIN
+        SELECT RAISE(ABORT, 'Invalid legacy party review decision');
+      END
+    ''');
   }
 
   Future<void> _createCashEventIndexesAndTriggers() async {
