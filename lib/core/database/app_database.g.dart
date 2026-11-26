@@ -15971,6 +15971,4619 @@ class LegacyPartyReviewDecisionsCompanion
   }
 }
 
+class $LegacyInvoiceImportRunsTable extends LegacyInvoiceImportRuns
+    with TableInfo<$LegacyInvoiceImportRunsTable, LegacyInvoiceImportRun> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $LegacyInvoiceImportRunsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _runIdMeta = const VerificationMeta('runId');
+  @override
+  late final GeneratedColumn<String> runId = GeneratedColumn<String>(
+    'run_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _parentRunIdMeta = const VerificationMeta(
+    'parentRunId',
+  );
+  @override
+  late final GeneratedColumn<String> parentRunId = GeneratedColumn<String>(
+    'parent_run_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _snapshotSha256Meta = const VerificationMeta(
+    'snapshotSha256',
+  );
+  @override
+  late final GeneratedColumn<String> snapshotSha256 = GeneratedColumn<String>(
+    'snapshot_sha256',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _snapshotByteLengthMeta =
+      const VerificationMeta('snapshotByteLength');
+  @override
+  late final GeneratedColumn<int> snapshotByteLength = GeneratedColumn<int>(
+    'snapshot_byte_length',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _snapshotSourceExistsMeta =
+      const VerificationMeta('snapshotSourceExists');
+  @override
+  late final GeneratedColumn<int> snapshotSourceExists = GeneratedColumn<int>(
+    'snapshot_source_exists',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _snapshotFormatVersionMeta =
+      const VerificationMeta('snapshotFormatVersion');
+  @override
+  late final GeneratedColumn<int> snapshotFormatVersion = GeneratedColumn<int>(
+    'snapshot_format_version',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _migrationVersionMeta = const VerificationMeta(
+    'migrationVersion',
+  );
+  @override
+  late final GeneratedColumn<int> migrationVersion = GeneratedColumn<int>(
+    'migration_version',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _occurrenceIdentityVersionMeta =
+      const VerificationMeta('occurrenceIdentityVersion');
+  @override
+  late final GeneratedColumn<int> occurrenceIdentityVersion =
+      GeneratedColumn<int>(
+        'occurrence_identity_version',
+        aliasedName,
+        false,
+        type: DriftSqlType.int,
+        requiredDuringInsert: true,
+      );
+  static const VerificationMeta _preflightVersionMeta = const VerificationMeta(
+    'preflightVersion',
+  );
+  @override
+  late final GeneratedColumn<int> preflightVersion = GeneratedColumn<int>(
+    'preflight_version',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _mappingContractVersionMeta =
+      const VerificationMeta('mappingContractVersion');
+  @override
+  late final GeneratedColumn<int> mappingContractVersion = GeneratedColumn<int>(
+    'mapping_contract_version',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _partyReviewRunIdMeta = const VerificationMeta(
+    'partyReviewRunId',
+  );
+  @override
+  late final GeneratedColumn<String> partyReviewRunId = GeneratedColumn<String>(
+    'party_review_run_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _exportManifestSha256Meta =
+      const VerificationMeta('exportManifestSha256');
+  @override
+  late final GeneratedColumn<String> exportManifestSha256 =
+      GeneratedColumn<String>(
+        'export_manifest_sha256',
+        aliasedName,
+        true,
+        type: DriftSqlType.string,
+        requiredDuringInsert: false,
+      );
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
+  );
+  @override
+  late final GeneratedColumn<int> createdAt = GeneratedColumn<int>(
+    'created_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _createdByActorIdMeta = const VerificationMeta(
+    'createdByActorId',
+  );
+  @override
+  late final GeneratedColumn<String> createdByActorId = GeneratedColumn<String>(
+    'created_by_actor_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _createdByActorSourceMeta =
+      const VerificationMeta('createdByActorSource');
+  @override
+  late final GeneratedColumn<String> createdByActorSource =
+      GeneratedColumn<String>(
+        'created_by_actor_source',
+        aliasedName,
+        false,
+        type: DriftSqlType.string,
+        requiredDuringInsert: true,
+      );
+  static const VerificationMeta _statusMeta = const VerificationMeta('status');
+  @override
+  late final GeneratedColumn<String> status = GeneratedColumn<String>(
+    'status',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _updatedAtMeta = const VerificationMeta(
+    'updatedAt',
+  );
+  @override
+  late final GeneratedColumn<int> updatedAt = GeneratedColumn<int>(
+    'updated_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    runId,
+    parentRunId,
+    snapshotSha256,
+    snapshotByteLength,
+    snapshotSourceExists,
+    snapshotFormatVersion,
+    migrationVersion,
+    occurrenceIdentityVersion,
+    preflightVersion,
+    mappingContractVersion,
+    partyReviewRunId,
+    exportManifestSha256,
+    createdAt,
+    createdByActorId,
+    createdByActorSource,
+    status,
+    updatedAt,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'legacy_invoice_import_runs';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<LegacyInvoiceImportRun> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('run_id')) {
+      context.handle(
+        _runIdMeta,
+        runId.isAcceptableOrUnknown(data['run_id']!, _runIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_runIdMeta);
+    }
+    if (data.containsKey('parent_run_id')) {
+      context.handle(
+        _parentRunIdMeta,
+        parentRunId.isAcceptableOrUnknown(
+          data['parent_run_id']!,
+          _parentRunIdMeta,
+        ),
+      );
+    }
+    if (data.containsKey('snapshot_sha256')) {
+      context.handle(
+        _snapshotSha256Meta,
+        snapshotSha256.isAcceptableOrUnknown(
+          data['snapshot_sha256']!,
+          _snapshotSha256Meta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_snapshotSha256Meta);
+    }
+    if (data.containsKey('snapshot_byte_length')) {
+      context.handle(
+        _snapshotByteLengthMeta,
+        snapshotByteLength.isAcceptableOrUnknown(
+          data['snapshot_byte_length']!,
+          _snapshotByteLengthMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_snapshotByteLengthMeta);
+    }
+    if (data.containsKey('snapshot_source_exists')) {
+      context.handle(
+        _snapshotSourceExistsMeta,
+        snapshotSourceExists.isAcceptableOrUnknown(
+          data['snapshot_source_exists']!,
+          _snapshotSourceExistsMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_snapshotSourceExistsMeta);
+    }
+    if (data.containsKey('snapshot_format_version')) {
+      context.handle(
+        _snapshotFormatVersionMeta,
+        snapshotFormatVersion.isAcceptableOrUnknown(
+          data['snapshot_format_version']!,
+          _snapshotFormatVersionMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_snapshotFormatVersionMeta);
+    }
+    if (data.containsKey('migration_version')) {
+      context.handle(
+        _migrationVersionMeta,
+        migrationVersion.isAcceptableOrUnknown(
+          data['migration_version']!,
+          _migrationVersionMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_migrationVersionMeta);
+    }
+    if (data.containsKey('occurrence_identity_version')) {
+      context.handle(
+        _occurrenceIdentityVersionMeta,
+        occurrenceIdentityVersion.isAcceptableOrUnknown(
+          data['occurrence_identity_version']!,
+          _occurrenceIdentityVersionMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_occurrenceIdentityVersionMeta);
+    }
+    if (data.containsKey('preflight_version')) {
+      context.handle(
+        _preflightVersionMeta,
+        preflightVersion.isAcceptableOrUnknown(
+          data['preflight_version']!,
+          _preflightVersionMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_preflightVersionMeta);
+    }
+    if (data.containsKey('mapping_contract_version')) {
+      context.handle(
+        _mappingContractVersionMeta,
+        mappingContractVersion.isAcceptableOrUnknown(
+          data['mapping_contract_version']!,
+          _mappingContractVersionMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_mappingContractVersionMeta);
+    }
+    if (data.containsKey('party_review_run_id')) {
+      context.handle(
+        _partyReviewRunIdMeta,
+        partyReviewRunId.isAcceptableOrUnknown(
+          data['party_review_run_id']!,
+          _partyReviewRunIdMeta,
+        ),
+      );
+    }
+    if (data.containsKey('export_manifest_sha256')) {
+      context.handle(
+        _exportManifestSha256Meta,
+        exportManifestSha256.isAcceptableOrUnknown(
+          data['export_manifest_sha256']!,
+          _exportManifestSha256Meta,
+        ),
+      );
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_createdAtMeta);
+    }
+    if (data.containsKey('created_by_actor_id')) {
+      context.handle(
+        _createdByActorIdMeta,
+        createdByActorId.isAcceptableOrUnknown(
+          data['created_by_actor_id']!,
+          _createdByActorIdMeta,
+        ),
+      );
+    }
+    if (data.containsKey('created_by_actor_source')) {
+      context.handle(
+        _createdByActorSourceMeta,
+        createdByActorSource.isAcceptableOrUnknown(
+          data['created_by_actor_source']!,
+          _createdByActorSourceMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_createdByActorSourceMeta);
+    }
+    if (data.containsKey('status')) {
+      context.handle(
+        _statusMeta,
+        status.isAcceptableOrUnknown(data['status']!, _statusMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_statusMeta);
+    }
+    if (data.containsKey('updated_at')) {
+      context.handle(
+        _updatedAtMeta,
+        updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_updatedAtMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {runId};
+  @override
+  LegacyInvoiceImportRun map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return LegacyInvoiceImportRun(
+      runId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}run_id'],
+      )!,
+      parentRunId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}parent_run_id'],
+      ),
+      snapshotSha256: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}snapshot_sha256'],
+      )!,
+      snapshotByteLength: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}snapshot_byte_length'],
+      )!,
+      snapshotSourceExists: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}snapshot_source_exists'],
+      )!,
+      snapshotFormatVersion: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}snapshot_format_version'],
+      )!,
+      migrationVersion: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}migration_version'],
+      )!,
+      occurrenceIdentityVersion: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}occurrence_identity_version'],
+      )!,
+      preflightVersion: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}preflight_version'],
+      )!,
+      mappingContractVersion: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}mapping_contract_version'],
+      )!,
+      partyReviewRunId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}party_review_run_id'],
+      ),
+      exportManifestSha256: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}export_manifest_sha256'],
+      ),
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}created_at'],
+      )!,
+      createdByActorId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}created_by_actor_id'],
+      ),
+      createdByActorSource: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}created_by_actor_source'],
+      )!,
+      status: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}status'],
+      )!,
+      updatedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}updated_at'],
+      )!,
+    );
+  }
+
+  @override
+  $LegacyInvoiceImportRunsTable createAlias(String alias) {
+    return $LegacyInvoiceImportRunsTable(attachedDatabase, alias);
+  }
+}
+
+class LegacyInvoiceImportRun extends DataClass
+    implements Insertable<LegacyInvoiceImportRun> {
+  final String runId;
+  final String? parentRunId;
+  final String snapshotSha256;
+  final int snapshotByteLength;
+  final int snapshotSourceExists;
+  final int snapshotFormatVersion;
+  final int migrationVersion;
+  final int occurrenceIdentityVersion;
+  final int preflightVersion;
+  final int mappingContractVersion;
+  final String? partyReviewRunId;
+  final String? exportManifestSha256;
+  final int createdAt;
+  final String? createdByActorId;
+  final String createdByActorSource;
+  final String status;
+  final int updatedAt;
+  const LegacyInvoiceImportRun({
+    required this.runId,
+    this.parentRunId,
+    required this.snapshotSha256,
+    required this.snapshotByteLength,
+    required this.snapshotSourceExists,
+    required this.snapshotFormatVersion,
+    required this.migrationVersion,
+    required this.occurrenceIdentityVersion,
+    required this.preflightVersion,
+    required this.mappingContractVersion,
+    this.partyReviewRunId,
+    this.exportManifestSha256,
+    required this.createdAt,
+    this.createdByActorId,
+    required this.createdByActorSource,
+    required this.status,
+    required this.updatedAt,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['run_id'] = Variable<String>(runId);
+    if (!nullToAbsent || parentRunId != null) {
+      map['parent_run_id'] = Variable<String>(parentRunId);
+    }
+    map['snapshot_sha256'] = Variable<String>(snapshotSha256);
+    map['snapshot_byte_length'] = Variable<int>(snapshotByteLength);
+    map['snapshot_source_exists'] = Variable<int>(snapshotSourceExists);
+    map['snapshot_format_version'] = Variable<int>(snapshotFormatVersion);
+    map['migration_version'] = Variable<int>(migrationVersion);
+    map['occurrence_identity_version'] = Variable<int>(
+      occurrenceIdentityVersion,
+    );
+    map['preflight_version'] = Variable<int>(preflightVersion);
+    map['mapping_contract_version'] = Variable<int>(mappingContractVersion);
+    if (!nullToAbsent || partyReviewRunId != null) {
+      map['party_review_run_id'] = Variable<String>(partyReviewRunId);
+    }
+    if (!nullToAbsent || exportManifestSha256 != null) {
+      map['export_manifest_sha256'] = Variable<String>(exportManifestSha256);
+    }
+    map['created_at'] = Variable<int>(createdAt);
+    if (!nullToAbsent || createdByActorId != null) {
+      map['created_by_actor_id'] = Variable<String>(createdByActorId);
+    }
+    map['created_by_actor_source'] = Variable<String>(createdByActorSource);
+    map['status'] = Variable<String>(status);
+    map['updated_at'] = Variable<int>(updatedAt);
+    return map;
+  }
+
+  LegacyInvoiceImportRunsCompanion toCompanion(bool nullToAbsent) {
+    return LegacyInvoiceImportRunsCompanion(
+      runId: Value(runId),
+      parentRunId: parentRunId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(parentRunId),
+      snapshotSha256: Value(snapshotSha256),
+      snapshotByteLength: Value(snapshotByteLength),
+      snapshotSourceExists: Value(snapshotSourceExists),
+      snapshotFormatVersion: Value(snapshotFormatVersion),
+      migrationVersion: Value(migrationVersion),
+      occurrenceIdentityVersion: Value(occurrenceIdentityVersion),
+      preflightVersion: Value(preflightVersion),
+      mappingContractVersion: Value(mappingContractVersion),
+      partyReviewRunId: partyReviewRunId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(partyReviewRunId),
+      exportManifestSha256: exportManifestSha256 == null && nullToAbsent
+          ? const Value.absent()
+          : Value(exportManifestSha256),
+      createdAt: Value(createdAt),
+      createdByActorId: createdByActorId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(createdByActorId),
+      createdByActorSource: Value(createdByActorSource),
+      status: Value(status),
+      updatedAt: Value(updatedAt),
+    );
+  }
+
+  factory LegacyInvoiceImportRun.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return LegacyInvoiceImportRun(
+      runId: serializer.fromJson<String>(json['runId']),
+      parentRunId: serializer.fromJson<String?>(json['parentRunId']),
+      snapshotSha256: serializer.fromJson<String>(json['snapshotSha256']),
+      snapshotByteLength: serializer.fromJson<int>(json['snapshotByteLength']),
+      snapshotSourceExists: serializer.fromJson<int>(
+        json['snapshotSourceExists'],
+      ),
+      snapshotFormatVersion: serializer.fromJson<int>(
+        json['snapshotFormatVersion'],
+      ),
+      migrationVersion: serializer.fromJson<int>(json['migrationVersion']),
+      occurrenceIdentityVersion: serializer.fromJson<int>(
+        json['occurrenceIdentityVersion'],
+      ),
+      preflightVersion: serializer.fromJson<int>(json['preflightVersion']),
+      mappingContractVersion: serializer.fromJson<int>(
+        json['mappingContractVersion'],
+      ),
+      partyReviewRunId: serializer.fromJson<String?>(json['partyReviewRunId']),
+      exportManifestSha256: serializer.fromJson<String?>(
+        json['exportManifestSha256'],
+      ),
+      createdAt: serializer.fromJson<int>(json['createdAt']),
+      createdByActorId: serializer.fromJson<String?>(json['createdByActorId']),
+      createdByActorSource: serializer.fromJson<String>(
+        json['createdByActorSource'],
+      ),
+      status: serializer.fromJson<String>(json['status']),
+      updatedAt: serializer.fromJson<int>(json['updatedAt']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'runId': serializer.toJson<String>(runId),
+      'parentRunId': serializer.toJson<String?>(parentRunId),
+      'snapshotSha256': serializer.toJson<String>(snapshotSha256),
+      'snapshotByteLength': serializer.toJson<int>(snapshotByteLength),
+      'snapshotSourceExists': serializer.toJson<int>(snapshotSourceExists),
+      'snapshotFormatVersion': serializer.toJson<int>(snapshotFormatVersion),
+      'migrationVersion': serializer.toJson<int>(migrationVersion),
+      'occurrenceIdentityVersion': serializer.toJson<int>(
+        occurrenceIdentityVersion,
+      ),
+      'preflightVersion': serializer.toJson<int>(preflightVersion),
+      'mappingContractVersion': serializer.toJson<int>(mappingContractVersion),
+      'partyReviewRunId': serializer.toJson<String?>(partyReviewRunId),
+      'exportManifestSha256': serializer.toJson<String?>(exportManifestSha256),
+      'createdAt': serializer.toJson<int>(createdAt),
+      'createdByActorId': serializer.toJson<String?>(createdByActorId),
+      'createdByActorSource': serializer.toJson<String>(createdByActorSource),
+      'status': serializer.toJson<String>(status),
+      'updatedAt': serializer.toJson<int>(updatedAt),
+    };
+  }
+
+  LegacyInvoiceImportRun copyWith({
+    String? runId,
+    Value<String?> parentRunId = const Value.absent(),
+    String? snapshotSha256,
+    int? snapshotByteLength,
+    int? snapshotSourceExists,
+    int? snapshotFormatVersion,
+    int? migrationVersion,
+    int? occurrenceIdentityVersion,
+    int? preflightVersion,
+    int? mappingContractVersion,
+    Value<String?> partyReviewRunId = const Value.absent(),
+    Value<String?> exportManifestSha256 = const Value.absent(),
+    int? createdAt,
+    Value<String?> createdByActorId = const Value.absent(),
+    String? createdByActorSource,
+    String? status,
+    int? updatedAt,
+  }) => LegacyInvoiceImportRun(
+    runId: runId ?? this.runId,
+    parentRunId: parentRunId.present ? parentRunId.value : this.parentRunId,
+    snapshotSha256: snapshotSha256 ?? this.snapshotSha256,
+    snapshotByteLength: snapshotByteLength ?? this.snapshotByteLength,
+    snapshotSourceExists: snapshotSourceExists ?? this.snapshotSourceExists,
+    snapshotFormatVersion: snapshotFormatVersion ?? this.snapshotFormatVersion,
+    migrationVersion: migrationVersion ?? this.migrationVersion,
+    occurrenceIdentityVersion:
+        occurrenceIdentityVersion ?? this.occurrenceIdentityVersion,
+    preflightVersion: preflightVersion ?? this.preflightVersion,
+    mappingContractVersion:
+        mappingContractVersion ?? this.mappingContractVersion,
+    partyReviewRunId: partyReviewRunId.present
+        ? partyReviewRunId.value
+        : this.partyReviewRunId,
+    exportManifestSha256: exportManifestSha256.present
+        ? exportManifestSha256.value
+        : this.exportManifestSha256,
+    createdAt: createdAt ?? this.createdAt,
+    createdByActorId: createdByActorId.present
+        ? createdByActorId.value
+        : this.createdByActorId,
+    createdByActorSource: createdByActorSource ?? this.createdByActorSource,
+    status: status ?? this.status,
+    updatedAt: updatedAt ?? this.updatedAt,
+  );
+  LegacyInvoiceImportRun copyWithCompanion(
+    LegacyInvoiceImportRunsCompanion data,
+  ) {
+    return LegacyInvoiceImportRun(
+      runId: data.runId.present ? data.runId.value : this.runId,
+      parentRunId: data.parentRunId.present
+          ? data.parentRunId.value
+          : this.parentRunId,
+      snapshotSha256: data.snapshotSha256.present
+          ? data.snapshotSha256.value
+          : this.snapshotSha256,
+      snapshotByteLength: data.snapshotByteLength.present
+          ? data.snapshotByteLength.value
+          : this.snapshotByteLength,
+      snapshotSourceExists: data.snapshotSourceExists.present
+          ? data.snapshotSourceExists.value
+          : this.snapshotSourceExists,
+      snapshotFormatVersion: data.snapshotFormatVersion.present
+          ? data.snapshotFormatVersion.value
+          : this.snapshotFormatVersion,
+      migrationVersion: data.migrationVersion.present
+          ? data.migrationVersion.value
+          : this.migrationVersion,
+      occurrenceIdentityVersion: data.occurrenceIdentityVersion.present
+          ? data.occurrenceIdentityVersion.value
+          : this.occurrenceIdentityVersion,
+      preflightVersion: data.preflightVersion.present
+          ? data.preflightVersion.value
+          : this.preflightVersion,
+      mappingContractVersion: data.mappingContractVersion.present
+          ? data.mappingContractVersion.value
+          : this.mappingContractVersion,
+      partyReviewRunId: data.partyReviewRunId.present
+          ? data.partyReviewRunId.value
+          : this.partyReviewRunId,
+      exportManifestSha256: data.exportManifestSha256.present
+          ? data.exportManifestSha256.value
+          : this.exportManifestSha256,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      createdByActorId: data.createdByActorId.present
+          ? data.createdByActorId.value
+          : this.createdByActorId,
+      createdByActorSource: data.createdByActorSource.present
+          ? data.createdByActorSource.value
+          : this.createdByActorSource,
+      status: data.status.present ? data.status.value : this.status,
+      updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('LegacyInvoiceImportRun(')
+          ..write('runId: $runId, ')
+          ..write('parentRunId: $parentRunId, ')
+          ..write('snapshotSha256: $snapshotSha256, ')
+          ..write('snapshotByteLength: $snapshotByteLength, ')
+          ..write('snapshotSourceExists: $snapshotSourceExists, ')
+          ..write('snapshotFormatVersion: $snapshotFormatVersion, ')
+          ..write('migrationVersion: $migrationVersion, ')
+          ..write('occurrenceIdentityVersion: $occurrenceIdentityVersion, ')
+          ..write('preflightVersion: $preflightVersion, ')
+          ..write('mappingContractVersion: $mappingContractVersion, ')
+          ..write('partyReviewRunId: $partyReviewRunId, ')
+          ..write('exportManifestSha256: $exportManifestSha256, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('createdByActorId: $createdByActorId, ')
+          ..write('createdByActorSource: $createdByActorSource, ')
+          ..write('status: $status, ')
+          ..write('updatedAt: $updatedAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    runId,
+    parentRunId,
+    snapshotSha256,
+    snapshotByteLength,
+    snapshotSourceExists,
+    snapshotFormatVersion,
+    migrationVersion,
+    occurrenceIdentityVersion,
+    preflightVersion,
+    mappingContractVersion,
+    partyReviewRunId,
+    exportManifestSha256,
+    createdAt,
+    createdByActorId,
+    createdByActorSource,
+    status,
+    updatedAt,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is LegacyInvoiceImportRun &&
+          other.runId == this.runId &&
+          other.parentRunId == this.parentRunId &&
+          other.snapshotSha256 == this.snapshotSha256 &&
+          other.snapshotByteLength == this.snapshotByteLength &&
+          other.snapshotSourceExists == this.snapshotSourceExists &&
+          other.snapshotFormatVersion == this.snapshotFormatVersion &&
+          other.migrationVersion == this.migrationVersion &&
+          other.occurrenceIdentityVersion == this.occurrenceIdentityVersion &&
+          other.preflightVersion == this.preflightVersion &&
+          other.mappingContractVersion == this.mappingContractVersion &&
+          other.partyReviewRunId == this.partyReviewRunId &&
+          other.exportManifestSha256 == this.exportManifestSha256 &&
+          other.createdAt == this.createdAt &&
+          other.createdByActorId == this.createdByActorId &&
+          other.createdByActorSource == this.createdByActorSource &&
+          other.status == this.status &&
+          other.updatedAt == this.updatedAt);
+}
+
+class LegacyInvoiceImportRunsCompanion
+    extends UpdateCompanion<LegacyInvoiceImportRun> {
+  final Value<String> runId;
+  final Value<String?> parentRunId;
+  final Value<String> snapshotSha256;
+  final Value<int> snapshotByteLength;
+  final Value<int> snapshotSourceExists;
+  final Value<int> snapshotFormatVersion;
+  final Value<int> migrationVersion;
+  final Value<int> occurrenceIdentityVersion;
+  final Value<int> preflightVersion;
+  final Value<int> mappingContractVersion;
+  final Value<String?> partyReviewRunId;
+  final Value<String?> exportManifestSha256;
+  final Value<int> createdAt;
+  final Value<String?> createdByActorId;
+  final Value<String> createdByActorSource;
+  final Value<String> status;
+  final Value<int> updatedAt;
+  final Value<int> rowid;
+  const LegacyInvoiceImportRunsCompanion({
+    this.runId = const Value.absent(),
+    this.parentRunId = const Value.absent(),
+    this.snapshotSha256 = const Value.absent(),
+    this.snapshotByteLength = const Value.absent(),
+    this.snapshotSourceExists = const Value.absent(),
+    this.snapshotFormatVersion = const Value.absent(),
+    this.migrationVersion = const Value.absent(),
+    this.occurrenceIdentityVersion = const Value.absent(),
+    this.preflightVersion = const Value.absent(),
+    this.mappingContractVersion = const Value.absent(),
+    this.partyReviewRunId = const Value.absent(),
+    this.exportManifestSha256 = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.createdByActorId = const Value.absent(),
+    this.createdByActorSource = const Value.absent(),
+    this.status = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  LegacyInvoiceImportRunsCompanion.insert({
+    required String runId,
+    this.parentRunId = const Value.absent(),
+    required String snapshotSha256,
+    required int snapshotByteLength,
+    required int snapshotSourceExists,
+    required int snapshotFormatVersion,
+    required int migrationVersion,
+    required int occurrenceIdentityVersion,
+    required int preflightVersion,
+    required int mappingContractVersion,
+    this.partyReviewRunId = const Value.absent(),
+    this.exportManifestSha256 = const Value.absent(),
+    required int createdAt,
+    this.createdByActorId = const Value.absent(),
+    required String createdByActorSource,
+    required String status,
+    required int updatedAt,
+    this.rowid = const Value.absent(),
+  }) : runId = Value(runId),
+       snapshotSha256 = Value(snapshotSha256),
+       snapshotByteLength = Value(snapshotByteLength),
+       snapshotSourceExists = Value(snapshotSourceExists),
+       snapshotFormatVersion = Value(snapshotFormatVersion),
+       migrationVersion = Value(migrationVersion),
+       occurrenceIdentityVersion = Value(occurrenceIdentityVersion),
+       preflightVersion = Value(preflightVersion),
+       mappingContractVersion = Value(mappingContractVersion),
+       createdAt = Value(createdAt),
+       createdByActorSource = Value(createdByActorSource),
+       status = Value(status),
+       updatedAt = Value(updatedAt);
+  static Insertable<LegacyInvoiceImportRun> custom({
+    Expression<String>? runId,
+    Expression<String>? parentRunId,
+    Expression<String>? snapshotSha256,
+    Expression<int>? snapshotByteLength,
+    Expression<int>? snapshotSourceExists,
+    Expression<int>? snapshotFormatVersion,
+    Expression<int>? migrationVersion,
+    Expression<int>? occurrenceIdentityVersion,
+    Expression<int>? preflightVersion,
+    Expression<int>? mappingContractVersion,
+    Expression<String>? partyReviewRunId,
+    Expression<String>? exportManifestSha256,
+    Expression<int>? createdAt,
+    Expression<String>? createdByActorId,
+    Expression<String>? createdByActorSource,
+    Expression<String>? status,
+    Expression<int>? updatedAt,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (runId != null) 'run_id': runId,
+      if (parentRunId != null) 'parent_run_id': parentRunId,
+      if (snapshotSha256 != null) 'snapshot_sha256': snapshotSha256,
+      if (snapshotByteLength != null)
+        'snapshot_byte_length': snapshotByteLength,
+      if (snapshotSourceExists != null)
+        'snapshot_source_exists': snapshotSourceExists,
+      if (snapshotFormatVersion != null)
+        'snapshot_format_version': snapshotFormatVersion,
+      if (migrationVersion != null) 'migration_version': migrationVersion,
+      if (occurrenceIdentityVersion != null)
+        'occurrence_identity_version': occurrenceIdentityVersion,
+      if (preflightVersion != null) 'preflight_version': preflightVersion,
+      if (mappingContractVersion != null)
+        'mapping_contract_version': mappingContractVersion,
+      if (partyReviewRunId != null) 'party_review_run_id': partyReviewRunId,
+      if (exportManifestSha256 != null)
+        'export_manifest_sha256': exportManifestSha256,
+      if (createdAt != null) 'created_at': createdAt,
+      if (createdByActorId != null) 'created_by_actor_id': createdByActorId,
+      if (createdByActorSource != null)
+        'created_by_actor_source': createdByActorSource,
+      if (status != null) 'status': status,
+      if (updatedAt != null) 'updated_at': updatedAt,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  LegacyInvoiceImportRunsCompanion copyWith({
+    Value<String>? runId,
+    Value<String?>? parentRunId,
+    Value<String>? snapshotSha256,
+    Value<int>? snapshotByteLength,
+    Value<int>? snapshotSourceExists,
+    Value<int>? snapshotFormatVersion,
+    Value<int>? migrationVersion,
+    Value<int>? occurrenceIdentityVersion,
+    Value<int>? preflightVersion,
+    Value<int>? mappingContractVersion,
+    Value<String?>? partyReviewRunId,
+    Value<String?>? exportManifestSha256,
+    Value<int>? createdAt,
+    Value<String?>? createdByActorId,
+    Value<String>? createdByActorSource,
+    Value<String>? status,
+    Value<int>? updatedAt,
+    Value<int>? rowid,
+  }) {
+    return LegacyInvoiceImportRunsCompanion(
+      runId: runId ?? this.runId,
+      parentRunId: parentRunId ?? this.parentRunId,
+      snapshotSha256: snapshotSha256 ?? this.snapshotSha256,
+      snapshotByteLength: snapshotByteLength ?? this.snapshotByteLength,
+      snapshotSourceExists: snapshotSourceExists ?? this.snapshotSourceExists,
+      snapshotFormatVersion:
+          snapshotFormatVersion ?? this.snapshotFormatVersion,
+      migrationVersion: migrationVersion ?? this.migrationVersion,
+      occurrenceIdentityVersion:
+          occurrenceIdentityVersion ?? this.occurrenceIdentityVersion,
+      preflightVersion: preflightVersion ?? this.preflightVersion,
+      mappingContractVersion:
+          mappingContractVersion ?? this.mappingContractVersion,
+      partyReviewRunId: partyReviewRunId ?? this.partyReviewRunId,
+      exportManifestSha256: exportManifestSha256 ?? this.exportManifestSha256,
+      createdAt: createdAt ?? this.createdAt,
+      createdByActorId: createdByActorId ?? this.createdByActorId,
+      createdByActorSource: createdByActorSource ?? this.createdByActorSource,
+      status: status ?? this.status,
+      updatedAt: updatedAt ?? this.updatedAt,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (runId.present) {
+      map['run_id'] = Variable<String>(runId.value);
+    }
+    if (parentRunId.present) {
+      map['parent_run_id'] = Variable<String>(parentRunId.value);
+    }
+    if (snapshotSha256.present) {
+      map['snapshot_sha256'] = Variable<String>(snapshotSha256.value);
+    }
+    if (snapshotByteLength.present) {
+      map['snapshot_byte_length'] = Variable<int>(snapshotByteLength.value);
+    }
+    if (snapshotSourceExists.present) {
+      map['snapshot_source_exists'] = Variable<int>(snapshotSourceExists.value);
+    }
+    if (snapshotFormatVersion.present) {
+      map['snapshot_format_version'] = Variable<int>(
+        snapshotFormatVersion.value,
+      );
+    }
+    if (migrationVersion.present) {
+      map['migration_version'] = Variable<int>(migrationVersion.value);
+    }
+    if (occurrenceIdentityVersion.present) {
+      map['occurrence_identity_version'] = Variable<int>(
+        occurrenceIdentityVersion.value,
+      );
+    }
+    if (preflightVersion.present) {
+      map['preflight_version'] = Variable<int>(preflightVersion.value);
+    }
+    if (mappingContractVersion.present) {
+      map['mapping_contract_version'] = Variable<int>(
+        mappingContractVersion.value,
+      );
+    }
+    if (partyReviewRunId.present) {
+      map['party_review_run_id'] = Variable<String>(partyReviewRunId.value);
+    }
+    if (exportManifestSha256.present) {
+      map['export_manifest_sha256'] = Variable<String>(
+        exportManifestSha256.value,
+      );
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<int>(createdAt.value);
+    }
+    if (createdByActorId.present) {
+      map['created_by_actor_id'] = Variable<String>(createdByActorId.value);
+    }
+    if (createdByActorSource.present) {
+      map['created_by_actor_source'] = Variable<String>(
+        createdByActorSource.value,
+      );
+    }
+    if (status.present) {
+      map['status'] = Variable<String>(status.value);
+    }
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<int>(updatedAt.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('LegacyInvoiceImportRunsCompanion(')
+          ..write('runId: $runId, ')
+          ..write('parentRunId: $parentRunId, ')
+          ..write('snapshotSha256: $snapshotSha256, ')
+          ..write('snapshotByteLength: $snapshotByteLength, ')
+          ..write('snapshotSourceExists: $snapshotSourceExists, ')
+          ..write('snapshotFormatVersion: $snapshotFormatVersion, ')
+          ..write('migrationVersion: $migrationVersion, ')
+          ..write('occurrenceIdentityVersion: $occurrenceIdentityVersion, ')
+          ..write('preflightVersion: $preflightVersion, ')
+          ..write('mappingContractVersion: $mappingContractVersion, ')
+          ..write('partyReviewRunId: $partyReviewRunId, ')
+          ..write('exportManifestSha256: $exportManifestSha256, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('createdByActorId: $createdByActorId, ')
+          ..write('createdByActorSource: $createdByActorSource, ')
+          ..write('status: $status, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $LegacyInvoiceImportOccurrencesTable
+    extends LegacyInvoiceImportOccurrences
+    with
+        TableInfo<
+          $LegacyInvoiceImportOccurrencesTable,
+          LegacyInvoiceImportOccurrence
+        > {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $LegacyInvoiceImportOccurrencesTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _runIdMeta = const VerificationMeta('runId');
+  @override
+  late final GeneratedColumn<String> runId = GeneratedColumn<String>(
+    'run_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _sourceOccurrenceKeyMeta =
+      const VerificationMeta('sourceOccurrenceKey');
+  @override
+  late final GeneratedColumn<String> sourceOccurrenceKey =
+      GeneratedColumn<String>(
+        'source_occurrence_key',
+        aliasedName,
+        false,
+        type: DriftSqlType.string,
+        requiredDuringInsert: true,
+      );
+  static const VerificationMeta _sourceIndexMeta = const VerificationMeta(
+    'sourceIndex',
+  );
+  @override
+  late final GeneratedColumn<int> sourceIndex = GeneratedColumn<int>(
+    'source_index',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _recordSha256Meta = const VerificationMeta(
+    'recordSha256',
+  );
+  @override
+  late final GeneratedColumn<String> recordSha256 = GeneratedColumn<String>(
+    'record_sha256',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _legacyInvoiceIdMeta = const VerificationMeta(
+    'legacyInvoiceId',
+  );
+  @override
+  late final GeneratedColumn<String> legacyInvoiceId = GeneratedColumn<String>(
+    'legacy_invoice_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _legacyInvoiceSerialMeta =
+      const VerificationMeta('legacyInvoiceSerial');
+  @override
+  late final GeneratedColumn<String> legacyInvoiceSerial =
+      GeneratedColumn<String>(
+        'legacy_invoice_serial',
+        aliasedName,
+        true,
+        type: DriftSqlType.string,
+        requiredDuringInsert: false,
+      );
+  static const VerificationMeta _preflightClassificationMeta =
+      const VerificationMeta('preflightClassification');
+  @override
+  late final GeneratedColumn<String> preflightClassification =
+      GeneratedColumn<String>(
+        'preflight_classification',
+        aliasedName,
+        false,
+        type: DriftSqlType.string,
+        requiredDuringInsert: true,
+      );
+  static const VerificationMeta _preflightFindingsJsonMeta =
+      const VerificationMeta('preflightFindingsJson');
+  @override
+  late final GeneratedColumn<String> preflightFindingsJson =
+      GeneratedColumn<String>(
+        'preflight_findings_json',
+        aliasedName,
+        false,
+        type: DriftSqlType.string,
+        requiredDuringInsert: true,
+      );
+  static const VerificationMeta _partyReviewRunIdMeta = const VerificationMeta(
+    'partyReviewRunId',
+  );
+  @override
+  late final GeneratedColumn<String> partyReviewRunId = GeneratedColumn<String>(
+    'party_review_run_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _partyReviewDecisionIdMeta =
+      const VerificationMeta('partyReviewDecisionId');
+  @override
+  late final GeneratedColumn<String> partyReviewDecisionId =
+      GeneratedColumn<String>(
+        'party_review_decision_id',
+        aliasedName,
+        true,
+        type: DriftSqlType.string,
+        requiredDuringInsert: false,
+      );
+  static const VerificationMeta _executionStatusMeta = const VerificationMeta(
+    'executionStatus',
+  );
+  @override
+  late final GeneratedColumn<String> executionStatus = GeneratedColumn<String>(
+    'execution_status',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _destinationInvoiceIdMeta =
+      const VerificationMeta('destinationInvoiceId');
+  @override
+  late final GeneratedColumn<String> destinationInvoiceId =
+      GeneratedColumn<String>(
+        'destination_invoice_id',
+        aliasedName,
+        true,
+        type: DriftSqlType.string,
+        requiredDuringInsert: false,
+      );
+  static const VerificationMeta _currentAttemptNumberMeta =
+      const VerificationMeta('currentAttemptNumber');
+  @override
+  late final GeneratedColumn<int> currentAttemptNumber = GeneratedColumn<int>(
+    'current_attempt_number',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(0),
+  );
+  static const VerificationMeta _activeClaimTokenHashMeta =
+      const VerificationMeta('activeClaimTokenHash');
+  @override
+  late final GeneratedColumn<String> activeClaimTokenHash =
+      GeneratedColumn<String>(
+        'active_claim_token_hash',
+        aliasedName,
+        true,
+        type: DriftSqlType.string,
+        requiredDuringInsert: false,
+      );
+  static const VerificationMeta _activeClaimExpiresAtMeta =
+      const VerificationMeta('activeClaimExpiresAt');
+  @override
+  late final GeneratedColumn<int> activeClaimExpiresAt = GeneratedColumn<int>(
+    'active_claim_expires_at',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _activeAttemptStartedAtMeta =
+      const VerificationMeta('activeAttemptStartedAt');
+  @override
+  late final GeneratedColumn<int> activeAttemptStartedAt = GeneratedColumn<int>(
+    'active_attempt_started_at',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _lastErrorCodeMeta = const VerificationMeta(
+    'lastErrorCode',
+  );
+  @override
+  late final GeneratedColumn<String> lastErrorCode = GeneratedColumn<String>(
+    'last_error_code',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _holdOrExclusionReasonMeta =
+      const VerificationMeta('holdOrExclusionReason');
+  @override
+  late final GeneratedColumn<String> holdOrExclusionReason =
+      GeneratedColumn<String>(
+        'hold_or_exclusion_reason',
+        aliasedName,
+        true,
+        type: DriftSqlType.string,
+        requiredDuringInsert: false,
+      );
+  static const VerificationMeta _updatedAtMeta = const VerificationMeta(
+    'updatedAt',
+  );
+  @override
+  late final GeneratedColumn<int> updatedAt = GeneratedColumn<int>(
+    'updated_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    runId,
+    sourceOccurrenceKey,
+    sourceIndex,
+    recordSha256,
+    legacyInvoiceId,
+    legacyInvoiceSerial,
+    preflightClassification,
+    preflightFindingsJson,
+    partyReviewRunId,
+    partyReviewDecisionId,
+    executionStatus,
+    destinationInvoiceId,
+    currentAttemptNumber,
+    activeClaimTokenHash,
+    activeClaimExpiresAt,
+    activeAttemptStartedAt,
+    lastErrorCode,
+    holdOrExclusionReason,
+    updatedAt,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'legacy_invoice_import_occurrences';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<LegacyInvoiceImportOccurrence> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('run_id')) {
+      context.handle(
+        _runIdMeta,
+        runId.isAcceptableOrUnknown(data['run_id']!, _runIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_runIdMeta);
+    }
+    if (data.containsKey('source_occurrence_key')) {
+      context.handle(
+        _sourceOccurrenceKeyMeta,
+        sourceOccurrenceKey.isAcceptableOrUnknown(
+          data['source_occurrence_key']!,
+          _sourceOccurrenceKeyMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_sourceOccurrenceKeyMeta);
+    }
+    if (data.containsKey('source_index')) {
+      context.handle(
+        _sourceIndexMeta,
+        sourceIndex.isAcceptableOrUnknown(
+          data['source_index']!,
+          _sourceIndexMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_sourceIndexMeta);
+    }
+    if (data.containsKey('record_sha256')) {
+      context.handle(
+        _recordSha256Meta,
+        recordSha256.isAcceptableOrUnknown(
+          data['record_sha256']!,
+          _recordSha256Meta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_recordSha256Meta);
+    }
+    if (data.containsKey('legacy_invoice_id')) {
+      context.handle(
+        _legacyInvoiceIdMeta,
+        legacyInvoiceId.isAcceptableOrUnknown(
+          data['legacy_invoice_id']!,
+          _legacyInvoiceIdMeta,
+        ),
+      );
+    }
+    if (data.containsKey('legacy_invoice_serial')) {
+      context.handle(
+        _legacyInvoiceSerialMeta,
+        legacyInvoiceSerial.isAcceptableOrUnknown(
+          data['legacy_invoice_serial']!,
+          _legacyInvoiceSerialMeta,
+        ),
+      );
+    }
+    if (data.containsKey('preflight_classification')) {
+      context.handle(
+        _preflightClassificationMeta,
+        preflightClassification.isAcceptableOrUnknown(
+          data['preflight_classification']!,
+          _preflightClassificationMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_preflightClassificationMeta);
+    }
+    if (data.containsKey('preflight_findings_json')) {
+      context.handle(
+        _preflightFindingsJsonMeta,
+        preflightFindingsJson.isAcceptableOrUnknown(
+          data['preflight_findings_json']!,
+          _preflightFindingsJsonMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_preflightFindingsJsonMeta);
+    }
+    if (data.containsKey('party_review_run_id')) {
+      context.handle(
+        _partyReviewRunIdMeta,
+        partyReviewRunId.isAcceptableOrUnknown(
+          data['party_review_run_id']!,
+          _partyReviewRunIdMeta,
+        ),
+      );
+    }
+    if (data.containsKey('party_review_decision_id')) {
+      context.handle(
+        _partyReviewDecisionIdMeta,
+        partyReviewDecisionId.isAcceptableOrUnknown(
+          data['party_review_decision_id']!,
+          _partyReviewDecisionIdMeta,
+        ),
+      );
+    }
+    if (data.containsKey('execution_status')) {
+      context.handle(
+        _executionStatusMeta,
+        executionStatus.isAcceptableOrUnknown(
+          data['execution_status']!,
+          _executionStatusMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_executionStatusMeta);
+    }
+    if (data.containsKey('destination_invoice_id')) {
+      context.handle(
+        _destinationInvoiceIdMeta,
+        destinationInvoiceId.isAcceptableOrUnknown(
+          data['destination_invoice_id']!,
+          _destinationInvoiceIdMeta,
+        ),
+      );
+    }
+    if (data.containsKey('current_attempt_number')) {
+      context.handle(
+        _currentAttemptNumberMeta,
+        currentAttemptNumber.isAcceptableOrUnknown(
+          data['current_attempt_number']!,
+          _currentAttemptNumberMeta,
+        ),
+      );
+    }
+    if (data.containsKey('active_claim_token_hash')) {
+      context.handle(
+        _activeClaimTokenHashMeta,
+        activeClaimTokenHash.isAcceptableOrUnknown(
+          data['active_claim_token_hash']!,
+          _activeClaimTokenHashMeta,
+        ),
+      );
+    }
+    if (data.containsKey('active_claim_expires_at')) {
+      context.handle(
+        _activeClaimExpiresAtMeta,
+        activeClaimExpiresAt.isAcceptableOrUnknown(
+          data['active_claim_expires_at']!,
+          _activeClaimExpiresAtMeta,
+        ),
+      );
+    }
+    if (data.containsKey('active_attempt_started_at')) {
+      context.handle(
+        _activeAttemptStartedAtMeta,
+        activeAttemptStartedAt.isAcceptableOrUnknown(
+          data['active_attempt_started_at']!,
+          _activeAttemptStartedAtMeta,
+        ),
+      );
+    }
+    if (data.containsKey('last_error_code')) {
+      context.handle(
+        _lastErrorCodeMeta,
+        lastErrorCode.isAcceptableOrUnknown(
+          data['last_error_code']!,
+          _lastErrorCodeMeta,
+        ),
+      );
+    }
+    if (data.containsKey('hold_or_exclusion_reason')) {
+      context.handle(
+        _holdOrExclusionReasonMeta,
+        holdOrExclusionReason.isAcceptableOrUnknown(
+          data['hold_or_exclusion_reason']!,
+          _holdOrExclusionReasonMeta,
+        ),
+      );
+    }
+    if (data.containsKey('updated_at')) {
+      context.handle(
+        _updatedAtMeta,
+        updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_updatedAtMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {runId, sourceOccurrenceKey};
+  @override
+  List<Set<GeneratedColumn>> get uniqueKeys => [
+    {runId, sourceIndex},
+  ];
+  @override
+  LegacyInvoiceImportOccurrence map(
+    Map<String, dynamic> data, {
+    String? tablePrefix,
+  }) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return LegacyInvoiceImportOccurrence(
+      runId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}run_id'],
+      )!,
+      sourceOccurrenceKey: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}source_occurrence_key'],
+      )!,
+      sourceIndex: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}source_index'],
+      )!,
+      recordSha256: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}record_sha256'],
+      )!,
+      legacyInvoiceId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}legacy_invoice_id'],
+      ),
+      legacyInvoiceSerial: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}legacy_invoice_serial'],
+      ),
+      preflightClassification: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}preflight_classification'],
+      )!,
+      preflightFindingsJson: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}preflight_findings_json'],
+      )!,
+      partyReviewRunId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}party_review_run_id'],
+      ),
+      partyReviewDecisionId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}party_review_decision_id'],
+      ),
+      executionStatus: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}execution_status'],
+      )!,
+      destinationInvoiceId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}destination_invoice_id'],
+      ),
+      currentAttemptNumber: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}current_attempt_number'],
+      )!,
+      activeClaimTokenHash: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}active_claim_token_hash'],
+      ),
+      activeClaimExpiresAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}active_claim_expires_at'],
+      ),
+      activeAttemptStartedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}active_attempt_started_at'],
+      ),
+      lastErrorCode: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}last_error_code'],
+      ),
+      holdOrExclusionReason: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}hold_or_exclusion_reason'],
+      ),
+      updatedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}updated_at'],
+      )!,
+    );
+  }
+
+  @override
+  $LegacyInvoiceImportOccurrencesTable createAlias(String alias) {
+    return $LegacyInvoiceImportOccurrencesTable(attachedDatabase, alias);
+  }
+}
+
+class LegacyInvoiceImportOccurrence extends DataClass
+    implements Insertable<LegacyInvoiceImportOccurrence> {
+  final String runId;
+  final String sourceOccurrenceKey;
+  final int sourceIndex;
+  final String recordSha256;
+  final String? legacyInvoiceId;
+  final String? legacyInvoiceSerial;
+  final String preflightClassification;
+  final String preflightFindingsJson;
+  final String? partyReviewRunId;
+  final String? partyReviewDecisionId;
+  final String executionStatus;
+  final String? destinationInvoiceId;
+  final int currentAttemptNumber;
+  final String? activeClaimTokenHash;
+  final int? activeClaimExpiresAt;
+  final int? activeAttemptStartedAt;
+  final String? lastErrorCode;
+  final String? holdOrExclusionReason;
+  final int updatedAt;
+  const LegacyInvoiceImportOccurrence({
+    required this.runId,
+    required this.sourceOccurrenceKey,
+    required this.sourceIndex,
+    required this.recordSha256,
+    this.legacyInvoiceId,
+    this.legacyInvoiceSerial,
+    required this.preflightClassification,
+    required this.preflightFindingsJson,
+    this.partyReviewRunId,
+    this.partyReviewDecisionId,
+    required this.executionStatus,
+    this.destinationInvoiceId,
+    required this.currentAttemptNumber,
+    this.activeClaimTokenHash,
+    this.activeClaimExpiresAt,
+    this.activeAttemptStartedAt,
+    this.lastErrorCode,
+    this.holdOrExclusionReason,
+    required this.updatedAt,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['run_id'] = Variable<String>(runId);
+    map['source_occurrence_key'] = Variable<String>(sourceOccurrenceKey);
+    map['source_index'] = Variable<int>(sourceIndex);
+    map['record_sha256'] = Variable<String>(recordSha256);
+    if (!nullToAbsent || legacyInvoiceId != null) {
+      map['legacy_invoice_id'] = Variable<String>(legacyInvoiceId);
+    }
+    if (!nullToAbsent || legacyInvoiceSerial != null) {
+      map['legacy_invoice_serial'] = Variable<String>(legacyInvoiceSerial);
+    }
+    map['preflight_classification'] = Variable<String>(preflightClassification);
+    map['preflight_findings_json'] = Variable<String>(preflightFindingsJson);
+    if (!nullToAbsent || partyReviewRunId != null) {
+      map['party_review_run_id'] = Variable<String>(partyReviewRunId);
+    }
+    if (!nullToAbsent || partyReviewDecisionId != null) {
+      map['party_review_decision_id'] = Variable<String>(partyReviewDecisionId);
+    }
+    map['execution_status'] = Variable<String>(executionStatus);
+    if (!nullToAbsent || destinationInvoiceId != null) {
+      map['destination_invoice_id'] = Variable<String>(destinationInvoiceId);
+    }
+    map['current_attempt_number'] = Variable<int>(currentAttemptNumber);
+    if (!nullToAbsent || activeClaimTokenHash != null) {
+      map['active_claim_token_hash'] = Variable<String>(activeClaimTokenHash);
+    }
+    if (!nullToAbsent || activeClaimExpiresAt != null) {
+      map['active_claim_expires_at'] = Variable<int>(activeClaimExpiresAt);
+    }
+    if (!nullToAbsent || activeAttemptStartedAt != null) {
+      map['active_attempt_started_at'] = Variable<int>(activeAttemptStartedAt);
+    }
+    if (!nullToAbsent || lastErrorCode != null) {
+      map['last_error_code'] = Variable<String>(lastErrorCode);
+    }
+    if (!nullToAbsent || holdOrExclusionReason != null) {
+      map['hold_or_exclusion_reason'] = Variable<String>(holdOrExclusionReason);
+    }
+    map['updated_at'] = Variable<int>(updatedAt);
+    return map;
+  }
+
+  LegacyInvoiceImportOccurrencesCompanion toCompanion(bool nullToAbsent) {
+    return LegacyInvoiceImportOccurrencesCompanion(
+      runId: Value(runId),
+      sourceOccurrenceKey: Value(sourceOccurrenceKey),
+      sourceIndex: Value(sourceIndex),
+      recordSha256: Value(recordSha256),
+      legacyInvoiceId: legacyInvoiceId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(legacyInvoiceId),
+      legacyInvoiceSerial: legacyInvoiceSerial == null && nullToAbsent
+          ? const Value.absent()
+          : Value(legacyInvoiceSerial),
+      preflightClassification: Value(preflightClassification),
+      preflightFindingsJson: Value(preflightFindingsJson),
+      partyReviewRunId: partyReviewRunId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(partyReviewRunId),
+      partyReviewDecisionId: partyReviewDecisionId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(partyReviewDecisionId),
+      executionStatus: Value(executionStatus),
+      destinationInvoiceId: destinationInvoiceId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(destinationInvoiceId),
+      currentAttemptNumber: Value(currentAttemptNumber),
+      activeClaimTokenHash: activeClaimTokenHash == null && nullToAbsent
+          ? const Value.absent()
+          : Value(activeClaimTokenHash),
+      activeClaimExpiresAt: activeClaimExpiresAt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(activeClaimExpiresAt),
+      activeAttemptStartedAt: activeAttemptStartedAt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(activeAttemptStartedAt),
+      lastErrorCode: lastErrorCode == null && nullToAbsent
+          ? const Value.absent()
+          : Value(lastErrorCode),
+      holdOrExclusionReason: holdOrExclusionReason == null && nullToAbsent
+          ? const Value.absent()
+          : Value(holdOrExclusionReason),
+      updatedAt: Value(updatedAt),
+    );
+  }
+
+  factory LegacyInvoiceImportOccurrence.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return LegacyInvoiceImportOccurrence(
+      runId: serializer.fromJson<String>(json['runId']),
+      sourceOccurrenceKey: serializer.fromJson<String>(
+        json['sourceOccurrenceKey'],
+      ),
+      sourceIndex: serializer.fromJson<int>(json['sourceIndex']),
+      recordSha256: serializer.fromJson<String>(json['recordSha256']),
+      legacyInvoiceId: serializer.fromJson<String?>(json['legacyInvoiceId']),
+      legacyInvoiceSerial: serializer.fromJson<String?>(
+        json['legacyInvoiceSerial'],
+      ),
+      preflightClassification: serializer.fromJson<String>(
+        json['preflightClassification'],
+      ),
+      preflightFindingsJson: serializer.fromJson<String>(
+        json['preflightFindingsJson'],
+      ),
+      partyReviewRunId: serializer.fromJson<String?>(json['partyReviewRunId']),
+      partyReviewDecisionId: serializer.fromJson<String?>(
+        json['partyReviewDecisionId'],
+      ),
+      executionStatus: serializer.fromJson<String>(json['executionStatus']),
+      destinationInvoiceId: serializer.fromJson<String?>(
+        json['destinationInvoiceId'],
+      ),
+      currentAttemptNumber: serializer.fromJson<int>(
+        json['currentAttemptNumber'],
+      ),
+      activeClaimTokenHash: serializer.fromJson<String?>(
+        json['activeClaimTokenHash'],
+      ),
+      activeClaimExpiresAt: serializer.fromJson<int?>(
+        json['activeClaimExpiresAt'],
+      ),
+      activeAttemptStartedAt: serializer.fromJson<int?>(
+        json['activeAttemptStartedAt'],
+      ),
+      lastErrorCode: serializer.fromJson<String?>(json['lastErrorCode']),
+      holdOrExclusionReason: serializer.fromJson<String?>(
+        json['holdOrExclusionReason'],
+      ),
+      updatedAt: serializer.fromJson<int>(json['updatedAt']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'runId': serializer.toJson<String>(runId),
+      'sourceOccurrenceKey': serializer.toJson<String>(sourceOccurrenceKey),
+      'sourceIndex': serializer.toJson<int>(sourceIndex),
+      'recordSha256': serializer.toJson<String>(recordSha256),
+      'legacyInvoiceId': serializer.toJson<String?>(legacyInvoiceId),
+      'legacyInvoiceSerial': serializer.toJson<String?>(legacyInvoiceSerial),
+      'preflightClassification': serializer.toJson<String>(
+        preflightClassification,
+      ),
+      'preflightFindingsJson': serializer.toJson<String>(preflightFindingsJson),
+      'partyReviewRunId': serializer.toJson<String?>(partyReviewRunId),
+      'partyReviewDecisionId': serializer.toJson<String?>(
+        partyReviewDecisionId,
+      ),
+      'executionStatus': serializer.toJson<String>(executionStatus),
+      'destinationInvoiceId': serializer.toJson<String?>(destinationInvoiceId),
+      'currentAttemptNumber': serializer.toJson<int>(currentAttemptNumber),
+      'activeClaimTokenHash': serializer.toJson<String?>(activeClaimTokenHash),
+      'activeClaimExpiresAt': serializer.toJson<int?>(activeClaimExpiresAt),
+      'activeAttemptStartedAt': serializer.toJson<int?>(activeAttemptStartedAt),
+      'lastErrorCode': serializer.toJson<String?>(lastErrorCode),
+      'holdOrExclusionReason': serializer.toJson<String?>(
+        holdOrExclusionReason,
+      ),
+      'updatedAt': serializer.toJson<int>(updatedAt),
+    };
+  }
+
+  LegacyInvoiceImportOccurrence copyWith({
+    String? runId,
+    String? sourceOccurrenceKey,
+    int? sourceIndex,
+    String? recordSha256,
+    Value<String?> legacyInvoiceId = const Value.absent(),
+    Value<String?> legacyInvoiceSerial = const Value.absent(),
+    String? preflightClassification,
+    String? preflightFindingsJson,
+    Value<String?> partyReviewRunId = const Value.absent(),
+    Value<String?> partyReviewDecisionId = const Value.absent(),
+    String? executionStatus,
+    Value<String?> destinationInvoiceId = const Value.absent(),
+    int? currentAttemptNumber,
+    Value<String?> activeClaimTokenHash = const Value.absent(),
+    Value<int?> activeClaimExpiresAt = const Value.absent(),
+    Value<int?> activeAttemptStartedAt = const Value.absent(),
+    Value<String?> lastErrorCode = const Value.absent(),
+    Value<String?> holdOrExclusionReason = const Value.absent(),
+    int? updatedAt,
+  }) => LegacyInvoiceImportOccurrence(
+    runId: runId ?? this.runId,
+    sourceOccurrenceKey: sourceOccurrenceKey ?? this.sourceOccurrenceKey,
+    sourceIndex: sourceIndex ?? this.sourceIndex,
+    recordSha256: recordSha256 ?? this.recordSha256,
+    legacyInvoiceId: legacyInvoiceId.present
+        ? legacyInvoiceId.value
+        : this.legacyInvoiceId,
+    legacyInvoiceSerial: legacyInvoiceSerial.present
+        ? legacyInvoiceSerial.value
+        : this.legacyInvoiceSerial,
+    preflightClassification:
+        preflightClassification ?? this.preflightClassification,
+    preflightFindingsJson: preflightFindingsJson ?? this.preflightFindingsJson,
+    partyReviewRunId: partyReviewRunId.present
+        ? partyReviewRunId.value
+        : this.partyReviewRunId,
+    partyReviewDecisionId: partyReviewDecisionId.present
+        ? partyReviewDecisionId.value
+        : this.partyReviewDecisionId,
+    executionStatus: executionStatus ?? this.executionStatus,
+    destinationInvoiceId: destinationInvoiceId.present
+        ? destinationInvoiceId.value
+        : this.destinationInvoiceId,
+    currentAttemptNumber: currentAttemptNumber ?? this.currentAttemptNumber,
+    activeClaimTokenHash: activeClaimTokenHash.present
+        ? activeClaimTokenHash.value
+        : this.activeClaimTokenHash,
+    activeClaimExpiresAt: activeClaimExpiresAt.present
+        ? activeClaimExpiresAt.value
+        : this.activeClaimExpiresAt,
+    activeAttemptStartedAt: activeAttemptStartedAt.present
+        ? activeAttemptStartedAt.value
+        : this.activeAttemptStartedAt,
+    lastErrorCode: lastErrorCode.present
+        ? lastErrorCode.value
+        : this.lastErrorCode,
+    holdOrExclusionReason: holdOrExclusionReason.present
+        ? holdOrExclusionReason.value
+        : this.holdOrExclusionReason,
+    updatedAt: updatedAt ?? this.updatedAt,
+  );
+  LegacyInvoiceImportOccurrence copyWithCompanion(
+    LegacyInvoiceImportOccurrencesCompanion data,
+  ) {
+    return LegacyInvoiceImportOccurrence(
+      runId: data.runId.present ? data.runId.value : this.runId,
+      sourceOccurrenceKey: data.sourceOccurrenceKey.present
+          ? data.sourceOccurrenceKey.value
+          : this.sourceOccurrenceKey,
+      sourceIndex: data.sourceIndex.present
+          ? data.sourceIndex.value
+          : this.sourceIndex,
+      recordSha256: data.recordSha256.present
+          ? data.recordSha256.value
+          : this.recordSha256,
+      legacyInvoiceId: data.legacyInvoiceId.present
+          ? data.legacyInvoiceId.value
+          : this.legacyInvoiceId,
+      legacyInvoiceSerial: data.legacyInvoiceSerial.present
+          ? data.legacyInvoiceSerial.value
+          : this.legacyInvoiceSerial,
+      preflightClassification: data.preflightClassification.present
+          ? data.preflightClassification.value
+          : this.preflightClassification,
+      preflightFindingsJson: data.preflightFindingsJson.present
+          ? data.preflightFindingsJson.value
+          : this.preflightFindingsJson,
+      partyReviewRunId: data.partyReviewRunId.present
+          ? data.partyReviewRunId.value
+          : this.partyReviewRunId,
+      partyReviewDecisionId: data.partyReviewDecisionId.present
+          ? data.partyReviewDecisionId.value
+          : this.partyReviewDecisionId,
+      executionStatus: data.executionStatus.present
+          ? data.executionStatus.value
+          : this.executionStatus,
+      destinationInvoiceId: data.destinationInvoiceId.present
+          ? data.destinationInvoiceId.value
+          : this.destinationInvoiceId,
+      currentAttemptNumber: data.currentAttemptNumber.present
+          ? data.currentAttemptNumber.value
+          : this.currentAttemptNumber,
+      activeClaimTokenHash: data.activeClaimTokenHash.present
+          ? data.activeClaimTokenHash.value
+          : this.activeClaimTokenHash,
+      activeClaimExpiresAt: data.activeClaimExpiresAt.present
+          ? data.activeClaimExpiresAt.value
+          : this.activeClaimExpiresAt,
+      activeAttemptStartedAt: data.activeAttemptStartedAt.present
+          ? data.activeAttemptStartedAt.value
+          : this.activeAttemptStartedAt,
+      lastErrorCode: data.lastErrorCode.present
+          ? data.lastErrorCode.value
+          : this.lastErrorCode,
+      holdOrExclusionReason: data.holdOrExclusionReason.present
+          ? data.holdOrExclusionReason.value
+          : this.holdOrExclusionReason,
+      updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('LegacyInvoiceImportOccurrence(')
+          ..write('runId: $runId, ')
+          ..write('sourceOccurrenceKey: $sourceOccurrenceKey, ')
+          ..write('sourceIndex: $sourceIndex, ')
+          ..write('recordSha256: $recordSha256, ')
+          ..write('legacyInvoiceId: $legacyInvoiceId, ')
+          ..write('legacyInvoiceSerial: $legacyInvoiceSerial, ')
+          ..write('preflightClassification: $preflightClassification, ')
+          ..write('preflightFindingsJson: $preflightFindingsJson, ')
+          ..write('partyReviewRunId: $partyReviewRunId, ')
+          ..write('partyReviewDecisionId: $partyReviewDecisionId, ')
+          ..write('executionStatus: $executionStatus, ')
+          ..write('destinationInvoiceId: $destinationInvoiceId, ')
+          ..write('currentAttemptNumber: $currentAttemptNumber, ')
+          ..write('activeClaimTokenHash: $activeClaimTokenHash, ')
+          ..write('activeClaimExpiresAt: $activeClaimExpiresAt, ')
+          ..write('activeAttemptStartedAt: $activeAttemptStartedAt, ')
+          ..write('lastErrorCode: $lastErrorCode, ')
+          ..write('holdOrExclusionReason: $holdOrExclusionReason, ')
+          ..write('updatedAt: $updatedAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    runId,
+    sourceOccurrenceKey,
+    sourceIndex,
+    recordSha256,
+    legacyInvoiceId,
+    legacyInvoiceSerial,
+    preflightClassification,
+    preflightFindingsJson,
+    partyReviewRunId,
+    partyReviewDecisionId,
+    executionStatus,
+    destinationInvoiceId,
+    currentAttemptNumber,
+    activeClaimTokenHash,
+    activeClaimExpiresAt,
+    activeAttemptStartedAt,
+    lastErrorCode,
+    holdOrExclusionReason,
+    updatedAt,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is LegacyInvoiceImportOccurrence &&
+          other.runId == this.runId &&
+          other.sourceOccurrenceKey == this.sourceOccurrenceKey &&
+          other.sourceIndex == this.sourceIndex &&
+          other.recordSha256 == this.recordSha256 &&
+          other.legacyInvoiceId == this.legacyInvoiceId &&
+          other.legacyInvoiceSerial == this.legacyInvoiceSerial &&
+          other.preflightClassification == this.preflightClassification &&
+          other.preflightFindingsJson == this.preflightFindingsJson &&
+          other.partyReviewRunId == this.partyReviewRunId &&
+          other.partyReviewDecisionId == this.partyReviewDecisionId &&
+          other.executionStatus == this.executionStatus &&
+          other.destinationInvoiceId == this.destinationInvoiceId &&
+          other.currentAttemptNumber == this.currentAttemptNumber &&
+          other.activeClaimTokenHash == this.activeClaimTokenHash &&
+          other.activeClaimExpiresAt == this.activeClaimExpiresAt &&
+          other.activeAttemptStartedAt == this.activeAttemptStartedAt &&
+          other.lastErrorCode == this.lastErrorCode &&
+          other.holdOrExclusionReason == this.holdOrExclusionReason &&
+          other.updatedAt == this.updatedAt);
+}
+
+class LegacyInvoiceImportOccurrencesCompanion
+    extends UpdateCompanion<LegacyInvoiceImportOccurrence> {
+  final Value<String> runId;
+  final Value<String> sourceOccurrenceKey;
+  final Value<int> sourceIndex;
+  final Value<String> recordSha256;
+  final Value<String?> legacyInvoiceId;
+  final Value<String?> legacyInvoiceSerial;
+  final Value<String> preflightClassification;
+  final Value<String> preflightFindingsJson;
+  final Value<String?> partyReviewRunId;
+  final Value<String?> partyReviewDecisionId;
+  final Value<String> executionStatus;
+  final Value<String?> destinationInvoiceId;
+  final Value<int> currentAttemptNumber;
+  final Value<String?> activeClaimTokenHash;
+  final Value<int?> activeClaimExpiresAt;
+  final Value<int?> activeAttemptStartedAt;
+  final Value<String?> lastErrorCode;
+  final Value<String?> holdOrExclusionReason;
+  final Value<int> updatedAt;
+  final Value<int> rowid;
+  const LegacyInvoiceImportOccurrencesCompanion({
+    this.runId = const Value.absent(),
+    this.sourceOccurrenceKey = const Value.absent(),
+    this.sourceIndex = const Value.absent(),
+    this.recordSha256 = const Value.absent(),
+    this.legacyInvoiceId = const Value.absent(),
+    this.legacyInvoiceSerial = const Value.absent(),
+    this.preflightClassification = const Value.absent(),
+    this.preflightFindingsJson = const Value.absent(),
+    this.partyReviewRunId = const Value.absent(),
+    this.partyReviewDecisionId = const Value.absent(),
+    this.executionStatus = const Value.absent(),
+    this.destinationInvoiceId = const Value.absent(),
+    this.currentAttemptNumber = const Value.absent(),
+    this.activeClaimTokenHash = const Value.absent(),
+    this.activeClaimExpiresAt = const Value.absent(),
+    this.activeAttemptStartedAt = const Value.absent(),
+    this.lastErrorCode = const Value.absent(),
+    this.holdOrExclusionReason = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  LegacyInvoiceImportOccurrencesCompanion.insert({
+    required String runId,
+    required String sourceOccurrenceKey,
+    required int sourceIndex,
+    required String recordSha256,
+    this.legacyInvoiceId = const Value.absent(),
+    this.legacyInvoiceSerial = const Value.absent(),
+    required String preflightClassification,
+    required String preflightFindingsJson,
+    this.partyReviewRunId = const Value.absent(),
+    this.partyReviewDecisionId = const Value.absent(),
+    required String executionStatus,
+    this.destinationInvoiceId = const Value.absent(),
+    this.currentAttemptNumber = const Value.absent(),
+    this.activeClaimTokenHash = const Value.absent(),
+    this.activeClaimExpiresAt = const Value.absent(),
+    this.activeAttemptStartedAt = const Value.absent(),
+    this.lastErrorCode = const Value.absent(),
+    this.holdOrExclusionReason = const Value.absent(),
+    required int updatedAt,
+    this.rowid = const Value.absent(),
+  }) : runId = Value(runId),
+       sourceOccurrenceKey = Value(sourceOccurrenceKey),
+       sourceIndex = Value(sourceIndex),
+       recordSha256 = Value(recordSha256),
+       preflightClassification = Value(preflightClassification),
+       preflightFindingsJson = Value(preflightFindingsJson),
+       executionStatus = Value(executionStatus),
+       updatedAt = Value(updatedAt);
+  static Insertable<LegacyInvoiceImportOccurrence> custom({
+    Expression<String>? runId,
+    Expression<String>? sourceOccurrenceKey,
+    Expression<int>? sourceIndex,
+    Expression<String>? recordSha256,
+    Expression<String>? legacyInvoiceId,
+    Expression<String>? legacyInvoiceSerial,
+    Expression<String>? preflightClassification,
+    Expression<String>? preflightFindingsJson,
+    Expression<String>? partyReviewRunId,
+    Expression<String>? partyReviewDecisionId,
+    Expression<String>? executionStatus,
+    Expression<String>? destinationInvoiceId,
+    Expression<int>? currentAttemptNumber,
+    Expression<String>? activeClaimTokenHash,
+    Expression<int>? activeClaimExpiresAt,
+    Expression<int>? activeAttemptStartedAt,
+    Expression<String>? lastErrorCode,
+    Expression<String>? holdOrExclusionReason,
+    Expression<int>? updatedAt,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (runId != null) 'run_id': runId,
+      if (sourceOccurrenceKey != null)
+        'source_occurrence_key': sourceOccurrenceKey,
+      if (sourceIndex != null) 'source_index': sourceIndex,
+      if (recordSha256 != null) 'record_sha256': recordSha256,
+      if (legacyInvoiceId != null) 'legacy_invoice_id': legacyInvoiceId,
+      if (legacyInvoiceSerial != null)
+        'legacy_invoice_serial': legacyInvoiceSerial,
+      if (preflightClassification != null)
+        'preflight_classification': preflightClassification,
+      if (preflightFindingsJson != null)
+        'preflight_findings_json': preflightFindingsJson,
+      if (partyReviewRunId != null) 'party_review_run_id': partyReviewRunId,
+      if (partyReviewDecisionId != null)
+        'party_review_decision_id': partyReviewDecisionId,
+      if (executionStatus != null) 'execution_status': executionStatus,
+      if (destinationInvoiceId != null)
+        'destination_invoice_id': destinationInvoiceId,
+      if (currentAttemptNumber != null)
+        'current_attempt_number': currentAttemptNumber,
+      if (activeClaimTokenHash != null)
+        'active_claim_token_hash': activeClaimTokenHash,
+      if (activeClaimExpiresAt != null)
+        'active_claim_expires_at': activeClaimExpiresAt,
+      if (activeAttemptStartedAt != null)
+        'active_attempt_started_at': activeAttemptStartedAt,
+      if (lastErrorCode != null) 'last_error_code': lastErrorCode,
+      if (holdOrExclusionReason != null)
+        'hold_or_exclusion_reason': holdOrExclusionReason,
+      if (updatedAt != null) 'updated_at': updatedAt,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  LegacyInvoiceImportOccurrencesCompanion copyWith({
+    Value<String>? runId,
+    Value<String>? sourceOccurrenceKey,
+    Value<int>? sourceIndex,
+    Value<String>? recordSha256,
+    Value<String?>? legacyInvoiceId,
+    Value<String?>? legacyInvoiceSerial,
+    Value<String>? preflightClassification,
+    Value<String>? preflightFindingsJson,
+    Value<String?>? partyReviewRunId,
+    Value<String?>? partyReviewDecisionId,
+    Value<String>? executionStatus,
+    Value<String?>? destinationInvoiceId,
+    Value<int>? currentAttemptNumber,
+    Value<String?>? activeClaimTokenHash,
+    Value<int?>? activeClaimExpiresAt,
+    Value<int?>? activeAttemptStartedAt,
+    Value<String?>? lastErrorCode,
+    Value<String?>? holdOrExclusionReason,
+    Value<int>? updatedAt,
+    Value<int>? rowid,
+  }) {
+    return LegacyInvoiceImportOccurrencesCompanion(
+      runId: runId ?? this.runId,
+      sourceOccurrenceKey: sourceOccurrenceKey ?? this.sourceOccurrenceKey,
+      sourceIndex: sourceIndex ?? this.sourceIndex,
+      recordSha256: recordSha256 ?? this.recordSha256,
+      legacyInvoiceId: legacyInvoiceId ?? this.legacyInvoiceId,
+      legacyInvoiceSerial: legacyInvoiceSerial ?? this.legacyInvoiceSerial,
+      preflightClassification:
+          preflightClassification ?? this.preflightClassification,
+      preflightFindingsJson:
+          preflightFindingsJson ?? this.preflightFindingsJson,
+      partyReviewRunId: partyReviewRunId ?? this.partyReviewRunId,
+      partyReviewDecisionId:
+          partyReviewDecisionId ?? this.partyReviewDecisionId,
+      executionStatus: executionStatus ?? this.executionStatus,
+      destinationInvoiceId: destinationInvoiceId ?? this.destinationInvoiceId,
+      currentAttemptNumber: currentAttemptNumber ?? this.currentAttemptNumber,
+      activeClaimTokenHash: activeClaimTokenHash ?? this.activeClaimTokenHash,
+      activeClaimExpiresAt: activeClaimExpiresAt ?? this.activeClaimExpiresAt,
+      activeAttemptStartedAt:
+          activeAttemptStartedAt ?? this.activeAttemptStartedAt,
+      lastErrorCode: lastErrorCode ?? this.lastErrorCode,
+      holdOrExclusionReason:
+          holdOrExclusionReason ?? this.holdOrExclusionReason,
+      updatedAt: updatedAt ?? this.updatedAt,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (runId.present) {
+      map['run_id'] = Variable<String>(runId.value);
+    }
+    if (sourceOccurrenceKey.present) {
+      map['source_occurrence_key'] = Variable<String>(
+        sourceOccurrenceKey.value,
+      );
+    }
+    if (sourceIndex.present) {
+      map['source_index'] = Variable<int>(sourceIndex.value);
+    }
+    if (recordSha256.present) {
+      map['record_sha256'] = Variable<String>(recordSha256.value);
+    }
+    if (legacyInvoiceId.present) {
+      map['legacy_invoice_id'] = Variable<String>(legacyInvoiceId.value);
+    }
+    if (legacyInvoiceSerial.present) {
+      map['legacy_invoice_serial'] = Variable<String>(
+        legacyInvoiceSerial.value,
+      );
+    }
+    if (preflightClassification.present) {
+      map['preflight_classification'] = Variable<String>(
+        preflightClassification.value,
+      );
+    }
+    if (preflightFindingsJson.present) {
+      map['preflight_findings_json'] = Variable<String>(
+        preflightFindingsJson.value,
+      );
+    }
+    if (partyReviewRunId.present) {
+      map['party_review_run_id'] = Variable<String>(partyReviewRunId.value);
+    }
+    if (partyReviewDecisionId.present) {
+      map['party_review_decision_id'] = Variable<String>(
+        partyReviewDecisionId.value,
+      );
+    }
+    if (executionStatus.present) {
+      map['execution_status'] = Variable<String>(executionStatus.value);
+    }
+    if (destinationInvoiceId.present) {
+      map['destination_invoice_id'] = Variable<String>(
+        destinationInvoiceId.value,
+      );
+    }
+    if (currentAttemptNumber.present) {
+      map['current_attempt_number'] = Variable<int>(currentAttemptNumber.value);
+    }
+    if (activeClaimTokenHash.present) {
+      map['active_claim_token_hash'] = Variable<String>(
+        activeClaimTokenHash.value,
+      );
+    }
+    if (activeClaimExpiresAt.present) {
+      map['active_claim_expires_at'] = Variable<int>(
+        activeClaimExpiresAt.value,
+      );
+    }
+    if (activeAttemptStartedAt.present) {
+      map['active_attempt_started_at'] = Variable<int>(
+        activeAttemptStartedAt.value,
+      );
+    }
+    if (lastErrorCode.present) {
+      map['last_error_code'] = Variable<String>(lastErrorCode.value);
+    }
+    if (holdOrExclusionReason.present) {
+      map['hold_or_exclusion_reason'] = Variable<String>(
+        holdOrExclusionReason.value,
+      );
+    }
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<int>(updatedAt.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('LegacyInvoiceImportOccurrencesCompanion(')
+          ..write('runId: $runId, ')
+          ..write('sourceOccurrenceKey: $sourceOccurrenceKey, ')
+          ..write('sourceIndex: $sourceIndex, ')
+          ..write('recordSha256: $recordSha256, ')
+          ..write('legacyInvoiceId: $legacyInvoiceId, ')
+          ..write('legacyInvoiceSerial: $legacyInvoiceSerial, ')
+          ..write('preflightClassification: $preflightClassification, ')
+          ..write('preflightFindingsJson: $preflightFindingsJson, ')
+          ..write('partyReviewRunId: $partyReviewRunId, ')
+          ..write('partyReviewDecisionId: $partyReviewDecisionId, ')
+          ..write('executionStatus: $executionStatus, ')
+          ..write('destinationInvoiceId: $destinationInvoiceId, ')
+          ..write('currentAttemptNumber: $currentAttemptNumber, ')
+          ..write('activeClaimTokenHash: $activeClaimTokenHash, ')
+          ..write('activeClaimExpiresAt: $activeClaimExpiresAt, ')
+          ..write('activeAttemptStartedAt: $activeAttemptStartedAt, ')
+          ..write('lastErrorCode: $lastErrorCode, ')
+          ..write('holdOrExclusionReason: $holdOrExclusionReason, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $LegacyInvoiceImportAttemptsTable extends LegacyInvoiceImportAttempts
+    with
+        TableInfo<
+          $LegacyInvoiceImportAttemptsTable,
+          LegacyInvoiceImportAttempt
+        > {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $LegacyInvoiceImportAttemptsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _attemptIdMeta = const VerificationMeta(
+    'attemptId',
+  );
+  @override
+  late final GeneratedColumn<String> attemptId = GeneratedColumn<String>(
+    'attempt_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _runIdMeta = const VerificationMeta('runId');
+  @override
+  late final GeneratedColumn<String> runId = GeneratedColumn<String>(
+    'run_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _sourceOccurrenceKeyMeta =
+      const VerificationMeta('sourceOccurrenceKey');
+  @override
+  late final GeneratedColumn<String> sourceOccurrenceKey =
+      GeneratedColumn<String>(
+        'source_occurrence_key',
+        aliasedName,
+        false,
+        type: DriftSqlType.string,
+        requiredDuringInsert: true,
+      );
+  static const VerificationMeta _attemptNumberMeta = const VerificationMeta(
+    'attemptNumber',
+  );
+  @override
+  late final GeneratedColumn<int> attemptNumber = GeneratedColumn<int>(
+    'attempt_number',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _attemptIdempotencyKeyMeta =
+      const VerificationMeta('attemptIdempotencyKey');
+  @override
+  late final GeneratedColumn<String> attemptIdempotencyKey =
+      GeneratedColumn<String>(
+        'attempt_idempotency_key',
+        aliasedName,
+        false,
+        type: DriftSqlType.string,
+        requiredDuringInsert: true,
+      );
+  static const VerificationMeta _claimTokenHashMeta = const VerificationMeta(
+    'claimTokenHash',
+  );
+  @override
+  late final GeneratedColumn<String> claimTokenHash = GeneratedColumn<String>(
+    'claim_token_hash',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _workerIdMeta = const VerificationMeta(
+    'workerId',
+  );
+  @override
+  late final GeneratedColumn<String> workerId = GeneratedColumn<String>(
+    'worker_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _startedAtMeta = const VerificationMeta(
+    'startedAt',
+  );
+  @override
+  late final GeneratedColumn<int> startedAt = GeneratedColumn<int>(
+    'started_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _completedAtMeta = const VerificationMeta(
+    'completedAt',
+  );
+  @override
+  late final GeneratedColumn<int> completedAt = GeneratedColumn<int>(
+    'completed_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _outcomeMeta = const VerificationMeta(
+    'outcome',
+  );
+  @override
+  late final GeneratedColumn<String> outcome = GeneratedColumn<String>(
+    'outcome',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _errorCodeMeta = const VerificationMeta(
+    'errorCode',
+  );
+  @override
+  late final GeneratedColumn<String> errorCode = GeneratedColumn<String>(
+    'error_code',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _diagnosticMeta = const VerificationMeta(
+    'diagnostic',
+  );
+  @override
+  late final GeneratedColumn<String> diagnostic = GeneratedColumn<String>(
+    'diagnostic',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _destinationInvoiceIdMeta =
+      const VerificationMeta('destinationInvoiceId');
+  @override
+  late final GeneratedColumn<String> destinationInvoiceId =
+      GeneratedColumn<String>(
+        'destination_invoice_id',
+        aliasedName,
+        true,
+        type: DriftSqlType.string,
+        requiredDuringInsert: false,
+      );
+  static const VerificationMeta _destinationFingerprintMeta =
+      const VerificationMeta('destinationFingerprint');
+  @override
+  late final GeneratedColumn<String> destinationFingerprint =
+      GeneratedColumn<String>(
+        'destination_fingerprint',
+        aliasedName,
+        true,
+        type: DriftSqlType.string,
+        requiredDuringInsert: false,
+      );
+  @override
+  List<GeneratedColumn> get $columns => [
+    attemptId,
+    runId,
+    sourceOccurrenceKey,
+    attemptNumber,
+    attemptIdempotencyKey,
+    claimTokenHash,
+    workerId,
+    startedAt,
+    completedAt,
+    outcome,
+    errorCode,
+    diagnostic,
+    destinationInvoiceId,
+    destinationFingerprint,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'legacy_invoice_import_attempts';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<LegacyInvoiceImportAttempt> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('attempt_id')) {
+      context.handle(
+        _attemptIdMeta,
+        attemptId.isAcceptableOrUnknown(data['attempt_id']!, _attemptIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_attemptIdMeta);
+    }
+    if (data.containsKey('run_id')) {
+      context.handle(
+        _runIdMeta,
+        runId.isAcceptableOrUnknown(data['run_id']!, _runIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_runIdMeta);
+    }
+    if (data.containsKey('source_occurrence_key')) {
+      context.handle(
+        _sourceOccurrenceKeyMeta,
+        sourceOccurrenceKey.isAcceptableOrUnknown(
+          data['source_occurrence_key']!,
+          _sourceOccurrenceKeyMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_sourceOccurrenceKeyMeta);
+    }
+    if (data.containsKey('attempt_number')) {
+      context.handle(
+        _attemptNumberMeta,
+        attemptNumber.isAcceptableOrUnknown(
+          data['attempt_number']!,
+          _attemptNumberMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_attemptNumberMeta);
+    }
+    if (data.containsKey('attempt_idempotency_key')) {
+      context.handle(
+        _attemptIdempotencyKeyMeta,
+        attemptIdempotencyKey.isAcceptableOrUnknown(
+          data['attempt_idempotency_key']!,
+          _attemptIdempotencyKeyMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_attemptIdempotencyKeyMeta);
+    }
+    if (data.containsKey('claim_token_hash')) {
+      context.handle(
+        _claimTokenHashMeta,
+        claimTokenHash.isAcceptableOrUnknown(
+          data['claim_token_hash']!,
+          _claimTokenHashMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_claimTokenHashMeta);
+    }
+    if (data.containsKey('worker_id')) {
+      context.handle(
+        _workerIdMeta,
+        workerId.isAcceptableOrUnknown(data['worker_id']!, _workerIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_workerIdMeta);
+    }
+    if (data.containsKey('started_at')) {
+      context.handle(
+        _startedAtMeta,
+        startedAt.isAcceptableOrUnknown(data['started_at']!, _startedAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_startedAtMeta);
+    }
+    if (data.containsKey('completed_at')) {
+      context.handle(
+        _completedAtMeta,
+        completedAt.isAcceptableOrUnknown(
+          data['completed_at']!,
+          _completedAtMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_completedAtMeta);
+    }
+    if (data.containsKey('outcome')) {
+      context.handle(
+        _outcomeMeta,
+        outcome.isAcceptableOrUnknown(data['outcome']!, _outcomeMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_outcomeMeta);
+    }
+    if (data.containsKey('error_code')) {
+      context.handle(
+        _errorCodeMeta,
+        errorCode.isAcceptableOrUnknown(data['error_code']!, _errorCodeMeta),
+      );
+    }
+    if (data.containsKey('diagnostic')) {
+      context.handle(
+        _diagnosticMeta,
+        diagnostic.isAcceptableOrUnknown(data['diagnostic']!, _diagnosticMeta),
+      );
+    }
+    if (data.containsKey('destination_invoice_id')) {
+      context.handle(
+        _destinationInvoiceIdMeta,
+        destinationInvoiceId.isAcceptableOrUnknown(
+          data['destination_invoice_id']!,
+          _destinationInvoiceIdMeta,
+        ),
+      );
+    }
+    if (data.containsKey('destination_fingerprint')) {
+      context.handle(
+        _destinationFingerprintMeta,
+        destinationFingerprint.isAcceptableOrUnknown(
+          data['destination_fingerprint']!,
+          _destinationFingerprintMeta,
+        ),
+      );
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {attemptId};
+  @override
+  List<Set<GeneratedColumn>> get uniqueKeys => [
+    {runId, sourceOccurrenceKey, attemptNumber},
+    {attemptIdempotencyKey},
+  ];
+  @override
+  LegacyInvoiceImportAttempt map(
+    Map<String, dynamic> data, {
+    String? tablePrefix,
+  }) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return LegacyInvoiceImportAttempt(
+      attemptId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}attempt_id'],
+      )!,
+      runId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}run_id'],
+      )!,
+      sourceOccurrenceKey: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}source_occurrence_key'],
+      )!,
+      attemptNumber: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}attempt_number'],
+      )!,
+      attemptIdempotencyKey: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}attempt_idempotency_key'],
+      )!,
+      claimTokenHash: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}claim_token_hash'],
+      )!,
+      workerId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}worker_id'],
+      )!,
+      startedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}started_at'],
+      )!,
+      completedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}completed_at'],
+      )!,
+      outcome: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}outcome'],
+      )!,
+      errorCode: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}error_code'],
+      ),
+      diagnostic: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}diagnostic'],
+      ),
+      destinationInvoiceId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}destination_invoice_id'],
+      ),
+      destinationFingerprint: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}destination_fingerprint'],
+      ),
+    );
+  }
+
+  @override
+  $LegacyInvoiceImportAttemptsTable createAlias(String alias) {
+    return $LegacyInvoiceImportAttemptsTable(attachedDatabase, alias);
+  }
+}
+
+class LegacyInvoiceImportAttempt extends DataClass
+    implements Insertable<LegacyInvoiceImportAttempt> {
+  final String attemptId;
+  final String runId;
+  final String sourceOccurrenceKey;
+  final int attemptNumber;
+  final String attemptIdempotencyKey;
+  final String claimTokenHash;
+  final String workerId;
+  final int startedAt;
+  final int completedAt;
+  final String outcome;
+  final String? errorCode;
+  final String? diagnostic;
+  final String? destinationInvoiceId;
+  final String? destinationFingerprint;
+  const LegacyInvoiceImportAttempt({
+    required this.attemptId,
+    required this.runId,
+    required this.sourceOccurrenceKey,
+    required this.attemptNumber,
+    required this.attemptIdempotencyKey,
+    required this.claimTokenHash,
+    required this.workerId,
+    required this.startedAt,
+    required this.completedAt,
+    required this.outcome,
+    this.errorCode,
+    this.diagnostic,
+    this.destinationInvoiceId,
+    this.destinationFingerprint,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['attempt_id'] = Variable<String>(attemptId);
+    map['run_id'] = Variable<String>(runId);
+    map['source_occurrence_key'] = Variable<String>(sourceOccurrenceKey);
+    map['attempt_number'] = Variable<int>(attemptNumber);
+    map['attempt_idempotency_key'] = Variable<String>(attemptIdempotencyKey);
+    map['claim_token_hash'] = Variable<String>(claimTokenHash);
+    map['worker_id'] = Variable<String>(workerId);
+    map['started_at'] = Variable<int>(startedAt);
+    map['completed_at'] = Variable<int>(completedAt);
+    map['outcome'] = Variable<String>(outcome);
+    if (!nullToAbsent || errorCode != null) {
+      map['error_code'] = Variable<String>(errorCode);
+    }
+    if (!nullToAbsent || diagnostic != null) {
+      map['diagnostic'] = Variable<String>(diagnostic);
+    }
+    if (!nullToAbsent || destinationInvoiceId != null) {
+      map['destination_invoice_id'] = Variable<String>(destinationInvoiceId);
+    }
+    if (!nullToAbsent || destinationFingerprint != null) {
+      map['destination_fingerprint'] = Variable<String>(destinationFingerprint);
+    }
+    return map;
+  }
+
+  LegacyInvoiceImportAttemptsCompanion toCompanion(bool nullToAbsent) {
+    return LegacyInvoiceImportAttemptsCompanion(
+      attemptId: Value(attemptId),
+      runId: Value(runId),
+      sourceOccurrenceKey: Value(sourceOccurrenceKey),
+      attemptNumber: Value(attemptNumber),
+      attemptIdempotencyKey: Value(attemptIdempotencyKey),
+      claimTokenHash: Value(claimTokenHash),
+      workerId: Value(workerId),
+      startedAt: Value(startedAt),
+      completedAt: Value(completedAt),
+      outcome: Value(outcome),
+      errorCode: errorCode == null && nullToAbsent
+          ? const Value.absent()
+          : Value(errorCode),
+      diagnostic: diagnostic == null && nullToAbsent
+          ? const Value.absent()
+          : Value(diagnostic),
+      destinationInvoiceId: destinationInvoiceId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(destinationInvoiceId),
+      destinationFingerprint: destinationFingerprint == null && nullToAbsent
+          ? const Value.absent()
+          : Value(destinationFingerprint),
+    );
+  }
+
+  factory LegacyInvoiceImportAttempt.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return LegacyInvoiceImportAttempt(
+      attemptId: serializer.fromJson<String>(json['attemptId']),
+      runId: serializer.fromJson<String>(json['runId']),
+      sourceOccurrenceKey: serializer.fromJson<String>(
+        json['sourceOccurrenceKey'],
+      ),
+      attemptNumber: serializer.fromJson<int>(json['attemptNumber']),
+      attemptIdempotencyKey: serializer.fromJson<String>(
+        json['attemptIdempotencyKey'],
+      ),
+      claimTokenHash: serializer.fromJson<String>(json['claimTokenHash']),
+      workerId: serializer.fromJson<String>(json['workerId']),
+      startedAt: serializer.fromJson<int>(json['startedAt']),
+      completedAt: serializer.fromJson<int>(json['completedAt']),
+      outcome: serializer.fromJson<String>(json['outcome']),
+      errorCode: serializer.fromJson<String?>(json['errorCode']),
+      diagnostic: serializer.fromJson<String?>(json['diagnostic']),
+      destinationInvoiceId: serializer.fromJson<String?>(
+        json['destinationInvoiceId'],
+      ),
+      destinationFingerprint: serializer.fromJson<String?>(
+        json['destinationFingerprint'],
+      ),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'attemptId': serializer.toJson<String>(attemptId),
+      'runId': serializer.toJson<String>(runId),
+      'sourceOccurrenceKey': serializer.toJson<String>(sourceOccurrenceKey),
+      'attemptNumber': serializer.toJson<int>(attemptNumber),
+      'attemptIdempotencyKey': serializer.toJson<String>(attemptIdempotencyKey),
+      'claimTokenHash': serializer.toJson<String>(claimTokenHash),
+      'workerId': serializer.toJson<String>(workerId),
+      'startedAt': serializer.toJson<int>(startedAt),
+      'completedAt': serializer.toJson<int>(completedAt),
+      'outcome': serializer.toJson<String>(outcome),
+      'errorCode': serializer.toJson<String?>(errorCode),
+      'diagnostic': serializer.toJson<String?>(diagnostic),
+      'destinationInvoiceId': serializer.toJson<String?>(destinationInvoiceId),
+      'destinationFingerprint': serializer.toJson<String?>(
+        destinationFingerprint,
+      ),
+    };
+  }
+
+  LegacyInvoiceImportAttempt copyWith({
+    String? attemptId,
+    String? runId,
+    String? sourceOccurrenceKey,
+    int? attemptNumber,
+    String? attemptIdempotencyKey,
+    String? claimTokenHash,
+    String? workerId,
+    int? startedAt,
+    int? completedAt,
+    String? outcome,
+    Value<String?> errorCode = const Value.absent(),
+    Value<String?> diagnostic = const Value.absent(),
+    Value<String?> destinationInvoiceId = const Value.absent(),
+    Value<String?> destinationFingerprint = const Value.absent(),
+  }) => LegacyInvoiceImportAttempt(
+    attemptId: attemptId ?? this.attemptId,
+    runId: runId ?? this.runId,
+    sourceOccurrenceKey: sourceOccurrenceKey ?? this.sourceOccurrenceKey,
+    attemptNumber: attemptNumber ?? this.attemptNumber,
+    attemptIdempotencyKey: attemptIdempotencyKey ?? this.attemptIdempotencyKey,
+    claimTokenHash: claimTokenHash ?? this.claimTokenHash,
+    workerId: workerId ?? this.workerId,
+    startedAt: startedAt ?? this.startedAt,
+    completedAt: completedAt ?? this.completedAt,
+    outcome: outcome ?? this.outcome,
+    errorCode: errorCode.present ? errorCode.value : this.errorCode,
+    diagnostic: diagnostic.present ? diagnostic.value : this.diagnostic,
+    destinationInvoiceId: destinationInvoiceId.present
+        ? destinationInvoiceId.value
+        : this.destinationInvoiceId,
+    destinationFingerprint: destinationFingerprint.present
+        ? destinationFingerprint.value
+        : this.destinationFingerprint,
+  );
+  LegacyInvoiceImportAttempt copyWithCompanion(
+    LegacyInvoiceImportAttemptsCompanion data,
+  ) {
+    return LegacyInvoiceImportAttempt(
+      attemptId: data.attemptId.present ? data.attemptId.value : this.attemptId,
+      runId: data.runId.present ? data.runId.value : this.runId,
+      sourceOccurrenceKey: data.sourceOccurrenceKey.present
+          ? data.sourceOccurrenceKey.value
+          : this.sourceOccurrenceKey,
+      attemptNumber: data.attemptNumber.present
+          ? data.attemptNumber.value
+          : this.attemptNumber,
+      attemptIdempotencyKey: data.attemptIdempotencyKey.present
+          ? data.attemptIdempotencyKey.value
+          : this.attemptIdempotencyKey,
+      claimTokenHash: data.claimTokenHash.present
+          ? data.claimTokenHash.value
+          : this.claimTokenHash,
+      workerId: data.workerId.present ? data.workerId.value : this.workerId,
+      startedAt: data.startedAt.present ? data.startedAt.value : this.startedAt,
+      completedAt: data.completedAt.present
+          ? data.completedAt.value
+          : this.completedAt,
+      outcome: data.outcome.present ? data.outcome.value : this.outcome,
+      errorCode: data.errorCode.present ? data.errorCode.value : this.errorCode,
+      diagnostic: data.diagnostic.present
+          ? data.diagnostic.value
+          : this.diagnostic,
+      destinationInvoiceId: data.destinationInvoiceId.present
+          ? data.destinationInvoiceId.value
+          : this.destinationInvoiceId,
+      destinationFingerprint: data.destinationFingerprint.present
+          ? data.destinationFingerprint.value
+          : this.destinationFingerprint,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('LegacyInvoiceImportAttempt(')
+          ..write('attemptId: $attemptId, ')
+          ..write('runId: $runId, ')
+          ..write('sourceOccurrenceKey: $sourceOccurrenceKey, ')
+          ..write('attemptNumber: $attemptNumber, ')
+          ..write('attemptIdempotencyKey: $attemptIdempotencyKey, ')
+          ..write('claimTokenHash: $claimTokenHash, ')
+          ..write('workerId: $workerId, ')
+          ..write('startedAt: $startedAt, ')
+          ..write('completedAt: $completedAt, ')
+          ..write('outcome: $outcome, ')
+          ..write('errorCode: $errorCode, ')
+          ..write('diagnostic: $diagnostic, ')
+          ..write('destinationInvoiceId: $destinationInvoiceId, ')
+          ..write('destinationFingerprint: $destinationFingerprint')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    attemptId,
+    runId,
+    sourceOccurrenceKey,
+    attemptNumber,
+    attemptIdempotencyKey,
+    claimTokenHash,
+    workerId,
+    startedAt,
+    completedAt,
+    outcome,
+    errorCode,
+    diagnostic,
+    destinationInvoiceId,
+    destinationFingerprint,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is LegacyInvoiceImportAttempt &&
+          other.attemptId == this.attemptId &&
+          other.runId == this.runId &&
+          other.sourceOccurrenceKey == this.sourceOccurrenceKey &&
+          other.attemptNumber == this.attemptNumber &&
+          other.attemptIdempotencyKey == this.attemptIdempotencyKey &&
+          other.claimTokenHash == this.claimTokenHash &&
+          other.workerId == this.workerId &&
+          other.startedAt == this.startedAt &&
+          other.completedAt == this.completedAt &&
+          other.outcome == this.outcome &&
+          other.errorCode == this.errorCode &&
+          other.diagnostic == this.diagnostic &&
+          other.destinationInvoiceId == this.destinationInvoiceId &&
+          other.destinationFingerprint == this.destinationFingerprint);
+}
+
+class LegacyInvoiceImportAttemptsCompanion
+    extends UpdateCompanion<LegacyInvoiceImportAttempt> {
+  final Value<String> attemptId;
+  final Value<String> runId;
+  final Value<String> sourceOccurrenceKey;
+  final Value<int> attemptNumber;
+  final Value<String> attemptIdempotencyKey;
+  final Value<String> claimTokenHash;
+  final Value<String> workerId;
+  final Value<int> startedAt;
+  final Value<int> completedAt;
+  final Value<String> outcome;
+  final Value<String?> errorCode;
+  final Value<String?> diagnostic;
+  final Value<String?> destinationInvoiceId;
+  final Value<String?> destinationFingerprint;
+  final Value<int> rowid;
+  const LegacyInvoiceImportAttemptsCompanion({
+    this.attemptId = const Value.absent(),
+    this.runId = const Value.absent(),
+    this.sourceOccurrenceKey = const Value.absent(),
+    this.attemptNumber = const Value.absent(),
+    this.attemptIdempotencyKey = const Value.absent(),
+    this.claimTokenHash = const Value.absent(),
+    this.workerId = const Value.absent(),
+    this.startedAt = const Value.absent(),
+    this.completedAt = const Value.absent(),
+    this.outcome = const Value.absent(),
+    this.errorCode = const Value.absent(),
+    this.diagnostic = const Value.absent(),
+    this.destinationInvoiceId = const Value.absent(),
+    this.destinationFingerprint = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  LegacyInvoiceImportAttemptsCompanion.insert({
+    required String attemptId,
+    required String runId,
+    required String sourceOccurrenceKey,
+    required int attemptNumber,
+    required String attemptIdempotencyKey,
+    required String claimTokenHash,
+    required String workerId,
+    required int startedAt,
+    required int completedAt,
+    required String outcome,
+    this.errorCode = const Value.absent(),
+    this.diagnostic = const Value.absent(),
+    this.destinationInvoiceId = const Value.absent(),
+    this.destinationFingerprint = const Value.absent(),
+    this.rowid = const Value.absent(),
+  }) : attemptId = Value(attemptId),
+       runId = Value(runId),
+       sourceOccurrenceKey = Value(sourceOccurrenceKey),
+       attemptNumber = Value(attemptNumber),
+       attemptIdempotencyKey = Value(attemptIdempotencyKey),
+       claimTokenHash = Value(claimTokenHash),
+       workerId = Value(workerId),
+       startedAt = Value(startedAt),
+       completedAt = Value(completedAt),
+       outcome = Value(outcome);
+  static Insertable<LegacyInvoiceImportAttempt> custom({
+    Expression<String>? attemptId,
+    Expression<String>? runId,
+    Expression<String>? sourceOccurrenceKey,
+    Expression<int>? attemptNumber,
+    Expression<String>? attemptIdempotencyKey,
+    Expression<String>? claimTokenHash,
+    Expression<String>? workerId,
+    Expression<int>? startedAt,
+    Expression<int>? completedAt,
+    Expression<String>? outcome,
+    Expression<String>? errorCode,
+    Expression<String>? diagnostic,
+    Expression<String>? destinationInvoiceId,
+    Expression<String>? destinationFingerprint,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (attemptId != null) 'attempt_id': attemptId,
+      if (runId != null) 'run_id': runId,
+      if (sourceOccurrenceKey != null)
+        'source_occurrence_key': sourceOccurrenceKey,
+      if (attemptNumber != null) 'attempt_number': attemptNumber,
+      if (attemptIdempotencyKey != null)
+        'attempt_idempotency_key': attemptIdempotencyKey,
+      if (claimTokenHash != null) 'claim_token_hash': claimTokenHash,
+      if (workerId != null) 'worker_id': workerId,
+      if (startedAt != null) 'started_at': startedAt,
+      if (completedAt != null) 'completed_at': completedAt,
+      if (outcome != null) 'outcome': outcome,
+      if (errorCode != null) 'error_code': errorCode,
+      if (diagnostic != null) 'diagnostic': diagnostic,
+      if (destinationInvoiceId != null)
+        'destination_invoice_id': destinationInvoiceId,
+      if (destinationFingerprint != null)
+        'destination_fingerprint': destinationFingerprint,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  LegacyInvoiceImportAttemptsCompanion copyWith({
+    Value<String>? attemptId,
+    Value<String>? runId,
+    Value<String>? sourceOccurrenceKey,
+    Value<int>? attemptNumber,
+    Value<String>? attemptIdempotencyKey,
+    Value<String>? claimTokenHash,
+    Value<String>? workerId,
+    Value<int>? startedAt,
+    Value<int>? completedAt,
+    Value<String>? outcome,
+    Value<String?>? errorCode,
+    Value<String?>? diagnostic,
+    Value<String?>? destinationInvoiceId,
+    Value<String?>? destinationFingerprint,
+    Value<int>? rowid,
+  }) {
+    return LegacyInvoiceImportAttemptsCompanion(
+      attemptId: attemptId ?? this.attemptId,
+      runId: runId ?? this.runId,
+      sourceOccurrenceKey: sourceOccurrenceKey ?? this.sourceOccurrenceKey,
+      attemptNumber: attemptNumber ?? this.attemptNumber,
+      attemptIdempotencyKey:
+          attemptIdempotencyKey ?? this.attemptIdempotencyKey,
+      claimTokenHash: claimTokenHash ?? this.claimTokenHash,
+      workerId: workerId ?? this.workerId,
+      startedAt: startedAt ?? this.startedAt,
+      completedAt: completedAt ?? this.completedAt,
+      outcome: outcome ?? this.outcome,
+      errorCode: errorCode ?? this.errorCode,
+      diagnostic: diagnostic ?? this.diagnostic,
+      destinationInvoiceId: destinationInvoiceId ?? this.destinationInvoiceId,
+      destinationFingerprint:
+          destinationFingerprint ?? this.destinationFingerprint,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (attemptId.present) {
+      map['attempt_id'] = Variable<String>(attemptId.value);
+    }
+    if (runId.present) {
+      map['run_id'] = Variable<String>(runId.value);
+    }
+    if (sourceOccurrenceKey.present) {
+      map['source_occurrence_key'] = Variable<String>(
+        sourceOccurrenceKey.value,
+      );
+    }
+    if (attemptNumber.present) {
+      map['attempt_number'] = Variable<int>(attemptNumber.value);
+    }
+    if (attemptIdempotencyKey.present) {
+      map['attempt_idempotency_key'] = Variable<String>(
+        attemptIdempotencyKey.value,
+      );
+    }
+    if (claimTokenHash.present) {
+      map['claim_token_hash'] = Variable<String>(claimTokenHash.value);
+    }
+    if (workerId.present) {
+      map['worker_id'] = Variable<String>(workerId.value);
+    }
+    if (startedAt.present) {
+      map['started_at'] = Variable<int>(startedAt.value);
+    }
+    if (completedAt.present) {
+      map['completed_at'] = Variable<int>(completedAt.value);
+    }
+    if (outcome.present) {
+      map['outcome'] = Variable<String>(outcome.value);
+    }
+    if (errorCode.present) {
+      map['error_code'] = Variable<String>(errorCode.value);
+    }
+    if (diagnostic.present) {
+      map['diagnostic'] = Variable<String>(diagnostic.value);
+    }
+    if (destinationInvoiceId.present) {
+      map['destination_invoice_id'] = Variable<String>(
+        destinationInvoiceId.value,
+      );
+    }
+    if (destinationFingerprint.present) {
+      map['destination_fingerprint'] = Variable<String>(
+        destinationFingerprint.value,
+      );
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('LegacyInvoiceImportAttemptsCompanion(')
+          ..write('attemptId: $attemptId, ')
+          ..write('runId: $runId, ')
+          ..write('sourceOccurrenceKey: $sourceOccurrenceKey, ')
+          ..write('attemptNumber: $attemptNumber, ')
+          ..write('attemptIdempotencyKey: $attemptIdempotencyKey, ')
+          ..write('claimTokenHash: $claimTokenHash, ')
+          ..write('workerId: $workerId, ')
+          ..write('startedAt: $startedAt, ')
+          ..write('completedAt: $completedAt, ')
+          ..write('outcome: $outcome, ')
+          ..write('errorCode: $errorCode, ')
+          ..write('diagnostic: $diagnostic, ')
+          ..write('destinationInvoiceId: $destinationInvoiceId, ')
+          ..write('destinationFingerprint: $destinationFingerprint, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $LegacyInvoiceImportEventsTable extends LegacyInvoiceImportEvents
+    with TableInfo<$LegacyInvoiceImportEventsTable, LegacyInvoiceImportEvent> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $LegacyInvoiceImportEventsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _eventIdMeta = const VerificationMeta(
+    'eventId',
+  );
+  @override
+  late final GeneratedColumn<String> eventId = GeneratedColumn<String>(
+    'event_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _runIdMeta = const VerificationMeta('runId');
+  @override
+  late final GeneratedColumn<String> runId = GeneratedColumn<String>(
+    'run_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _sourceOccurrenceKeyMeta =
+      const VerificationMeta('sourceOccurrenceKey');
+  @override
+  late final GeneratedColumn<String> sourceOccurrenceKey =
+      GeneratedColumn<String>(
+        'source_occurrence_key',
+        aliasedName,
+        true,
+        type: DriftSqlType.string,
+        requiredDuringInsert: false,
+      );
+  static const VerificationMeta _eventTypeMeta = const VerificationMeta(
+    'eventType',
+  );
+  @override
+  late final GeneratedColumn<String> eventType = GeneratedColumn<String>(
+    'event_type',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _actorIdMeta = const VerificationMeta(
+    'actorId',
+  );
+  @override
+  late final GeneratedColumn<String> actorId = GeneratedColumn<String>(
+    'actor_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _actorSourceMeta = const VerificationMeta(
+    'actorSource',
+  );
+  @override
+  late final GeneratedColumn<String> actorSource = GeneratedColumn<String>(
+    'actor_source',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _occurredAtMeta = const VerificationMeta(
+    'occurredAt',
+  );
+  @override
+  late final GeneratedColumn<int> occurredAt = GeneratedColumn<int>(
+    'occurred_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _reasonMeta = const VerificationMeta('reason');
+  @override
+  late final GeneratedColumn<String> reason = GeneratedColumn<String>(
+    'reason',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _detailsJsonMeta = const VerificationMeta(
+    'detailsJson',
+  );
+  @override
+  late final GeneratedColumn<String> detailsJson = GeneratedColumn<String>(
+    'details_json',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _requestIdempotencyKeyMeta =
+      const VerificationMeta('requestIdempotencyKey');
+  @override
+  late final GeneratedColumn<String> requestIdempotencyKey =
+      GeneratedColumn<String>(
+        'request_idempotency_key',
+        aliasedName,
+        true,
+        type: DriftSqlType.string,
+        requiredDuringInsert: false,
+      );
+  @override
+  List<GeneratedColumn> get $columns => [
+    eventId,
+    runId,
+    sourceOccurrenceKey,
+    eventType,
+    actorId,
+    actorSource,
+    occurredAt,
+    reason,
+    detailsJson,
+    requestIdempotencyKey,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'legacy_invoice_import_events';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<LegacyInvoiceImportEvent> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('event_id')) {
+      context.handle(
+        _eventIdMeta,
+        eventId.isAcceptableOrUnknown(data['event_id']!, _eventIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_eventIdMeta);
+    }
+    if (data.containsKey('run_id')) {
+      context.handle(
+        _runIdMeta,
+        runId.isAcceptableOrUnknown(data['run_id']!, _runIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_runIdMeta);
+    }
+    if (data.containsKey('source_occurrence_key')) {
+      context.handle(
+        _sourceOccurrenceKeyMeta,
+        sourceOccurrenceKey.isAcceptableOrUnknown(
+          data['source_occurrence_key']!,
+          _sourceOccurrenceKeyMeta,
+        ),
+      );
+    }
+    if (data.containsKey('event_type')) {
+      context.handle(
+        _eventTypeMeta,
+        eventType.isAcceptableOrUnknown(data['event_type']!, _eventTypeMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_eventTypeMeta);
+    }
+    if (data.containsKey('actor_id')) {
+      context.handle(
+        _actorIdMeta,
+        actorId.isAcceptableOrUnknown(data['actor_id']!, _actorIdMeta),
+      );
+    }
+    if (data.containsKey('actor_source')) {
+      context.handle(
+        _actorSourceMeta,
+        actorSource.isAcceptableOrUnknown(
+          data['actor_source']!,
+          _actorSourceMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_actorSourceMeta);
+    }
+    if (data.containsKey('occurred_at')) {
+      context.handle(
+        _occurredAtMeta,
+        occurredAt.isAcceptableOrUnknown(data['occurred_at']!, _occurredAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_occurredAtMeta);
+    }
+    if (data.containsKey('reason')) {
+      context.handle(
+        _reasonMeta,
+        reason.isAcceptableOrUnknown(data['reason']!, _reasonMeta),
+      );
+    }
+    if (data.containsKey('details_json')) {
+      context.handle(
+        _detailsJsonMeta,
+        detailsJson.isAcceptableOrUnknown(
+          data['details_json']!,
+          _detailsJsonMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_detailsJsonMeta);
+    }
+    if (data.containsKey('request_idempotency_key')) {
+      context.handle(
+        _requestIdempotencyKeyMeta,
+        requestIdempotencyKey.isAcceptableOrUnknown(
+          data['request_idempotency_key']!,
+          _requestIdempotencyKeyMeta,
+        ),
+      );
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {eventId};
+  @override
+  List<Set<GeneratedColumn>> get uniqueKeys => [
+    {requestIdempotencyKey},
+  ];
+  @override
+  LegacyInvoiceImportEvent map(
+    Map<String, dynamic> data, {
+    String? tablePrefix,
+  }) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return LegacyInvoiceImportEvent(
+      eventId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}event_id'],
+      )!,
+      runId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}run_id'],
+      )!,
+      sourceOccurrenceKey: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}source_occurrence_key'],
+      ),
+      eventType: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}event_type'],
+      )!,
+      actorId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}actor_id'],
+      ),
+      actorSource: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}actor_source'],
+      )!,
+      occurredAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}occurred_at'],
+      )!,
+      reason: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}reason'],
+      ),
+      detailsJson: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}details_json'],
+      )!,
+      requestIdempotencyKey: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}request_idempotency_key'],
+      ),
+    );
+  }
+
+  @override
+  $LegacyInvoiceImportEventsTable createAlias(String alias) {
+    return $LegacyInvoiceImportEventsTable(attachedDatabase, alias);
+  }
+}
+
+class LegacyInvoiceImportEvent extends DataClass
+    implements Insertable<LegacyInvoiceImportEvent> {
+  final String eventId;
+  final String runId;
+  final String? sourceOccurrenceKey;
+  final String eventType;
+  final String? actorId;
+  final String actorSource;
+  final int occurredAt;
+  final String? reason;
+  final String detailsJson;
+  final String? requestIdempotencyKey;
+  const LegacyInvoiceImportEvent({
+    required this.eventId,
+    required this.runId,
+    this.sourceOccurrenceKey,
+    required this.eventType,
+    this.actorId,
+    required this.actorSource,
+    required this.occurredAt,
+    this.reason,
+    required this.detailsJson,
+    this.requestIdempotencyKey,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['event_id'] = Variable<String>(eventId);
+    map['run_id'] = Variable<String>(runId);
+    if (!nullToAbsent || sourceOccurrenceKey != null) {
+      map['source_occurrence_key'] = Variable<String>(sourceOccurrenceKey);
+    }
+    map['event_type'] = Variable<String>(eventType);
+    if (!nullToAbsent || actorId != null) {
+      map['actor_id'] = Variable<String>(actorId);
+    }
+    map['actor_source'] = Variable<String>(actorSource);
+    map['occurred_at'] = Variable<int>(occurredAt);
+    if (!nullToAbsent || reason != null) {
+      map['reason'] = Variable<String>(reason);
+    }
+    map['details_json'] = Variable<String>(detailsJson);
+    if (!nullToAbsent || requestIdempotencyKey != null) {
+      map['request_idempotency_key'] = Variable<String>(requestIdempotencyKey);
+    }
+    return map;
+  }
+
+  LegacyInvoiceImportEventsCompanion toCompanion(bool nullToAbsent) {
+    return LegacyInvoiceImportEventsCompanion(
+      eventId: Value(eventId),
+      runId: Value(runId),
+      sourceOccurrenceKey: sourceOccurrenceKey == null && nullToAbsent
+          ? const Value.absent()
+          : Value(sourceOccurrenceKey),
+      eventType: Value(eventType),
+      actorId: actorId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(actorId),
+      actorSource: Value(actorSource),
+      occurredAt: Value(occurredAt),
+      reason: reason == null && nullToAbsent
+          ? const Value.absent()
+          : Value(reason),
+      detailsJson: Value(detailsJson),
+      requestIdempotencyKey: requestIdempotencyKey == null && nullToAbsent
+          ? const Value.absent()
+          : Value(requestIdempotencyKey),
+    );
+  }
+
+  factory LegacyInvoiceImportEvent.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return LegacyInvoiceImportEvent(
+      eventId: serializer.fromJson<String>(json['eventId']),
+      runId: serializer.fromJson<String>(json['runId']),
+      sourceOccurrenceKey: serializer.fromJson<String?>(
+        json['sourceOccurrenceKey'],
+      ),
+      eventType: serializer.fromJson<String>(json['eventType']),
+      actorId: serializer.fromJson<String?>(json['actorId']),
+      actorSource: serializer.fromJson<String>(json['actorSource']),
+      occurredAt: serializer.fromJson<int>(json['occurredAt']),
+      reason: serializer.fromJson<String?>(json['reason']),
+      detailsJson: serializer.fromJson<String>(json['detailsJson']),
+      requestIdempotencyKey: serializer.fromJson<String?>(
+        json['requestIdempotencyKey'],
+      ),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'eventId': serializer.toJson<String>(eventId),
+      'runId': serializer.toJson<String>(runId),
+      'sourceOccurrenceKey': serializer.toJson<String?>(sourceOccurrenceKey),
+      'eventType': serializer.toJson<String>(eventType),
+      'actorId': serializer.toJson<String?>(actorId),
+      'actorSource': serializer.toJson<String>(actorSource),
+      'occurredAt': serializer.toJson<int>(occurredAt),
+      'reason': serializer.toJson<String?>(reason),
+      'detailsJson': serializer.toJson<String>(detailsJson),
+      'requestIdempotencyKey': serializer.toJson<String?>(
+        requestIdempotencyKey,
+      ),
+    };
+  }
+
+  LegacyInvoiceImportEvent copyWith({
+    String? eventId,
+    String? runId,
+    Value<String?> sourceOccurrenceKey = const Value.absent(),
+    String? eventType,
+    Value<String?> actorId = const Value.absent(),
+    String? actorSource,
+    int? occurredAt,
+    Value<String?> reason = const Value.absent(),
+    String? detailsJson,
+    Value<String?> requestIdempotencyKey = const Value.absent(),
+  }) => LegacyInvoiceImportEvent(
+    eventId: eventId ?? this.eventId,
+    runId: runId ?? this.runId,
+    sourceOccurrenceKey: sourceOccurrenceKey.present
+        ? sourceOccurrenceKey.value
+        : this.sourceOccurrenceKey,
+    eventType: eventType ?? this.eventType,
+    actorId: actorId.present ? actorId.value : this.actorId,
+    actorSource: actorSource ?? this.actorSource,
+    occurredAt: occurredAt ?? this.occurredAt,
+    reason: reason.present ? reason.value : this.reason,
+    detailsJson: detailsJson ?? this.detailsJson,
+    requestIdempotencyKey: requestIdempotencyKey.present
+        ? requestIdempotencyKey.value
+        : this.requestIdempotencyKey,
+  );
+  LegacyInvoiceImportEvent copyWithCompanion(
+    LegacyInvoiceImportEventsCompanion data,
+  ) {
+    return LegacyInvoiceImportEvent(
+      eventId: data.eventId.present ? data.eventId.value : this.eventId,
+      runId: data.runId.present ? data.runId.value : this.runId,
+      sourceOccurrenceKey: data.sourceOccurrenceKey.present
+          ? data.sourceOccurrenceKey.value
+          : this.sourceOccurrenceKey,
+      eventType: data.eventType.present ? data.eventType.value : this.eventType,
+      actorId: data.actorId.present ? data.actorId.value : this.actorId,
+      actorSource: data.actorSource.present
+          ? data.actorSource.value
+          : this.actorSource,
+      occurredAt: data.occurredAt.present
+          ? data.occurredAt.value
+          : this.occurredAt,
+      reason: data.reason.present ? data.reason.value : this.reason,
+      detailsJson: data.detailsJson.present
+          ? data.detailsJson.value
+          : this.detailsJson,
+      requestIdempotencyKey: data.requestIdempotencyKey.present
+          ? data.requestIdempotencyKey.value
+          : this.requestIdempotencyKey,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('LegacyInvoiceImportEvent(')
+          ..write('eventId: $eventId, ')
+          ..write('runId: $runId, ')
+          ..write('sourceOccurrenceKey: $sourceOccurrenceKey, ')
+          ..write('eventType: $eventType, ')
+          ..write('actorId: $actorId, ')
+          ..write('actorSource: $actorSource, ')
+          ..write('occurredAt: $occurredAt, ')
+          ..write('reason: $reason, ')
+          ..write('detailsJson: $detailsJson, ')
+          ..write('requestIdempotencyKey: $requestIdempotencyKey')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    eventId,
+    runId,
+    sourceOccurrenceKey,
+    eventType,
+    actorId,
+    actorSource,
+    occurredAt,
+    reason,
+    detailsJson,
+    requestIdempotencyKey,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is LegacyInvoiceImportEvent &&
+          other.eventId == this.eventId &&
+          other.runId == this.runId &&
+          other.sourceOccurrenceKey == this.sourceOccurrenceKey &&
+          other.eventType == this.eventType &&
+          other.actorId == this.actorId &&
+          other.actorSource == this.actorSource &&
+          other.occurredAt == this.occurredAt &&
+          other.reason == this.reason &&
+          other.detailsJson == this.detailsJson &&
+          other.requestIdempotencyKey == this.requestIdempotencyKey);
+}
+
+class LegacyInvoiceImportEventsCompanion
+    extends UpdateCompanion<LegacyInvoiceImportEvent> {
+  final Value<String> eventId;
+  final Value<String> runId;
+  final Value<String?> sourceOccurrenceKey;
+  final Value<String> eventType;
+  final Value<String?> actorId;
+  final Value<String> actorSource;
+  final Value<int> occurredAt;
+  final Value<String?> reason;
+  final Value<String> detailsJson;
+  final Value<String?> requestIdempotencyKey;
+  final Value<int> rowid;
+  const LegacyInvoiceImportEventsCompanion({
+    this.eventId = const Value.absent(),
+    this.runId = const Value.absent(),
+    this.sourceOccurrenceKey = const Value.absent(),
+    this.eventType = const Value.absent(),
+    this.actorId = const Value.absent(),
+    this.actorSource = const Value.absent(),
+    this.occurredAt = const Value.absent(),
+    this.reason = const Value.absent(),
+    this.detailsJson = const Value.absent(),
+    this.requestIdempotencyKey = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  LegacyInvoiceImportEventsCompanion.insert({
+    required String eventId,
+    required String runId,
+    this.sourceOccurrenceKey = const Value.absent(),
+    required String eventType,
+    this.actorId = const Value.absent(),
+    required String actorSource,
+    required int occurredAt,
+    this.reason = const Value.absent(),
+    required String detailsJson,
+    this.requestIdempotencyKey = const Value.absent(),
+    this.rowid = const Value.absent(),
+  }) : eventId = Value(eventId),
+       runId = Value(runId),
+       eventType = Value(eventType),
+       actorSource = Value(actorSource),
+       occurredAt = Value(occurredAt),
+       detailsJson = Value(detailsJson);
+  static Insertable<LegacyInvoiceImportEvent> custom({
+    Expression<String>? eventId,
+    Expression<String>? runId,
+    Expression<String>? sourceOccurrenceKey,
+    Expression<String>? eventType,
+    Expression<String>? actorId,
+    Expression<String>? actorSource,
+    Expression<int>? occurredAt,
+    Expression<String>? reason,
+    Expression<String>? detailsJson,
+    Expression<String>? requestIdempotencyKey,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (eventId != null) 'event_id': eventId,
+      if (runId != null) 'run_id': runId,
+      if (sourceOccurrenceKey != null)
+        'source_occurrence_key': sourceOccurrenceKey,
+      if (eventType != null) 'event_type': eventType,
+      if (actorId != null) 'actor_id': actorId,
+      if (actorSource != null) 'actor_source': actorSource,
+      if (occurredAt != null) 'occurred_at': occurredAt,
+      if (reason != null) 'reason': reason,
+      if (detailsJson != null) 'details_json': detailsJson,
+      if (requestIdempotencyKey != null)
+        'request_idempotency_key': requestIdempotencyKey,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  LegacyInvoiceImportEventsCompanion copyWith({
+    Value<String>? eventId,
+    Value<String>? runId,
+    Value<String?>? sourceOccurrenceKey,
+    Value<String>? eventType,
+    Value<String?>? actorId,
+    Value<String>? actorSource,
+    Value<int>? occurredAt,
+    Value<String?>? reason,
+    Value<String>? detailsJson,
+    Value<String?>? requestIdempotencyKey,
+    Value<int>? rowid,
+  }) {
+    return LegacyInvoiceImportEventsCompanion(
+      eventId: eventId ?? this.eventId,
+      runId: runId ?? this.runId,
+      sourceOccurrenceKey: sourceOccurrenceKey ?? this.sourceOccurrenceKey,
+      eventType: eventType ?? this.eventType,
+      actorId: actorId ?? this.actorId,
+      actorSource: actorSource ?? this.actorSource,
+      occurredAt: occurredAt ?? this.occurredAt,
+      reason: reason ?? this.reason,
+      detailsJson: detailsJson ?? this.detailsJson,
+      requestIdempotencyKey:
+          requestIdempotencyKey ?? this.requestIdempotencyKey,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (eventId.present) {
+      map['event_id'] = Variable<String>(eventId.value);
+    }
+    if (runId.present) {
+      map['run_id'] = Variable<String>(runId.value);
+    }
+    if (sourceOccurrenceKey.present) {
+      map['source_occurrence_key'] = Variable<String>(
+        sourceOccurrenceKey.value,
+      );
+    }
+    if (eventType.present) {
+      map['event_type'] = Variable<String>(eventType.value);
+    }
+    if (actorId.present) {
+      map['actor_id'] = Variable<String>(actorId.value);
+    }
+    if (actorSource.present) {
+      map['actor_source'] = Variable<String>(actorSource.value);
+    }
+    if (occurredAt.present) {
+      map['occurred_at'] = Variable<int>(occurredAt.value);
+    }
+    if (reason.present) {
+      map['reason'] = Variable<String>(reason.value);
+    }
+    if (detailsJson.present) {
+      map['details_json'] = Variable<String>(detailsJson.value);
+    }
+    if (requestIdempotencyKey.present) {
+      map['request_idempotency_key'] = Variable<String>(
+        requestIdempotencyKey.value,
+      );
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('LegacyInvoiceImportEventsCompanion(')
+          ..write('eventId: $eventId, ')
+          ..write('runId: $runId, ')
+          ..write('sourceOccurrenceKey: $sourceOccurrenceKey, ')
+          ..write('eventType: $eventType, ')
+          ..write('actorId: $actorId, ')
+          ..write('actorSource: $actorSource, ')
+          ..write('occurredAt: $occurredAt, ')
+          ..write('reason: $reason, ')
+          ..write('detailsJson: $detailsJson, ')
+          ..write('requestIdempotencyKey: $requestIdempotencyKey, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $LegacyInvoiceOccurrenceMappingsTable
+    extends LegacyInvoiceOccurrenceMappings
+    with
+        TableInfo<
+          $LegacyInvoiceOccurrenceMappingsTable,
+          LegacyInvoiceOccurrenceMapping
+        > {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $LegacyInvoiceOccurrenceMappingsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _sourceOccurrenceKeyMeta =
+      const VerificationMeta('sourceOccurrenceKey');
+  @override
+  late final GeneratedColumn<String> sourceOccurrenceKey =
+      GeneratedColumn<String>(
+        'source_occurrence_key',
+        aliasedName,
+        false,
+        type: DriftSqlType.string,
+        requiredDuringInsert: true,
+      );
+  static const VerificationMeta _sourceSnapshotSha256Meta =
+      const VerificationMeta('sourceSnapshotSha256');
+  @override
+  late final GeneratedColumn<String> sourceSnapshotSha256 =
+      GeneratedColumn<String>(
+        'source_snapshot_sha256',
+        aliasedName,
+        false,
+        type: DriftSqlType.string,
+        requiredDuringInsert: true,
+      );
+  static const VerificationMeta _occurrenceIdentityVersionMeta =
+      const VerificationMeta('occurrenceIdentityVersion');
+  @override
+  late final GeneratedColumn<int> occurrenceIdentityVersion =
+      GeneratedColumn<int>(
+        'occurrence_identity_version',
+        aliasedName,
+        false,
+        type: DriftSqlType.int,
+        requiredDuringInsert: true,
+      );
+  static const VerificationMeta _sourceIndexMeta = const VerificationMeta(
+    'sourceIndex',
+  );
+  @override
+  late final GeneratedColumn<int> sourceIndex = GeneratedColumn<int>(
+    'source_index',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _recordSha256Meta = const VerificationMeta(
+    'recordSha256',
+  );
+  @override
+  late final GeneratedColumn<String> recordSha256 = GeneratedColumn<String>(
+    'record_sha256',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _migrationVersionMeta = const VerificationMeta(
+    'migrationVersion',
+  );
+  @override
+  late final GeneratedColumn<int> migrationVersion = GeneratedColumn<int>(
+    'migration_version',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _mappingContractVersionMeta =
+      const VerificationMeta('mappingContractVersion');
+  @override
+  late final GeneratedColumn<int> mappingContractVersion = GeneratedColumn<int>(
+    'mapping_contract_version',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _importRunIdMeta = const VerificationMeta(
+    'importRunId',
+  );
+  @override
+  late final GeneratedColumn<String> importRunId = GeneratedColumn<String>(
+    'import_run_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _destinationInvoiceIdMeta =
+      const VerificationMeta('destinationInvoiceId');
+  @override
+  late final GeneratedColumn<String> destinationInvoiceId =
+      GeneratedColumn<String>(
+        'destination_invoice_id',
+        aliasedName,
+        false,
+        type: DriftSqlType.string,
+        requiredDuringInsert: true,
+      );
+  static const VerificationMeta _destinationFingerprintMeta =
+      const VerificationMeta('destinationFingerprint');
+  @override
+  late final GeneratedColumn<String> destinationFingerprint =
+      GeneratedColumn<String>(
+        'destination_fingerprint',
+        aliasedName,
+        false,
+        type: DriftSqlType.string,
+        requiredDuringInsert: true,
+      );
+  static const VerificationMeta _importedAtMeta = const VerificationMeta(
+    'importedAt',
+  );
+  @override
+  late final GeneratedColumn<int> importedAt = GeneratedColumn<int>(
+    'imported_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    sourceOccurrenceKey,
+    sourceSnapshotSha256,
+    occurrenceIdentityVersion,
+    sourceIndex,
+    recordSha256,
+    migrationVersion,
+    mappingContractVersion,
+    importRunId,
+    destinationInvoiceId,
+    destinationFingerprint,
+    importedAt,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'legacy_invoice_occurrence_mappings';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<LegacyInvoiceOccurrenceMapping> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('source_occurrence_key')) {
+      context.handle(
+        _sourceOccurrenceKeyMeta,
+        sourceOccurrenceKey.isAcceptableOrUnknown(
+          data['source_occurrence_key']!,
+          _sourceOccurrenceKeyMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_sourceOccurrenceKeyMeta);
+    }
+    if (data.containsKey('source_snapshot_sha256')) {
+      context.handle(
+        _sourceSnapshotSha256Meta,
+        sourceSnapshotSha256.isAcceptableOrUnknown(
+          data['source_snapshot_sha256']!,
+          _sourceSnapshotSha256Meta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_sourceSnapshotSha256Meta);
+    }
+    if (data.containsKey('occurrence_identity_version')) {
+      context.handle(
+        _occurrenceIdentityVersionMeta,
+        occurrenceIdentityVersion.isAcceptableOrUnknown(
+          data['occurrence_identity_version']!,
+          _occurrenceIdentityVersionMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_occurrenceIdentityVersionMeta);
+    }
+    if (data.containsKey('source_index')) {
+      context.handle(
+        _sourceIndexMeta,
+        sourceIndex.isAcceptableOrUnknown(
+          data['source_index']!,
+          _sourceIndexMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_sourceIndexMeta);
+    }
+    if (data.containsKey('record_sha256')) {
+      context.handle(
+        _recordSha256Meta,
+        recordSha256.isAcceptableOrUnknown(
+          data['record_sha256']!,
+          _recordSha256Meta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_recordSha256Meta);
+    }
+    if (data.containsKey('migration_version')) {
+      context.handle(
+        _migrationVersionMeta,
+        migrationVersion.isAcceptableOrUnknown(
+          data['migration_version']!,
+          _migrationVersionMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_migrationVersionMeta);
+    }
+    if (data.containsKey('mapping_contract_version')) {
+      context.handle(
+        _mappingContractVersionMeta,
+        mappingContractVersion.isAcceptableOrUnknown(
+          data['mapping_contract_version']!,
+          _mappingContractVersionMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_mappingContractVersionMeta);
+    }
+    if (data.containsKey('import_run_id')) {
+      context.handle(
+        _importRunIdMeta,
+        importRunId.isAcceptableOrUnknown(
+          data['import_run_id']!,
+          _importRunIdMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_importRunIdMeta);
+    }
+    if (data.containsKey('destination_invoice_id')) {
+      context.handle(
+        _destinationInvoiceIdMeta,
+        destinationInvoiceId.isAcceptableOrUnknown(
+          data['destination_invoice_id']!,
+          _destinationInvoiceIdMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_destinationInvoiceIdMeta);
+    }
+    if (data.containsKey('destination_fingerprint')) {
+      context.handle(
+        _destinationFingerprintMeta,
+        destinationFingerprint.isAcceptableOrUnknown(
+          data['destination_fingerprint']!,
+          _destinationFingerprintMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_destinationFingerprintMeta);
+    }
+    if (data.containsKey('imported_at')) {
+      context.handle(
+        _importedAtMeta,
+        importedAt.isAcceptableOrUnknown(data['imported_at']!, _importedAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_importedAtMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {sourceOccurrenceKey};
+  @override
+  List<Set<GeneratedColumn>> get uniqueKeys => [
+    {destinationInvoiceId},
+  ];
+  @override
+  LegacyInvoiceOccurrenceMapping map(
+    Map<String, dynamic> data, {
+    String? tablePrefix,
+  }) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return LegacyInvoiceOccurrenceMapping(
+      sourceOccurrenceKey: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}source_occurrence_key'],
+      )!,
+      sourceSnapshotSha256: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}source_snapshot_sha256'],
+      )!,
+      occurrenceIdentityVersion: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}occurrence_identity_version'],
+      )!,
+      sourceIndex: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}source_index'],
+      )!,
+      recordSha256: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}record_sha256'],
+      )!,
+      migrationVersion: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}migration_version'],
+      )!,
+      mappingContractVersion: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}mapping_contract_version'],
+      )!,
+      importRunId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}import_run_id'],
+      )!,
+      destinationInvoiceId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}destination_invoice_id'],
+      )!,
+      destinationFingerprint: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}destination_fingerprint'],
+      )!,
+      importedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}imported_at'],
+      )!,
+    );
+  }
+
+  @override
+  $LegacyInvoiceOccurrenceMappingsTable createAlias(String alias) {
+    return $LegacyInvoiceOccurrenceMappingsTable(attachedDatabase, alias);
+  }
+}
+
+class LegacyInvoiceOccurrenceMapping extends DataClass
+    implements Insertable<LegacyInvoiceOccurrenceMapping> {
+  final String sourceOccurrenceKey;
+  final String sourceSnapshotSha256;
+  final int occurrenceIdentityVersion;
+  final int sourceIndex;
+  final String recordSha256;
+  final int migrationVersion;
+  final int mappingContractVersion;
+  final String importRunId;
+  final String destinationInvoiceId;
+  final String destinationFingerprint;
+  final int importedAt;
+  const LegacyInvoiceOccurrenceMapping({
+    required this.sourceOccurrenceKey,
+    required this.sourceSnapshotSha256,
+    required this.occurrenceIdentityVersion,
+    required this.sourceIndex,
+    required this.recordSha256,
+    required this.migrationVersion,
+    required this.mappingContractVersion,
+    required this.importRunId,
+    required this.destinationInvoiceId,
+    required this.destinationFingerprint,
+    required this.importedAt,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['source_occurrence_key'] = Variable<String>(sourceOccurrenceKey);
+    map['source_snapshot_sha256'] = Variable<String>(sourceSnapshotSha256);
+    map['occurrence_identity_version'] = Variable<int>(
+      occurrenceIdentityVersion,
+    );
+    map['source_index'] = Variable<int>(sourceIndex);
+    map['record_sha256'] = Variable<String>(recordSha256);
+    map['migration_version'] = Variable<int>(migrationVersion);
+    map['mapping_contract_version'] = Variable<int>(mappingContractVersion);
+    map['import_run_id'] = Variable<String>(importRunId);
+    map['destination_invoice_id'] = Variable<String>(destinationInvoiceId);
+    map['destination_fingerprint'] = Variable<String>(destinationFingerprint);
+    map['imported_at'] = Variable<int>(importedAt);
+    return map;
+  }
+
+  LegacyInvoiceOccurrenceMappingsCompanion toCompanion(bool nullToAbsent) {
+    return LegacyInvoiceOccurrenceMappingsCompanion(
+      sourceOccurrenceKey: Value(sourceOccurrenceKey),
+      sourceSnapshotSha256: Value(sourceSnapshotSha256),
+      occurrenceIdentityVersion: Value(occurrenceIdentityVersion),
+      sourceIndex: Value(sourceIndex),
+      recordSha256: Value(recordSha256),
+      migrationVersion: Value(migrationVersion),
+      mappingContractVersion: Value(mappingContractVersion),
+      importRunId: Value(importRunId),
+      destinationInvoiceId: Value(destinationInvoiceId),
+      destinationFingerprint: Value(destinationFingerprint),
+      importedAt: Value(importedAt),
+    );
+  }
+
+  factory LegacyInvoiceOccurrenceMapping.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return LegacyInvoiceOccurrenceMapping(
+      sourceOccurrenceKey: serializer.fromJson<String>(
+        json['sourceOccurrenceKey'],
+      ),
+      sourceSnapshotSha256: serializer.fromJson<String>(
+        json['sourceSnapshotSha256'],
+      ),
+      occurrenceIdentityVersion: serializer.fromJson<int>(
+        json['occurrenceIdentityVersion'],
+      ),
+      sourceIndex: serializer.fromJson<int>(json['sourceIndex']),
+      recordSha256: serializer.fromJson<String>(json['recordSha256']),
+      migrationVersion: serializer.fromJson<int>(json['migrationVersion']),
+      mappingContractVersion: serializer.fromJson<int>(
+        json['mappingContractVersion'],
+      ),
+      importRunId: serializer.fromJson<String>(json['importRunId']),
+      destinationInvoiceId: serializer.fromJson<String>(
+        json['destinationInvoiceId'],
+      ),
+      destinationFingerprint: serializer.fromJson<String>(
+        json['destinationFingerprint'],
+      ),
+      importedAt: serializer.fromJson<int>(json['importedAt']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'sourceOccurrenceKey': serializer.toJson<String>(sourceOccurrenceKey),
+      'sourceSnapshotSha256': serializer.toJson<String>(sourceSnapshotSha256),
+      'occurrenceIdentityVersion': serializer.toJson<int>(
+        occurrenceIdentityVersion,
+      ),
+      'sourceIndex': serializer.toJson<int>(sourceIndex),
+      'recordSha256': serializer.toJson<String>(recordSha256),
+      'migrationVersion': serializer.toJson<int>(migrationVersion),
+      'mappingContractVersion': serializer.toJson<int>(mappingContractVersion),
+      'importRunId': serializer.toJson<String>(importRunId),
+      'destinationInvoiceId': serializer.toJson<String>(destinationInvoiceId),
+      'destinationFingerprint': serializer.toJson<String>(
+        destinationFingerprint,
+      ),
+      'importedAt': serializer.toJson<int>(importedAt),
+    };
+  }
+
+  LegacyInvoiceOccurrenceMapping copyWith({
+    String? sourceOccurrenceKey,
+    String? sourceSnapshotSha256,
+    int? occurrenceIdentityVersion,
+    int? sourceIndex,
+    String? recordSha256,
+    int? migrationVersion,
+    int? mappingContractVersion,
+    String? importRunId,
+    String? destinationInvoiceId,
+    String? destinationFingerprint,
+    int? importedAt,
+  }) => LegacyInvoiceOccurrenceMapping(
+    sourceOccurrenceKey: sourceOccurrenceKey ?? this.sourceOccurrenceKey,
+    sourceSnapshotSha256: sourceSnapshotSha256 ?? this.sourceSnapshotSha256,
+    occurrenceIdentityVersion:
+        occurrenceIdentityVersion ?? this.occurrenceIdentityVersion,
+    sourceIndex: sourceIndex ?? this.sourceIndex,
+    recordSha256: recordSha256 ?? this.recordSha256,
+    migrationVersion: migrationVersion ?? this.migrationVersion,
+    mappingContractVersion:
+        mappingContractVersion ?? this.mappingContractVersion,
+    importRunId: importRunId ?? this.importRunId,
+    destinationInvoiceId: destinationInvoiceId ?? this.destinationInvoiceId,
+    destinationFingerprint:
+        destinationFingerprint ?? this.destinationFingerprint,
+    importedAt: importedAt ?? this.importedAt,
+  );
+  LegacyInvoiceOccurrenceMapping copyWithCompanion(
+    LegacyInvoiceOccurrenceMappingsCompanion data,
+  ) {
+    return LegacyInvoiceOccurrenceMapping(
+      sourceOccurrenceKey: data.sourceOccurrenceKey.present
+          ? data.sourceOccurrenceKey.value
+          : this.sourceOccurrenceKey,
+      sourceSnapshotSha256: data.sourceSnapshotSha256.present
+          ? data.sourceSnapshotSha256.value
+          : this.sourceSnapshotSha256,
+      occurrenceIdentityVersion: data.occurrenceIdentityVersion.present
+          ? data.occurrenceIdentityVersion.value
+          : this.occurrenceIdentityVersion,
+      sourceIndex: data.sourceIndex.present
+          ? data.sourceIndex.value
+          : this.sourceIndex,
+      recordSha256: data.recordSha256.present
+          ? data.recordSha256.value
+          : this.recordSha256,
+      migrationVersion: data.migrationVersion.present
+          ? data.migrationVersion.value
+          : this.migrationVersion,
+      mappingContractVersion: data.mappingContractVersion.present
+          ? data.mappingContractVersion.value
+          : this.mappingContractVersion,
+      importRunId: data.importRunId.present
+          ? data.importRunId.value
+          : this.importRunId,
+      destinationInvoiceId: data.destinationInvoiceId.present
+          ? data.destinationInvoiceId.value
+          : this.destinationInvoiceId,
+      destinationFingerprint: data.destinationFingerprint.present
+          ? data.destinationFingerprint.value
+          : this.destinationFingerprint,
+      importedAt: data.importedAt.present
+          ? data.importedAt.value
+          : this.importedAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('LegacyInvoiceOccurrenceMapping(')
+          ..write('sourceOccurrenceKey: $sourceOccurrenceKey, ')
+          ..write('sourceSnapshotSha256: $sourceSnapshotSha256, ')
+          ..write('occurrenceIdentityVersion: $occurrenceIdentityVersion, ')
+          ..write('sourceIndex: $sourceIndex, ')
+          ..write('recordSha256: $recordSha256, ')
+          ..write('migrationVersion: $migrationVersion, ')
+          ..write('mappingContractVersion: $mappingContractVersion, ')
+          ..write('importRunId: $importRunId, ')
+          ..write('destinationInvoiceId: $destinationInvoiceId, ')
+          ..write('destinationFingerprint: $destinationFingerprint, ')
+          ..write('importedAt: $importedAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    sourceOccurrenceKey,
+    sourceSnapshotSha256,
+    occurrenceIdentityVersion,
+    sourceIndex,
+    recordSha256,
+    migrationVersion,
+    mappingContractVersion,
+    importRunId,
+    destinationInvoiceId,
+    destinationFingerprint,
+    importedAt,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is LegacyInvoiceOccurrenceMapping &&
+          other.sourceOccurrenceKey == this.sourceOccurrenceKey &&
+          other.sourceSnapshotSha256 == this.sourceSnapshotSha256 &&
+          other.occurrenceIdentityVersion == this.occurrenceIdentityVersion &&
+          other.sourceIndex == this.sourceIndex &&
+          other.recordSha256 == this.recordSha256 &&
+          other.migrationVersion == this.migrationVersion &&
+          other.mappingContractVersion == this.mappingContractVersion &&
+          other.importRunId == this.importRunId &&
+          other.destinationInvoiceId == this.destinationInvoiceId &&
+          other.destinationFingerprint == this.destinationFingerprint &&
+          other.importedAt == this.importedAt);
+}
+
+class LegacyInvoiceOccurrenceMappingsCompanion
+    extends UpdateCompanion<LegacyInvoiceOccurrenceMapping> {
+  final Value<String> sourceOccurrenceKey;
+  final Value<String> sourceSnapshotSha256;
+  final Value<int> occurrenceIdentityVersion;
+  final Value<int> sourceIndex;
+  final Value<String> recordSha256;
+  final Value<int> migrationVersion;
+  final Value<int> mappingContractVersion;
+  final Value<String> importRunId;
+  final Value<String> destinationInvoiceId;
+  final Value<String> destinationFingerprint;
+  final Value<int> importedAt;
+  final Value<int> rowid;
+  const LegacyInvoiceOccurrenceMappingsCompanion({
+    this.sourceOccurrenceKey = const Value.absent(),
+    this.sourceSnapshotSha256 = const Value.absent(),
+    this.occurrenceIdentityVersion = const Value.absent(),
+    this.sourceIndex = const Value.absent(),
+    this.recordSha256 = const Value.absent(),
+    this.migrationVersion = const Value.absent(),
+    this.mappingContractVersion = const Value.absent(),
+    this.importRunId = const Value.absent(),
+    this.destinationInvoiceId = const Value.absent(),
+    this.destinationFingerprint = const Value.absent(),
+    this.importedAt = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  LegacyInvoiceOccurrenceMappingsCompanion.insert({
+    required String sourceOccurrenceKey,
+    required String sourceSnapshotSha256,
+    required int occurrenceIdentityVersion,
+    required int sourceIndex,
+    required String recordSha256,
+    required int migrationVersion,
+    required int mappingContractVersion,
+    required String importRunId,
+    required String destinationInvoiceId,
+    required String destinationFingerprint,
+    required int importedAt,
+    this.rowid = const Value.absent(),
+  }) : sourceOccurrenceKey = Value(sourceOccurrenceKey),
+       sourceSnapshotSha256 = Value(sourceSnapshotSha256),
+       occurrenceIdentityVersion = Value(occurrenceIdentityVersion),
+       sourceIndex = Value(sourceIndex),
+       recordSha256 = Value(recordSha256),
+       migrationVersion = Value(migrationVersion),
+       mappingContractVersion = Value(mappingContractVersion),
+       importRunId = Value(importRunId),
+       destinationInvoiceId = Value(destinationInvoiceId),
+       destinationFingerprint = Value(destinationFingerprint),
+       importedAt = Value(importedAt);
+  static Insertable<LegacyInvoiceOccurrenceMapping> custom({
+    Expression<String>? sourceOccurrenceKey,
+    Expression<String>? sourceSnapshotSha256,
+    Expression<int>? occurrenceIdentityVersion,
+    Expression<int>? sourceIndex,
+    Expression<String>? recordSha256,
+    Expression<int>? migrationVersion,
+    Expression<int>? mappingContractVersion,
+    Expression<String>? importRunId,
+    Expression<String>? destinationInvoiceId,
+    Expression<String>? destinationFingerprint,
+    Expression<int>? importedAt,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (sourceOccurrenceKey != null)
+        'source_occurrence_key': sourceOccurrenceKey,
+      if (sourceSnapshotSha256 != null)
+        'source_snapshot_sha256': sourceSnapshotSha256,
+      if (occurrenceIdentityVersion != null)
+        'occurrence_identity_version': occurrenceIdentityVersion,
+      if (sourceIndex != null) 'source_index': sourceIndex,
+      if (recordSha256 != null) 'record_sha256': recordSha256,
+      if (migrationVersion != null) 'migration_version': migrationVersion,
+      if (mappingContractVersion != null)
+        'mapping_contract_version': mappingContractVersion,
+      if (importRunId != null) 'import_run_id': importRunId,
+      if (destinationInvoiceId != null)
+        'destination_invoice_id': destinationInvoiceId,
+      if (destinationFingerprint != null)
+        'destination_fingerprint': destinationFingerprint,
+      if (importedAt != null) 'imported_at': importedAt,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  LegacyInvoiceOccurrenceMappingsCompanion copyWith({
+    Value<String>? sourceOccurrenceKey,
+    Value<String>? sourceSnapshotSha256,
+    Value<int>? occurrenceIdentityVersion,
+    Value<int>? sourceIndex,
+    Value<String>? recordSha256,
+    Value<int>? migrationVersion,
+    Value<int>? mappingContractVersion,
+    Value<String>? importRunId,
+    Value<String>? destinationInvoiceId,
+    Value<String>? destinationFingerprint,
+    Value<int>? importedAt,
+    Value<int>? rowid,
+  }) {
+    return LegacyInvoiceOccurrenceMappingsCompanion(
+      sourceOccurrenceKey: sourceOccurrenceKey ?? this.sourceOccurrenceKey,
+      sourceSnapshotSha256: sourceSnapshotSha256 ?? this.sourceSnapshotSha256,
+      occurrenceIdentityVersion:
+          occurrenceIdentityVersion ?? this.occurrenceIdentityVersion,
+      sourceIndex: sourceIndex ?? this.sourceIndex,
+      recordSha256: recordSha256 ?? this.recordSha256,
+      migrationVersion: migrationVersion ?? this.migrationVersion,
+      mappingContractVersion:
+          mappingContractVersion ?? this.mappingContractVersion,
+      importRunId: importRunId ?? this.importRunId,
+      destinationInvoiceId: destinationInvoiceId ?? this.destinationInvoiceId,
+      destinationFingerprint:
+          destinationFingerprint ?? this.destinationFingerprint,
+      importedAt: importedAt ?? this.importedAt,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (sourceOccurrenceKey.present) {
+      map['source_occurrence_key'] = Variable<String>(
+        sourceOccurrenceKey.value,
+      );
+    }
+    if (sourceSnapshotSha256.present) {
+      map['source_snapshot_sha256'] = Variable<String>(
+        sourceSnapshotSha256.value,
+      );
+    }
+    if (occurrenceIdentityVersion.present) {
+      map['occurrence_identity_version'] = Variable<int>(
+        occurrenceIdentityVersion.value,
+      );
+    }
+    if (sourceIndex.present) {
+      map['source_index'] = Variable<int>(sourceIndex.value);
+    }
+    if (recordSha256.present) {
+      map['record_sha256'] = Variable<String>(recordSha256.value);
+    }
+    if (migrationVersion.present) {
+      map['migration_version'] = Variable<int>(migrationVersion.value);
+    }
+    if (mappingContractVersion.present) {
+      map['mapping_contract_version'] = Variable<int>(
+        mappingContractVersion.value,
+      );
+    }
+    if (importRunId.present) {
+      map['import_run_id'] = Variable<String>(importRunId.value);
+    }
+    if (destinationInvoiceId.present) {
+      map['destination_invoice_id'] = Variable<String>(
+        destinationInvoiceId.value,
+      );
+    }
+    if (destinationFingerprint.present) {
+      map['destination_fingerprint'] = Variable<String>(
+        destinationFingerprint.value,
+      );
+    }
+    if (importedAt.present) {
+      map['imported_at'] = Variable<int>(importedAt.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('LegacyInvoiceOccurrenceMappingsCompanion(')
+          ..write('sourceOccurrenceKey: $sourceOccurrenceKey, ')
+          ..write('sourceSnapshotSha256: $sourceSnapshotSha256, ')
+          ..write('occurrenceIdentityVersion: $occurrenceIdentityVersion, ')
+          ..write('sourceIndex: $sourceIndex, ')
+          ..write('recordSha256: $recordSha256, ')
+          ..write('migrationVersion: $migrationVersion, ')
+          ..write('mappingContractVersion: $mappingContractVersion, ')
+          ..write('importRunId: $importRunId, ')
+          ..write('destinationInvoiceId: $destinationInvoiceId, ')
+          ..write('destinationFingerprint: $destinationFingerprint, ')
+          ..write('importedAt: $importedAt, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(e);
   $AppDatabaseManager get managers => $AppDatabaseManager(this);
@@ -16015,6 +20628,16 @@ abstract class _$AppDatabase extends GeneratedDatabase {
       $LegacyMigrationOccurrencesTable(this);
   late final $LegacyPartyReviewDecisionsTable legacyPartyReviewDecisions =
       $LegacyPartyReviewDecisionsTable(this);
+  late final $LegacyInvoiceImportRunsTable legacyInvoiceImportRuns =
+      $LegacyInvoiceImportRunsTable(this);
+  late final $LegacyInvoiceImportOccurrencesTable
+  legacyInvoiceImportOccurrences = $LegacyInvoiceImportOccurrencesTable(this);
+  late final $LegacyInvoiceImportAttemptsTable legacyInvoiceImportAttempts =
+      $LegacyInvoiceImportAttemptsTable(this);
+  late final $LegacyInvoiceImportEventsTable legacyInvoiceImportEvents =
+      $LegacyInvoiceImportEventsTable(this);
+  late final $LegacyInvoiceOccurrenceMappingsTable
+  legacyInvoiceOccurrenceMappings = $LegacyInvoiceOccurrenceMappingsTable(this);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
@@ -16044,6 +20667,11 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     legacyMigrationRuns,
     legacyMigrationOccurrences,
     legacyPartyReviewDecisions,
+    legacyInvoiceImportRuns,
+    legacyInvoiceImportOccurrences,
+    legacyInvoiceImportAttempts,
+    legacyInvoiceImportEvents,
+    legacyInvoiceOccurrenceMappings,
   ];
 }
 
@@ -23975,6 +28603,2143 @@ typedef $$LegacyPartyReviewDecisionsTableProcessedTableManager =
       LegacyPartyReviewDecision,
       PrefetchHooks Function()
     >;
+typedef $$LegacyInvoiceImportRunsTableCreateCompanionBuilder =
+    LegacyInvoiceImportRunsCompanion Function({
+      required String runId,
+      Value<String?> parentRunId,
+      required String snapshotSha256,
+      required int snapshotByteLength,
+      required int snapshotSourceExists,
+      required int snapshotFormatVersion,
+      required int migrationVersion,
+      required int occurrenceIdentityVersion,
+      required int preflightVersion,
+      required int mappingContractVersion,
+      Value<String?> partyReviewRunId,
+      Value<String?> exportManifestSha256,
+      required int createdAt,
+      Value<String?> createdByActorId,
+      required String createdByActorSource,
+      required String status,
+      required int updatedAt,
+      Value<int> rowid,
+    });
+typedef $$LegacyInvoiceImportRunsTableUpdateCompanionBuilder =
+    LegacyInvoiceImportRunsCompanion Function({
+      Value<String> runId,
+      Value<String?> parentRunId,
+      Value<String> snapshotSha256,
+      Value<int> snapshotByteLength,
+      Value<int> snapshotSourceExists,
+      Value<int> snapshotFormatVersion,
+      Value<int> migrationVersion,
+      Value<int> occurrenceIdentityVersion,
+      Value<int> preflightVersion,
+      Value<int> mappingContractVersion,
+      Value<String?> partyReviewRunId,
+      Value<String?> exportManifestSha256,
+      Value<int> createdAt,
+      Value<String?> createdByActorId,
+      Value<String> createdByActorSource,
+      Value<String> status,
+      Value<int> updatedAt,
+      Value<int> rowid,
+    });
+
+class $$LegacyInvoiceImportRunsTableFilterComposer
+    extends Composer<_$AppDatabase, $LegacyInvoiceImportRunsTable> {
+  $$LegacyInvoiceImportRunsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get runId => $composableBuilder(
+    column: $table.runId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get parentRunId => $composableBuilder(
+    column: $table.parentRunId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get snapshotSha256 => $composableBuilder(
+    column: $table.snapshotSha256,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get snapshotByteLength => $composableBuilder(
+    column: $table.snapshotByteLength,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get snapshotSourceExists => $composableBuilder(
+    column: $table.snapshotSourceExists,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get snapshotFormatVersion => $composableBuilder(
+    column: $table.snapshotFormatVersion,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get migrationVersion => $composableBuilder(
+    column: $table.migrationVersion,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get occurrenceIdentityVersion => $composableBuilder(
+    column: $table.occurrenceIdentityVersion,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get preflightVersion => $composableBuilder(
+    column: $table.preflightVersion,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get mappingContractVersion => $composableBuilder(
+    column: $table.mappingContractVersion,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get partyReviewRunId => $composableBuilder(
+    column: $table.partyReviewRunId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get exportManifestSha256 => $composableBuilder(
+    column: $table.exportManifestSha256,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get createdByActorId => $composableBuilder(
+    column: $table.createdByActorId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get createdByActorSource => $composableBuilder(
+    column: $table.createdByActorSource,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get status => $composableBuilder(
+    column: $table.status,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$LegacyInvoiceImportRunsTableOrderingComposer
+    extends Composer<_$AppDatabase, $LegacyInvoiceImportRunsTable> {
+  $$LegacyInvoiceImportRunsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get runId => $composableBuilder(
+    column: $table.runId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get parentRunId => $composableBuilder(
+    column: $table.parentRunId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get snapshotSha256 => $composableBuilder(
+    column: $table.snapshotSha256,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get snapshotByteLength => $composableBuilder(
+    column: $table.snapshotByteLength,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get snapshotSourceExists => $composableBuilder(
+    column: $table.snapshotSourceExists,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get snapshotFormatVersion => $composableBuilder(
+    column: $table.snapshotFormatVersion,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get migrationVersion => $composableBuilder(
+    column: $table.migrationVersion,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get occurrenceIdentityVersion => $composableBuilder(
+    column: $table.occurrenceIdentityVersion,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get preflightVersion => $composableBuilder(
+    column: $table.preflightVersion,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get mappingContractVersion => $composableBuilder(
+    column: $table.mappingContractVersion,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get partyReviewRunId => $composableBuilder(
+    column: $table.partyReviewRunId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get exportManifestSha256 => $composableBuilder(
+    column: $table.exportManifestSha256,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get createdByActorId => $composableBuilder(
+    column: $table.createdByActorId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get createdByActorSource => $composableBuilder(
+    column: $table.createdByActorSource,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get status => $composableBuilder(
+    column: $table.status,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$LegacyInvoiceImportRunsTableAnnotationComposer
+    extends Composer<_$AppDatabase, $LegacyInvoiceImportRunsTable> {
+  $$LegacyInvoiceImportRunsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get runId =>
+      $composableBuilder(column: $table.runId, builder: (column) => column);
+
+  GeneratedColumn<String> get parentRunId => $composableBuilder(
+    column: $table.parentRunId,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get snapshotSha256 => $composableBuilder(
+    column: $table.snapshotSha256,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get snapshotByteLength => $composableBuilder(
+    column: $table.snapshotByteLength,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get snapshotSourceExists => $composableBuilder(
+    column: $table.snapshotSourceExists,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get snapshotFormatVersion => $composableBuilder(
+    column: $table.snapshotFormatVersion,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get migrationVersion => $composableBuilder(
+    column: $table.migrationVersion,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get occurrenceIdentityVersion => $composableBuilder(
+    column: $table.occurrenceIdentityVersion,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get preflightVersion => $composableBuilder(
+    column: $table.preflightVersion,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get mappingContractVersion => $composableBuilder(
+    column: $table.mappingContractVersion,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get partyReviewRunId => $composableBuilder(
+    column: $table.partyReviewRunId,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get exportManifestSha256 => $composableBuilder(
+    column: $table.exportManifestSha256,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  GeneratedColumn<String> get createdByActorId => $composableBuilder(
+    column: $table.createdByActorId,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get createdByActorSource => $composableBuilder(
+    column: $table.createdByActorSource,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get status =>
+      $composableBuilder(column: $table.status, builder: (column) => column);
+
+  GeneratedColumn<int> get updatedAt =>
+      $composableBuilder(column: $table.updatedAt, builder: (column) => column);
+}
+
+class $$LegacyInvoiceImportRunsTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $LegacyInvoiceImportRunsTable,
+          LegacyInvoiceImportRun,
+          $$LegacyInvoiceImportRunsTableFilterComposer,
+          $$LegacyInvoiceImportRunsTableOrderingComposer,
+          $$LegacyInvoiceImportRunsTableAnnotationComposer,
+          $$LegacyInvoiceImportRunsTableCreateCompanionBuilder,
+          $$LegacyInvoiceImportRunsTableUpdateCompanionBuilder,
+          (
+            LegacyInvoiceImportRun,
+            BaseReferences<
+              _$AppDatabase,
+              $LegacyInvoiceImportRunsTable,
+              LegacyInvoiceImportRun
+            >,
+          ),
+          LegacyInvoiceImportRun,
+          PrefetchHooks Function()
+        > {
+  $$LegacyInvoiceImportRunsTableTableManager(
+    _$AppDatabase db,
+    $LegacyInvoiceImportRunsTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$LegacyInvoiceImportRunsTableFilterComposer(
+                $db: db,
+                $table: table,
+              ),
+          createOrderingComposer: () =>
+              $$LegacyInvoiceImportRunsTableOrderingComposer(
+                $db: db,
+                $table: table,
+              ),
+          createComputedFieldComposer: () =>
+              $$LegacyInvoiceImportRunsTableAnnotationComposer(
+                $db: db,
+                $table: table,
+              ),
+          updateCompanionCallback:
+              ({
+                Value<String> runId = const Value.absent(),
+                Value<String?> parentRunId = const Value.absent(),
+                Value<String> snapshotSha256 = const Value.absent(),
+                Value<int> snapshotByteLength = const Value.absent(),
+                Value<int> snapshotSourceExists = const Value.absent(),
+                Value<int> snapshotFormatVersion = const Value.absent(),
+                Value<int> migrationVersion = const Value.absent(),
+                Value<int> occurrenceIdentityVersion = const Value.absent(),
+                Value<int> preflightVersion = const Value.absent(),
+                Value<int> mappingContractVersion = const Value.absent(),
+                Value<String?> partyReviewRunId = const Value.absent(),
+                Value<String?> exportManifestSha256 = const Value.absent(),
+                Value<int> createdAt = const Value.absent(),
+                Value<String?> createdByActorId = const Value.absent(),
+                Value<String> createdByActorSource = const Value.absent(),
+                Value<String> status = const Value.absent(),
+                Value<int> updatedAt = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => LegacyInvoiceImportRunsCompanion(
+                runId: runId,
+                parentRunId: parentRunId,
+                snapshotSha256: snapshotSha256,
+                snapshotByteLength: snapshotByteLength,
+                snapshotSourceExists: snapshotSourceExists,
+                snapshotFormatVersion: snapshotFormatVersion,
+                migrationVersion: migrationVersion,
+                occurrenceIdentityVersion: occurrenceIdentityVersion,
+                preflightVersion: preflightVersion,
+                mappingContractVersion: mappingContractVersion,
+                partyReviewRunId: partyReviewRunId,
+                exportManifestSha256: exportManifestSha256,
+                createdAt: createdAt,
+                createdByActorId: createdByActorId,
+                createdByActorSource: createdByActorSource,
+                status: status,
+                updatedAt: updatedAt,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String runId,
+                Value<String?> parentRunId = const Value.absent(),
+                required String snapshotSha256,
+                required int snapshotByteLength,
+                required int snapshotSourceExists,
+                required int snapshotFormatVersion,
+                required int migrationVersion,
+                required int occurrenceIdentityVersion,
+                required int preflightVersion,
+                required int mappingContractVersion,
+                Value<String?> partyReviewRunId = const Value.absent(),
+                Value<String?> exportManifestSha256 = const Value.absent(),
+                required int createdAt,
+                Value<String?> createdByActorId = const Value.absent(),
+                required String createdByActorSource,
+                required String status,
+                required int updatedAt,
+                Value<int> rowid = const Value.absent(),
+              }) => LegacyInvoiceImportRunsCompanion.insert(
+                runId: runId,
+                parentRunId: parentRunId,
+                snapshotSha256: snapshotSha256,
+                snapshotByteLength: snapshotByteLength,
+                snapshotSourceExists: snapshotSourceExists,
+                snapshotFormatVersion: snapshotFormatVersion,
+                migrationVersion: migrationVersion,
+                occurrenceIdentityVersion: occurrenceIdentityVersion,
+                preflightVersion: preflightVersion,
+                mappingContractVersion: mappingContractVersion,
+                partyReviewRunId: partyReviewRunId,
+                exportManifestSha256: exportManifestSha256,
+                createdAt: createdAt,
+                createdByActorId: createdByActorId,
+                createdByActorSource: createdByActorSource,
+                status: status,
+                updatedAt: updatedAt,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable<
+                    $LegacyInvoiceImportRunsTable,
+                    LegacyInvoiceImportRun
+                  >(table),
+                  BaseReferences<
+                    _$AppDatabase,
+                    $LegacyInvoiceImportRunsTable,
+                    LegacyInvoiceImportRun
+                  >(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$LegacyInvoiceImportRunsTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $LegacyInvoiceImportRunsTable,
+      LegacyInvoiceImportRun,
+      $$LegacyInvoiceImportRunsTableFilterComposer,
+      $$LegacyInvoiceImportRunsTableOrderingComposer,
+      $$LegacyInvoiceImportRunsTableAnnotationComposer,
+      $$LegacyInvoiceImportRunsTableCreateCompanionBuilder,
+      $$LegacyInvoiceImportRunsTableUpdateCompanionBuilder,
+      (
+        LegacyInvoiceImportRun,
+        BaseReferences<
+          _$AppDatabase,
+          $LegacyInvoiceImportRunsTable,
+          LegacyInvoiceImportRun
+        >,
+      ),
+      LegacyInvoiceImportRun,
+      PrefetchHooks Function()
+    >;
+typedef $$LegacyInvoiceImportOccurrencesTableCreateCompanionBuilder =
+    LegacyInvoiceImportOccurrencesCompanion Function({
+      required String runId,
+      required String sourceOccurrenceKey,
+      required int sourceIndex,
+      required String recordSha256,
+      Value<String?> legacyInvoiceId,
+      Value<String?> legacyInvoiceSerial,
+      required String preflightClassification,
+      required String preflightFindingsJson,
+      Value<String?> partyReviewRunId,
+      Value<String?> partyReviewDecisionId,
+      required String executionStatus,
+      Value<String?> destinationInvoiceId,
+      Value<int> currentAttemptNumber,
+      Value<String?> activeClaimTokenHash,
+      Value<int?> activeClaimExpiresAt,
+      Value<int?> activeAttemptStartedAt,
+      Value<String?> lastErrorCode,
+      Value<String?> holdOrExclusionReason,
+      required int updatedAt,
+      Value<int> rowid,
+    });
+typedef $$LegacyInvoiceImportOccurrencesTableUpdateCompanionBuilder =
+    LegacyInvoiceImportOccurrencesCompanion Function({
+      Value<String> runId,
+      Value<String> sourceOccurrenceKey,
+      Value<int> sourceIndex,
+      Value<String> recordSha256,
+      Value<String?> legacyInvoiceId,
+      Value<String?> legacyInvoiceSerial,
+      Value<String> preflightClassification,
+      Value<String> preflightFindingsJson,
+      Value<String?> partyReviewRunId,
+      Value<String?> partyReviewDecisionId,
+      Value<String> executionStatus,
+      Value<String?> destinationInvoiceId,
+      Value<int> currentAttemptNumber,
+      Value<String?> activeClaimTokenHash,
+      Value<int?> activeClaimExpiresAt,
+      Value<int?> activeAttemptStartedAt,
+      Value<String?> lastErrorCode,
+      Value<String?> holdOrExclusionReason,
+      Value<int> updatedAt,
+      Value<int> rowid,
+    });
+
+class $$LegacyInvoiceImportOccurrencesTableFilterComposer
+    extends Composer<_$AppDatabase, $LegacyInvoiceImportOccurrencesTable> {
+  $$LegacyInvoiceImportOccurrencesTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get runId => $composableBuilder(
+    column: $table.runId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get sourceOccurrenceKey => $composableBuilder(
+    column: $table.sourceOccurrenceKey,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get sourceIndex => $composableBuilder(
+    column: $table.sourceIndex,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get recordSha256 => $composableBuilder(
+    column: $table.recordSha256,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get legacyInvoiceId => $composableBuilder(
+    column: $table.legacyInvoiceId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get legacyInvoiceSerial => $composableBuilder(
+    column: $table.legacyInvoiceSerial,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get preflightClassification => $composableBuilder(
+    column: $table.preflightClassification,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get preflightFindingsJson => $composableBuilder(
+    column: $table.preflightFindingsJson,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get partyReviewRunId => $composableBuilder(
+    column: $table.partyReviewRunId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get partyReviewDecisionId => $composableBuilder(
+    column: $table.partyReviewDecisionId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get executionStatus => $composableBuilder(
+    column: $table.executionStatus,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get destinationInvoiceId => $composableBuilder(
+    column: $table.destinationInvoiceId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get currentAttemptNumber => $composableBuilder(
+    column: $table.currentAttemptNumber,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get activeClaimTokenHash => $composableBuilder(
+    column: $table.activeClaimTokenHash,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get activeClaimExpiresAt => $composableBuilder(
+    column: $table.activeClaimExpiresAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get activeAttemptStartedAt => $composableBuilder(
+    column: $table.activeAttemptStartedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get lastErrorCode => $composableBuilder(
+    column: $table.lastErrorCode,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get holdOrExclusionReason => $composableBuilder(
+    column: $table.holdOrExclusionReason,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$LegacyInvoiceImportOccurrencesTableOrderingComposer
+    extends Composer<_$AppDatabase, $LegacyInvoiceImportOccurrencesTable> {
+  $$LegacyInvoiceImportOccurrencesTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get runId => $composableBuilder(
+    column: $table.runId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get sourceOccurrenceKey => $composableBuilder(
+    column: $table.sourceOccurrenceKey,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get sourceIndex => $composableBuilder(
+    column: $table.sourceIndex,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get recordSha256 => $composableBuilder(
+    column: $table.recordSha256,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get legacyInvoiceId => $composableBuilder(
+    column: $table.legacyInvoiceId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get legacyInvoiceSerial => $composableBuilder(
+    column: $table.legacyInvoiceSerial,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get preflightClassification => $composableBuilder(
+    column: $table.preflightClassification,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get preflightFindingsJson => $composableBuilder(
+    column: $table.preflightFindingsJson,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get partyReviewRunId => $composableBuilder(
+    column: $table.partyReviewRunId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get partyReviewDecisionId => $composableBuilder(
+    column: $table.partyReviewDecisionId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get executionStatus => $composableBuilder(
+    column: $table.executionStatus,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get destinationInvoiceId => $composableBuilder(
+    column: $table.destinationInvoiceId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get currentAttemptNumber => $composableBuilder(
+    column: $table.currentAttemptNumber,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get activeClaimTokenHash => $composableBuilder(
+    column: $table.activeClaimTokenHash,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get activeClaimExpiresAt => $composableBuilder(
+    column: $table.activeClaimExpiresAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get activeAttemptStartedAt => $composableBuilder(
+    column: $table.activeAttemptStartedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get lastErrorCode => $composableBuilder(
+    column: $table.lastErrorCode,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get holdOrExclusionReason => $composableBuilder(
+    column: $table.holdOrExclusionReason,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$LegacyInvoiceImportOccurrencesTableAnnotationComposer
+    extends Composer<_$AppDatabase, $LegacyInvoiceImportOccurrencesTable> {
+  $$LegacyInvoiceImportOccurrencesTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get runId =>
+      $composableBuilder(column: $table.runId, builder: (column) => column);
+
+  GeneratedColumn<String> get sourceOccurrenceKey => $composableBuilder(
+    column: $table.sourceOccurrenceKey,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get sourceIndex => $composableBuilder(
+    column: $table.sourceIndex,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get recordSha256 => $composableBuilder(
+    column: $table.recordSha256,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get legacyInvoiceId => $composableBuilder(
+    column: $table.legacyInvoiceId,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get legacyInvoiceSerial => $composableBuilder(
+    column: $table.legacyInvoiceSerial,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get preflightClassification => $composableBuilder(
+    column: $table.preflightClassification,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get preflightFindingsJson => $composableBuilder(
+    column: $table.preflightFindingsJson,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get partyReviewRunId => $composableBuilder(
+    column: $table.partyReviewRunId,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get partyReviewDecisionId => $composableBuilder(
+    column: $table.partyReviewDecisionId,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get executionStatus => $composableBuilder(
+    column: $table.executionStatus,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get destinationInvoiceId => $composableBuilder(
+    column: $table.destinationInvoiceId,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get currentAttemptNumber => $composableBuilder(
+    column: $table.currentAttemptNumber,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get activeClaimTokenHash => $composableBuilder(
+    column: $table.activeClaimTokenHash,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get activeClaimExpiresAt => $composableBuilder(
+    column: $table.activeClaimExpiresAt,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get activeAttemptStartedAt => $composableBuilder(
+    column: $table.activeAttemptStartedAt,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get lastErrorCode => $composableBuilder(
+    column: $table.lastErrorCode,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get holdOrExclusionReason => $composableBuilder(
+    column: $table.holdOrExclusionReason,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get updatedAt =>
+      $composableBuilder(column: $table.updatedAt, builder: (column) => column);
+}
+
+class $$LegacyInvoiceImportOccurrencesTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $LegacyInvoiceImportOccurrencesTable,
+          LegacyInvoiceImportOccurrence,
+          $$LegacyInvoiceImportOccurrencesTableFilterComposer,
+          $$LegacyInvoiceImportOccurrencesTableOrderingComposer,
+          $$LegacyInvoiceImportOccurrencesTableAnnotationComposer,
+          $$LegacyInvoiceImportOccurrencesTableCreateCompanionBuilder,
+          $$LegacyInvoiceImportOccurrencesTableUpdateCompanionBuilder,
+          (
+            LegacyInvoiceImportOccurrence,
+            BaseReferences<
+              _$AppDatabase,
+              $LegacyInvoiceImportOccurrencesTable,
+              LegacyInvoiceImportOccurrence
+            >,
+          ),
+          LegacyInvoiceImportOccurrence,
+          PrefetchHooks Function()
+        > {
+  $$LegacyInvoiceImportOccurrencesTableTableManager(
+    _$AppDatabase db,
+    $LegacyInvoiceImportOccurrencesTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$LegacyInvoiceImportOccurrencesTableFilterComposer(
+                $db: db,
+                $table: table,
+              ),
+          createOrderingComposer: () =>
+              $$LegacyInvoiceImportOccurrencesTableOrderingComposer(
+                $db: db,
+                $table: table,
+              ),
+          createComputedFieldComposer: () =>
+              $$LegacyInvoiceImportOccurrencesTableAnnotationComposer(
+                $db: db,
+                $table: table,
+              ),
+          updateCompanionCallback:
+              ({
+                Value<String> runId = const Value.absent(),
+                Value<String> sourceOccurrenceKey = const Value.absent(),
+                Value<int> sourceIndex = const Value.absent(),
+                Value<String> recordSha256 = const Value.absent(),
+                Value<String?> legacyInvoiceId = const Value.absent(),
+                Value<String?> legacyInvoiceSerial = const Value.absent(),
+                Value<String> preflightClassification = const Value.absent(),
+                Value<String> preflightFindingsJson = const Value.absent(),
+                Value<String?> partyReviewRunId = const Value.absent(),
+                Value<String?> partyReviewDecisionId = const Value.absent(),
+                Value<String> executionStatus = const Value.absent(),
+                Value<String?> destinationInvoiceId = const Value.absent(),
+                Value<int> currentAttemptNumber = const Value.absent(),
+                Value<String?> activeClaimTokenHash = const Value.absent(),
+                Value<int?> activeClaimExpiresAt = const Value.absent(),
+                Value<int?> activeAttemptStartedAt = const Value.absent(),
+                Value<String?> lastErrorCode = const Value.absent(),
+                Value<String?> holdOrExclusionReason = const Value.absent(),
+                Value<int> updatedAt = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => LegacyInvoiceImportOccurrencesCompanion(
+                runId: runId,
+                sourceOccurrenceKey: sourceOccurrenceKey,
+                sourceIndex: sourceIndex,
+                recordSha256: recordSha256,
+                legacyInvoiceId: legacyInvoiceId,
+                legacyInvoiceSerial: legacyInvoiceSerial,
+                preflightClassification: preflightClassification,
+                preflightFindingsJson: preflightFindingsJson,
+                partyReviewRunId: partyReviewRunId,
+                partyReviewDecisionId: partyReviewDecisionId,
+                executionStatus: executionStatus,
+                destinationInvoiceId: destinationInvoiceId,
+                currentAttemptNumber: currentAttemptNumber,
+                activeClaimTokenHash: activeClaimTokenHash,
+                activeClaimExpiresAt: activeClaimExpiresAt,
+                activeAttemptStartedAt: activeAttemptStartedAt,
+                lastErrorCode: lastErrorCode,
+                holdOrExclusionReason: holdOrExclusionReason,
+                updatedAt: updatedAt,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String runId,
+                required String sourceOccurrenceKey,
+                required int sourceIndex,
+                required String recordSha256,
+                Value<String?> legacyInvoiceId = const Value.absent(),
+                Value<String?> legacyInvoiceSerial = const Value.absent(),
+                required String preflightClassification,
+                required String preflightFindingsJson,
+                Value<String?> partyReviewRunId = const Value.absent(),
+                Value<String?> partyReviewDecisionId = const Value.absent(),
+                required String executionStatus,
+                Value<String?> destinationInvoiceId = const Value.absent(),
+                Value<int> currentAttemptNumber = const Value.absent(),
+                Value<String?> activeClaimTokenHash = const Value.absent(),
+                Value<int?> activeClaimExpiresAt = const Value.absent(),
+                Value<int?> activeAttemptStartedAt = const Value.absent(),
+                Value<String?> lastErrorCode = const Value.absent(),
+                Value<String?> holdOrExclusionReason = const Value.absent(),
+                required int updatedAt,
+                Value<int> rowid = const Value.absent(),
+              }) => LegacyInvoiceImportOccurrencesCompanion.insert(
+                runId: runId,
+                sourceOccurrenceKey: sourceOccurrenceKey,
+                sourceIndex: sourceIndex,
+                recordSha256: recordSha256,
+                legacyInvoiceId: legacyInvoiceId,
+                legacyInvoiceSerial: legacyInvoiceSerial,
+                preflightClassification: preflightClassification,
+                preflightFindingsJson: preflightFindingsJson,
+                partyReviewRunId: partyReviewRunId,
+                partyReviewDecisionId: partyReviewDecisionId,
+                executionStatus: executionStatus,
+                destinationInvoiceId: destinationInvoiceId,
+                currentAttemptNumber: currentAttemptNumber,
+                activeClaimTokenHash: activeClaimTokenHash,
+                activeClaimExpiresAt: activeClaimExpiresAt,
+                activeAttemptStartedAt: activeAttemptStartedAt,
+                lastErrorCode: lastErrorCode,
+                holdOrExclusionReason: holdOrExclusionReason,
+                updatedAt: updatedAt,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable<
+                    $LegacyInvoiceImportOccurrencesTable,
+                    LegacyInvoiceImportOccurrence
+                  >(table),
+                  BaseReferences<
+                    _$AppDatabase,
+                    $LegacyInvoiceImportOccurrencesTable,
+                    LegacyInvoiceImportOccurrence
+                  >(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$LegacyInvoiceImportOccurrencesTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $LegacyInvoiceImportOccurrencesTable,
+      LegacyInvoiceImportOccurrence,
+      $$LegacyInvoiceImportOccurrencesTableFilterComposer,
+      $$LegacyInvoiceImportOccurrencesTableOrderingComposer,
+      $$LegacyInvoiceImportOccurrencesTableAnnotationComposer,
+      $$LegacyInvoiceImportOccurrencesTableCreateCompanionBuilder,
+      $$LegacyInvoiceImportOccurrencesTableUpdateCompanionBuilder,
+      (
+        LegacyInvoiceImportOccurrence,
+        BaseReferences<
+          _$AppDatabase,
+          $LegacyInvoiceImportOccurrencesTable,
+          LegacyInvoiceImportOccurrence
+        >,
+      ),
+      LegacyInvoiceImportOccurrence,
+      PrefetchHooks Function()
+    >;
+typedef $$LegacyInvoiceImportAttemptsTableCreateCompanionBuilder =
+    LegacyInvoiceImportAttemptsCompanion Function({
+      required String attemptId,
+      required String runId,
+      required String sourceOccurrenceKey,
+      required int attemptNumber,
+      required String attemptIdempotencyKey,
+      required String claimTokenHash,
+      required String workerId,
+      required int startedAt,
+      required int completedAt,
+      required String outcome,
+      Value<String?> errorCode,
+      Value<String?> diagnostic,
+      Value<String?> destinationInvoiceId,
+      Value<String?> destinationFingerprint,
+      Value<int> rowid,
+    });
+typedef $$LegacyInvoiceImportAttemptsTableUpdateCompanionBuilder =
+    LegacyInvoiceImportAttemptsCompanion Function({
+      Value<String> attemptId,
+      Value<String> runId,
+      Value<String> sourceOccurrenceKey,
+      Value<int> attemptNumber,
+      Value<String> attemptIdempotencyKey,
+      Value<String> claimTokenHash,
+      Value<String> workerId,
+      Value<int> startedAt,
+      Value<int> completedAt,
+      Value<String> outcome,
+      Value<String?> errorCode,
+      Value<String?> diagnostic,
+      Value<String?> destinationInvoiceId,
+      Value<String?> destinationFingerprint,
+      Value<int> rowid,
+    });
+
+class $$LegacyInvoiceImportAttemptsTableFilterComposer
+    extends Composer<_$AppDatabase, $LegacyInvoiceImportAttemptsTable> {
+  $$LegacyInvoiceImportAttemptsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get attemptId => $composableBuilder(
+    column: $table.attemptId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get runId => $composableBuilder(
+    column: $table.runId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get sourceOccurrenceKey => $composableBuilder(
+    column: $table.sourceOccurrenceKey,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get attemptNumber => $composableBuilder(
+    column: $table.attemptNumber,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get attemptIdempotencyKey => $composableBuilder(
+    column: $table.attemptIdempotencyKey,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get claimTokenHash => $composableBuilder(
+    column: $table.claimTokenHash,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get workerId => $composableBuilder(
+    column: $table.workerId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get startedAt => $composableBuilder(
+    column: $table.startedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get completedAt => $composableBuilder(
+    column: $table.completedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get outcome => $composableBuilder(
+    column: $table.outcome,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get errorCode => $composableBuilder(
+    column: $table.errorCode,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get diagnostic => $composableBuilder(
+    column: $table.diagnostic,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get destinationInvoiceId => $composableBuilder(
+    column: $table.destinationInvoiceId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get destinationFingerprint => $composableBuilder(
+    column: $table.destinationFingerprint,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$LegacyInvoiceImportAttemptsTableOrderingComposer
+    extends Composer<_$AppDatabase, $LegacyInvoiceImportAttemptsTable> {
+  $$LegacyInvoiceImportAttemptsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get attemptId => $composableBuilder(
+    column: $table.attemptId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get runId => $composableBuilder(
+    column: $table.runId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get sourceOccurrenceKey => $composableBuilder(
+    column: $table.sourceOccurrenceKey,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get attemptNumber => $composableBuilder(
+    column: $table.attemptNumber,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get attemptIdempotencyKey => $composableBuilder(
+    column: $table.attemptIdempotencyKey,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get claimTokenHash => $composableBuilder(
+    column: $table.claimTokenHash,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get workerId => $composableBuilder(
+    column: $table.workerId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get startedAt => $composableBuilder(
+    column: $table.startedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get completedAt => $composableBuilder(
+    column: $table.completedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get outcome => $composableBuilder(
+    column: $table.outcome,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get errorCode => $composableBuilder(
+    column: $table.errorCode,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get diagnostic => $composableBuilder(
+    column: $table.diagnostic,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get destinationInvoiceId => $composableBuilder(
+    column: $table.destinationInvoiceId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get destinationFingerprint => $composableBuilder(
+    column: $table.destinationFingerprint,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$LegacyInvoiceImportAttemptsTableAnnotationComposer
+    extends Composer<_$AppDatabase, $LegacyInvoiceImportAttemptsTable> {
+  $$LegacyInvoiceImportAttemptsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get attemptId =>
+      $composableBuilder(column: $table.attemptId, builder: (column) => column);
+
+  GeneratedColumn<String> get runId =>
+      $composableBuilder(column: $table.runId, builder: (column) => column);
+
+  GeneratedColumn<String> get sourceOccurrenceKey => $composableBuilder(
+    column: $table.sourceOccurrenceKey,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get attemptNumber => $composableBuilder(
+    column: $table.attemptNumber,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get attemptIdempotencyKey => $composableBuilder(
+    column: $table.attemptIdempotencyKey,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get claimTokenHash => $composableBuilder(
+    column: $table.claimTokenHash,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get workerId =>
+      $composableBuilder(column: $table.workerId, builder: (column) => column);
+
+  GeneratedColumn<int> get startedAt =>
+      $composableBuilder(column: $table.startedAt, builder: (column) => column);
+
+  GeneratedColumn<int> get completedAt => $composableBuilder(
+    column: $table.completedAt,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get outcome =>
+      $composableBuilder(column: $table.outcome, builder: (column) => column);
+
+  GeneratedColumn<String> get errorCode =>
+      $composableBuilder(column: $table.errorCode, builder: (column) => column);
+
+  GeneratedColumn<String> get diagnostic => $composableBuilder(
+    column: $table.diagnostic,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get destinationInvoiceId => $composableBuilder(
+    column: $table.destinationInvoiceId,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get destinationFingerprint => $composableBuilder(
+    column: $table.destinationFingerprint,
+    builder: (column) => column,
+  );
+}
+
+class $$LegacyInvoiceImportAttemptsTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $LegacyInvoiceImportAttemptsTable,
+          LegacyInvoiceImportAttempt,
+          $$LegacyInvoiceImportAttemptsTableFilterComposer,
+          $$LegacyInvoiceImportAttemptsTableOrderingComposer,
+          $$LegacyInvoiceImportAttemptsTableAnnotationComposer,
+          $$LegacyInvoiceImportAttemptsTableCreateCompanionBuilder,
+          $$LegacyInvoiceImportAttemptsTableUpdateCompanionBuilder,
+          (
+            LegacyInvoiceImportAttempt,
+            BaseReferences<
+              _$AppDatabase,
+              $LegacyInvoiceImportAttemptsTable,
+              LegacyInvoiceImportAttempt
+            >,
+          ),
+          LegacyInvoiceImportAttempt,
+          PrefetchHooks Function()
+        > {
+  $$LegacyInvoiceImportAttemptsTableTableManager(
+    _$AppDatabase db,
+    $LegacyInvoiceImportAttemptsTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$LegacyInvoiceImportAttemptsTableFilterComposer(
+                $db: db,
+                $table: table,
+              ),
+          createOrderingComposer: () =>
+              $$LegacyInvoiceImportAttemptsTableOrderingComposer(
+                $db: db,
+                $table: table,
+              ),
+          createComputedFieldComposer: () =>
+              $$LegacyInvoiceImportAttemptsTableAnnotationComposer(
+                $db: db,
+                $table: table,
+              ),
+          updateCompanionCallback:
+              ({
+                Value<String> attemptId = const Value.absent(),
+                Value<String> runId = const Value.absent(),
+                Value<String> sourceOccurrenceKey = const Value.absent(),
+                Value<int> attemptNumber = const Value.absent(),
+                Value<String> attemptIdempotencyKey = const Value.absent(),
+                Value<String> claimTokenHash = const Value.absent(),
+                Value<String> workerId = const Value.absent(),
+                Value<int> startedAt = const Value.absent(),
+                Value<int> completedAt = const Value.absent(),
+                Value<String> outcome = const Value.absent(),
+                Value<String?> errorCode = const Value.absent(),
+                Value<String?> diagnostic = const Value.absent(),
+                Value<String?> destinationInvoiceId = const Value.absent(),
+                Value<String?> destinationFingerprint = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => LegacyInvoiceImportAttemptsCompanion(
+                attemptId: attemptId,
+                runId: runId,
+                sourceOccurrenceKey: sourceOccurrenceKey,
+                attemptNumber: attemptNumber,
+                attemptIdempotencyKey: attemptIdempotencyKey,
+                claimTokenHash: claimTokenHash,
+                workerId: workerId,
+                startedAt: startedAt,
+                completedAt: completedAt,
+                outcome: outcome,
+                errorCode: errorCode,
+                diagnostic: diagnostic,
+                destinationInvoiceId: destinationInvoiceId,
+                destinationFingerprint: destinationFingerprint,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String attemptId,
+                required String runId,
+                required String sourceOccurrenceKey,
+                required int attemptNumber,
+                required String attemptIdempotencyKey,
+                required String claimTokenHash,
+                required String workerId,
+                required int startedAt,
+                required int completedAt,
+                required String outcome,
+                Value<String?> errorCode = const Value.absent(),
+                Value<String?> diagnostic = const Value.absent(),
+                Value<String?> destinationInvoiceId = const Value.absent(),
+                Value<String?> destinationFingerprint = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => LegacyInvoiceImportAttemptsCompanion.insert(
+                attemptId: attemptId,
+                runId: runId,
+                sourceOccurrenceKey: sourceOccurrenceKey,
+                attemptNumber: attemptNumber,
+                attemptIdempotencyKey: attemptIdempotencyKey,
+                claimTokenHash: claimTokenHash,
+                workerId: workerId,
+                startedAt: startedAt,
+                completedAt: completedAt,
+                outcome: outcome,
+                errorCode: errorCode,
+                diagnostic: diagnostic,
+                destinationInvoiceId: destinationInvoiceId,
+                destinationFingerprint: destinationFingerprint,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable<
+                    $LegacyInvoiceImportAttemptsTable,
+                    LegacyInvoiceImportAttempt
+                  >(table),
+                  BaseReferences<
+                    _$AppDatabase,
+                    $LegacyInvoiceImportAttemptsTable,
+                    LegacyInvoiceImportAttempt
+                  >(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$LegacyInvoiceImportAttemptsTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $LegacyInvoiceImportAttemptsTable,
+      LegacyInvoiceImportAttempt,
+      $$LegacyInvoiceImportAttemptsTableFilterComposer,
+      $$LegacyInvoiceImportAttemptsTableOrderingComposer,
+      $$LegacyInvoiceImportAttemptsTableAnnotationComposer,
+      $$LegacyInvoiceImportAttemptsTableCreateCompanionBuilder,
+      $$LegacyInvoiceImportAttemptsTableUpdateCompanionBuilder,
+      (
+        LegacyInvoiceImportAttempt,
+        BaseReferences<
+          _$AppDatabase,
+          $LegacyInvoiceImportAttemptsTable,
+          LegacyInvoiceImportAttempt
+        >,
+      ),
+      LegacyInvoiceImportAttempt,
+      PrefetchHooks Function()
+    >;
+typedef $$LegacyInvoiceImportEventsTableCreateCompanionBuilder =
+    LegacyInvoiceImportEventsCompanion Function({
+      required String eventId,
+      required String runId,
+      Value<String?> sourceOccurrenceKey,
+      required String eventType,
+      Value<String?> actorId,
+      required String actorSource,
+      required int occurredAt,
+      Value<String?> reason,
+      required String detailsJson,
+      Value<String?> requestIdempotencyKey,
+      Value<int> rowid,
+    });
+typedef $$LegacyInvoiceImportEventsTableUpdateCompanionBuilder =
+    LegacyInvoiceImportEventsCompanion Function({
+      Value<String> eventId,
+      Value<String> runId,
+      Value<String?> sourceOccurrenceKey,
+      Value<String> eventType,
+      Value<String?> actorId,
+      Value<String> actorSource,
+      Value<int> occurredAt,
+      Value<String?> reason,
+      Value<String> detailsJson,
+      Value<String?> requestIdempotencyKey,
+      Value<int> rowid,
+    });
+
+class $$LegacyInvoiceImportEventsTableFilterComposer
+    extends Composer<_$AppDatabase, $LegacyInvoiceImportEventsTable> {
+  $$LegacyInvoiceImportEventsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get eventId => $composableBuilder(
+    column: $table.eventId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get runId => $composableBuilder(
+    column: $table.runId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get sourceOccurrenceKey => $composableBuilder(
+    column: $table.sourceOccurrenceKey,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get eventType => $composableBuilder(
+    column: $table.eventType,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get actorId => $composableBuilder(
+    column: $table.actorId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get actorSource => $composableBuilder(
+    column: $table.actorSource,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get occurredAt => $composableBuilder(
+    column: $table.occurredAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get reason => $composableBuilder(
+    column: $table.reason,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get detailsJson => $composableBuilder(
+    column: $table.detailsJson,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get requestIdempotencyKey => $composableBuilder(
+    column: $table.requestIdempotencyKey,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$LegacyInvoiceImportEventsTableOrderingComposer
+    extends Composer<_$AppDatabase, $LegacyInvoiceImportEventsTable> {
+  $$LegacyInvoiceImportEventsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get eventId => $composableBuilder(
+    column: $table.eventId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get runId => $composableBuilder(
+    column: $table.runId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get sourceOccurrenceKey => $composableBuilder(
+    column: $table.sourceOccurrenceKey,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get eventType => $composableBuilder(
+    column: $table.eventType,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get actorId => $composableBuilder(
+    column: $table.actorId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get actorSource => $composableBuilder(
+    column: $table.actorSource,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get occurredAt => $composableBuilder(
+    column: $table.occurredAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get reason => $composableBuilder(
+    column: $table.reason,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get detailsJson => $composableBuilder(
+    column: $table.detailsJson,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get requestIdempotencyKey => $composableBuilder(
+    column: $table.requestIdempotencyKey,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$LegacyInvoiceImportEventsTableAnnotationComposer
+    extends Composer<_$AppDatabase, $LegacyInvoiceImportEventsTable> {
+  $$LegacyInvoiceImportEventsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get eventId =>
+      $composableBuilder(column: $table.eventId, builder: (column) => column);
+
+  GeneratedColumn<String> get runId =>
+      $composableBuilder(column: $table.runId, builder: (column) => column);
+
+  GeneratedColumn<String> get sourceOccurrenceKey => $composableBuilder(
+    column: $table.sourceOccurrenceKey,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get eventType =>
+      $composableBuilder(column: $table.eventType, builder: (column) => column);
+
+  GeneratedColumn<String> get actorId =>
+      $composableBuilder(column: $table.actorId, builder: (column) => column);
+
+  GeneratedColumn<String> get actorSource => $composableBuilder(
+    column: $table.actorSource,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get occurredAt => $composableBuilder(
+    column: $table.occurredAt,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get reason =>
+      $composableBuilder(column: $table.reason, builder: (column) => column);
+
+  GeneratedColumn<String> get detailsJson => $composableBuilder(
+    column: $table.detailsJson,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get requestIdempotencyKey => $composableBuilder(
+    column: $table.requestIdempotencyKey,
+    builder: (column) => column,
+  );
+}
+
+class $$LegacyInvoiceImportEventsTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $LegacyInvoiceImportEventsTable,
+          LegacyInvoiceImportEvent,
+          $$LegacyInvoiceImportEventsTableFilterComposer,
+          $$LegacyInvoiceImportEventsTableOrderingComposer,
+          $$LegacyInvoiceImportEventsTableAnnotationComposer,
+          $$LegacyInvoiceImportEventsTableCreateCompanionBuilder,
+          $$LegacyInvoiceImportEventsTableUpdateCompanionBuilder,
+          (
+            LegacyInvoiceImportEvent,
+            BaseReferences<
+              _$AppDatabase,
+              $LegacyInvoiceImportEventsTable,
+              LegacyInvoiceImportEvent
+            >,
+          ),
+          LegacyInvoiceImportEvent,
+          PrefetchHooks Function()
+        > {
+  $$LegacyInvoiceImportEventsTableTableManager(
+    _$AppDatabase db,
+    $LegacyInvoiceImportEventsTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$LegacyInvoiceImportEventsTableFilterComposer(
+                $db: db,
+                $table: table,
+              ),
+          createOrderingComposer: () =>
+              $$LegacyInvoiceImportEventsTableOrderingComposer(
+                $db: db,
+                $table: table,
+              ),
+          createComputedFieldComposer: () =>
+              $$LegacyInvoiceImportEventsTableAnnotationComposer(
+                $db: db,
+                $table: table,
+              ),
+          updateCompanionCallback:
+              ({
+                Value<String> eventId = const Value.absent(),
+                Value<String> runId = const Value.absent(),
+                Value<String?> sourceOccurrenceKey = const Value.absent(),
+                Value<String> eventType = const Value.absent(),
+                Value<String?> actorId = const Value.absent(),
+                Value<String> actorSource = const Value.absent(),
+                Value<int> occurredAt = const Value.absent(),
+                Value<String?> reason = const Value.absent(),
+                Value<String> detailsJson = const Value.absent(),
+                Value<String?> requestIdempotencyKey = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => LegacyInvoiceImportEventsCompanion(
+                eventId: eventId,
+                runId: runId,
+                sourceOccurrenceKey: sourceOccurrenceKey,
+                eventType: eventType,
+                actorId: actorId,
+                actorSource: actorSource,
+                occurredAt: occurredAt,
+                reason: reason,
+                detailsJson: detailsJson,
+                requestIdempotencyKey: requestIdempotencyKey,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String eventId,
+                required String runId,
+                Value<String?> sourceOccurrenceKey = const Value.absent(),
+                required String eventType,
+                Value<String?> actorId = const Value.absent(),
+                required String actorSource,
+                required int occurredAt,
+                Value<String?> reason = const Value.absent(),
+                required String detailsJson,
+                Value<String?> requestIdempotencyKey = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => LegacyInvoiceImportEventsCompanion.insert(
+                eventId: eventId,
+                runId: runId,
+                sourceOccurrenceKey: sourceOccurrenceKey,
+                eventType: eventType,
+                actorId: actorId,
+                actorSource: actorSource,
+                occurredAt: occurredAt,
+                reason: reason,
+                detailsJson: detailsJson,
+                requestIdempotencyKey: requestIdempotencyKey,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable<
+                    $LegacyInvoiceImportEventsTable,
+                    LegacyInvoiceImportEvent
+                  >(table),
+                  BaseReferences<
+                    _$AppDatabase,
+                    $LegacyInvoiceImportEventsTable,
+                    LegacyInvoiceImportEvent
+                  >(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$LegacyInvoiceImportEventsTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $LegacyInvoiceImportEventsTable,
+      LegacyInvoiceImportEvent,
+      $$LegacyInvoiceImportEventsTableFilterComposer,
+      $$LegacyInvoiceImportEventsTableOrderingComposer,
+      $$LegacyInvoiceImportEventsTableAnnotationComposer,
+      $$LegacyInvoiceImportEventsTableCreateCompanionBuilder,
+      $$LegacyInvoiceImportEventsTableUpdateCompanionBuilder,
+      (
+        LegacyInvoiceImportEvent,
+        BaseReferences<
+          _$AppDatabase,
+          $LegacyInvoiceImportEventsTable,
+          LegacyInvoiceImportEvent
+        >,
+      ),
+      LegacyInvoiceImportEvent,
+      PrefetchHooks Function()
+    >;
+typedef $$LegacyInvoiceOccurrenceMappingsTableCreateCompanionBuilder =
+    LegacyInvoiceOccurrenceMappingsCompanion Function({
+      required String sourceOccurrenceKey,
+      required String sourceSnapshotSha256,
+      required int occurrenceIdentityVersion,
+      required int sourceIndex,
+      required String recordSha256,
+      required int migrationVersion,
+      required int mappingContractVersion,
+      required String importRunId,
+      required String destinationInvoiceId,
+      required String destinationFingerprint,
+      required int importedAt,
+      Value<int> rowid,
+    });
+typedef $$LegacyInvoiceOccurrenceMappingsTableUpdateCompanionBuilder =
+    LegacyInvoiceOccurrenceMappingsCompanion Function({
+      Value<String> sourceOccurrenceKey,
+      Value<String> sourceSnapshotSha256,
+      Value<int> occurrenceIdentityVersion,
+      Value<int> sourceIndex,
+      Value<String> recordSha256,
+      Value<int> migrationVersion,
+      Value<int> mappingContractVersion,
+      Value<String> importRunId,
+      Value<String> destinationInvoiceId,
+      Value<String> destinationFingerprint,
+      Value<int> importedAt,
+      Value<int> rowid,
+    });
+
+class $$LegacyInvoiceOccurrenceMappingsTableFilterComposer
+    extends Composer<_$AppDatabase, $LegacyInvoiceOccurrenceMappingsTable> {
+  $$LegacyInvoiceOccurrenceMappingsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get sourceOccurrenceKey => $composableBuilder(
+    column: $table.sourceOccurrenceKey,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get sourceSnapshotSha256 => $composableBuilder(
+    column: $table.sourceSnapshotSha256,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get occurrenceIdentityVersion => $composableBuilder(
+    column: $table.occurrenceIdentityVersion,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get sourceIndex => $composableBuilder(
+    column: $table.sourceIndex,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get recordSha256 => $composableBuilder(
+    column: $table.recordSha256,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get migrationVersion => $composableBuilder(
+    column: $table.migrationVersion,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get mappingContractVersion => $composableBuilder(
+    column: $table.mappingContractVersion,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get importRunId => $composableBuilder(
+    column: $table.importRunId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get destinationInvoiceId => $composableBuilder(
+    column: $table.destinationInvoiceId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get destinationFingerprint => $composableBuilder(
+    column: $table.destinationFingerprint,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get importedAt => $composableBuilder(
+    column: $table.importedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$LegacyInvoiceOccurrenceMappingsTableOrderingComposer
+    extends Composer<_$AppDatabase, $LegacyInvoiceOccurrenceMappingsTable> {
+  $$LegacyInvoiceOccurrenceMappingsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get sourceOccurrenceKey => $composableBuilder(
+    column: $table.sourceOccurrenceKey,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get sourceSnapshotSha256 => $composableBuilder(
+    column: $table.sourceSnapshotSha256,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get occurrenceIdentityVersion => $composableBuilder(
+    column: $table.occurrenceIdentityVersion,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get sourceIndex => $composableBuilder(
+    column: $table.sourceIndex,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get recordSha256 => $composableBuilder(
+    column: $table.recordSha256,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get migrationVersion => $composableBuilder(
+    column: $table.migrationVersion,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get mappingContractVersion => $composableBuilder(
+    column: $table.mappingContractVersion,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get importRunId => $composableBuilder(
+    column: $table.importRunId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get destinationInvoiceId => $composableBuilder(
+    column: $table.destinationInvoiceId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get destinationFingerprint => $composableBuilder(
+    column: $table.destinationFingerprint,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get importedAt => $composableBuilder(
+    column: $table.importedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$LegacyInvoiceOccurrenceMappingsTableAnnotationComposer
+    extends Composer<_$AppDatabase, $LegacyInvoiceOccurrenceMappingsTable> {
+  $$LegacyInvoiceOccurrenceMappingsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get sourceOccurrenceKey => $composableBuilder(
+    column: $table.sourceOccurrenceKey,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get sourceSnapshotSha256 => $composableBuilder(
+    column: $table.sourceSnapshotSha256,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get occurrenceIdentityVersion => $composableBuilder(
+    column: $table.occurrenceIdentityVersion,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get sourceIndex => $composableBuilder(
+    column: $table.sourceIndex,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get recordSha256 => $composableBuilder(
+    column: $table.recordSha256,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get migrationVersion => $composableBuilder(
+    column: $table.migrationVersion,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get mappingContractVersion => $composableBuilder(
+    column: $table.mappingContractVersion,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get importRunId => $composableBuilder(
+    column: $table.importRunId,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get destinationInvoiceId => $composableBuilder(
+    column: $table.destinationInvoiceId,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get destinationFingerprint => $composableBuilder(
+    column: $table.destinationFingerprint,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get importedAt => $composableBuilder(
+    column: $table.importedAt,
+    builder: (column) => column,
+  );
+}
+
+class $$LegacyInvoiceOccurrenceMappingsTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $LegacyInvoiceOccurrenceMappingsTable,
+          LegacyInvoiceOccurrenceMapping,
+          $$LegacyInvoiceOccurrenceMappingsTableFilterComposer,
+          $$LegacyInvoiceOccurrenceMappingsTableOrderingComposer,
+          $$LegacyInvoiceOccurrenceMappingsTableAnnotationComposer,
+          $$LegacyInvoiceOccurrenceMappingsTableCreateCompanionBuilder,
+          $$LegacyInvoiceOccurrenceMappingsTableUpdateCompanionBuilder,
+          (
+            LegacyInvoiceOccurrenceMapping,
+            BaseReferences<
+              _$AppDatabase,
+              $LegacyInvoiceOccurrenceMappingsTable,
+              LegacyInvoiceOccurrenceMapping
+            >,
+          ),
+          LegacyInvoiceOccurrenceMapping,
+          PrefetchHooks Function()
+        > {
+  $$LegacyInvoiceOccurrenceMappingsTableTableManager(
+    _$AppDatabase db,
+    $LegacyInvoiceOccurrenceMappingsTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$LegacyInvoiceOccurrenceMappingsTableFilterComposer(
+                $db: db,
+                $table: table,
+              ),
+          createOrderingComposer: () =>
+              $$LegacyInvoiceOccurrenceMappingsTableOrderingComposer(
+                $db: db,
+                $table: table,
+              ),
+          createComputedFieldComposer: () =>
+              $$LegacyInvoiceOccurrenceMappingsTableAnnotationComposer(
+                $db: db,
+                $table: table,
+              ),
+          updateCompanionCallback:
+              ({
+                Value<String> sourceOccurrenceKey = const Value.absent(),
+                Value<String> sourceSnapshotSha256 = const Value.absent(),
+                Value<int> occurrenceIdentityVersion = const Value.absent(),
+                Value<int> sourceIndex = const Value.absent(),
+                Value<String> recordSha256 = const Value.absent(),
+                Value<int> migrationVersion = const Value.absent(),
+                Value<int> mappingContractVersion = const Value.absent(),
+                Value<String> importRunId = const Value.absent(),
+                Value<String> destinationInvoiceId = const Value.absent(),
+                Value<String> destinationFingerprint = const Value.absent(),
+                Value<int> importedAt = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => LegacyInvoiceOccurrenceMappingsCompanion(
+                sourceOccurrenceKey: sourceOccurrenceKey,
+                sourceSnapshotSha256: sourceSnapshotSha256,
+                occurrenceIdentityVersion: occurrenceIdentityVersion,
+                sourceIndex: sourceIndex,
+                recordSha256: recordSha256,
+                migrationVersion: migrationVersion,
+                mappingContractVersion: mappingContractVersion,
+                importRunId: importRunId,
+                destinationInvoiceId: destinationInvoiceId,
+                destinationFingerprint: destinationFingerprint,
+                importedAt: importedAt,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String sourceOccurrenceKey,
+                required String sourceSnapshotSha256,
+                required int occurrenceIdentityVersion,
+                required int sourceIndex,
+                required String recordSha256,
+                required int migrationVersion,
+                required int mappingContractVersion,
+                required String importRunId,
+                required String destinationInvoiceId,
+                required String destinationFingerprint,
+                required int importedAt,
+                Value<int> rowid = const Value.absent(),
+              }) => LegacyInvoiceOccurrenceMappingsCompanion.insert(
+                sourceOccurrenceKey: sourceOccurrenceKey,
+                sourceSnapshotSha256: sourceSnapshotSha256,
+                occurrenceIdentityVersion: occurrenceIdentityVersion,
+                sourceIndex: sourceIndex,
+                recordSha256: recordSha256,
+                migrationVersion: migrationVersion,
+                mappingContractVersion: mappingContractVersion,
+                importRunId: importRunId,
+                destinationInvoiceId: destinationInvoiceId,
+                destinationFingerprint: destinationFingerprint,
+                importedAt: importedAt,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable<
+                    $LegacyInvoiceOccurrenceMappingsTable,
+                    LegacyInvoiceOccurrenceMapping
+                  >(table),
+                  BaseReferences<
+                    _$AppDatabase,
+                    $LegacyInvoiceOccurrenceMappingsTable,
+                    LegacyInvoiceOccurrenceMapping
+                  >(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$LegacyInvoiceOccurrenceMappingsTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $LegacyInvoiceOccurrenceMappingsTable,
+      LegacyInvoiceOccurrenceMapping,
+      $$LegacyInvoiceOccurrenceMappingsTableFilterComposer,
+      $$LegacyInvoiceOccurrenceMappingsTableOrderingComposer,
+      $$LegacyInvoiceOccurrenceMappingsTableAnnotationComposer,
+      $$LegacyInvoiceOccurrenceMappingsTableCreateCompanionBuilder,
+      $$LegacyInvoiceOccurrenceMappingsTableUpdateCompanionBuilder,
+      (
+        LegacyInvoiceOccurrenceMapping,
+        BaseReferences<
+          _$AppDatabase,
+          $LegacyInvoiceOccurrenceMappingsTable,
+          LegacyInvoiceOccurrenceMapping
+        >,
+      ),
+      LegacyInvoiceOccurrenceMapping,
+      PrefetchHooks Function()
+    >;
 
 class $AppDatabaseManager {
   final _$AppDatabase _db;
@@ -24047,5 +30812,33 @@ class $AppDatabaseManager {
       $$LegacyPartyReviewDecisionsTableTableManager(
         _db,
         _db.legacyPartyReviewDecisions,
+      );
+  $$LegacyInvoiceImportRunsTableTableManager get legacyInvoiceImportRuns =>
+      $$LegacyInvoiceImportRunsTableTableManager(
+        _db,
+        _db.legacyInvoiceImportRuns,
+      );
+  $$LegacyInvoiceImportOccurrencesTableTableManager
+  get legacyInvoiceImportOccurrences =>
+      $$LegacyInvoiceImportOccurrencesTableTableManager(
+        _db,
+        _db.legacyInvoiceImportOccurrences,
+      );
+  $$LegacyInvoiceImportAttemptsTableTableManager
+  get legacyInvoiceImportAttempts =>
+      $$LegacyInvoiceImportAttemptsTableTableManager(
+        _db,
+        _db.legacyInvoiceImportAttempts,
+      );
+  $$LegacyInvoiceImportEventsTableTableManager get legacyInvoiceImportEvents =>
+      $$LegacyInvoiceImportEventsTableTableManager(
+        _db,
+        _db.legacyInvoiceImportEvents,
+      );
+  $$LegacyInvoiceOccurrenceMappingsTableTableManager
+  get legacyInvoiceOccurrenceMappings =>
+      $$LegacyInvoiceOccurrenceMappingsTableTableManager(
+        _db,
+        _db.legacyInvoiceOccurrenceMappings,
       );
 }
