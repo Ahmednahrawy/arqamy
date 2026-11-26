@@ -202,3 +202,9 @@ On 2026-11-26, the owner approved the following D4 policy for legacy `formattedD
 - Populate Drift `issued_at` only after the supported source formats and timezone semantics have been explicitly established and covered by tests.
 
 The actual source formats and timezone semantics remain to be established from representative source values. This policy is a design decision only; it does not authorize implementation.
+
+## 20. Owner-approved field validation rule — invoice action
+
+On 2026-11-26, the owner approved this D4 policy for historical `invoiceAction` values. The recognized values are `شراء` (purchase), `بيع` (sale), and `تخزين` (storage). A null, empty, or unrecognized value must hold the entire invoice occurrence for human review and produce a stable validation finding. Preserve the exact original value in the immutable source snapshot. Never infer an action from the customer, products, or amounts, and never assign a default action.
+
+The current application UI requires an action selection for new invoices. This defensive migration validation protects against older persisted records, alternate write paths, malformed data, and corruption; it does not imply that the current UI permits actionless invoice creation. This is policy documentation only and does not authorize implementation.
