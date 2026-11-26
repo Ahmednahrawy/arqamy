@@ -18,16 +18,37 @@ This document defines the proposed migration architecture, data-preservation rul
 
 ## 2. Current implementation verified on main
 
-The following were inspected in the repository before writing this design:
+**Reviewed baseline:** `main` merge commit `271d330` (2026-11-26). The current Drift schema version is **7**.
 
-- `lib/core/database/app_database.dart` — Drift schema; current schema version is 5. The invoice table already has legacy-oriented fields including `legacy_record_key`, `legacy_invoice_id`, and `source_json`, plus legacy financial-value fields.
-- `lib/features/payment_ledger/data/ledger_import_planner.dart` — read-only planner; `legacyRecordKeyFor(invoice)` currently returns `saved_invoices/${invoice.id}`. It detects duplicate invoice IDs and holds all occurrences with that ID.
-- `lib/features/payment_ledger/data/ledger_import_executor.dart` — writes a plan inside a Drift transaction and requests a backup before execution. Existing idempotency is based on the current legacy record key.
-- `lib/features/payment_ledger/data/ledger_import_service.dart` — previews from `InvoiceProvider`, opens the Drift database for an import call, and uses the current typed invoice backup service.
-- `lib/features/orderscreen/data/models/invoice.dart` — `Invoice.fromJson` directly casts fields and product values; malformed records can throw during ordinary decoding.
-- `lib/core/services/invoice_backup_service.dart` — `saveLocalBackup` reloads and serializes decoded invoices through `provider.exportBackup()`. This is useful as an application-level backup, but it is not a byte-for-byte snapshot of the original SharedPreferences value.
+### Implemented migration foundation
 
-The application continues to use SharedPreferences as its operational invoice store. The migration must therefore be designed around the raw persisted source, not only the decoded provider list.
+The following components now exist in the repository:
+
+- `LegacyInvoiceSnapshotService` captures the raw `saved_invoices` preference directly, records whether the key exists, writes a content-addressed raw file and manifest, and verifies the raw file by byte length and SHA-256.
+- `LegacyInvoicePreflightService` verifies the snapshot and parses the top-level JSON array record by record. It retains source index, raw record fragment, occurrence identity, malformed reasons, and audit findings. It distinguishes ready, needs-review, duplicate-identity, and malformed-record outcomes; fatal snapshot/JSON errors stop preflight.
+- `LegacyInvoiceSourceOccurrenceIdentity` creates a versioned deterministic key from snapshot digest, source index, and exact record-fragment digest.
+- `LegacyInvoicePartyResolutionPlanner` proposes customer/supplier identity and role per source occurrence. It does not create parties or automatically merge ambiguous names.
+- `LegacyInvoicePartyResolutionReview` supports explicit review decisions against the snapshot and occurrence identity.
+- `LegacyPartyReviewJournalRepository` persists migration-run metadata, frozen occurrence/review snapshots, and append-only, idempotent decisions. The D3.2 schema migration upgrades the database to version 7 and strengthens the insert-validation trigger for resolved suggestions.
+
+### Existing import foundation — not yet migration-safe
+
+- `LedgerImportPlanner` and `LedgerImportExecutor` exist. The executor writes within a Drift transaction and requires a backup callback.
+- However, the planner's `legacyRecordKeyFor(invoice)` still returns `saved_invoices/{invoice.id}`. Duplicate IDs are held when the planner receives them together, but the key is not a unique source-occurrence identity.
+- `LedgerImportService.preview` currently loads typed invoices through `InvoiceProvider`; it does not orchestrate the raw snapshot/preflight/review pipeline.
+- The current backup callback uses the typed invoice backup service. That is not equivalent to a verified, independently recoverable byte-for-byte source snapshot.
+
+### Current production boundary
+
+The application continues to read and write operational invoices through SharedPreferences key `saved_invoices`. The new snapshot/preflight/review components are migration preparation tools; they do not switch production reads or writes to Drift.
+
+The current snapshot service writes to app-private storage. An independently recoverable/user-exportable snapshot and verified restore workflow are still required before cutover.
+
+### Known validation note
+
+The latest owner-reported local validation on this baseline is `flutter analyze` clean and **362 tests passed**. The payment-ledger concurrency tests still emit Drift multiple-`AppDatabase` warnings. They did not fail the test run, but the underlying executor/handle ownership must be investigated rather than suppressing the warning.
+
+The original typed-model concern remains relevant to ordinary app loading: `Invoice.fromJson` still performs direct casts. The migration preflight avoids relying on that all-or-nothing decode path, but it does not by itself harden the production loader.
 
 ## 3. Non-negotiable migration invariants
 
@@ -46,21 +67,21 @@ The application continues to use SharedPreferences as its operational invoice st
 
 ## 4. Target migration architecture
 
-The migration is a staged pipeline:
+The target pipeline remains:
 
-1. Capture an immutable raw source snapshot.
-2. Perform read-only, record-level preflight.
-3. Assign a deterministic identity to each source occurrence.
-4. Resolve party identity and role without guessing.
-5. Build an import plan using the existing ledger mapping/planning logic where appropriate.
-6. Import eligible invoices and lines transactionally into Drift.
-7. Preserve held and malformed records in a traceable migration review area.
-8. Reconcile source and destination.
+1. Capture an immutable raw source snapshot. **Foundation implemented; independent export/restore remains open.**
+2. Perform read-only, record-level preflight. **Implemented.**
+3. Assign deterministic identity to each source occurrence. **Implemented.**
+4. Resolve party identity and role without guessing. **Planner and explicit review workflow implemented; persistent review journal implemented through D3.2.**
+5. Build an import plan using existing ledger mapping where its contract is safe. **Existing planner is not yet occurrence-key safe.**
+6. Import eligible invoices and lines transactionally into Drift. **Not yet implemented as the production migration path.**
+7. Preserve held and malformed records in a durable, traceable migration store. **Review metadata is persisted; durable raw-record quarantine/import-state handling still needs design.**
+8. Reconcile source and destination. **Specification exists; executable reconciliation is not complete.**
 9. Obtain explicit acceptance.
 10. Cut over the application repository to Drift.
-11. Retain the legacy snapshot and a documented recovery path.
+11. Retain the legacy snapshot and a tested recovery path.
 
-The existing `LedgerImportPlanner`, `LedgerImportExecutor`, customer registry/linking components, and ledger invoice mapper should be reused or extended where their current contracts fit. Do not create parallel mapping or customer-matching engines.
+The existing `LedgerImportPlanner`, `LedgerImportExecutor`, party registry, occurrence identity, and review journal should be reused or extended where their current contracts fit. Do not create parallel mapping or customer-matching engines. The party-review journal is not an import-execution journal: it records review decisions, not invoice-import progress or transaction recovery state.
 
 ## 5. Stage A — immutable raw source snapshot
 
@@ -125,7 +146,7 @@ Conceptual key:
 
 `sourceOccurrenceKey = version + snapshotDigest + occurrenceIndex + recordDigest`
 
-The final encoding and database uniqueness constraints are implementation details to be decided during schema review.
+Implemented encoding (identity version 1): `v1:{snapshotSha256}:{sourceIndex}:{recordSha256}`. The key is generated by `LegacyInvoiceSourceOccurrenceIdentity.create`. The current implementation validates a non-negative source index and a 64-character hexadecimal snapshot digest. Any future format change must increment the identity version and must not reinterpret existing journal rows. Database uniqueness and importer use of this key remain part of the import design review.
 
 Properties:
 
@@ -193,9 +214,11 @@ Any later opening-balance or historical-payment reconstruction requires a separa
 
 ## 10. Stage F — migration journal and transactional import
 
-A migration journal is recommended so the process can be resumed, inspected, and reconciled. It should record the snapshot identity, migration version, timestamps, source counts, classification counts, and final state.
+A persistent **party-review journal** is implemented in schema version 7. It records a run bound to a snapshot digest and processing versions, frozen occurrence/preflight/resolution data, and append-only decisions with idempotency and supersession history.
 
-Each source occurrence should have a durable status and traceable findings. Suggested states:
+This journal is deliberately limited to review. It does not record invoice import attempts, per-invoice transactional progress, reconciliation results, or cutover state. A separate **migration execution journal** is still required and must not be conflated with the party-review journal.
+
+The proposed execution journal should record the snapshot identity, migration version, timestamps, source counts, classification counts, and final state. Each source occurrence should have a durable import status and traceable findings. Suggested states:
 
 - captured;
 - preflighted;
@@ -222,7 +245,7 @@ Party/account prerequisites must be validated before writes. The executor must d
 
 An existing destination row must never be overwritten merely because a legacy ID or serial matches. Idempotency must be based on the immutable source occurrence identity and migration version.
 
-The current executor already uses a transaction and performs a backup before execution. Those are useful foundations, but its current invoice key is based on `saved_invoices/{invoice.id}`; it must be adapted to the occurrence identity before it can safely support duplicate source IDs.
+The current executor already uses a transaction and performs a backup callback before execution. Those are useful foundations, but its current invoice key is based on `saved_invoices/{invoice.id}`; it must be adapted to the immutable source-occurrence key and migration version before it can safely support duplicate source IDs or distinct occurrences with identical invoice IDs. The executor must also persist import progress/recovery state without allowing a partial invoice/line/mapping commit.
 
 ## 11. Stage G — reconciliation
 
@@ -300,20 +323,28 @@ User-facing error and recovery screens must be localized in Arabic and English b
 
 ## 15. Implementation sequence (each step separately gated)
 
-1. Implement raw SharedPreferences snapshot capture, verification, and tests.
-2. Implement read-only record-level parser/preflight and tests.
-3. Add deterministic source-occurrence identity and duplicate handling.
-4. Extend party resolution and review reporting where required.
-5. Finalize and approve the migration-journal schema proposal.
-6. Extend planner and mapper to use occurrence identity.
-7. Implement transactional, resumable import and failure-injection tests.
-8. Implement reconciliation report and acceptance checks.
-9. Implement Drift-backed invoice repository behind an application-facing interface.
-10. Integrate invoice lifecycle operations and test cold-start/recovery behavior.
-11. Prepare cutover and post-cutover rollback runbook.
-12. Request explicit approval for cutover; do not switch automatically.
+The following foundations are complete and recorded in `docs/finished_tasks.md`:
 
-No step authorizes the next step. Review and approval are required before each material schema, architecture, or production behavior change.
+- Raw SharedPreferences snapshot capture, content-addressed storage, manifest, and raw-file verification.
+- Read-only record-level preflight and malformed/fatal classification.
+- Deterministic source-occurrence identity version 1.
+- Party-resolution planning and explicit review decisions.
+- Persistent party-review journal, including append-only/idempotent decisions and the D3.2 schema-v7 trigger migration.
+
+Remaining sequence:
+
+1. Design and implement an independently recoverable/exportable raw snapshot plus verified restore procedure.
+2. Finalize the migration execution journal schema and lifecycle separately from the party-review journal.
+3. Adapt planner, mapper, and executor to use source-occurrence identity plus migration version; stop using invoice ID as the sole import key.
+4. Define durable quarantine/held-record storage for malformed and unresolved occurrences, retaining exact raw fragments.
+5. Implement transactional, resumable import of invoice, lines, and occurrence mapping, with injected-failure tests.
+6. Implement executable reconciliation and a signed/reviewable acceptance report.
+7. Implement a Drift-backed invoice repository behind the current application-facing contract.
+8. Integrate create, read, update, delete, restore, and customer-history workflows with one authoritative repository.
+9. Finalize and test post-cutover rollback/recovery, including data created after cutover.
+10. Request explicit approval for cutover; do not switch automatically.
+
+No remaining step authorizes the next step. Review and approval are required before each material schema, architecture, or production behavior change.
 
 ## 16. Definition of migration acceptance
 
