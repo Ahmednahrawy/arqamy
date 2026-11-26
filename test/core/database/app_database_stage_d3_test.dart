@@ -313,6 +313,15 @@ void main() {
         resolutionStatus: 'ambiguousName',
         sourceIndex: 1,
       );
+      await _insertOccurrence(
+        database,
+        key: 'resolved-existing-id-before-upgrade',
+        expectedRole: 'customer',
+        suggestedPartyId: 'party-v7-customer',
+        suggestedPartyName: 'Customer V7',
+        resolutionStatus: 'resolvedByExistingId',
+        sourceIndex: 2,
+      );
       await _insertDecision(
         database,
         decisionId: 'decision-before-upgrade',
@@ -364,6 +373,18 @@ void main() {
         occurrenceKey: 'resolved-before-upgrade',
         sequence: 2,
         previousDecisionId: 'decision-before-upgrade',
+        action: 'acceptSuggestedMatch',
+        expectedRole: 'customer',
+        partyId: 'party-v7-customer',
+        partyName: 'Customer V7',
+        partyRole: 'customer',
+      );
+
+      await _insertDecision(
+        database,
+        decisionId: 'decision-existing-id-after-upgrade',
+        occurrenceKey: 'resolved-existing-id-before-upgrade',
+        sequence: 1,
         action: 'acceptSuggestedMatch',
         expectedRole: 'customer',
         partyId: 'party-v7-customer',
