@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:arqamy/core/database/app_database.dart';
+import 'package:arqamy/core/database/app_database.dart' hide LegacyPartyReviewDecision;
 import 'package:arqamy/core/services/legacy_invoice_party_resolution_planner.dart';
 import 'package:arqamy/core/services/legacy_invoice_preflight_service.dart';
 import 'package:arqamy/core/services/legacy_invoice_party_resolution_review.dart';
