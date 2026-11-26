@@ -225,3 +225,11 @@ This is a mapping policy only. It does not authorize schema or importer implemen
 On 2026-11-26, the owner approved the following destination strategy: retain the exact original `formattedDate` and `formattedTime` strings in the immutable source snapshot; after source formats and timezone semantics are established and tested, map the combined value to the existing `issued_at` field. Do not add separate structured date or time columns solely for this migration; reconsider them only for a distinct business requirement.
 
 Invalid or unrecognized values remain held under the previously approved policy. This is a mapping decision only and does not authorize implementation.
+
+## Owner-approved field policy — invoice total versus line totals
+
+On 2026-11-26, the owner approved holding the entire invoice occurrence for human review whenever the legacy invoice `totalCost` differs from the sum of calculated product line totals.
+
+Preserve the original invoice total and all original line values in the immutable source snapshot. Do not recalculate the invoice total, modify product lines, omit lines, or silently adjust values or rounding to force a match. Emit a stable finding identifying the mismatch and report the compared values where safely representable. Any later correction, if supported, must be explicit, authorized, attributable, and auditable without changing original source evidence.
+
+The exact comparison arithmetic and precision rules must be specified and tested before implementation to ensure deterministic results. This is a policy decision only; it does not authorize schema or importer changes.
