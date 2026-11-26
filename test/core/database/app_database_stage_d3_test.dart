@@ -40,13 +40,14 @@ void main() {
   test(
     'creates the three persistent journal tables on a fresh database',
     () async {
-      expect(database.schemaVersion, 7);
-      expect(await database.storedSchemaVersion, 7);
+      expect(database.schemaVersion, 8);
+      expect(await database.storedSchemaVersion, 8);
 
       final tables = await database
           .customSelect(
             "SELECT name FROM sqlite_master WHERE type = 'table' "
-            "AND name LIKE 'legacy_%' ORDER BY name",
+            "AND name IN ('legacy_migration_occurrences', 'legacy_migration_runs', "
+            "'legacy_party_review_decisions') ORDER BY name",
           )
           .map((row) => row.read<String>('name'))
           .get();
@@ -341,8 +342,8 @@ void main() {
 
       database = await AppDatabase.open(path: databasePath);
 
-      expect(database.schemaVersion, 7);
-      expect(await database.storedSchemaVersion, 7);
+      expect(database.schemaVersion, 8);
+      expect(await database.storedSchemaVersion, 8);
       final preserved = await database
           .customSelect(
             'SELECT COUNT(*) AS count FROM legacy_party_review_decisions '
@@ -406,7 +407,7 @@ void main() {
     },
   );
 
-  test('rolls back a failed v5-to-v7 journal migration', () async {
+  test('rolls back a failed v5-to-v8 journal migration', () async {
     await database.customStatement(
       'INSERT INTO parties (party_id, display_name, created_at, updated_at) '
       'VALUES (?, ?, ?, ?)',
@@ -416,7 +417,7 @@ void main() {
     await database.customStatement('DROP TABLE legacy_migration_occurrences');
     await database.customStatement('DROP TABLE legacy_migration_runs');
     // A view with the target table name cannot be silently accepted by
-    // CREATE TABLE IF NOT EXISTS, so this forces the v5-to-v7 DDL to fail
+    // CREATE TABLE IF NOT EXISTS, so this forces the v5-to-v8 DDL to fail
     // after legacy_migration_runs has been created inside the migration.
     await database.customStatement(
       'CREATE VIEW legacy_migration_occurrences AS SELECT 1 AS sentinel',
@@ -462,7 +463,7 @@ void main() {
     await inspector.close();
 
     database = await AppDatabase.open(path: databasePath);
-    expect(await database.storedSchemaVersion, 7);
+    expect(await database.storedSchemaVersion, 8);
   });
 
   test(
@@ -494,7 +495,7 @@ void main() {
 
       database = await AppDatabase.open(path: databasePath);
 
-      expect(await database.storedSchemaVersion, 7);
+      expect(await database.storedSchemaVersion, 8);
       expect(
         await database
             .customSelect(
