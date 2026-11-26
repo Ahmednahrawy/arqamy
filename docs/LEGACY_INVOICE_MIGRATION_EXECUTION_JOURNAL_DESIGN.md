@@ -395,6 +395,8 @@ Implementation should remain separately gated and be split into reviewable steps
 
 Do not combine schema, importer, app cutover, and legacy deletion in one change.
 
+The repository inspection and field mapping are recorded in [LEGACY_INVOICE_MIGRATION_EXECUTION_AUDIT.md](LEGACY_INVOICE_MIGRATION_EXECUTION_AUDIT.md) and [LEGACY_INVOICE_FIELD_MAPPING_MATRIX.md](LEGACY_INVOICE_FIELD_MAPPING_MATRIX.md).
+
 ## 15. Owner-approved design decisions
 
 The owner approved the following D4 recommendations on 2026-11-26:
