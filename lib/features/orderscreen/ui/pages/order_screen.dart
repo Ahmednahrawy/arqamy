@@ -1,6 +1,7 @@
 import 'package:arqamy/features/orderscreen/data/models/invoice.dart';
 import 'package:arqamy/features/orderscreen/providers/invoice_provider.dart';
 import 'package:arqamy/core/services/invoice_service.dart';
+import 'package:arqamy/core/services/invoice_excel_export_service.dart';
 import 'package:arqamy/features/orderscreen/ui/widgets/invoice_summary_bottomsheet.dart';
 import 'package:arqamy/features/orderscreen/ui/widgets/product_input_form.dart';
 import 'package:arqamy/features/settingscreen/providers/invoice_setting_provider.dart';
@@ -23,7 +24,7 @@ import 'package:arqamy/features/orderscreen/ui/widgets/my_data_table.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 
-enum _InvoiceShareTarget { allApps, whatsapp }
+enum _InvoiceShareTarget { allApps, whatsapp, excel }
 
 class Orderscreen extends StatefulWidget {
   const Orderscreen({super.key});
@@ -159,36 +160,45 @@ class _OrderscreenState extends State<Orderscreen>
 
     if (shareTarget != null) {
       try {
-        final shareInvoice = shareTarget == _InvoiceShareTarget.whatsapp
-            ? InvoiceService.generateAndShareInvoiceToWhatsApp
-            : InvoiceService.generateAndShareInvoice;
-        await shareInvoice(
-          provider: provider,
-          settings: context.read<InvoiceSettingsProvider>(),
-          customerName: invoice.customerName,
-          invoiceId: invoice.id,
-          totalCost: invoice.totalCost,
-          paid: invoice.paid,
-          rest: invoice.rest,
-          formattedDate: invoice.formattedDate,
-          formattedTime: invoice.formattedTime,
-          invoiceAction: invoice.invoiceAction,
-          invoiceSerial: invoice.invoiceSerial,
-          locale: locale,
-        );
+        if (shareTarget == _InvoiceShareTarget.excel) {
+          await InvoiceExcelExportService.generateAndShareInvoice(
+            invoice,
+            locale: locale,
+          );
+        } else {
+          final shareInvoice = shareTarget == _InvoiceShareTarget.whatsapp
+              ? InvoiceService.generateAndShareInvoiceToWhatsApp
+              : InvoiceService.generateAndShareInvoice;
+          await shareInvoice(
+            provider: provider,
+            settings: context.read<InvoiceSettingsProvider>(),
+            customerName: invoice.customerName,
+            invoiceId: invoice.id,
+            totalCost: invoice.totalCost,
+            paid: invoice.paid,
+            rest: invoice.rest,
+            formattedDate: invoice.formattedDate,
+            formattedTime: invoice.formattedTime,
+            invoiceAction: invoice.invoiceAction,
+            invoiceSerial: invoice.invoiceSerial,
+            locale: locale,
+          );
+        }
       } catch (error) {
         if (!mounted) return;
         Navigator.of(context).pop();
-        _showToast(
-          '${S.of(context).share_invoice_failed}: $error',
-          isError: true,
-        );
+        final failureMessage = shareTarget == _InvoiceShareTarget.excel
+            ? S.of(context).invoice_excel_export_failed
+            : S.of(context).share_invoice_failed;
+        _showToast('$failureMessage: $error', isError: true);
         return;
       }
     }
     if (!mounted) return;
     Navigator.of(context).pop();
-    if (shareTarget != null) {
+    if (shareTarget == _InvoiceShareTarget.excel) {
+      _showToast(S.of(context).invoice_exported_to_excel);
+    } else if (shareTarget != null) {
       _showToast(S.of(context).invoice_sent_successfully);
     } else {
       _showToast(S.of(context).invoice_saved_successfully);
@@ -197,6 +207,9 @@ class _OrderscreenState extends State<Orderscreen>
 
   Future<void> _shareInvoice() =>
       _saveInvoice(shareTarget: _InvoiceShareTarget.allApps);
+
+  Future<void> _exportInvoiceToExcel() =>
+      _saveInvoice(shareTarget: _InvoiceShareTarget.excel);
 
   Future<void> _sendInvoiceToWhatsApp() =>
       _saveInvoice(shareTarget: _InvoiceShareTarget.whatsapp);
@@ -627,6 +640,16 @@ class _OrderscreenState extends State<Orderscreen>
                 icon: const FaIcon(FontAwesomeIcons.whatsapp),
               ),
             ],
+          ),
+          verticalSpace(8),
+          SizedBox(
+            width: double.infinity,
+            child: OutlinedButton.icon(
+              key: const ValueKey('export-current-invoice-excel'),
+              onPressed: _exportInvoiceToExcel,
+              icon: const Icon(Icons.table_chart),
+              label: Text(S.of(context).exportToExcel),
+            ),
           ),
         ],
       ),

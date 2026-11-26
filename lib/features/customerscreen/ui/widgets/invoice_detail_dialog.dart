@@ -6,6 +6,7 @@ import 'package:arqamy/features/orderscreen/data/models/invoice.dart';
 import 'package:arqamy/features/orderscreen/providers/invoice_provider.dart';
 import 'package:arqamy/features/settingscreen/providers/invoice_setting_provider.dart';
 import 'package:arqamy/core/services/invoice_service.dart';
+import 'package:arqamy/core/services/invoice_excel_export_service.dart';
 import 'package:arqamy/core/widgets/app_snack_bar.dart';
 import 'package:arqamy/generated/l10n.dart';
 import 'package:provider/provider.dart';
@@ -30,9 +31,7 @@ class InvoiceDetailDialog extends StatelessWidget {
     final strings = S.of(context);
 
     return Dialog(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(20),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
       child: Container(
         constraints: BoxConstraints(
           maxHeight: MediaQuery.of(context).size.height * 0.8,
@@ -97,10 +96,21 @@ class InvoiceDetailDialog extends StatelessWidget {
                       title: strings.customer_info,
                       icon: Icons.person,
                       children: [
-                        _buildInfoRow(context, strings.name, invoice.customerName),
                         _buildInfoRow(
-                            context, strings.date, invoice.formattedDate),
-                        _buildInfoRow(context, strings.time, invoice.formattedTime),
+                          context,
+                          strings.name,
+                          invoice.customerName,
+                        ),
+                        _buildInfoRow(
+                          context,
+                          strings.date,
+                          invoice.formattedDate,
+                        ),
+                        _buildInfoRow(
+                          context,
+                          strings.time,
+                          invoice.formattedTime,
+                        ),
                       ],
                     ),
 
@@ -179,8 +189,9 @@ class InvoiceDetailDialog extends StatelessWidget {
                     label: strings.share,
                     onPressed: () async {
                       final scaffoldMessenger = ScaffoldMessenger.of(context);
-                      final locale =
-                          Localizations.localeOf(context).languageCode;
+                      final locale = Localizations.localeOf(
+                        context,
+                      ).languageCode;
                       final tempProvider = InvoiceProvider();
                       for (var product in invoice.products) {
                         tempProvider.addProduct(product);
@@ -211,6 +222,30 @@ class InvoiceDetailDialog extends StatelessWidget {
                     },
                     color: colors.primary,
                   ),
+                  _buildActionButton(
+                    icon: Icons.table_chart,
+                    label: strings.exportToExcel,
+                    onPressed: () async {
+                      final scaffoldMessenger = ScaffoldMessenger.of(context);
+                      final locale = Localizations.localeOf(
+                        context,
+                      ).languageCode;
+                      try {
+                        await InvoiceExcelExportService.generateAndShareInvoice(
+                          invoice,
+                          locale: locale,
+                        );
+                      } catch (error) {
+                        if (!scaffoldMessenger.mounted) return;
+                        showAppSnackBarOn(
+                          scaffoldMessenger,
+                          '${strings.invoice_excel_export_failed}: $error',
+                          isError: true,
+                        );
+                      }
+                    },
+                    color: colors.tertiary,
+                  ),
                 ],
               ),
             ),
@@ -229,9 +264,7 @@ class InvoiceDetailDialog extends StatelessWidget {
     final colors = Theme.of(context).colorScheme;
     return Card(
       elevation: 2,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
@@ -244,9 +277,9 @@ class InvoiceDetailDialog extends StatelessWidget {
                 Text(
                   title,
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                      ),
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ],
             ),
@@ -273,10 +306,7 @@ class InvoiceDetailDialog extends StatelessWidget {
         children: [
           Text(
             label,
-            style: TextStyle(
-              color: colors.onSurfaceVariant,
-              fontSize: 14,
-            ),
+            style: TextStyle(color: colors.onSurfaceVariant, fontSize: 14),
           ),
           Text(
             value,
@@ -300,9 +330,7 @@ class InvoiceDetailDialog extends StatelessWidget {
     final strings = S.of(context);
     return Card(
       elevation: 2,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
@@ -389,9 +417,7 @@ class InvoiceDetailDialog extends StatelessWidget {
                         Text(
                           '${strings.net_weight}: '
                           '${AppFormatters.weight(netWeight, strings)}',
-                          style: const TextStyle(
-                            fontSize: 13,
-                          ),
+                          style: const TextStyle(fontSize: 13),
                         ),
                         if (product.price == 0)
                           const SizedBox.shrink()
@@ -425,10 +451,7 @@ class InvoiceDetailDialog extends StatelessWidget {
     return TextButton.icon(
       onPressed: onPressed,
       icon: Icon(icon, size: 18, color: color),
-      label: Text(
-        label!,
-        style: TextStyle(color: color),
-      ),
+      label: Text(label!, style: TextStyle(color: color)),
       style: TextButton.styleFrom(
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 2),
       ),

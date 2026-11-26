@@ -4,6 +4,7 @@ import 'package:arqamy/core/helpers/invoice_action.dart';
 import 'package:arqamy/core/helpers/invoice_date_parser.dart';
 import 'package:arqamy/core/helpers/money.dart';
 import 'package:arqamy/core/services/invoice_service.dart';
+import 'package:arqamy/core/services/invoice_excel_export_service.dart';
 import 'package:arqamy/features/customerscreen/ui/widgets/edit_invoice_dialog.dart';
 import 'package:arqamy/features/customerscreen/ui/widgets/invoice_detail_dialog.dart';
 import 'package:arqamy/features/orderscreen/data/models/invoice.dart';
@@ -1149,6 +1150,9 @@ class _CustomerScreenState extends State<CustomerScreen> {
                           case 'share':
                             _shareInvoice(invoice);
                             break;
+                          case 'excel':
+                            _exportInvoiceToExcel(invoice);
+                            break;
                         }
                       },
                       itemBuilder: (context) => [
@@ -1171,6 +1175,17 @@ class _CustomerScreenState extends State<CustomerScreen> {
                               color: colors.primary,
                             ),
                             title: Text(strings.share),
+                            contentPadding: EdgeInsets.zero,
+                          ),
+                        ),
+                        PopupMenuItem(
+                          value: 'excel',
+                          child: ListTile(
+                            leading: Icon(
+                              Icons.table_chart_outlined,
+                              color: colors.primary,
+                            ),
+                            title: Text(strings.exportToExcel),
                             contentPadding: EdgeInsets.zero,
                           ),
                         ),
@@ -1339,6 +1354,23 @@ class _CustomerScreenState extends State<CustomerScreen> {
       showAppSnackBar(
         context,
         '${S.of(context).could_not_share_invoice}: $error',
+        isError: true,
+      );
+    }
+  }
+
+  Future<void> _exportInvoiceToExcel(Invoice invoice) async {
+    final locale = Localizations.localeOf(context).languageCode;
+    try {
+      await InvoiceExcelExportService.generateAndShareInvoice(
+        invoice,
+        locale: locale,
+      );
+    } catch (error) {
+      if (!mounted) return;
+      showAppSnackBar(
+        context,
+        '${S.of(context).invoice_excel_export_failed}: $error',
         isError: true,
       );
     }
