@@ -66,7 +66,7 @@ void main() {
 
       database = await AppDatabase.open(path: databasePath);
 
-      expect(await database!.storedSchemaVersion, 6);
+      expect(await database!.storedSchemaVersion, 7);
       expect(await _snapshotVersion3Tables(database!), before);
       expect(
         await database!
@@ -120,7 +120,7 @@ void main() {
       final beforeReopen = await _snapshotVersion3Tables(database!);
       await database!.close();
       database = await AppDatabase.open(path: databasePath);
-      expect(await database!.storedSchemaVersion, 6);
+      expect(await database!.storedSchemaVersion, 7);
       expect(await _snapshotVersion3Tables(database!), beforeReopen);
     },
   );
@@ -202,7 +202,7 @@ void main() {
 
       database = await AppDatabase.open(path: databasePath);
 
-      expect(await database!.storedSchemaVersion, 6);
+      expect(await database!.storedSchemaVersion, 7);
       final migratedRows = await database!
           .customSelect(
             'SELECT * FROM allocation_reversals '
