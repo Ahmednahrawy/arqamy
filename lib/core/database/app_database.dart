@@ -927,7 +927,7 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase._(super.executor);
 
   @override
-  int get schemaVersion => 6;
+  int get schemaVersion => 7;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -968,6 +968,18 @@ class AppDatabase extends _$AppDatabase {
           await m.createTable(legacyMigrationRuns);
           await m.createTable(legacyMigrationOccurrences);
           await m.createTable(legacyPartyReviewDecisions);
+          await _createLegacyPartyReviewJournalTriggers();
+        });
+      }
+
+      if (from == 6 && to >= 7) {
+        // Existing v6 installations already have the original trigger.
+        // Replace only that validation trigger, atomically, while preserving
+        // all journal rows and every unrelated table and trigger.
+        await transaction(() async {
+          await customStatement(
+            'DROP TRIGGER IF EXISTS legacy_party_review_decisions_validate_insert',
+          );
           await _createLegacyPartyReviewJournalTriggers();
         });
       }
@@ -1232,6 +1244,7 @@ class AppDatabase extends _$AppDatabase {
         WHERE o.run_id = NEW.run_id
           AND o.source_occurrence_key = NEW.source_occurrence_key
           AND o.suggested_party_id = NEW.resolved_party_id
+          AND o.resolution_status IN ('resolvedByName', 'resolvedByExistingId')
           AND pr.role = NEW.expected_role
           AND NEW.resolved_party_role = NEW.expected_role
       ))
