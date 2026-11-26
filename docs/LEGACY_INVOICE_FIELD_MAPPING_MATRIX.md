@@ -285,3 +285,14 @@ Do not resolve the party automatically by matching the display name, including w
 On 2026-11-26, the owner approved holding the entire invoice occurrence for human review when legacy `customerId` is present but does not identify an existing party in the current database.
 
 Do not fall back to matching `customerName`, create a replacement party, or silently change the source ID. Preserve the original source evidence and emit a stable finding identifying the missing party reference. Release from hold only after an explicit, authorized, attributable party-resolution decision, followed by validation that the selected party exists and has the required role for the invoice action. This is design policy only; it does not authorize party, schema, or importer implementation.
+
+
+## Owner-approved policy — historical customer-name discrepancy
+
+When `customerId` resolves to an existing party with the required role, but the invoice's original `customerName` differs from that party's current display name:
+
+- Preserve the exact original `customerName` as historical source evidence in the immutable raw snapshot and normalized source evidence.
+- Keep the resolved `party_id` and `party_role` as the authoritative party link; do not resolve identity from the name or replace the original name with the current party display name.
+- Treat the discrepancy as a non-blocking audit finding. Do not hold or exclude the occurrence solely because these names differ.
+- Do not mutate the party's display name or the invoice's source name to make them match.
+- This is a design policy only; it does not authorize implementation or migration execution.
