@@ -45,8 +45,8 @@ void main() {
       [
         {
           'currency_code': 'EGP',
-          'decimal_places': 2,
-          'name': 'Egyptian pound',
+          'minor_unit_scale': 2,
+          'display_name': 'Egyptian pound',
         },
       ],
     );
