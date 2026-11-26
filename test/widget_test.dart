@@ -13,8 +13,13 @@ import 'package:arqamy/features/orderscreen/providers/invoice_provider.dart';
 import 'package:arqamy/features/orderscreen/data/models/product_model.dart';
 import 'package:arqamy/features/orderscreen/ui/pages/order_screen.dart';
 import 'package:arqamy/features/settingscreen/providers/invoice_setting_provider.dart';
+import 'package:arqamy/features/settingscreen/ui/pages/invoice_setting.dart';
+import 'package:arqamy/generated/l10n.dart';
 import 'package:material_ui/material_ui.dart';
+import 'package:material_ui/material_ui.dart' as mui;
 import 'package:flutter_test/flutter_test.dart';
+import 'package:flutter_localizations/flutter_localizations.dart' as fl;
+import 'package:cupertino_ui/cupertino_ui.dart' as cupertino;
 import 'package:arqamy/config/routes/app_router.dart';
 import 'package:arqamy/my_app.dart';
 import 'package:provider/provider.dart';
@@ -166,6 +171,144 @@ void main() {
       expect(tester.takeException(), isNull);
     },
   );
+
+  testWidgets('order defaults and field visibility come from settings', (
+    WidgetTester tester,
+  ) async {
+    SharedPreferences.setMockInitialValues({
+      'master_products': json.encode(['تمر سيوي']),
+      'defaultPackageWeight': 4.5,
+      'defaultPackageNumber': 3,
+      'showPackageWeight': false,
+      'showPackageNumber': true,
+    });
+    final settings = InvoiceSettingsProvider();
+    await settings.loadSettings();
+    final invoiceProvider = InvoiceProvider();
+
+    await tester.pumpWidget(
+      MultiProvider(
+        providers: [
+          ChangeNotifierProvider(create: (_) => Language()),
+          ChangeNotifierProvider(create: (_) => ThemeProvider()),
+          ChangeNotifierProvider.value(value: invoiceProvider),
+          ChangeNotifierProvider.value(value: settings),
+        ],
+        child: MyApp(appRouter: AppRouter()),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    Finder fieldWithLabel(String label) => find.byWidgetPredicate(
+      (widget) =>
+          widget is TextField && widget.decoration?.labelText == label,
+    );
+
+    expect(fieldWithLabel('وزن العبوة'), findsNothing);
+    expect(
+      tester.widget<TextField>(fieldWithLabel('عدد العبوات')).controller!.text,
+      '3',
+    );
+
+    await tester.tap(find.text('شراء'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('اختر منتج'));
+    await tester.pumpAndSettle();
+    await tester.tap(
+      find
+          .ancestor(
+            of: find.text('تمر سيوي').last,
+            matching: find.byType(ListTile),
+          )
+          .last,
+      warnIfMissed: false,
+    );
+    await tester.pumpAndSettle();
+    await tester.enterText(fieldWithLabel('الوزن أو العدد'), '5');
+    await tester.enterText(fieldWithLabel('السعر'), '10');
+    await tester.tap(find.text('أضف منتج'));
+    await tester.pumpAndSettle();
+
+    expect(invoiceProvider.products, hasLength(1));
+    expect(invoiceProvider.products.single.packageWeight, 4.5);
+    expect(invoiceProvider.products.single.numberPackage, 3);
+  });
+
+  testWidgets('invoice settings has grouped defaults, clear icons and reset', (
+    WidgetTester tester,
+  ) async {
+    SharedPreferences.setMockInitialValues({
+      'managerName': 'Old manager',
+      'defaultPackageWeight': 7,
+      'defaultPackageNumber': 4,
+      'showPackageWeight': false,
+    });
+    final settings = InvoiceSettingsProvider();
+    await settings.loadSettings();
+    tester.view.physicalSize = const Size(1200, 2400);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+
+    await tester.pumpWidget(
+      MultiProvider(
+        providers: [
+          ChangeNotifierProvider(create: (_) => Language()),
+          ChangeNotifierProvider(create: (_) => ThemeProvider()),
+          ChangeNotifierProvider(create: (_) => InvoiceProvider()),
+          ChangeNotifierProvider.value(value: settings),
+        ],
+        child: MaterialApp(
+          locale: const Locale('ar'),
+          localizationsDelegates: const [
+            S.delegate,
+            mui.GlobalMaterialLocalizations.delegate,
+            fl.GlobalWidgetsLocalizations.delegate,
+            cupertino.GlobalCupertinoLocalizations.delegate,
+          ],
+          supportedLocales: S.delegate.supportedLocales,
+          home: const InvoiceSettingsScreen(),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    expect(find.text('إعدادات الطلب'), findsOneWidget);
+    expect(find.text('الوزن الافتراضي للعبوة'), findsOneWidget);
+    expect(find.text('عدد العبوات الافتراضي'), findsOneWidget);
+    expect(find.text('إظهار حقل وزن العبوة'), findsOneWidget);
+    expect(find.text('إظهار حقل عدد العبوات'), findsOneWidget);
+
+    Finder fieldWithLabel(String label) => find.byWidgetPredicate(
+      (widget) =>
+          widget is TextField && widget.decoration?.labelText == label,
+    );
+    final managerField = fieldWithLabel('اسم المدير');
+    expect(
+      tester.widget<TextField>(managerField).controller!.text,
+      'Old manager',
+    );
+    final clearIcon = find.descendant(
+      of: managerField,
+      matching: find.byTooltip('مسح'),
+    );
+    expect(clearIcon, findsOneWidget);
+    await tester.tap(clearIcon);
+    await tester.pumpAndSettle();
+    expect(tester.widget<TextField>(managerField).controller!.text, isEmpty);
+
+    await tester.tap(find.widgetWithText(OutlinedButton, 'إعادة تعيين إلى الافتراضي'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.widgetWithText(FilledButton, 'إعادة تعيين'));
+    await tester.pumpAndSettle();
+
+    expect(settings.managerName, isEmpty);
+    expect(settings.defaultPackageWeight, 2.0);
+    expect(settings.defaultPackageNumber, 0);
+    expect(settings.showPackageWeight, isTrue);
+    expect(settings.showPackageNumber, isTrue);
+    expect(tester.takeException(), isNull);
+  });
 
   testWidgets('price and package weight clear icons need a double tap', (
     WidgetTester tester,

@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:arqamy/core/helpers/invoice_backup.dart';
 import 'package:arqamy/features/orderscreen/data/models/invoice.dart';
 import 'package:arqamy/features/orderscreen/data/models/product_model.dart';
+import 'package:arqamy/features/settingscreen/data/models/invoice_settings_snapshot.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 Invoice _invoice(String id, {String? action = 'بيع', String serial = '7'}) {
@@ -80,6 +81,27 @@ void main() {
     expect(payload['version'], 1);
     expect(payload['invoiceCount'], 2);
     expect(payload['exportedAt'], '2026-11-21T12:00:00.000Z');
+  });
+
+  test('invoice settings round trip inside the backup', () {
+    final settings = InvoiceSettingsSnapshot.defaults();
+    final text = InvoiceBackup.encode(
+      [_invoice('a')],
+      exportedAt: DateTime.utc(2026, 11, 21, 12),
+      settings: settings,
+    );
+
+    expect(InvoiceBackup.decodeSettings(text), settings);
+    expect(InvoiceBackup.containsSettings(text), isTrue);
+  });
+
+  test('invalid settings reject the whole backup', () {
+    final payload = _payload();
+    final settings = InvoiceSettingsSnapshot.defaults().toJson();
+    settings['defaultPackageWeight'] = -1;
+    payload['settings'] = settings;
+
+    _expectRejected(payload, 'settings');
   });
 
   test('whole numbers are accepted where decimals are expected', () {

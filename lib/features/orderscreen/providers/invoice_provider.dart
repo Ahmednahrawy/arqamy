@@ -5,6 +5,7 @@ import 'package:arqamy/core/helpers/product_list_constants.dart';
 import 'package:arqamy/core/helpers/money.dart';
 import 'package:arqamy/core/helpers/invoice_discount.dart';
 import 'package:arqamy/core/helpers/invoice_backup.dart';
+import 'package:arqamy/features/settingscreen/data/models/invoice_settings_snapshot.dart';
 import 'package:arqamy/features/orderscreen/data/models/invoice.dart';
 import 'package:arqamy/core/helpers/invoice_action.dart';
 import 'package:flutter/foundation.dart';
@@ -376,9 +377,17 @@ class InvoiceProvider extends ChangeNotifier {
   }
 
   // Load products from local storage
-  /// Backup text containing every saved invoice.
-  String exportBackup({DateTime? now}) {
-    return InvoiceBackup.encode(_invoices, exportedAt: now ?? DateTime.now());
+  /// Backup text containing every saved invoice and, when supplied, the
+  /// invoice settings snapshot.
+  String exportBackup({
+    DateTime? now,
+    InvoiceSettingsSnapshot? settings,
+  }) {
+    return InvoiceBackup.encode(
+      _invoices,
+      exportedAt: now ?? DateTime.now(),
+      settings: settings,
+    );
   }
 
   /// Counts what [restoreBackup] would add and replace, without changing

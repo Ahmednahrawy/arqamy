@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:arqamy/core/helpers/invoice_backup.dart';
 import 'package:arqamy/core/services/backup_file_picker.dart';
 import 'package:arqamy/features/orderscreen/providers/invoice_provider.dart';
+import 'package:arqamy/features/settingscreen/providers/invoice_setting_provider.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
@@ -12,22 +13,23 @@ import 'package:share_plus/share_plus.dart';
 class InvoiceBackupService {
   const InvoiceBackupService._();
 
-  /// Returns the number of invoices backed up, or 0 when there is nothing to
-  /// back up (nothing is shared in that case).
+  /// Returns the number of invoices backed up, or 0 when there are neither
+  /// invoices nor settings to back up (nothing is shared in that case).
   static Future<int> shareBackup(
     InvoiceProvider provider, {
     DateTime? now,
+    InvoiceSettingsProvider? settings,
   }) async {
     // Reload first so a backup never misses invoices that were not opened yet.
     await provider.loadInvoices();
     final count = provider.invoices.length;
-    if (count == 0) return 0;
+    if (count == 0 && settings == null) return 0;
 
     final timestamp = now ?? DateTime.now();
     final directory = await getTemporaryDirectory();
     final file = File(p.join(directory.path, backupFileName(timestamp)));
     await file.writeAsString(
-      provider.exportBackup(now: timestamp),
+      provider.exportBackup(now: timestamp, settings: settings?.snapshot()),
       flush: true,
     );
     await SharePlus.instance.share(
@@ -43,6 +45,7 @@ class InvoiceBackupService {
     InvoiceProvider provider, {
     DateTime? now,
     Directory? directory,
+    InvoiceSettingsProvider? settings,
   }) async {
     await provider.loadInvoices();
     final timestamp = now ?? DateTime.now();
@@ -54,7 +57,7 @@ class InvoiceBackupService {
     await folder.create(recursive: true);
     final file = File(p.join(folder.path, 'auto-${backupFileName(timestamp)}'));
     await file.writeAsString(
-      provider.exportBackup(now: timestamp),
+      provider.exportBackup(now: timestamp, settings: settings?.snapshot()),
       flush: true,
     );
     return file;

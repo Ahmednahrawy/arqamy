@@ -4,6 +4,7 @@ import 'package:arqamy/core/helpers/invoice_discount.dart';
 import 'package:arqamy/core/helpers/money.dart';
 import 'package:arqamy/features/orderscreen/data/models/invoice.dart';
 import 'package:arqamy/features/orderscreen/data/models/product_model.dart';
+import 'package:arqamy/features/settingscreen/data/models/invoice_settings_snapshot.dart';
 
 /// Thrown when text is not a valid Arqamy invoice backup.
 class InvoiceBackupFormatException implements Exception {
@@ -28,6 +29,7 @@ class InvoiceBackup {
   static String encode(
     Iterable<Invoice> invoices, {
     required DateTime exportedAt,
+    InvoiceSettingsSnapshot? settings,
   }) {
     final list = invoices.toList();
     return const JsonEncoder.withIndent('  ').convert({
@@ -35,11 +37,13 @@ class InvoiceBackup {
       'version': version,
       'exportedAt': exportedAt.toUtc().toIso8601String(),
       'invoiceCount': list.length,
+      if (settings != null) 'settings': settings.toJson(),
       'invoices': [for (final invoice in list) invoice.toJson()],
     });
   }
 
-  static List<Invoice> decode(String text) {
+  /// Decodes and validates the common backup header.
+  static Map<String, dynamic> decodeRoot(String text) {
     Object? root;
     try {
       root = jsonDecode(text);
@@ -62,6 +66,21 @@ class InvoiceBackup {
         'This backup was made by a newer version of the app.',
       );
     }
+    return Map<String, dynamic>.from(root);
+  }
+
+  /// Returns the settings carried by a backup, or null for a legacy backup.
+  static InvoiceSettingsSnapshot? decodeSettings(String text) =>
+      _parseSettings(decodeRoot(text)['settings']);
+
+  /// True when the backup carries invoice settings.
+  static bool containsSettings(String text) => decodeSettings(text) != null;
+
+  static List<Invoice> decode(String text) {
+    final root = decodeRoot(text);
+    // Validate settings even when only invoices are requested, so a bad
+    // settings object can never be restored later from the same file.
+    _parseSettings(root['settings']);
     final rawInvoices = root['invoices'];
     if (rawInvoices is! List) {
       throw const InvoiceBackupFormatException(
@@ -88,6 +107,15 @@ class InvoiceBackup {
       invoices.add(invoice);
     }
     return invoices;
+  }
+
+  static InvoiceSettingsSnapshot? _parseSettings(Object? raw) {
+    if (raw == null) return null;
+    try {
+      return InvoiceSettingsSnapshot.fromJson(raw);
+    } on FormatException catch (error) {
+      throw InvoiceBackupFormatException('Invalid settings: ${error.message}.');
+    }
   }
 
   static Invoice _parseInvoice(Object? raw, int number) {

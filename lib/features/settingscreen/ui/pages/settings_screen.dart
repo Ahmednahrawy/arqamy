@@ -9,6 +9,7 @@ import 'package:arqamy/features/settingscreen/ui/pages/help_screen.dart';
 import 'package:arqamy/features/settingscreen/ui/pages/invoice_setting.dart';
 import 'package:arqamy/features/settingscreen/ui/pages/privacy_screen.dart';
 import 'package:arqamy/features/settingscreen/ui/pages/product_management.dart';
+import 'package:arqamy/features/settingscreen/providers/invoice_setting_provider.dart';
 import 'package:arqamy/features/settingscreen/ui/widgets/settings_actions_dropdown.dart';
 import 'package:arqamy/generated/l10n.dart';
 import 'package:flutter/foundation.dart' show kDebugMode;
@@ -21,12 +22,9 @@ class SettingsScreen extends StatelessWidget {
   Future<void> _backupInvoices(BuildContext context) async {
     final strings = S.of(context);
     final provider = context.read<InvoiceProvider>();
+    final settings = context.read<InvoiceSettingsProvider>();
     try {
-      final count = await InvoiceBackupService.shareBackup(provider);
-      if (!context.mounted) return;
-      if (count == 0) {
-        showAppSnackBar(context, strings.backup_no_invoices);
-      }
+      await InvoiceBackupService.shareBackup(provider, settings: settings);
     } catch (error) {
       if (!context.mounted) return;
       showAppSnackBar(
@@ -40,6 +38,7 @@ class SettingsScreen extends StatelessWidget {
   Future<void> _restoreInvoices(BuildContext context) async {
     final strings = S.of(context);
     final provider = context.read<InvoiceProvider>();
+    final settings = context.read<InvoiceSettingsProvider>();
     try {
       final text = await InvoiceBackupService.pickBackupText();
       if (text == null || !context.mounted) return;
@@ -47,8 +46,9 @@ class SettingsScreen extends StatelessWidget {
       // Reload so the preview compares against what is really saved.
       await provider.loadInvoices();
       final preview = provider.previewRestore(text);
+      final hasSettings = InvoiceBackup.containsSettings(text);
       if (!context.mounted) return;
-      if (preview.total == 0) {
+      if (preview.total == 0 && !hasSettings) {
         showAppSnackBar(context, strings.restore_empty_backup);
         return;
       }
@@ -65,6 +65,10 @@ class SettingsScreen extends StatelessWidget {
               const SizedBox(height: 12),
               Text('${strings.restore_new_invoices}: ${preview.added}'),
               Text('${strings.restore_replaced_invoices}: ${preview.replaced}'),
+              if (hasSettings) ...[
+                const SizedBox(height: 8),
+                Text(strings.restore_settings_included),
+              ],
             ],
           ),
           actions: [
@@ -82,6 +86,7 @@ class SettingsScreen extends StatelessWidget {
       if (confirmed != true || !context.mounted) return;
 
       await provider.restoreBackup(text);
+      await settings.restoreFromBackup(text);
       if (!context.mounted) return;
       showAppSnackBar(context, strings.restore_done);
     } on InvoiceBackupFormatException catch (error) {

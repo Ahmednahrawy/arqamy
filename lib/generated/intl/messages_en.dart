@@ -61,6 +61,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "clearInvoiceSearch": MessageLookupByLibrary.simpleMessage("Clear search"),
     "clear_discount": MessageLookupByLibrary.simpleMessage("Clear discount"),
     "clear_field": MessageLookupByLibrary.simpleMessage("Double-tap to clear"),
+    "clear_text": MessageLookupByLibrary.simpleMessage("Clear"),
     "clear_draft_message": MessageLookupByLibrary.simpleMessage(
       "Only the current invoice data will be cleared. Saved invoices will not be deleted.",
     ),
@@ -525,6 +526,35 @@ class MessageLookup extends MessageLookupByLibrary {
     "purchase": MessageLookupByLibrary.simpleMessage("Purchase"),
     "purchases": MessageLookupByLibrary.simpleMessage("Purchases"),
     "qr_data": MessageLookupByLibrary.simpleMessage("QR data"),
+    "order_defaults": MessageLookupByLibrary.simpleMessage("Order defaults"),
+    "default_package_weight": MessageLookupByLibrary.simpleMessage(
+      "Default package weight",
+    ),
+    "default_package_count": MessageLookupByLibrary.simpleMessage(
+      "Default package count",
+    ),
+    "show_package_weight": MessageLookupByLibrary.simpleMessage(
+      "Show package weight field",
+    ),
+    "show_package_number": MessageLookupByLibrary.simpleMessage(
+      "Show package count field",
+    ),
+    "reset_to_defaults": MessageLookupByLibrary.simpleMessage(
+      "Reset to defaults",
+    ),
+    "reset_action": MessageLookupByLibrary.simpleMessage("Reset"),
+    "reset_defaults_confirm": MessageLookupByLibrary.simpleMessage(
+      "Reset all invoice settings and order defaults?",
+    ),
+    "restore_settings_included": MessageLookupByLibrary.simpleMessage(
+      "Invoice settings will also be restored.",
+    ),
+    "invalid_default_package_weight": MessageLookupByLibrary.simpleMessage(
+      "Enter a package weight of zero or more",
+    ),
+    "invalid_default_package_count": MessageLookupByLibrary.simpleMessage(
+      "Enter a whole package count of zero or more",
+    ),
     "quantity": MessageLookupByLibrary.simpleMessage("Quantity"),
     "recentInvoices": MessageLookupByLibrary.simpleMessage("Recent invoices"),
     "remaining": MessageLookupByLibrary.simpleMessage("Remaining"),

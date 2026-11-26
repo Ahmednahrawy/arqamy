@@ -1,6 +1,7 @@
 import 'package:arqamy/core/helpers/invoice_action.dart';
 import 'package:arqamy/core/helpers/money.dart';
 import 'package:arqamy/features/orderscreen/providers/invoice_provider.dart';
+import 'package:arqamy/features/settingscreen/providers/invoice_setting_provider.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:provider/provider.dart';
@@ -43,15 +44,30 @@ class _ProductInputFormState extends State<ProductInputForm> {
   final _priceFocusNode = FocusNode();
   final _packageWeightFocusNode = FocusNode();
   final _packageNumberFocusNode = FocusNode();
+  String _packageWeightDefaultText = '2';
+  String _packageNumberDefaultText = '0';
+  bool _showPackageWeight = true;
+  bool _showPackageNumber = true;
   FocusNode? _firstInvalidFocusNode;
   final Map<TextEditingController, DateTime> _lastClearTaps = {};
   @override
   void initState() {
     super.initState();
 
+    // Defaults are read once so a new invoice starts from the saved values.
+    final settings = context.read<InvoiceSettingsProvider>();
+    _packageWeightDefaultText = _formatDefaultNumber(
+      settings.defaultPackageWeight,
+    );
+    _packageNumberDefaultText = settings.defaultPackageNumber.toString();
+    _packageWeightController.text = _packageWeightDefaultText;
+    _packageNumberController.text = _packageNumberDefaultText;
+    _showPackageWeight = settings.showPackageWeight;
+    _showPackageNumber = settings.showPackageNumber;
+
     _packageNumberFocusNode.addListener(() {
       if (_packageNumberFocusNode.hasFocus &&
-          _packageNumberController.text == "0") {
+          _packageNumberController.text == _packageNumberDefaultText) {
         _packageNumberController.clear();
       }
     });
@@ -61,12 +77,17 @@ class _ProductInputFormState extends State<ProductInputForm> {
     });
   }
 
+  static String _formatDefaultNumber(double value) =>
+      value == value.truncateToDouble()
+      ? value.toStringAsFixed(0)
+      : value.toString();
+
   void _clearFields() {
     _weightController.clear();
     // _priceController.clear();
-    _packageNumberController.text = "0";
+    _packageWeightController.text = _packageWeightDefaultText;
+    _packageNumberController.text = _packageNumberDefaultText;
 
-    // do not reset defaults for package weight/number to avoid annoying UX
     // _selectedProduct = null;
     // _action = null;
     setState(() {});
@@ -98,10 +119,15 @@ class _ProductInputFormState extends State<ProductInputForm> {
       return;
     }
 
+    final settings = context.read<InvoiceSettingsProvider>();
     final weight = double.tryParse(_weightController.text) ?? 0.0;
-    final packageWeight = double.tryParse(_packageWeightController.text) ?? 0.0;
+    final packageWeight = _showPackageWeight
+        ? double.tryParse(_packageWeightController.text) ?? 0.0
+        : settings.defaultPackageWeight;
     final price = double.tryParse(_priceController.text) ?? 0.0;
-    final numberPackage = int.tryParse(_packageNumberController.text) ?? 0;
+    final numberPackage = _showPackageNumber
+        ? int.tryParse(_packageNumberController.text) ?? 0
+        : settings.defaultPackageNumber;
     final product = Product(
       name: _selectedProduct!,
       weight: weight,
@@ -380,8 +406,15 @@ class _ProductInputFormState extends State<ProductInputForm> {
                       controller: _priceController,
                       focusNode: _priceFocusNode,
                       textInputAction: TextInputAction.next,
-                      onEditingComplete: () =>
-                          _focusField(_packageWeightFocusNode),
+                      onEditingComplete: () {
+                        if (_showPackageWeight) {
+                          _focusField(_packageWeightFocusNode);
+                        } else if (_showPackageNumber) {
+                          _focusField(_packageNumberFocusNode);
+                        } else {
+                          FocusScope.of(context).unfocus();
+                        }
+                      },
                       labelText: strings.price,
                       hintText: strings.currency,
                       suffixIcon: _clearIcon(
@@ -408,66 +441,82 @@ class _ProductInputFormState extends State<ProductInputForm> {
                   ),
                 ],
               ),
-              verticalSpace(8),
-              Row(
-                children: [
-                  Expanded(
-                    child: AppTextFormField(
-                      textDirection: TextDirection.ltr,
-                      controller: _packageNumberController,
-                      focusNode: _packageNumberFocusNode,
-                      textInputAction: TextInputAction.done,
-                      onEditingComplete: _handleAdd,
-                      labelText: strings.packageCount,
-                      digitsOnly: true,
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          _firstInvalidFocusNode ??= _packageNumberFocusNode;
-                          return strings.package_count_required;
-                        }
-                        if (int.tryParse(value) == null) {
-                          _firstInvalidFocusNode ??= _packageNumberFocusNode;
-                          return strings.invalidNumber;
-                        }
-                        return null;
-                      },
-                    ),
-                  ),
-                  horizontalSpace(8),
-                  Expanded(
-                    child: AppTextFormField(
-                      textDirection: TextDirection.ltr,
-                      controller: _packageWeightController,
-                      focusNode: _packageWeightFocusNode,
-                      textInputAction: TextInputAction.next,
-                      onEditingComplete: () =>
-                          _focusField(_packageNumberFocusNode),
-                      labelText: strings.packageWeight,
-                      suffixText: strings.kilograms,
-                      suffixIcon: _clearIcon(
-                        _packageWeightController,
-                        _packageWeightFocusNode,
-                        strings.clear_field,
+              if (_showPackageWeight || _showPackageNumber) ...[
+                verticalSpace(8),
+                Row(
+                  children: [
+                    if (_showPackageNumber)
+                      Expanded(
+                        child: AppTextFormField(
+                          textDirection: TextDirection.ltr,
+                          controller: _packageNumberController,
+                          focusNode: _packageNumberFocusNode,
+                          textInputAction: TextInputAction.done,
+                          onEditingComplete: _handleAdd,
+                          labelText: strings.packageCount,
+                          digitsOnly: true,
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              _firstInvalidFocusNode ??=
+                                  _packageNumberFocusNode;
+                              return strings.package_count_required;
+                            }
+                            if (int.tryParse(value) == null) {
+                              _firstInvalidFocusNode ??=
+                                  _packageNumberFocusNode;
+                              return strings.invalidNumber;
+                            }
+                            return null;
+                          },
+                        ),
                       ),
-                      onChanged: (_) => setState(() {}),
-                      keyboardType: const TextInputType.numberWithOptions(
-                        decimal: true,
+                    if (_showPackageNumber && _showPackageWeight)
+                      horizontalSpace(8),
+                    if (_showPackageWeight)
+                      Expanded(
+                        child: AppTextFormField(
+                          textDirection: TextDirection.ltr,
+                          controller: _packageWeightController,
+                          focusNode: _packageWeightFocusNode,
+                          textInputAction: _showPackageNumber
+                              ? TextInputAction.next
+                              : TextInputAction.done,
+                          onEditingComplete: () {
+                            if (_showPackageNumber) {
+                              _focusField(_packageNumberFocusNode);
+                            } else {
+                              FocusScope.of(context).unfocus();
+                            }
+                          },
+                          labelText: strings.packageWeight,
+                          suffixText: strings.kilograms,
+                          suffixIcon: _clearIcon(
+                            _packageWeightController,
+                            _packageWeightFocusNode,
+                            strings.clear_field,
+                          ),
+                          onChanged: (_) => setState(() {}),
+                          keyboardType: const TextInputType.numberWithOptions(
+                            decimal: true,
+                          ),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              _firstInvalidFocusNode ??=
+                                  _packageWeightFocusNode;
+                              return strings.package_weight_required;
+                            }
+                            if (double.tryParse(value) == null) {
+                              _firstInvalidFocusNode ??=
+                                  _packageWeightFocusNode;
+                              return strings.invalidNumber;
+                            }
+                            return null;
+                          },
+                        ),
                       ),
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          _firstInvalidFocusNode ??= _packageWeightFocusNode;
-                          return strings.package_weight_required;
-                        }
-                        if (double.tryParse(value) == null) {
-                          _firstInvalidFocusNode ??= _packageWeightFocusNode;
-                          return strings.invalidNumber;
-                        }
-                        return null;
-                      },
-                    ),
-                  ),
-                ],
-              ),
+                  ],
+                ),
+              ],
               verticalSpace(10),
               Center(
                 child: ConstrainedBox(

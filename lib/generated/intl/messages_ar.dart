@@ -63,6 +63,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "clearInvoiceSearch": MessageLookupByLibrary.simpleMessage("مسح البحث"),
     "clear_discount": MessageLookupByLibrary.simpleMessage("إزالة الخصم"),
     "clear_field": MessageLookupByLibrary.simpleMessage("انقر مرتين للمسح"),
+    "clear_text": MessageLookupByLibrary.simpleMessage("مسح"),
     "clear_draft_message": MessageLookupByLibrary.simpleMessage(
       "سيتم مسح بيانات الفاتورة الحالية فقط. لن يتم حذف الفواتير المحفوظة.",
     ),
@@ -501,6 +502,35 @@ class MessageLookup extends MessageLookupByLibrary {
     "purchase": MessageLookupByLibrary.simpleMessage("شراء"),
     "purchases": MessageLookupByLibrary.simpleMessage("مشتريات"),
     "qr_data": MessageLookupByLibrary.simpleMessage("بيانات QR"),
+    "order_defaults": MessageLookupByLibrary.simpleMessage("إعدادات الطلب"),
+    "default_package_weight": MessageLookupByLibrary.simpleMessage(
+      "الوزن الافتراضي للعبوة",
+    ),
+    "default_package_count": MessageLookupByLibrary.simpleMessage(
+      "عدد العبوات الافتراضي",
+    ),
+    "show_package_weight": MessageLookupByLibrary.simpleMessage(
+      "إظهار حقل وزن العبوة",
+    ),
+    "show_package_number": MessageLookupByLibrary.simpleMessage(
+      "إظهار حقل عدد العبوات",
+    ),
+    "reset_to_defaults": MessageLookupByLibrary.simpleMessage(
+      "إعادة تعيين إلى الافتراضي",
+    ),
+    "reset_action": MessageLookupByLibrary.simpleMessage("إعادة تعيين"),
+    "reset_defaults_confirm": MessageLookupByLibrary.simpleMessage(
+      "إعادة تعيين جميع إعدادات الفاتورة وإعدادات الطلب؟",
+    ),
+    "restore_settings_included": MessageLookupByLibrary.simpleMessage(
+      "سيتم أيضًا استعادة إعدادات الفاتورة.",
+    ),
+    "invalid_default_package_weight": MessageLookupByLibrary.simpleMessage(
+      "أدخل وزن عبوة صفرًا أو أكثر",
+    ),
+    "invalid_default_package_count": MessageLookupByLibrary.simpleMessage(
+      "أدخل عدد عبوات صحيحًا صفرًا أو أكثر",
+    ),
     "quantity": MessageLookupByLibrary.simpleMessage("الكمية"),
     "recentInvoices": MessageLookupByLibrary.simpleMessage("أحدث الفواتير"),
     "remaining": MessageLookupByLibrary.simpleMessage("الباقي"),

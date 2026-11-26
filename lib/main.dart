@@ -37,13 +37,19 @@ Future<void> main() async {
   }
 
   final invoiceProvider = InvoiceProvider();
+  final invoiceSettings = InvoiceSettingsProvider();
+  try {
+    await invoiceSettings.loadSettings();
+  } catch (error) {
+    debugPrint('Could not load invoice settings: $error');
+  }
 
   runApp(MultiProvider(
     providers: [
       ChangeNotifierProvider(create: (_) => Language()),
       ChangeNotifierProvider.value(value: themeProvider),
       ChangeNotifierProvider.value(value: invoiceProvider),
-      ChangeNotifierProvider(create: (_) => InvoiceSettingsProvider()),
+      ChangeNotifierProvider.value(value: invoiceSettings),
     ],
     child: AppBootstrap(
       invoiceProvider: invoiceProvider,

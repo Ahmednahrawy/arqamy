@@ -1255,6 +1255,11 @@ class S {
     );
   }
 
+  /// `Clear`
+  String get clear_text {
+    return Intl.message('Clear', name: 'clear_text', desc: '', args: []);
+  }
+
   /// `Discount cannot exceed the invoice total`
   String get discount_exceeds_total {
     return Intl.message(
@@ -1903,6 +1908,106 @@ class S {
   /// `QR data`
   String get qr_data {
     return Intl.message('QR data', name: 'qr_data', desc: '', args: []);
+  }
+
+  /// `Order defaults`
+  String get order_defaults {
+    return Intl.message('Order defaults', name: 'order_defaults', desc: '', args: []);
+  }
+
+  /// `Default package weight`
+  String get default_package_weight {
+    return Intl.message(
+      'Default package weight',
+      name: 'default_package_weight',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Default package count`
+  String get default_package_count {
+    return Intl.message(
+      'Default package count',
+      name: 'default_package_count',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Show package weight field`
+  String get show_package_weight {
+    return Intl.message(
+      'Show package weight field',
+      name: 'show_package_weight',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Show package count field`
+  String get show_package_number {
+    return Intl.message(
+      'Show package count field',
+      name: 'show_package_number',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Reset to defaults`
+  String get reset_to_defaults {
+    return Intl.message(
+      'Reset to defaults',
+      name: 'reset_to_defaults',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Reset`
+  String get reset_action {
+    return Intl.message('Reset', name: 'reset_action', desc: '', args: []);
+  }
+
+  /// `Reset all invoice settings and order defaults?`
+  String get reset_defaults_confirm {
+    return Intl.message(
+      'Reset all invoice settings and order defaults?',
+      name: 'reset_defaults_confirm',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Invoice settings will also be restored.`
+  String get restore_settings_included {
+    return Intl.message(
+      'Invoice settings will also be restored.',
+      name: 'restore_settings_included',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Enter a package weight of zero or more`
+  String get invalid_default_package_weight {
+    return Intl.message(
+      'Enter a package weight of zero or more',
+      name: 'invalid_default_package_weight',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Enter a whole package count of zero or more`
+  String get invalid_default_package_count {
+    return Intl.message(
+      'Enter a whole package count of zero or more',
+      name: 'invalid_default_package_count',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Invoice settings saved`
