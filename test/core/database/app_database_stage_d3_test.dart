@@ -268,13 +268,22 @@ void main() {
     await database.customStatement('DROP TABLE legacy_party_review_decisions');
     await database.customStatement('DROP TABLE legacy_migration_occurrences');
     await database.customStatement('DROP TABLE legacy_migration_runs');
+    // A view with the target table name cannot be silently accepted by
+    // CREATE TABLE IF NOT EXISTS, so this forces the v5-to-v6 DDL to fail
+    // after legacy_migration_runs has been created inside the migration.
     await database.customStatement(
-      'CREATE TABLE legacy_migration_occurrences (sentinel TEXT)',
+      'CREATE VIEW legacy_migration_occurrences AS SELECT 1 AS sentinel',
     );
     await database.customStatement('PRAGMA user_version = 5');
     await database.close();
 
-    await expectLater(AppDatabase.open(path: databasePath), throwsA(anything));
+    var migrationFailed = false;
+    try {
+      database = await AppDatabase.open(path: databasePath);
+    } catch (_) {
+      migrationFailed = true;
+    }
+    expect(migrationFailed, isTrue, reason: 'the injected DDL collision must fail migration');
 
     final inspector = _Version5InspectorDatabase(
       NativeDatabase(File(databasePath)),
