@@ -2,7 +2,7 @@
 
 **Repository:** Ahmednahrawy/arqamy  
 **Branch:** main  
-**Design status:** Proposal for owner review  
+**Design status:** D4 execution contract approved; schema v8 design approved  
 **Implementation status:** Schema v8 implementation authorized; importer and production migration excluded  
 **Scope:** Durable execution, occurrence-key idempotency, retry/recovery, and import-state accounting for migration from SharedPreferences saved_invoices to Drift.
 
@@ -12,7 +12,7 @@
 
 The D3.2 party-review journal records human decisions about party identity. It does not record invoice import execution. D4 defines a separate execution journal so an import can be resumed, audited, reconciled, and recovered without relying on in-memory progress or legacy invoice IDs.
 
-This proposal does not authorize schema changes, generated-code changes, importer changes, source mutation, repository cutover, or production workflow changes. Those require separate approval after this design is reviewed.
+The owner has approved the corrected additive schema v8 contract and authorized only its five D4 table declarations, migration callbacks for every supported pre-v8 database version, required constraints/triggers/indexes, generated Drift files, and schema-focused tests. This document does not authorize importer implementation, export/restore implementation, source mutation, UI integration, financial-ledger operations, production migration, repository cutover, or production workflow changes.
 
 The current operational invoice source remains SharedPreferences. No import or cutover is authorized by this document.
 
@@ -153,7 +153,7 @@ State changes must be validated against an explicit transition table:
 - preflighted → held for malformed, duplicate, unresolved, unsupported, or financially inconsistent records.
 - held → ready only after explicit, auditable resolution and revalidation.
 - ready → claimed through an atomic claim operation.
-- claimed → imported only in the same transaction that commits invoice, all lines, mapping, and successful attempt outcome.
+- claimed → imported only in the same transaction that commits invoice, all lines, successful attempt outcome, and mapping; mapping insertion follows the imported attempt/state writes so database-level mapping validation can enforce the complete success condition.
 - claimed → retryable_failure, permanent_failure, or conflict only with a durable attempt result.
 - An expired claim may be reclaimed after recording the prior attempt as abandoned; it must not imply that business data was imported.
 - imported → reconciled or reconciliation_failed only through a recorded reconciliation result.
@@ -185,9 +185,10 @@ The importer then opens one Drift transaction and revalidates the claim token, r
 Within that single transaction:
 1. Insert the destination invoice using the approved mapper and generated destination identity.
 2. Insert every validated invoice line in original source order.
-3. Insert the unique occurrence-to-destination mapping.
-4. Record the successful attempt outcome and update the occurrence to imported.
-5. Commit.
+3. Insert the successful `imported` attempt record.
+4. Update the occurrence projection to `imported` and clear active claim fields.
+5. Insert the unique occurrence-to-destination mapping; its database trigger verifies matching occurrence identity metadata, the successful attempt, imported state, and destination `legacy_record_key`.
+6. Commit.
 
 If any insert, constraint, validation, or state update fails, the entire transaction rolls back. No invoice without all its lines, no lines without their invoice, and no imported mapping without the corresponding invoice may remain.
 
@@ -411,11 +412,11 @@ The owner approved the following D4 recommendations on 2026-11-26:
 6. **Post-cutover recovery:** design and test forward-recovery/replay before cutover. Do not assume that restoring the old database file preserves post-cutover writes.
 7. **Audit model:** keep append-only attempt history separate from append-only operator-action events.
 
-These decisions approve the D4 design direction, not its implementation. Schema changes, importer changes, export/restore implementation, production execution, and cutover still require separate explicit approval.
+These decisions approve the D4 design direction. The corrected schema v8 implementation is authorized within the schema-only boundary stated in section 1. Importer changes, export/restore implementation, production execution, and cutover still require separate explicit approval.
 
 ---
 
-**End of D4 proposal — implementation not authorized.**
+**End of D4 proposal — schema v8 implementation authorized within the schema-only boundary; importer and production migration remain unauthorized.**
 
 ## 16. Owner-approved field validation rule — blank required text
 
