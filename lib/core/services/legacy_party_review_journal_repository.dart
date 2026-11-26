@@ -95,6 +95,9 @@ class LegacyPartyReviewJournalRepository {
       if (item.sourceOccurrenceIdentity.snapshotSha256 != preflight.snapshotSha256) {
         throw ArgumentError('Every occurrence identity must belong to the preflight snapshot.');
       }
+      if (item.sourceOccurrenceIdentity.version != occurrenceIdentityVersion) {
+        throw ArgumentError('Occurrence identity version does not match the run metadata.');
+      }
     }
     final planKeys = plan.resolutions
         .map((item) => item.sourceOccurrenceKey)
@@ -219,7 +222,9 @@ class LegacyPartyReviewJournalRepository {
     Iterable<RecordLegacyPartyReviewDecisionRequest> requests,
   ) {
     final batch = requests.toList(growable: false);
-    if (batch.isEmpty) return Future.value(const []);
+    if (batch.isEmpty) {
+      return Future<List<LegacyPartyReviewDecisionResult>>.value(const []);
+    }
     return _serialize(() => _transaction(() async {
       final results = <LegacyPartyReviewDecisionResult>[];
       for (final request in batch) {
