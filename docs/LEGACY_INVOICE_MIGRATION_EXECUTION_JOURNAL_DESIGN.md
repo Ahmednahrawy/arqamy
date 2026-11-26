@@ -57,13 +57,15 @@ v1:{snapshotSha256}:{sourceIndex}:{recordSha256}
 
 The inputs are the immutable snapshot digest, original array index, and digest of the exact raw record fragment. Store the exact key unchanged; do not re-derive it from a decoded invoice object.
 
-The complete idempotency scope is the tuple (migration_version, mapping_contract_version, occurrence_identity_version, source_occurrence_key). The run also binds the preflight and snapshot-format versions. A changed mapping contract must either increment the migration version or remain isolated by the mapping-contract version in the uniqueness key; it must never collide with an earlier import merely because the legacy invoice ID matches.
+The attempt/request idempotency scope is the tuple (migration_version, mapping_contract_version, occurrence_identity_version, source_occurrence_key). The run also binds the preflight and snapshot-format versions. This tuple distinguishes the exact processing contract for audit and retry.
 
-Recommended stable import idempotency key:
+However, **the durable source-occurrence-to-destination mapping must be globally unique by source_occurrence_key, independent of migration or mapping-contract version**. The occurrence key already includes the immutable snapshot digest, source index, record digest, and identity version. A later run or changed contract must not create a second destination invoice for the same source occurrence. If a mapping already exists under a different contract, report a conflict requiring an explicit, audited correction/recovery procedure; do not bypass it by generating a new versioned key.
+
+Recommended attempt idempotency key:
 
 legacy-invoice-import:{migration_version}:{mapping_contract_version}:{occurrence_identity_version}:{source_occurrence_key}
 
-If the repository uses a hashed or length-limited key, hash the canonical UTF-8 representation of that full tuple and retain the original components in separate columns for audit. Do not include a retry-attempt number in the business idempotency key: retries must converge on the same destination mapping.
+The destination invoice's legacy_record_key should use the stable source_occurrence_key (or a documented deterministic encoding of it), not the versioned attempt key. If the attempt key is hashed or length-limited, hash the canonical UTF-8 representation and retain all original components separately. Do not include an attempt number in either key.
 
 ### 3.3 Destination mapping
 
@@ -77,7 +79,7 @@ Each successfully imported occurrence must have exactly one durable mapping to i
 - mapping-contract version;
 - destination content fingerprint or equivalent verification value.
 
-The database must enforce uniqueness for the full migration-version/mapping-contract-version/occurrence-identity-version/source-occurrence identity and uniqueness of the destination mapping where appropriate. Check exact constraints against the current schema before implementation.
+The database must enforce global uniqueness of source_occurrence_key in the durable occurrence mapping, plus uniqueness of destination invoice mapping. Attempt idempotency is separately unique within the full processing-contract tuple. Check exact constraints against the current schema before implementation.
 
 Do not add a unique constraint to the legacy invoice ID or serial merely to make migration easier. Multiple source occurrences may legitimately share either value.
 
@@ -395,18 +397,21 @@ Implementation should remain separately gated and be split into reviewable steps
 
 Do not combine schema, importer, app cutover, and legacy deletion in one change.
 
-## 15. Open decisions for owner review
+The repository inspection and field mapping are recorded in [LEGACY_INVOICE_MIGRATION_EXECUTION_AUDIT.md](LEGACY_INVOICE_MIGRATION_EXECUTION_AUDIT.md) and [LEGACY_INVOICE_FIELD_MAPPING_MATRIX.md](LEGACY_INVOICE_FIELD_MAPPING_MATRIX.md).
 
-The following require explicit confirmation before implementation:
-1. Whether the first production execution is strictly single-worker (recommended) or needs parallel workers.
-2. Whether a retry after a terminally aborted run resumes the same run or creates a linked new run.
-3. Which actor identity is authoritative for local migration review and acceptance, and how its trust limitations are communicated.
-4. The retention period and user-selected destination for the independent export package.
-5. Whether explicit exclusion is allowed for any occurrence class, and which roles may authorize it.
-6. The precise post-cutover recovery approach and acceptable rollback window.
-7. Whether an execution-event table is separate from attempt history or implemented as a unified append-only audit stream.
+## 15. Owner-approved design decisions
 
-No decision here authorizes code or schema changes.
+The owner approved the following D4 recommendations on 2026-11-26:
+
+1. **Initial execution concurrency:** strictly one controlled local worker. Parallel execution is out of scope until separately justified and designed.
+2. **Retry after terminal abort:** create a new run linked to the aborted run. Preserve the original run and all its attempt/event history.
+3. **Actor identity:** use the authenticated application actor where available. Document that local database actor fields are audit metadata, not tamper-proof proof of identity.
+4. **Snapshot retention:** independently export and verify the source snapshot before production import; retain it through the agreed recovery period. The exact retention duration and destination remain an operational decision before production use.
+5. **Exclusion:** allow only as an explicit authorized action with a reason and immutable audit event. Authorization policy and eligible occurrence classes must be specified before implementation.
+6. **Post-cutover recovery:** design and test forward-recovery/replay before cutover. Do not assume that restoring the old database file preserves post-cutover writes.
+7. **Audit model:** keep append-only attempt history separate from append-only operator-action events.
+
+These decisions approve the D4 design direction, not its implementation. Schema changes, importer changes, export/restore implementation, production execution, and cutover still require separate explicit approval.
 
 ---
 
