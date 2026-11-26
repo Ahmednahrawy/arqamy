@@ -416,3 +416,11 @@ These decisions approve the D4 design direction, not its implementation. Schema 
 ---
 
 **End of D4 proposal — implementation not authorized.**
+
+## 16. Owner-approved field validation rule — blank required text
+
+On 2026-11-26, the owner approved the following migration rule: an occurrence must be held for human review if the legacy invoice ID, invoice serial, customer name, or any product name is empty or whitespace-only.
+
+Preflight must emit stable, field-specific findings. The exact original values remain preserved in the immutable source snapshot. The importer must not invent replacement values, silently substitute normalized values, discard the affected fields, or treat the occurrence as ready. Any later correction must be explicit, authorized, attributable, and auditable without changing the original source evidence.
+
+This rule resolves the corresponding open question in the field-mapping matrix. Other field-mapping questions remain open. This is a design decision only; it does not authorize implementation.
