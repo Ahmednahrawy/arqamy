@@ -139,6 +139,14 @@ class LegacyPartyReviewJournalRepository {
           'Only resolved occurrences may contain a suggested party.',
         );
       }
+      if (resolution.isResolved &&
+          (resolution.expectedRole == null ||
+              resolution.partyId?.trim().isEmpty != false ||
+              resolution.partyDisplayName?.trim().isEmpty != false)) {
+        throw ArgumentError(
+          'Resolved occurrences must contain a complete suggested party identity and role.',
+        );
+      }
     }
 
     return _serialize(
