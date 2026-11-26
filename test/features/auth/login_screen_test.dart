@@ -1,6 +1,7 @@
 import 'package:arqamy/features/auth/providers/auth_provider.dart';
 import 'package:arqamy/features/auth/ui/pages/login_screen.dart';
 import 'package:arqamy/generated/l10n.dart';
+import 'package:cupertino_ui/cupertino_ui.dart' as cupertino;
 import 'package:flutter_localizations/flutter_localizations.dart'
     hide GlobalMaterialLocalizations, GlobalCupertinoLocalizations;
 import 'package:flutter_test/flutter_test.dart';
@@ -43,6 +44,7 @@ void main() {
             S.delegate,
             GlobalMaterialLocalizations.delegate,
             GlobalWidgetsLocalizations.delegate,
+            cupertino.GlobalCupertinoLocalizations.delegate,
           ],
           supportedLocales: S.delegate.supportedLocales,
           home: LoginScreen(
