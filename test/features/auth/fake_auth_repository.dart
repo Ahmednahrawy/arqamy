@@ -20,8 +20,8 @@ class FakeAuthRepository implements AuthRepository {
   AuthUser? _currentUser;
   int _nextUid = 1;
 
-  /// When set, the next sign-in, sign-up or password-reset call fails with
-  /// this code. The setting clears itself after that one call.
+  /// When set, the next sign-in, sign-up, password-reset or sign-out call
+  /// fails with this code. The setting clears itself after that one call.
   AuthFailureCode? failNextWith;
 
   /// Normalized emails passed to [sendPasswordReset], in call order.
@@ -93,6 +93,7 @@ class FakeAuthRepository implements AuthRepository {
 
   @override
   Future<void> signOut() async {
+    _throwInjectedFailure();
     _currentUser = null;
     _changes.add(null);
   }

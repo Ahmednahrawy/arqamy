@@ -1,6 +1,8 @@
 import 'package:arqamy/app/bootstrap/app_bootstrap.dart';
 import 'package:arqamy/config/routes/app_router.dart';
 import 'package:arqamy/core/providers/language.dart';
+import 'package:arqamy/features/auth/data/firebase_auth_repository.dart';
+import 'package:arqamy/features/auth/providers/auth_provider.dart';
 import 'package:arqamy/features/orderscreen/providers/invoice_provider.dart';
 import 'package:arqamy/core/providers/theme.dart';
 import 'package:arqamy/features/settingscreen/providers/invoice_setting_provider.dart';
@@ -50,8 +52,10 @@ Future<void> main() async {
       ChangeNotifierProvider.value(value: themeProvider),
       ChangeNotifierProvider.value(value: invoiceProvider),
       ChangeNotifierProvider.value(value: invoiceSettings),
-    ],
-    child: AppBootstrap(
+      ChangeNotifierProvider(
+        create: (_) => AuthProvider(FirebaseAuthRepository()),
+      ),
+    ],    child: AppBootstrap(
       invoiceProvider: invoiceProvider,
       child: MyApp(appRouter: AppRouter()),
     ),
