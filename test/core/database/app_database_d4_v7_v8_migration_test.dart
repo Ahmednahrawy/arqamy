@@ -30,6 +30,15 @@ void main() {
     await temporaryDirectory.delete(recursive: true);
   });
 
+<<<<<<< HEAD
+=======
+  test('creates the D4 journal on a fresh database', () async {
+    expect(await _readD4Tables(database), _d4Tables);
+    await _expectD4IndexesAndTriggers(database);
+    await _expectDatabaseHealthy(database);
+  });
+
+>>>>>>> stage-d4-1-v8-schema
   test('creates all five D4 tables when upgrading v7 to v8', () async {
     await _dropD4Schema(database);
     await database.customStatement(
