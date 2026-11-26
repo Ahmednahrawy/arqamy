@@ -323,3 +323,14 @@ The migration must not infer or resolve the party by automatic display-name matc
 On 2026-11-26, the owner approved that an invoice occurrence must be held for human review when its legacy `customerId` is present but no party with that ID exists in the current database.
 
 The migration must not fall back to automatic `customerName` matching, create a replacement party, or silently rewrite the source ID. Preserve the exact source evidence and emit a stable finding for the missing party reference. Release requires an explicit, authorized, attributable party-resolution decision, followed by revalidation that the selected party exists and has the required role for the invoice action immediately before import. This policy does not authorize implementation.
+
+
+## Owner-approved policy — historical customer-name discrepancy
+
+When `customerId` resolves to an existing party with the required role, but the invoice's original `customerName` differs from that party's current display name:
+
+- Preserve the exact original `customerName` as historical source evidence in the immutable raw snapshot and normalized source evidence.
+- Keep the resolved `party_id` and `party_role` as the authoritative party link; do not resolve identity from the name or replace the original name with the current party display name.
+- Treat the discrepancy as a non-blocking audit finding. Do not hold or exclude the occurrence solely because these names differ.
+- Do not mutate the party's display name or the invoice's source name to make them match.
+- This is a design policy only; it does not authorize implementation or migration execution.
