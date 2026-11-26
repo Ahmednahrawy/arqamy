@@ -240,7 +240,7 @@ The proposed execution journal should record the snapshot identity, migration ve
 - reconciled;
 - accepted.
 
-The final state model and schema are subject to a separate schema proposal and approval.
+The detailed state machine, claim/lease behavior, occurrence mapping, attempt history, crash recovery, quarantine, reconciliation, and acceptance contract are proposed in [LEGACY_INVOICE_MIGRATION_EXECUTION_JOURNAL_DESIGN.md](LEGACY_INVOICE_MIGRATION_EXECUTION_JOURNAL_DESIGN.md). That document is also design-only; the final state model and schema require separate approval.
 
 ### Transaction boundary
 
