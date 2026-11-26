@@ -198,3 +198,12 @@ This policy applies to the migration validation boundary; it does not authorize 
 Hold an invoice occurrence if `paid` is negative, `paid` exceeds the absolute invoice total, or `rest` does not equal the absolute invoice total minus `paid`. Preserve the original `totalCost`, `paid`, and `rest` values exactly in the immutable source snapshot and retain their original values as historical aggregates. Do not clamp, cap, recalculate, overwrite, or otherwise silently correct any of them. Emit stable, field-specific or relationship-specific findings identifying the failed condition. Any later correction, if supported, must be explicit, authorized, attributable, and auditable without mutating original source evidence.
 
 These values remain historical invoice aggregates only. They do not establish physical cash movement and must not generate cash events, payments, allocations, refunds, reversals, suspense entries, or accounting postings. This is a policy decision only; it does not authorize implementation.
+
+
+## 17. Owner decision — zero-value invoice totals
+
+**Decision approved by the owner on 2026-11-26: hold the entire invoice occurrence for human review when `totalCost` is zero.**
+
+Do not assume that a zero-total invoice represents a valid free transaction, and do not replace the value, infer a non-zero amount, or otherwise auto-correct it. Preserve the exact original total and all product-line values in the immutable source snapshot. Emit a stable validation finding identifying the zero total. Any later disposition must be explicit, authorized, attributable, and auditable without mutating original source evidence.
+
+This is a defensive migration validation policy; it does not assert that the current UI permits zero-value invoices. It is design-only and does not authorize implementation.
