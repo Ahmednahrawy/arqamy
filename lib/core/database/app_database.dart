@@ -961,10 +961,15 @@ class AppDatabase extends _$AppDatabase {
       }
 
       if (from >= 2 && from < 6) {
-        await m.createTable(legacyMigrationRuns);
-        await m.createTable(legacyMigrationOccurrences);
-        await m.createTable(legacyPartyReviewDecisions);
-        await _createLegacyPartyReviewJournalTriggers();
+        // Drift does not wrap migration callbacks in transactions by default.
+        // Keep the v6 journal schema and its triggers atomic so a failed
+        // upgrade can be retried safely without leaving a partial schema.
+        await transaction(() async {
+          await m.createTable(legacyMigrationRuns);
+          await m.createTable(legacyMigrationOccurrences);
+          await m.createTable(legacyPartyReviewDecisions);
+          await _createLegacyPartyReviewJournalTriggers();
+        });
       }
     },
   );
