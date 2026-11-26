@@ -526,6 +526,9 @@ void main() {
           'refund_allocation_reversals',
           'suspense_entries',
           'suspense_resolutions',
+          'legacy_migration_runs',
+          'legacy_migration_occurrences',
+          'legacy_party_review_decisions',
         ]) ...['${table}_immutable_delete', '${table}_immutable_update'],
       ]),
     );
