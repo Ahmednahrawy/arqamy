@@ -128,18 +128,24 @@ class LegacyPartyReviewDecisionResult {
   final bool wasIdempotentReplay;
 }
 
+/// Mutually exclusive latest-state counts for one review run.
 class LegacyPartyReviewJournalSummary {
   const LegacyPartyReviewJournalSummary({
     required this.totalOccurrences,
     required this.approvedCount,
     required this.heldCount,
+    required this.staleCount,
     required this.reviewedCount,
     required this.unreviewedCount,
   });
 
   final int totalOccurrences;
+  /// Latest approval whose party still exists with the required role.
   final int approvedCount;
+  /// Latest decision explicitly says to keep the occurrence held.
   final int heldCount;
+  /// Latest approval is no longer valid because the party or role is missing.
+  final int staleCount;
   final int reviewedCount;
   final int unreviewedCount;
 }
