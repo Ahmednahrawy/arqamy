@@ -1,5 +1,6 @@
 import 'package:arqamy/features/settingscreen/ui/pages/privacy_screen.dart';
 import 'package:arqamy/generated/l10n.dart';
+import 'package:cupertino_ui/cupertino_ui.dart' show GlobalCupertinoLocalizations;
 import 'package:flutter_localizations/flutter_localizations.dart'
     hide GlobalMaterialLocalizations, GlobalCupertinoLocalizations;
 import 'package:flutter_test/flutter_test.dart';
@@ -18,6 +19,7 @@ void main() {
           S.delegate,
           GlobalMaterialLocalizations.delegate,
           GlobalWidgetsLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
         ],
         supportedLocales: S.delegate.supportedLocales,
         home: const PrivacyScreen(),
