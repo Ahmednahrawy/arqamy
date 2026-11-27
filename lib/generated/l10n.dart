@@ -385,10 +385,10 @@ class S {
     return Intl.message('Privacy', name: 'privacy', desc: '', args: []);
   }
 
-  /// `Arqamy keeps your invoices and customer details on this device. We do not collect or share your data.`
+  /// `Arqamy keeps your invoices and customer details on this device. We do not collect or share them.`
   String get privacy_intro {
     return Intl.message(
-      'Arqamy keeps your invoices and customer details on this device. We do not collect or share your data.',
+      'Arqamy keeps your invoices and customer details on this device. We do not collect or share them.',
       name: 'privacy_intro',
       desc: '',
       args: [],
@@ -450,6 +450,26 @@ class S {
     return Intl.message(
       'You can back up or restore your invoices from Settings at any time, and clear app data through your device settings.',
       name: 'privacy_choices_body',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Optional account`
+  String get privacy_account_title {
+    return Intl.message(
+      'Optional account',
+      name: 'privacy_account_title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `You can use Arqamy without an account. If you create one, your email address and sign-in details are stored by Google's Firebase Authentication so you can sign in and reset your password. Your invoices and customer details are not uploaded.`
+  String get privacy_account_body {
+    return Intl.message(
+      'You can use Arqamy without an account. If you create one, your email address and sign-in details are stored by Google\'s Firebase Authentication so you can sign in and reset your password. Your invoices and customer details are not uploaded.',
+      name: 'privacy_account_body',
       desc: '',
       args: [],
     );

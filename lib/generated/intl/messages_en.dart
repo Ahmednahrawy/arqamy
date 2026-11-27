@@ -539,6 +539,12 @@ class MessageLookup extends MessageLookupByLibrary {
       "Please enter the price",
     ),
     "privacy": MessageLookupByLibrary.simpleMessage("Privacy"),
+    "privacy_account_body": MessageLookupByLibrary.simpleMessage(
+      "You can use Arqamy without an account. If you create one, your email address and sign-in details are stored by Google\'s Firebase Authentication so you can sign in and reset your password. Your invoices and customer details are not uploaded.",
+    ),
+    "privacy_account_title": MessageLookupByLibrary.simpleMessage(
+      "Optional account",
+    ),
     "privacy_choices_body": MessageLookupByLibrary.simpleMessage(
       "You can back up or restore your invoices from Settings at any time, and clear app data through your device settings.",
     ),
@@ -552,7 +558,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Data stored on your device",
     ),
     "privacy_intro": MessageLookupByLibrary.simpleMessage(
-      "Arqamy keeps your invoices and customer details on this device. We do not collect or share your data.",
+      "Arqamy keeps your invoices and customer details on this device. We do not collect or share them.",
     ),
     "privacy_policy": MessageLookupByLibrary.simpleMessage("Privacy Policy"),
     "privacy_usage_body": MessageLookupByLibrary.simpleMessage(

@@ -1,4 +1,7 @@
 import 'package:arqamy/core/helpers/invoice_backup.dart';
+import 'package:arqamy/features/auth/providers/auth_provider.dart';
+import 'package:arqamy/features/auth/ui/auth_flow.dart';
+import 'package:arqamy/features/auth/ui/pages/account_screen.dart';
 import 'package:arqamy/features/customerscreen/data/customer_linking_service.dart';
 import 'package:arqamy/core/providers/theme.dart';
 import 'package:arqamy/core/services/invoice_backup_service.dart';
@@ -276,10 +279,21 @@ class SettingsScreen extends StatelessWidget {
     }
   }
 
+  Future<void> _openProfile(BuildContext context) async {
+    final auth = context.read<AuthProvider>();
+    if (auth.isSignedIn) {
+      await Navigator.of(
+        context,
+      ).push(MaterialPageRoute<void>(builder: (_) => const AccountScreen()));
+      return;
+    }
+    await openAuthFlow(context);
+  }
+
   @override
   Widget build(BuildContext context) {
     final themeProvider = Provider.of<ThemeProvider>(context);
-
+    final auth = context.watch<AuthProvider>();
     return Scaffold(
       appBar: AppBar(title: Text(S.of(context).settings)),
       body: ListView(
@@ -287,9 +301,10 @@ class SettingsScreen extends StatelessWidget {
           ListTile(
             leading: const Icon(Icons.person),
             title: Text(S.of(context).profile),
-            onTap: () {
-              // Handle account tap
-            },
+            subtitle: auth.isSignedIn
+                ? Text(auth.user?.email ?? '', textDirection: TextDirection.ltr)
+                : null,
+            onTap: () => _openProfile(context),
           ),
           Padding(
             padding: const EdgeInsets.symmetric(
@@ -352,9 +367,7 @@ class SettingsScreen extends StatelessWidget {
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(
-                  builder: (_) => const PrivacyScreen(),
-                ),
+                MaterialPageRoute(builder: (_) => const PrivacyScreen()),
               );
             },
           ),
@@ -364,9 +377,7 @@ class SettingsScreen extends StatelessWidget {
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(
-                  builder: (_) => const HelpScreen(),
-                ),
+                MaterialPageRoute(builder: (_) => const HelpScreen()),
               );
             },
           ),
@@ -408,7 +419,7 @@ class SettingsScreen extends StatelessWidget {
           ListTile(
             leading: const Icon(Icons.logout),
             title: Text(S.of(context).logout),
-            onTap: () {},
+            onTap: () => confirmAndSignOut(context),
           ),
         ],
       ),

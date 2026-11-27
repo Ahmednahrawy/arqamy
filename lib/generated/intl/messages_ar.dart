@@ -521,6 +521,12 @@ class MessageLookup extends MessageLookupByLibrary {
     "price_per_kg": MessageLookupByLibrary.simpleMessage("السعر لكل كجم"),
     "price_required": MessageLookupByLibrary.simpleMessage("رجاء أدخل السعر"),
     "privacy": MessageLookupByLibrary.simpleMessage("الخصوصية"),
+    "privacy_account_body": MessageLookupByLibrary.simpleMessage(
+      "يمكنك استخدام أرقامي بدون حساب. إذا أنشأت حسابًا، يتم حفظ بريدك الإلكتروني وبيانات تسجيل الدخول لدى خدمة Firebase Authentication من Google لتتمكن من تسجيل الدخول وإعادة تعيين كلمة المرور. لا يتم رفع فواتيرك أو بيانات عملائك.",
+    ),
+    "privacy_account_title": MessageLookupByLibrary.simpleMessage(
+      "حساب اختياري",
+    ),
     "privacy_choices_body": MessageLookupByLibrary.simpleMessage(
       "يمكنك عمل نسخة احتياطية من فواتيرك أو استعادتها من الإعدادات في أي وقت، وحذف بيانات التطبيق من إعدادات الجهاز.",
     ),
@@ -532,7 +538,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "البيانات المحفوظة على جهازك",
     ),
     "privacy_intro": MessageLookupByLibrary.simpleMessage(
-      "يحفظ تطبيق أرقامي فواتيرك وبيانات عملائك على جهازك. لا نقوم بجمع بياناتك أو مشاركتها.",
+      "يحفظ تطبيق أرقامي فواتيرك وبيانات عملائك على جهازك. لا نقوم بجمعها أو مشاركتها.",
     ),
     "privacy_policy": MessageLookupByLibrary.simpleMessage("سياسة الخصوصية"),
     "privacy_usage_body": MessageLookupByLibrary.simpleMessage(

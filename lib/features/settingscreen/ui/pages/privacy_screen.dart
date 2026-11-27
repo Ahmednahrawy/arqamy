@@ -61,6 +61,12 @@ class PrivacyScreen extends StatelessWidget {
               title: strings.privacy_choices_title,
               body: strings.privacy_choices_body,
             ),
+            const SizedBox(height: 12),
+            InfoCard(
+              icon: Icons.account_circle_outlined,
+              title: strings.privacy_account_title,
+              body: strings.privacy_account_body,
+            ),
           ],
         ),
       ),
