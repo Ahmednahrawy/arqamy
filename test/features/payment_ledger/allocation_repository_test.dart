@@ -11,6 +11,8 @@ import 'package:arqamy/features/payment_ledger/data/ledger_foundation_repository
 import 'package:drift/drift.dart';
 import 'package:flutter_test/flutter_test.dart';
 
+import '../../support/second_database_handle.dart';
+
 void main() {
   late Directory temp;
   late String path;
@@ -542,7 +544,7 @@ void main() {
     final created = await allocations.createAllocation(
       createRequest(amount: 1000, key: 'concurrent-reversal-allocation'),
     );
-    secondDatabase = await AppDatabase.open(path: path);
+    secondDatabase = await openSecondDatabaseHandle(path);
     final secondRepository = AllocationRepository(secondDatabase!);
     final outcomes = await Future.wait([
       allocations.reverseAllocation(
@@ -726,7 +728,7 @@ void main() {
   );
 
   test('separate database handles cannot over-allocate concurrently', () async {
-    secondDatabase = await AppDatabase.open(path: path);
+    secondDatabase = await openSecondDatabaseHandle(path);
     final secondRepository = AllocationRepository(secondDatabase!);
     final outcomes = await Future.wait<Object>([
       _capture(
@@ -760,7 +762,7 @@ void main() {
     'separate database handles cannot over-allocate payment availability',
     () async {
       await addInvoice(id: 'payment-race-invoice', totalMinor: 20000);
-      secondDatabase = await AppDatabase.open(path: path);
+      secondDatabase = await openSecondDatabaseHandle(path);
       final secondRepository = AllocationRepository(secondDatabase!);
       final outcomes = await Future.wait<Object>([
         _capture(

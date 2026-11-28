@@ -7,6 +7,7 @@ import 'package:arqamy/features/payment_ledger/data/ledger_foundation.dart';
 import 'package:arqamy/features/payment_ledger/data/ledger_foundation_repository.dart';
 import 'package:drift/drift.dart';
 import 'package:flutter_test/flutter_test.dart';
+import '../../support/second_database_handle.dart';
 
 void main() {
   late Directory temporaryDirectory;
@@ -120,7 +121,7 @@ void main() {
         physicalAmount: 10000,
         key: 'separate-handle-event',
       );
-      secondaryDatabase = await AppDatabase.open(path: databasePath);
+      secondaryDatabase = await openSecondDatabaseHandle(databasePath);
       final secondRepository = CashEventRepository(secondaryDatabase!);
       final firstRequest = _correctionRequest(
         payment,
@@ -181,7 +182,7 @@ void main() {
           idempotencyKey: 'separate-handle-suspense-create',
         ),
       );
-      secondaryDatabase = await AppDatabase.open(path: databasePath);
+      secondaryDatabase = await openSecondDatabaseHandle(databasePath);
       final secondRepository = CashEventRepository(secondaryDatabase!);
       final outcomes = await Future.wait<Object>([
         _captureOutcome(
@@ -222,7 +223,7 @@ void main() {
   test(
     'separate handles return one logical result for concurrent idempotent payment requests',
     () async {
-      secondaryDatabase = await AppDatabase.open(path: databasePath);
+      secondaryDatabase = await openSecondDatabaseHandle(databasePath);
       final secondRepository = CashEventRepository(secondaryDatabase!);
       final request = _paymentRequest(
         accountId: accountId,

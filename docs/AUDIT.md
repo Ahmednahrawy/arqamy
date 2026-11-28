@@ -1,508 +1,152 @@
 # Arqamy — Project Audit and Remediation Status
 
-| | |
-|---|---|
-| **Repository** | `Ahmednahrawy/arqamy` (public) |
-| **Current HEAD reviewed** | `8ab55c7d1526245aadde9c87e078be65ca503d58` — latest verified CI commit (2026-11-25) |
-| **Original audit baseline** | `fa56a7c` — 2026-11-23; detailed findings below originated from this snapshot |
-| **App version** | `1.0.4+22` (`pubspec.yaml`) |
-| **Last status review** | 2026-11-25 |
-| **Review scope** | Targeted revalidation of startup loading, invoice mutation guards, customer linking, Drift call sites, Android release-signing validation, and GitHub Actions CI. This is not yet a complete re-run of every original audit check. |
-| **Documentation change** | Added the current-status section below; the original detailed audit is retained as a dated baseline pending full re-audit. |
+|                             |                                                                                                                                                       |
+| --------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Repository**              | `Ahmednahrawy/arqamy` (public)                                                                                                                        |
+| **HEAD reviewed**           | `16e049ec23f5f056740d66023d3d5f682c3d5d7c` — `feat(orderscreen): implement invoice discount functionality` (2026-11-26)                               |
+| **Original audit baseline** | `fa56a7c` (2026-11-23). The full original findings text is preserved in Git history at blob `6139c60a8acdb0c8a2ff0cb2d6d80d720d25d738`.               |
+| **Previous status refresh** | 2026-11-25, against `8ab55c7`                                                                                                                         |
+| **App version**             | `1.0.4+22` (`pubspec.yaml`)                                                                                                                           |
+| **Review type**             | Static re-audit of the code and docs on `main` through the GitHub repository. Nothing was built, run or tested for this review.                       |
+| **Documentation change**    | Replaces the 2026-11-23 baseline text with a finding-by-finding status against HEAD. Original finding IDs are kept so older references still resolve. |
 
 ---
 
-## Current status — 2026-11-25
+## 1. Summary
 
-This section supersedes older statements in the original audit wherever the same issue is discussed below. The detailed findings after this section remain the 2026-11-23 baseline unless explicitly revalidated here.
+The two critical findings from the baseline are no longer open in code:
 
-### Verified progress on current `main`
+- **P0-1 (invoice history destroyed on first save after cold start)** is mitigated. Every mutation loads storage first and the app loads invoices before showing the main UI.
+- **P0-2 (release-signing configuration)** is hardened in code. The **key-compromise incident itself is not closed** (see §4).
 
-| Area | Current status | Evidence / remaining boundary |
-|---|---|---|
-| Invoice cold-start overwrite | **Mitigated** | `InvoiceProvider` calls `_ensureInvoicesLoaded()` inside the serialized mutation path before save, update, delete, restore, and customer-ID assignment. |
-| Application startup | **Implemented** | `AppBootstrap` loads saved invoices before exposing `MyApp`; it shows a loading state and a retry screen if storage loading fails. |
-| Startup regression coverage | **Added** | `test/app_bootstrap_test.dart` covers loading existing invoices before the app appears and retry after a read failure. Provider tests also cover persisted invoice operations. |
-| CI analysis and tests | **Passing on reviewed HEAD** | GitHub Actions run [45680408341](https://github.com/Ahmednahrawy/arqamy/actions/runs/45680408341) completed successfully for `8ab55c7`; both `flutter analyze` and `flutter test` passed. |
-| Customer identity | **Partially implemented** | Stable optional `customerId`, a Drift-backed customer registry, a migration planner, and an explicit Settings workflow for automatic unambiguous linking exist. Ambiguous name groups and unnamed invoices remain unresolved by design; normal invoice creation is not yet shown to assign a customer ID. |
-| Drift / ledger | **In active, limited use — not the main invoice store** | `CustomerLinkingService` and `LedgerImportService` open `AppDatabase` for customer linking and ledger import, then close it. The operational invoice provider still reads/writes the `saved_invoices` SharedPreferences key. Do not describe Drift as entirely dead or already adopted as the application-wide source of truth. |
-| Android release signing | **Configuration hardened; incident not closed** | `android/app/build.gradle.kts` requires complete signing properties and an existing keystore for release tasks; it does not fall back to debug signing. The exposed old upload key remains compromised. Replacement-key acceptance by Google Play and historical Git cleanup remain pending in `docs/SECURITY_REMEDIATION_STATUS.md`. |
-| CI workflow | **Partially implemented** | `.github/workflows/ci.yml` runs on pushes to `main` and pull requests, with `flutter pub get`, `flutter analyze`, and `flutter test`. Formatting enforcement and Android/Web build validation are not present in this workflow. |
+The main remaining risks are now:
 
-### Remaining high-priority risks confirmed in the targeted review
+1. **The production invoice store is still one unversioned JSON blob** in SharedPreferences (`saved_invoices`) with no per-record recovery. Since the cold-start fix, a single malformed record makes loading fail closed. That prevents data loss, but it also leaves the startup retry screen as the only outcome, with no way to skip or repair the bad record (P1-1, P1-2).
+2. **Invoice input validation is incomplete.** Negative or oversize business values are still possible, and the `.abs()` in `calculateOutstandingBalance` is still there (P1-3).
+3. **Customers are still keyed by name for normal invoice creation.** New invoices never receive a `customerId` (P1-4).
+4. **Release and privacy hygiene** items remain open: `AD_ID` permission, Android auto-backup, the iOS identity, unused dependencies, Firebase initialized but unused.
+5. **CI runs analyze and test only.** No format check, no Android or Web build.
 
-1. **Legacy invoice storage remains the production source of truth.** The invoice list is still serialized as one JSON array under SharedPreferences key `saved_invoices`; there is no versioned envelope, per-record recovery strategy, or completed migration to Drift.
-2. **Invoice JSON parsing remains permissive only by assumption, not by validation.** `Invoice.fromJson` still assigns dynamic JSON values directly to typed fields and maps product records without defensive field-level validation. A malformed record can still fail the whole load.
-3. **Drift adoption is incomplete.** Drift now supports customer registry/linking and ledger import workflows, but ordinary invoice persistence and the broader payment workflow have not been switched to Drift. A migration design, reconciliation rules, rollback, and acceptance criteria are still required before changing the production source of truth.
-4. **Signing-key incident remains open.** The old upload key and password material must continue to be treated as compromised. Do not use the old key. Do not upload with the replacement key until Google Play confirms it is active. Do not rewrite Git history or delete refs without explicit approval.
-5. **The startup error/retry screen is currently hardcoded in English.** It is not yet wired to the app's AR/EN localization resources.
+The Drift ledger is no longer dead code, but it is also not the invoice store. Its migration is designed and partly implemented (see §5).
 
-### Audit limitations
+### Status counts (23 tracked findings: 2 P0, 7 P1, 14 P2)
 
-The original code-size counts, test count, coverage percentages, dependency-outdated results, branch inventory, and detailed findings below describe the `fa56a7c` audit snapshot. They have **not** all been recomputed against `8ab55c7`. The latest CI result proves that analysis and tests passed on that commit; it does not prove that coverage, platform builds, dependency status, or every historical finding has been re-audited.
+| Status                               | IDs                                                          |
+| ------------------------------------ | ------------------------------------------------------------ |
+| Resolved in code (2)                 | P1-7, P2-7 (one cosmetic leftover)                           |
+| Mitigated, residual work remains (4) | P0-1, P0-2 (config only; incident open), P2-3, P2-10         |
+| Partially addressed (7)              | P1-3, P1-6, P2-4, P2-8, P2-9, P2-11, P2-14                   |
+| Open, unchanged (10)                 | P1-1, P1-2, P1-4, P1-5, P2-1, P2-2, P2-5, P2-6, P2-12, P2-13 |
 
-The next planned engineering task after this status refresh is the **detailed Drift adoption and legacy invoice migration design**, including backup, data mapping, duplicate handling, financial reconciliation, retry/idempotency, rollback, and explicit migration acceptance criteria. No migration implementation is authorized by this audit update.
-
----
-
-## 1. Original executive summary (baseline at `fa56a7c`)
-
-The app is a working Arabic-first invoice/POS tool with a genuinely good foundation in places: a correct fixed-point `Money` type with half-away-from-zero rounding, a versioned and validated backup format, a mutation lock around persistence, full ARB-based localization, and 211 passing tests.
-
-The problems are concentrated in two places: **the persistence path** and **release/security hygiene**.
-
-1. **Critical data loss.** Invoices live only in memory until a screen loads them. `OrderScreen` is the start route, it never calls `loadInvoices()`, and `saveInvoice()` writes the whole in-memory list over storage. A user who cold-starts the app and saves an invoice **silently destroys all previously saved invoices**. Reproduced with a failing test (see §3, P0-1).
-2. **Critical signing-key compromise.** The release keystore `upload-keystore.jks` and a plaintext file containing its store password were committed to a **public** GitHub repository and remain in history. I verified the keystore opens with the committed password and contains a usable `PrivateKeyEntry` (alias `upload`, valid to 2052). Anyone who clones the repo can sign an APK for `com.nahro.arqamy` that is accepted as an update.
-
-Around those sit structural issues: a single unversioned JSON blob in `SharedPreferences` with no validation or recovery, ~4,000 LOC of Drift ledger code that production never instantiates, `customerId` that is preserved but never assigned, and a CI pipeline that only builds an unsigned iOS IPA on manual dispatch.
-
-### Scorecard
-
-| Area | Grade | Note |
-|---|---|---|
-| Data integrity | **F** | P0 overwrite bug; no transactional storage; no schema version on the main store |
-| Security & privacy | **F** | Signing key + password public; unencrypted PII; `AD_ID` permission without ads |
-| Architecture | **D** | Two parallel persistence designs, one of them dead; no app-level init |
-| Business logic | **C-** | Money type is good; inputs and invoice numbering are not validated |
-| UX / i18n | **B-** | Solid RTL and localization; several no-op settings entries; debug prints |
-| Testing | **C+** | 211 green tests, 73.6% line coverage — but they miss the startup path entirely |
-| Build / CI / release | **F** | No analyze/test CI, debug-signing fallback, broken iOS identity |
-| Maintainability | **C** | Readable code, but duplicated constants, dead modules, stale branches |
+---|---|
+| Resolved in code | P1-7, P2-7 (one cosmetic leftover) |
+| Mitigated, residual work remains | P0-1, P0-2 (config only; incident open), P2-3, P2-10 |
+| Partially addressed | P1-3, P1-6, P2-4, P2-8, P2-9, P2-11 |
+| Open, unchanged | P1-1, P1-2, P1-4, P1-5, P2-1, P2-2, P2-5, P2-6, P2-12, P2-13, P2-14 |
 
 ---
 
-## 2. What was verified
+## 2. Finding status against HEAD
 
-| Check | Result |
-|---|---|
-| `flutter analyze --no-fatal-infos` | 0 errors, 0 warnings, 7 `avoid_print` infos (all in `lib/core/tool/customer_audit.dart`) |
-| `flutter test` | **211 tests, all passed** (~66 s) |
-| `flutter test --coverage` | **73.6%** of hand-written `lib/` lines (4,024 / 5,471); 47.1% if generated files are included |
-| `flutter pub outdated` | Direct deps current; only `cupertino_icons` has a newer major (2.0.0) |
-| Git | 138 commits; `main` + 4 stale branches (`ahmednahrawy-fix-main-2`, `-history-loading`, `-performance-optimization`, `releases`); single tag `v1.0` |
-| Remote | Public GitHub repo `github.com/Ahmednahrawy/arqamy` (confirmed via API) |
+Legend: **Resolved** = fixed as described · **Mitigated** = main risk removed, residual work noted · **Partial** = some of the fix exists · **Open** = no change found.
 
-Coverage is strong in the core (provider 89.6%, product form 89.6%, order screen 77.9%) and weak exactly where configuration and persistence bugs live:
-
-| File | Coverage |
-|---|---|
-| `lib/features/settingscreen/ui/pages/product_management.dart` | 0.7% |
-| `lib/features/settingscreen/ui/pages/settings_screen.dart` | 0.8% |
-| `lib/features/settingscreen/ui/pages/invoice_setting.dart` | 1.0% |
-| `lib/features/drawer/ui/side_nav.dart` | 1.0% |
-| `lib/core/database/app_database.dart` | 32.7% |
-
----
-
-## 3. Findings
-
-Severity: **P0** = data loss or security compromise, fix now · **P1** = serious correctness/release risk · **P2** = quality, UX, maintainability.
-
-### P0-1 — Invoice history is destroyed on the first save after a cold start
-
-**Where:** `lib/main.dart:42`, `lib/features/orderscreen/ui/pages/order_screen.dart:55-57` and `:147`, `lib/features/orderscreen/providers/invoice_provider.dart:161-175`, `:204-241`
-
-**What happens**
-
-`InvoiceProvider` starts with `_invoices = []`. The only production callers of `loadInvoices()` are `CustomerScreen.initState` (`customer_screen.dart:52`), the restore flow (`settings_screen.dart:43`) and `InvoiceBackupService.shareBackup` (`invoice_backup_service.dart:22`). The app's start route is `OrderScreen` (`my_app.dart:52`), whose `initState` calls only `prepareDraft()`.
-
-`saveInvoice()` then does:
-
-```dart
-final updatedInvoices = List<Invoice>.of(_invoices); // ← empty on a cold start
-...
-await _saveInvoicesToStorage(updatedInvoices);       // ← overwrites the whole store
-```
-
-So: launch app → add products → Save. The new invoice is written and **every previously saved invoice is gone**. The bug only hides if the user happened to open the Customers screen first in that session.
-
-**Evidence.** I reproduced it with a temporary test (since removed) that seeds `saved_invoices` with one invoice, constructs a fresh `InvoiceProvider` exactly as `main()` does, and saves a second invoice:
-
-```
-stored invoice ids after first save: [new]
-Expected: contains all of ['old', 'new']
-  Actual: ['new']
-```
-
-The existing suite does not catch this because `test/invoice_provider_test.dart` always saves from a provider that was never expected to have prior storage.
-
-**Impact.** Total loss of customer history, balances and invoice numbering for the primary flow. This is the single most important defect in the project.
-
-**Fix (do all three):**
-
-1. Make loading implicit and mandatory. Add to `InvoiceProvider`:
-   ```dart
-   bool _loaded = false;
-   Future<void> _ensureLoaded() async {
-     if (_loaded) return;
-     await loadInvoices();
-   }
-   ```
-   and `await _ensureLoaded()` inside `_withInvoiceMutationLock` before every mutation (`saveInvoice`, `updateInvoice`, `deleteInvoice`, `restoreBackup`). This fixes every call site at once, including future ones.
-2. Make silent overwrite impossible. In `_saveInvoicesToStorage`, if `!_loaded` throw `StateError('refusing to write before invoices are loaded')`. Fail loudly rather than lose data.
-3. Add a regression test that seeds `SharedPreferences` with an existing invoice, constructs a fresh provider, saves, and asserts both IDs survive. Keep the seed/act/assert shape of the reproduction above.
-
-Belt-and-braces: also call `loadInvoices()` during startup (see P1-7), and keep a copy of the previous blob under a `saved_invoices_backup` key before each write so a bad write is recoverable.
+| ID        | Original finding                                                    | Status                                 | Evidence at HEAD                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
+| --------- | ------------------------------------------------------------------- | -------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| **P0-1**  | Invoice history destroyed on first save after cold start            | **Mitigated**                          | `InvoiceProvider` calls `_ensureInvoicesLoaded()` inside `_withInvoiceMutationLock` before `saveInvoice`, `updateInvoice`, `deleteInvoice`, `restoreBackup` and `assignCustomerIds`. `AppBootstrap` loads invoices before `MyApp` is shown (`lib/main.dart`). **Residual:** `_saveInvoicesToStorage` itself has no `_invoicesLoaded` guard (safety depends on every caller going through `_ensureInvoicesLoaded`), and there is no previous-blob copy before each write. |
+| **P0-2**  | Release signing key and password public                             | **Mitigated (code) / Open (incident)** | `android/app/build.gradle.kts` no longer falls back to debug signing; it requires `storeFile`, `storePassword`, `keyAlias`, `keyPassword`, an existing keystore, and fails `assembleRelease` and `bundleRelease` otherwise. `storeFile` may be relative or absolute. Key rotation confirmation and history purge remain pending; see `docs/SECURITY_REMEDIATION_STATUS.md`.                                                                                              |
+| **P1-1**  | Persistence is one unversioned JSON blob, no validation or recovery | **Open**                               | Storage is still a single `saved_invoices` string. `_loadInvoicesFromStorage` maps every entry with `Invoice.fromJson`; one failure throws and fails the whole load. No version envelope, no per-record skip, no previous-blob copy. **Changed risk:** the load failure now blocks startup behind a retry screen instead of silently overwriting data.                                                                                                                   |
+| **P1-2**  | `Invoice.fromJson` trusts input                                     | **Open**                               | `lib/features/orderscreen/data/models/invoice.dart`: `id`, `customerName`, `totalCost`, `paid`, `rest`, dates, serial, product fields are still assigned straight from dynamic JSON. Only the newer optional fields (`subtotalCost`, `discount`) are parsed defensively.                                                                                                                                                                                                 |
+| **P1-3**  | Invalid amounts and quantities accepted                             | **Partial**                            | `product_input_form.dart` now rejects a line whose `netWeight * price` cannot be represented as `Money`, and `Money` rejects NaN and huge values. Still open: validators only check that the text parses, so negative weight, price and package values are not rejected; `calculateOutstandingBalance` still applies `.abs()` to the total; paid is not compared with the total. Discount input has its own validation (percent range, cannot exceed subtotal).          |
+| **P1-4**  | Customer identity never assigned                                    | **Open for normal use**                | `Orderscreen._buildInvoice` still does not set `customerId`. The model, `withCustomerId`, `assignCustomerIds`, the Drift customer registry and the Settings "Link customers" workflow exist, but new invoices are still created unlinked.                                                                                                                                                                                                                                |
+| **P1-5**  | iOS target cannot ship                                              | **Open**                               | `ios/Runner/Info.plist` still has `CFBundleDisplayName` "My Hand", `CFBundleName` "my_hand", landscape orientations, and no `NSPhotoLibraryUsageDescription`. (Bundle ID, deployment target and privacy manifest were not re-checked.)                                                                                                                                                                                                                                   |
+| **P1-6**  | ~4,000 LOC of ledger code dead in production                        | **Partial / changed**                  | The ledger is used by `CustomerLinkingService` and `LedgerImportService`, reached from Settings; the ledger import and customer-link tiles are shown with debug options (`showDebugOptions: kDebugMode`). It is still not the invoice store, and the invoice provider still reads and writes SharedPreferences. The decision to adopt Drift is made and documented (`docs/DEVELOPMENT_PLAN.md`, `docs/DRIFT_MIGRATION_DESIGN.md`); the migration is not complete (§5).   |
+| **P1-7**  | No app-level initialization phase                                   | **Resolved**                           | `AppBootstrap` wraps `MyApp`, loads invoices first, and shows a loading state and retry screen.                                                                                                                                                                                                                                                                                                                                                                          |
+| **P2-1**  | Invoice serials can collide                                         | **Open**                               | `_generateInvoiceSerial()` in `order_screen.dart` is still second-precision local time with no uniqueness check.                                                                                                                                                                                                                                                                                                                                                         |
+| **P2-2**  | Invoice date cannot be set at creation                              | **Open**                               | `selectedDate` is still `DateTime.now()` at widget construction; there is no date picker. Dates are still stored as formatted strings (`formattedDate`, `formattedTime`).                                                                                                                                                                                                                                                                                                |
+| **P2-3**  | Debug prints and listener leak                                      | **Mitigated**                          | Remaining `print(...)` calls found in `lib/` are guarded by `kDebugMode`. A `debugPrint('Selected Product…')` debug line remains in `product_input_form.dart`. **Not re-verified:** the focus listener registered inside `build` in `customer_name.dart`.                                                                                                                                                                                                                |
+| **P2-4**  | Non-functional settings entries                                     | **Partial**                            | Privacy and Help now open screens. Profile, Notifications and Logout still have empty `onTap` handlers (`settings_screen.dart`).                                                                                                                                                                                                                                                                                                                                         |
+| **P2-5**  | `AD_ID` permission without ads                                      | **Open**                               | `com.google.android.gms.permission.AD_ID` is still in `AndroidManifest.xml`.                                                                                                                                                                                                                                                                                                                                                                                             |
+| **P2-6**  | PII unencrypted and auto-backed up                                  | **Open**                               | No `android:allowBackup` setting in the manifest; invoice data remains plaintext in SharedPreferences; backups are plaintext JSON.                                                                                                                                                                                                                                                                                                                                       |
+| **P2-7**  | Fragile release build configuration                                 | **Resolved** (cosmetic leftover)       | Debug-signing fallback removed; keystore path no longer hardcoded in Gradle. The template `TODO: Specify your own unique Application ID` comment is still in `build.gradle.kts`.                                                                                                                                                                                                                                                                                         |
+| **P2-8**  | CI does not test or build                                           | **Partial**                            | `.github/workflows/ci.yml` now runs on pushes to `main` and on pull requests with `flutter analyze` and `flutter test` (Flutter 3.50.1, concurrency group, read-only permissions). Still missing: format check, Android build, Web build. `dart.yml` (manual iOS build) is unchanged, uses `actions/checkout@v3`, and still overwrites release tag `v1.0`.                                                                                                               |
+| **P2-9**  | Tests miss the startup path                                         | **Partial**                            | Startup and retry tests exist (`test/app_bootstrap_test.dart`) and provider tests were updated. Current test count was 362 at the D3.2 baseline per `docs/finished_tasks.md`; coverage was **not** recomputed.                                                                                                                                                                                                                                                           |
+| **P2-10** | Duplicated canonical values and helpers                             | **Mitigated**                          | `InvoiceActionL10n` still carries a second copy of the stored strings, but `test/invoice_action_test.dart` now asserts the constants and list match `InvoiceAction`. **Correction to the baseline:** `lib/core/helpers/helper_date_price.dart` is not unused; `order_screen.dart` imports it (`Utils.formatDate`). The `$` prefix finding was not re-checked.                                                                                                            |
+| **P2-11** | WhatsApp sharing supports one package                               | **Partial**                            | `MainActivity.kt` now tries `com.whatsapp`, then `com.whatsapp.w4b`; the manifest `<queries>` lists both. Still open: no generic share-sheet fallback; the channel name is still hardcoded in Kotlin and Dart.                                                                                                                                                                                                                                                           |
+| **P2-12** | Dependency set nonstandard and partly unused                        | **Open**                               | `http`, `permission_handler`, `google_fonts` and `cupertino_icons` have no imports in `lib/`. `cupertino_ui: any` is still unpinned. `description` is still "A new Flutter project." `file_picker` is now used (`backup_file_picker.dart`) and is a caret range (`^13.4.1`), not the exact pin recorded in the handoff. Others (`url_launcher`, `in_app_update`, `dropdown_search`, `flutter_screenutil`, `shared_preferences_android`) were not re-counted.             |
+| **P2-13** | Firebase initialized but unused                                     | **Open**                               | `Firebase.initializeApp` still runs at startup in `lib/main.dart`, errors are only `debugPrint`ed, and `lib/firebase_options.dart` is tracked in a public repository.                                                                                                                                                                                                                                                                                                    |
+| **P2-14** | Repository and documentation hygiene                                | **Partial**                            | `docs/` now holds real design and status documents. Still open: `README.md` is the default Flutter template (title `my_hand`); no `LICENSE` or `CHANGELOG.md` in the repository root; stale branches (nine ordinary branches listed in `docs/SECURITY_REMEDIATION_STATUS.md`; PRs #1 and #2 are open); the `v1.0` tag is overwritten by `dart.yml`.                                                                                                                      |
 
 ---
 
-### P0-2 — Release signing key and its password are public
+## 3. New findings since the baseline
 
-**Where:** git history (objects `1b4c7eb…` `upload-keystore.jks`, `a45870a…` `keytool.txt`), `android/key.properties` (on disk, gitignored), `android/app/build.gradle.kts:8-12`, `:34-54`
+### N-1 — Planning documents lag `main`
 
-**What I found**
+`docs/DEVELOPMENT_PLAN.md` and `docs/finished_tasks.md` state baseline `271d330`. `main` has since gained: atomic and validated migrations with probe tests, the unified `BackupFilePicker`, the approved D4 schema v8 vocabularies, three approved migration policies, and invoice discounts. None of these is reflected in the "finished" list or the current-architecture section. The plan also names the Drift schema as version 7. The code has moved on: the D4 execution-journal schema v8 was added on 2026-11-26 (`e7db948`, then `e801c85` gating its creation on the v8 target), with a v7-to-v8 migration test (`test/core/database/app_database_d4_v7_v8_migration_test.dart`). An earlier draft of this audit wrongly said v8 was not in the code, because a code-search index was out of date.
 
-- `upload-keystore.jks` is not tracked today, but it is in history (`git rev-list --all --objects` finds it, and the blob is byte-identical to the file still sitting in the repo root).
-- `keytool.txt`, also in history, contains the store password in plain text (it is the app name, lowercase).
-- `android/key.properties` on disk stores `storePassword`, `keyPassword` and `keyAlias=upload` in plain text.
-- I verified the key is usable: `keytool -list -v -keystore upload-keystore.jks -storepass <committed password>` returns `Alias name: upload`, `Entry type: PrivateKeyEntry`, `CN=ahmad alnahrawy, O=arqamy`, valid until **2052**.
-- The repository is **public**.
+### N-2 — Android backup picker copies customer data into the cache directory
 
-**Impact.** Anyone can extract the private key and produce an APK signed with the app's release identity for `com.nahro.arqamy`. If this key was ever used for a Play release (or a direct-distribution release), an attacker can ship an update that existing users will install and that Android will treat as legitimate. Even without distribution, the key must be treated as burned.
+`MainActivity.kt` (`copyPickedFileToCache`) writes the chosen backup to `cacheDir/picked-<name>`. No cleanup was found in `MainActivity.kt`. **Not verified:** whether `BackupFilePicker` or the backup services delete the file after restore. Backups contain customer names and amounts, so a leftover copy is a privacy concern. Verify and delete after use.
 
-**Fix (in this order):**
+### N-3 — Discounts add persisted fields that other documents may not cover
 
-1. **Rotate.** Generate a new keystore with a strong password, store it outside the repo, and — if the app is on Play — request a **Play App Signing key reset** for the upload key and ship a new version signed with the new key. Deleting history does not un-leak the key; rotation is the only real fix.
-2. **Purge history** with `git filter-repo` (or BFG) across *all* branches, then force-push. Assume the repo has already been cloned; treat this as hygiene, not remediation.
-3. Remove `keytool.txt` and `upload-keystore.p12` from history as well (the `.p12` blob is also present).
-4. Move signing material to CI secrets / a local path outside the repo. Keep `android/key.properties` gitignored (it already is, via `android/.gitignore:12`).
-5. Replace the absolute `storeFile` path (`D:/flutter_Projects/arqamy/upload-keystore.jks`) with a repo-relative or environment-provided path, so a release build does not silently break on any other machine.
-6. Remove the debug-signing fallback in `build.gradle.kts:49-53`. A release build with no key should **fail**, not ship debug-signed bits.
+The discount feature adds optional `subtotalCost` and `discount` fields to the invoice JSON (`Invoice.toJson`), written only when a discount exists. `totalCost` is the payable total. **Not verified:** whether `docs/LEGACY_INVOICE_FIELD_MAPPING_MATRIX.md` and the D4 mapping contract account for these fields. They should be confirmed before the importer mapping is finalized.
+
+### N-4 — Ledger concurrency tests emit Drift "multiple databases" warnings
+
+Already tracked in `docs/finished_tasks.md` ("Known follow-up"). Not reproduced here. They must be investigated, not suppressed.
 
 ---
 
-### P1-1 — Persistence is one unversioned JSON blob with no validation or recovery
+## 4. Security status
 
-**Where:** `invoice_provider.dart:204-241` (`saved_invoices` key), `lib/features/orderscreen/data/models/invoice.dart:36-66`
+The signing-key incident remains **open**. Code-side hardening is merged (PR #5, PR #6). Still pending, in order:
 
-Every save serializes the *entire* invoice list and rewrites one `SharedPreferences` string. There is no schema version, no per-record validation, no atomic swap, and no copy of the previous value.
+1. Google Play confirmation that the replacement upload key is active.
+2. A release build verified against the replacement key.
+3. A reviewed history-cleanup plan, executed only with explicit approval, preserving open-PR work.
 
-Consequences:
-
-- **A single bad record bricks the whole history.** `loadInvoices()` decodes the list and maps every entry; one `Invoice.fromJson` failure throws, the whole load fails, and the screen shows "could not load". The user then saves a new invoice and the provider's empty list overwrites the (partially recoverable) blob. The corrupt-data path and the P0-1 path compound each other.
-- **Growth is O(n) per save.** Every save re-serializes all invoices, including full product lists.
-- **No migration story.** Changing any field shape breaks every stored invoice at once.
-
-The backup format is the model to copy: `InvoiceBackup` (`lib/core/helpers/invoice_backup.dart`) has `format`, `version`, `invoiceCount`, per-field validation, and refuses partial restores. The live store has none of that.
-
-**Fix:** put a versioned envelope around `saved_invoices` (`{version: 2, invoices: [...]}`) with a migration function; decode per record inside a `try/catch` so one bad invoice is skipped and reported instead of killing the list; write the new blob to `saved_invoices_next`, then swap keys, keeping the previous blob as `saved_invoices_previous`. Longer term, see P1-6.
+Do not rewrite history while the reset is pending. Full sequence and safety rules: `docs/SECURITY_REMEDIATION_STATUS.md` (last reviewed 2026-11-25).
 
 ---
 
-### P1-2 — `Invoice.fromJson` trusts input and uses implicit dynamic casts
+## 5. Data-store and migration status
 
-**Where:** `invoice.dart:52-66`, `:78-86`
-
-```dart
-id: json['id'],                    // dynamic → String
-products: (json['products'] as List).map(...),
-totalCost: json['totalCost'],      // dynamic → double
-```
-
-Any of these can throw a `TypeError` at runtime: a missing key (`null`), an integer where a `double` is expected (`"totalCost": 10` from a hand-edited or third-party backup), a null product field, or `products` being absent. There are no defaults and no error messages identifying which invoice failed. `InvoiceBackup.decode` does validate around this, but the primary store does not.
-
-**Fix:** parse defensively with explicit `as num`/`toDouble()`, `Map<String, dynamic>` checks, and per-invoice error reporting (invoice index + field). This is a prerequisite for P1-1's "skip one bad record" behaviour.
+- **Operational invoice store:** SharedPreferences key `saved_invoices` (single JSON array).
+- **Drift:** schema version 8 in code (the D4 execution-journal tables were added on 2026-11-26); holds the payment ledger, the party/customer registry, the party-review journal and the D4 journal. It is not the operational invoice store.
+- **Next steps after the v8 schema:** per `docs/DEVELOPMENT_PLAN.md`, the independently exportable snapshot and restore procedure, the occurrence-key importer, reconciliation, the Drift-backed invoice repository and the cutover. Importer, export/restore, production migration and cutover are explicitly **not** authorized yet.
+- Migration rules that constrain related work (from `docs/DEVELOPMENT_PLAN.md`): never treat duplicate legacy IDs as unique; never synthesize cash events or allocations from invoice-level `paid`/`rest`; no uncontrolled dual-write between SharedPreferences and Drift.
 
 ---
 
-### P1-3 — Invoice amounts and quantities accept invalid business values
+## 6. Not re-verified in this review
 
-**Where:** `lib/features/orderscreen/ui/widgets/product_input_form.dart:99-101`, `:313-323`, `:339-405`; `order_screen.dart:79-82`, `:583-596`; `invoice_provider.dart:69-73`; `product_model.dart:15-20`
+These were not recomputed and should not be quoted as current:
 
-- Validators only check `double.tryParse(value) != null` — **negative weight, negative price and negative paid amounts are accepted**. Nothing checks `netWeight > 0`, `price >= 0`, or `paid >= 0`.
-- `Product.netWeight` is `weight - packageWeight * numberPackage`, so a package count larger than the weight produces a negative net weight and therefore a negative line total.
-- `paid` is not compared against the total: overpayment is silently accepted, and the negative case produces a "remaining" larger than the invoice.
-- `calculateOutstandingBalance` calls `Money.fromDouble(totalCost).abs()` (`invoice_provider.dart:71`). This converts a negative invoice total into a positive one, so a nonsensical invoice (negative price or negative net weight) displays a plausible-looking positive balance instead of surfacing the error.
-
-**Fix:** validate at the form boundary (`weight > 0`, `packageWeight >= 0`, `numberPackage >= 0`, `price >= 0`, `paid >= 0`, `paid <= total` or an explicit overpayment confirmation), and remove the `.abs()` so negative totals are visible and blocked. The ledger module already encodes these rules — reuse them (P1-6).
-
----
-
-### P1-4 — Customer identity is never assigned, so history splits on rename
-
-**Where:** `invoice.dart:20-22`, `order_screen.dart:119-130`, `edit_invoice_dialog.dart:174`, `invoice_backup.dart:106-128`
-
-`Invoice.customerId` was added ("Decision 39") and is preserved by edit and backup — but **nothing in `lib/` ever sets it to a non-null value**. `OrderScreen._buildInvoice` does not pass it. Grouping, totals and customer history are therefore keyed on the customer *name*, so renaming a customer (or fixing a spelling) splits their balance and history into two entities.
-
-**Fix:** introduce a real customer record (id, display name, aliases) and assign `customerId` at invoice creation; migrate existing invoices by normalized-name grouping (the existing `customer_audit.dart` normalization is a good starting point, but it must be a human-confirmed mapping, as that tool's own comment says). Group history by `customerId ?? fallbackNameKey` during the transition.
+- Line coverage (73.6% at `fa56a7c`) and per-file coverage.
+- Test count at HEAD (362 at `271d330`) and the `flutter analyze` result at HEAD.
+- The GitHub Actions result for `16e049e`.
+- `pubspec` dependency freshness (`flutter pub outdated`).
+- Behaviour on devices (WhatsApp sharing on Android 11+, file picker on different Android versions).
+- `docs/DRIFT_MIGRATION_DESIGN.md`, the field-mapping matrix, and the two journal design documents (not read for this review).
+- The startup error and retry screen's localization (previously hardcoded English).
 
 ---
 
-### P1-5 — The iOS target cannot ship as-is
+## 7. Suggested order of work
 
-**Where:** `ios/Runner/Info.plist:7-8`, `ios/Runner.xcodeproj/project.pbxproj:349,371`, `lib/features/settingscreen/ui/pages/invoice_setting.dart` (logo picking via `image_picker`)
+This list only orders the open findings above. It authorizes nothing; schema, migration and data changes still need separate approval per `docs/DEVELOPMENT_PLAN.md`.
 
-- `CFBundleDisplayName` is **"My Hand"** and `CFBundleName` is **"my_hand"** — stale branding from before the rename.
-- Bundle identifier is `com.example.myHand` (template default) and cannot be registered on the App Store.
-- Deployment target is `IPHONEOS_DEPLOYMENT_TARGET = 12.0`, below what current Flutter requires.
-- `image_picker` is used to pick the company logo, but there is **no `NSPhotoLibraryUsageDescription`** in `Info.plist`. Picking a logo from the gallery will terminate the app on iOS.
-- No `PrivacyInfo.xcprivacy` privacy manifest, which App Store submission now expects for apps using covered APIs.
-- `main.dart` locks orientation to portrait, while `Info.plist` allows landscape — inconsistent behaviour between platforms.
-
-**Fix:** set `CFBundleDisplayName` to Arqamy, change the bundle id to a real reverse-DNS identifier, raise the deployment target, add `NSPhotoLibraryUsageDescription` (and `NSPhotoLibraryAddUsageDescription` if saving), add a privacy manifest, and align supported orientations.
-
----
-
-### P1-6 — ~4,000 LOC of ledger/database code is dead in production
-
-**Where:** `lib/core/database/app_database.dart` (~1,300 lines, schema v5, triggers, append-only tables), `lib/features/payment_ledger/data/*` (`cash_event_repository.dart`, `allocation_repository.dart`, `ledger_foundation_repository.dart`, domain models)
-
-No production file constructs `AppDatabase`, `CashEventRepository`, `AllocationRepository` or `LedgerFoundationRepository` — only tests do. I grepped all of `lib/`; the only matches are the class declarations themselves. Yet:
-
-- `drift`, `drift_dev` and `build_runner` are direct dependencies, and the generated file is enormous.
-- 4,014 lines of hand-written code (one third of `lib/`) plus a large portion of the 13.6k test lines exist to validate a system the app never runs.
-- The tests emit Drift's "created the database class multiple times… race conditions… might corrupt the database" warning during concurrent-handle tests.
-
-**Impact.** Two competing sources of truth. A future developer will reasonably assume the ledger is live, wire a screen to it, and find that production data was never migrated. Meanwhile the real store (P1-1) stays unhardened, and the team pays the build/maintenance cost of Drift for nothing.
-
-**Fix:** make an explicit decision and write it down:
-- **Adopt it:** move invoices/payments into `AppDatabase` behind a repository interface, add a one-time migration from `saved_invoices`, and delete the SharedPreferences path.
-- **Or remove it:** delete `lib/core/database` and `lib/features/payment_ledger` (plus their tests and the Drift deps) and keep the simpler store — but then harden it per P1-1.
-
-Keeping both is the one option that is definitely wrong. Given the ledger already encodes the money and allocation rules the app lacks (P1-3), adopting it is the higher-value path — but only with a migration plan.
+1. **Close the signing incident** (§4), as Google's confirmation arrives.
+2. **Make the invoice store recoverable:** defensive `Invoice.fromJson` and per-record handling (P1-2, P1-1). This reduces the new startup-blocking risk. Coordinate with the D4 work, which also reads this store.
+3. **Validate amounts at the form** and remove the `.abs()` (P1-3).
+4. **Assign `customerId` at invoice creation** (P1-4), after the customer-identity policy is final.
+5. **Privacy and release hygiene:** `AD_ID`, `allowBackup`, backup cache cleanup (N-2), iOS identity, Firebase decision (P2-5, P2-6, P1-5, P2-13).
+6. **CI:** add format check and Android build (P2-8).
+7. **Housekeeping:** README, LICENSE, CHANGELOG, unused dependencies, stale branches, plan and finished-task docs (N-1, P2-12, P2-14).
 
 ---
 
-### P1-7 — No application-level initialization phase
+## 8. Method
 
-**Where:** `lib/main.dart:13-49`, `order_screen.dart:54-71`, `customer_screen.dart:47-52`
-
-Startup does theme and Firebase setup, then builds providers. Every feature loads its own data in `initState`. That is the root cause of P0-1, and it will keep producing variants of it (e.g. any new screen that mutates invoices before the customer screen has been opened).
-
-**Fix:** give the provider an explicit lifecycle — `InvoiceProvider.bootstrap()` that loads invoices (and master products) once — and `await` it before `runApp`, or expose a `FutureBuilder`/`AppBootstrap` widget at the root. Then remove the per-screen `loadInvoices()` calls or make them no-ops.
-
----
-
-### P2-1 — Invoice serials can collide
-
-**Where:** `order_screen.dart:96-100`
-
-```dart
-"${now.year}${month}${day}${hour}${minute}${second}"
-```
-
-Second precision, local time, no uniqueness check. Two invoices saved within the same second (or after a clock change / manual clock adjustment) get the same human-facing invoice number. The PDF filename uses the UUID, so files do not overwrite each other — but the number printed on the invoice does.
-
-**Fix:** derive the serial from a persisted monotonic counter (`last_serial + 1`) with a per-year prefix, or append a short random suffix, and validate uniqueness against loaded invoices.
-
----
-
-### P2-2 — Invoice date cannot be set at creation
-
-**Where:** `order_screen.dart:41`, `:73-77`, `:114-131`
-
-`selectedDate` is `final DateTime selectedDate = DateTime.now()` at widget construction, and `_selectDate` only formats it — there is no date picker. So every new invoice is dated "now" and can only be corrected afterwards through `EditInvoiceDialog`.
-
-**Fix:** add a date picker next to the invoice date and store an ISO `createdAt` on the invoice instead of pre-formatted `formattedDate`/`formattedTime` strings (format at render time, so changing the app locale doesn't leave old invoices in the old format).
-
----
-
-### P2-3 — Debug output and a listener leak in a production widget
-
-**Where:** `lib/features/orderscreen/ui/widgets/customer_name.dart:28,65,84,98,155`, `:139`
-
-Five unconditional `print()` calls run on every keystroke/save path and pollute logs (they also appear throughout the test output). At `:139` a `focusNode.addListener(...)` is registered inside `build`, so a new listener is added on every rebuild and never removed.
-
-**Fix:** delete the prints (or gate them behind `kDebugMode`), and move the listener registration into `initState` with a matching `removeListener` in `dispose`.
-
----
-
-### P2-4 — Settings exposes five non-functional entries
-
-**Where:** `lib/features/settingscreen/ui/pages/settings_screen.dart:109-115` (profile), `:161-166` (notifications), `:167-173` (privacy), `:174-180` (help), `:244-248` (logout)
-
-All have empty `onTap` bodies (`onTap: () {}` or a comment). To a user they look like working features. "Logout" in particular implies accounts that do not exist.
-
-**Fix:** remove them until implemented, or mark them "coming soon" and disable them.
-
----
-
-### P2-5 — `AD_ID` permission declared without any ads or analytics
-
-**Where:** `android/app/src/main/AndroidManifest.xml:3`
-
-`com.google.android.gms.permission.AD_ID` is declared, but the app has no ads SDK and no `firebase_analytics`. The permission is a Play data-safety declaration trigger and a privacy-flag for users.
-
-**Fix:** remove it. If an ads/analytics dependency is added later, let its manifest merge bring the permission.
-
----
-
-### P2-6 — Customer PII is stored and exported unencrypted, and auto-backed up
-
-**Where:** `invoice_provider.dart` (plain `SharedPreferences`), `invoice_backup_service.dart` (plaintext JSON via share sheet), Android manifest (no `android:allowBackup="false"`)
-
-Invoice data contains customer names, phone numbers and transaction amounts. It sits in plaintext `SharedPreferences` (included in Android's default cloud backup), and backups are plaintext JSON files handed to any app the user shares to.
-
-**Fix:** at minimum set `android:allowBackup="false"` (or use a scoped backup rule excluding invoice data), and warn users that backups contain personal data. If stronger protection is required, encrypt the store with a key from the Keystore/Keychain.
-
----
-
-### P2-7 — Release build configuration is fragile
-
-**Where:** `android/app/build.gradle.kts:8-12`, `:25`, `:45-55`
-
-- Falls back to **debug signing** when `key.properties` is missing (`:49-53`), so a release build can silently produce an unshippable, non-updatable artifact.
-- `storeFile` is an absolute developer path (`D:/flutter_Projects/arqamy/upload-keystore.jks`), so the build fails on any other machine.
-- The template `TODO: Specify your own unique Application ID` comment is still there (`:25`).
-
-**Fix:** fail the build when the keystore is absent in release; use a relative or environment-provided path; delete the TODO.
-
----
-
-### P2-8 — CI does not test or build the app
-
-**Where:** `.github/workflows/dart.yml`
-
-The only workflow is named `iOS-ipa-build`, runs **only on `workflow_dispatch`**, uses `actions/checkout@v3`, and does `pod repo update` → `flutter build ios --release --no-codesign` → zip → upload to tag `v1.0` (overwriting it). There is:
-
-- no `flutter analyze`, no `flutter test` on push/PR,
-- no Android build,
-- no dependency/security scanning,
-- no branch protection signal.
-
-**Fix:** add a PR workflow running `dart format --output=none --set-exit-if-changed .`, `flutter analyze --fatal-infos`, and `flutter test --coverage`; add an Android `assembleRelease` (unsigned or CI-signed) job; update actions; stop overwriting a fixed tag.
-
----
-
-### P2-9 — Tests systematically miss the startup path
-
-**Where:** `test/invoice_provider_test.dart`, `test/widget_test.dart`
-
-211 passing tests and 73.6% line coverage, which is genuinely good — but the suite injects a storage writer and starts every provider empty, so it never exercises "app starts with existing storage, then writes". That is exactly P0-1. Settings screens are at ~1% coverage, which is why P2-4/P2-7 went unnoticed.
-
-**Fix:** add the P0-1 regression test; add a widget test that boots the app with seeded `SharedPreferences` and saves; raise settings coverage with a few smoke tests (open screen, tap tiles, assert no crash). Also silence the debug prints so test output is readable.
-
----
-
-### P2-10 — Duplicated canonical values and formatting helpers
-
-- The persisted invoice actions exist in three places: `InvoiceAction` (`lib/core/helpers/invoice_action.dart:7-9`), `InvoiceActionL10n` (`lib/core/helpers/invoice_action_l10n.dart:10-12`), and `PdfLabels`/ARB. `invoice_action.dart`'s own doc comment says the strings "must never change", yet a second copy of them exists. Changing one copy silently orphans stored invoices.
-- PDF labels are hand-mirrored from the ARB files (`pdf_labels.dart` header comment admits it) with no test asserting they match.
-- `Utils.formatPrice`/`formatDate` (`lib/core/helpers/helper_date_price.dart`) duplicate `lib/core/helpers/formatters.dart`; `formatPrice` hardcodes a **`$`** prefix in an EGP app.
-
-**Fix:** make `InvoiceAction` the single source of truth (have `InvoiceActionL10n` delegate to it), add a test that `PdfLabels` matches the ARB values, and delete `helper_date_price.dart` (it is unused).
-
----
-
-### P2-11 — WhatsApp sharing only supports one package
-
-**Where:** `android/app/src/main/kotlin/com/nahro/arqamy/MainActivity.kt` (`setPackage("com.whatsapp")`), `lib/core/services/invoice_service.dart:14`
-
-- Users with only **WhatsApp Business** (`com.whatsapp.w4b`) get "WhatsApp is not installed".
-- On Android 11+, package visibility can make the explicit-package `ACTION_SEND` fail on some OEM builds; the manifest `<queries>` block only declares `PROCESS_TEXT`.
-- The channel name `com.nahro.arqamy/whatsapp` is hardcoded in Kotlin and Dart, with no shared constant.
-
-**Fix:** try `com.whatsapp`, then `com.whatsapp.w4b`, then fall back to the generic share sheet; add the WhatsApp packages to `<queries>`; test on an Android 11+ device.
-
----
-
-### P2-12 — Dependency set is nonstandard and partly unused
-
-| Dependency | Status |
-|---|---|
-| `http`, `permission_handler`, `google_fonts`, `cupertino_icons` | **unused** (0 imports) |
-| `font_awesome_flutter`, `url_launcher`, `in_app_update`, `dropdown_search` | 1 import each — confirm they are worth the weight |
-| `shared_preferences_android` | redundant explicit pin (transitive of `shared_preferences`) |
-| `drift`, `drift_dev`, `build_runner` | only used by dead code (P1-6) |
-| `cupertino_ui: any` | **unpinned** dependency; `material_ui` is also used instead of `flutter/material` |
-| `flutter_native_splash` | dev-time CLI tool (fine, but unused config) |
-
-`material_ui` / `cupertino_ui` replacing Flutter's own `material`/`cupertino` libraries is unusual and a supply-chain and upgrade risk; `any` means a future publish can change behaviour without a version change.
-
-**Fix:** remove unused deps, pin `cupertino_ui`, and document (or reverse) the `material_ui` choice. `pubspec.yaml` also still says `description: "A new Flutter project."`.
-
----
-
-### P2-13 — Firebase is initialized but unused
-
-**Where:** `lib/main.dart:23-29`, `lib/firebase_options.dart` (tracked)
-
-Firebase is initialized on every launch inside a `try/catch` that swallows failures, but no Firebase service (auth, Firestore, messaging, analytics) is used. It adds startup cost and ships project config for `my-hand-7dde2` in a public repo.
-
-**Fix:** remove Firebase entirely until a feature needs it, or add the feature. If kept, restrict the API key in Google Cloud console and stop swallowing initialization errors silently.
-
----
-
-### P2-14 — Repository and documentation hygiene
-
-- `README.md` is the default Flutter template; `docs/` was empty until this report.
-- `pubspec.yaml` version is `1.0.4+22`, but the only tag is `v1.0` and CI overwrites it. No `CHANGELOG.md`, no `LICENSE` despite being a public repo.
-- Four stale branches diverge from `main` by 100+ commits and have not been touched since October; `main...branch` counts are 132/1, 23/0, 134/1, 106/0.
-- History is noisy: many `Agent host session … - baseline checkpoint` commits, which makes `git log` and `git blame` much less useful.
-- Android launcher icon key is misspelled `laucher_icon` (works, but propagates the typo into `AndroidManifest.xml:7`).
-
-**Fix:** write a real README (what the app is, how to run, how to build, how to back up), add a CHANGELOG and license, delete merged/stale branches, and squash checkpoint commits going forward.
-
----
-
-## 4. Strengths worth keeping
-
-These are not filler — they are the parts a rewrite would most likely lose:
-
-- **`Money`** (`lib/core/helpers/money.dart`) is a correct fixed-point type: minor units, explicit half-away-from-zero rounding, binary-noise absorption, range checks, and a test suite that pins the tricky cases (`1.005 → 101`, `2.675 → 268`). Totals are summed as `Money`, not doubles.
-- **`InvoiceBackup`** is a genuinely good format: explicit `format`, `version`, `invoiceCount` integrity check, per-field validation, whole-file rejection, and an explicit refusal to read a newer version.
-- **`_withInvoiceMutationLock`** serializes mutations correctly within a provider instance — the right instinct, just applied to the wrong starting state.
-- **Localization** is real: ARB sources for `ar`/`en`, a custom generator (`tool/generate_l10n.dart`) that fails on missing translations, a proper `Directionality` override, and locale-aware dates.
-- **`AppSemanticColors`** as a `ThemeExtension` with light/dark variants is better theming than most Flutter apps of this size.
-- **The test suite** is fast, broad, and green — 211 tests in ~66 s.
-
----
-
-## 5. Remediation roadmap
-
-### Phase 0 — this week (stop the bleeding)
-
-| # | Action | Effort |
-|---|---|---|
-| 1 | P0-1: `_ensureLoaded()` before mutations + guard against writing when unloaded + regression test | 2–3 h |
-| 2 | P0-2: rotate the signing key, purge the keystore/password from history, remove debug-signing fallback | 2–4 h + Play console time |
-| 3 | P2-3: remove the `print`s and the per-build focus listener | 30 min |
-| 4 | P2-5 / P2-6: drop `AD_ID`, set `allowBackup="false"` | 30 min |
-
-### Phase 1 — next 1–2 weeks (make the data layer trustworthy)
-
-| # | Action | Effort |
-|---|---|---|
-| 5 | P1-7: app-level bootstrap that loads invoices before the first frame | 3 h |
-| 6 | P1-2 + P1-1: defensive `Invoice.fromJson`, versioned envelope, per-record skip, previous-blob copy | 1–2 d |
-| 7 | P1-3: validate weights, prices, paid amounts; remove the `.abs()` | 1 d |
-| 8 | P2-1 / P2-2: monotonic serial, real `createdAt`, date picker | 1 d |
-| 9 | P2-9: tests for startup-with-data, settings smoke tests | 1 d |
-| 10 | P2-8: PR CI (`analyze` + `test` + Android build) | half a day |
-
-### Phase 2 — this month (decide the architecture)
-
-| # | Action | Effort |
-|---|---|---|
-| 11 | P1-6: decide adopt-vs-delete the Drift ledger; write an ADR in `docs/` | 1 d decision |
-| 12 | If adopt: repository interface + one-time migration from `saved_invoices`; if delete: remove 4k LOC and Drift deps | 3–5 d |
-| 13 | P1-4: real customer records; assign and backfill `customerId` | 2–3 d |
-| 14 | P1-5: iOS identity, photo permission, privacy manifest, deployment target | 1 d |
-| 15 | P2-4 / P2-10 / P2-11 / P2-12: remove no-op settings, de-duplicate constants, fix WhatsApp sharing, prune deps | 2 d |
-
-### Phase 3 — ongoing
-
-- P2-14: README, CHANGELOG, license, branch cleanup.
-- Add integration tests for the full save → history → edit → backup → restore cycle.
-- Consider a crash/error reporter before shipping to real users (right now a failed write is only a snackbar).
-
----
-
-## 6. Appendix — commands used
-
-```powershell
-flutter analyze --no-fatal-infos
-flutter test
-flutter test --coverage
-flutter pub outdated
-
-git rev-list --all --objects | Select-String 'upload-keystore|keytool|key.properties'
-git cat-file -s 1b4c7eb741dfd674c3eb8ea09b82fca33cbea997   # keystore blob
-git show 1bdc5fb:keytool.txt                               # committed password
-keytool -list -v -keystore upload-keystore.jks -storepass <committed password>
-git for-each-ref --sort=-committerdate refs/heads
-```
-
-Data-loss reproduction (temporary test, removed after running): seed `SharedPreferences` with one invoice, build a fresh `InvoiceProvider`, `saveInvoice` a second one, assert both IDs survive — the assertion failed with `Actual: ['new']`.
-
-No source files were modified for this audit.
+Reviewed by reading `main` at `16e049e` through the GitHub repository connector: `android/app/build.gradle.kts`, `AndroidManifest.xml`, `MainActivity.kt`, `ios/Runner/Info.plist`, `pubspec.yaml`, `.github/workflows/*`, `lib/main.dart`, `invoice_provider.dart`, `invoice.dart`, `order_screen.dart`, `product_input_form.dart`, `settings_screen.dart`, `README.md`, the listed `docs/` files, the latest 30 commits, and open pull requests; plus targeted code searches for imports, `print(` and `InvoiceActionL10n`. No source files were modified.

@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:arqamy/core/helpers/excel_labels.dart';
 import 'package:arqamy/core/helpers/invoice_discount.dart';
+import 'package:arqamy/core/helpers/invoice_export_columns.dart';
 import 'package:arqamy/core/helpers/money.dart';
 import 'package:arqamy/core/services/invoice_excel_export_service.dart';
 import 'package:arqamy/features/orderscreen/data/models/invoice.dart';
@@ -68,27 +69,30 @@ void main() {
     final rows = sheet.rows;
     expect(_text(rows[0][0]), ExcelLabels.en.serial);
     expect(_text(rows[0][5]), ExcelLabels.en.product);
-    expect(_text(rows[0][11]), ExcelLabels.en.totalEgp);
+    expect(_text(rows[0][10]), ExcelLabels.en.totalEgp);
 
     expect(_text(rows[1][0]), invoice.invoiceSerial);
     expect(_text(rows[1][3]), 'Ahmed');
     expect(_text(rows[1][4]), ExcelLabels.en.sale);
     expect(_text(rows[1][5]), 'Rice');
     expect(_number(rows[1][6]), 12.5);
-    expect((rows[1][8]!.value as IntCellValue).value, 2);
-    expect(_number(rows[1][9]), 11.5);
-    expect(_number(rows[1][10]), 15);
-    expect(_number(rows[1][11]), 172.5);
+    expect((rows[1][7]!.value as IntCellValue).value, 2);
+    expect(_number(rows[1][8]), 11.5);
+    expect(_number(rows[1][9]), 15);
+    expect(_number(rows[1][10]), 172.5);
 
     expect(_text(rows[2][5]), 'Corn');
-    expect(_number(rows[2][11]), 79.99);
+    expect(_number(rows[2][10]), 79.99);
 
-    expect(_text(rows[3][10]), ExcelLabels.en.invoiceTotal);
-    expect(_number(rows[3][11]), invoice.totalCost);
-    expect(_text(rows[4][10]), ExcelLabels.en.collected);
-    expect(_number(rows[4][11]), invoice.paid);
-    expect(_text(rows[5][10]), ExcelLabels.en.remaining);
-    expect(_number(rows[5][11]), invoice.rest);
+    // A single shared package weight is written as a note under the rows.
+    expect(_text(rows[3][0]), ExcelLabels.en.packageWeightNote('0.50'));
+
+    expect(_text(rows[4][9]), ExcelLabels.en.invoiceTotal);
+    expect(_number(rows[4][10]), invoice.totalCost);
+    expect(_text(rows[5][9]), ExcelLabels.en.collected);
+    expect(_number(rows[5][10]), invoice.paid);
+    expect(_text(rows[6][9]), ExcelLabels.en.remaining);
+    expect(_number(rows[6][10]), invoice.rest);
   });
 
   test('exports subtotal and resolved discount when one was entered', () {
@@ -116,12 +120,71 @@ void main() {
     );
     final rows = workbook.tables['20261126-001']!.rows;
 
-    expect(_text(rows[3][10]), ExcelLabels.en.subtotal);
-    expect(_number(rows[3][11]), closeTo(252.49, 0.001));
-    expect(_text(rows[4][10]), '${ExcelLabels.en.discount} (10.00%)');
-    expect(_number(rows[4][11]), closeTo(25.25, 0.001));
-    expect(_text(rows[5][10]), ExcelLabels.en.invoiceTotal);
-    expect(_number(rows[5][11]), closeTo(227.24, 0.001));
+    expect(_text(rows[4][9]), ExcelLabels.en.subtotal);
+    expect(_number(rows[4][10]), closeTo(252.49, 0.001));
+    expect(_text(rows[5][9]), '${ExcelLabels.en.discount} (10.00%)');
+    expect(_number(rows[5][10]), closeTo(25.25, 0.001));
+    expect(_text(rows[6][9]), ExcelLabels.en.invoiceTotal);
+    expect(_number(rows[6][10]), closeTo(227.24, 0.001));
+  });
+
+  test('hiding package weight removes both its column and its note', () {
+    final columns = const InvoiceColumnVisibility().setVisible(
+      InvoiceTableColumn.packageWeight,
+      false,
+    );
+    final workbook = Excel.decodeBytes(
+      InvoiceExcelExportService.buildWorkbook(
+        _invoice(),
+        locale: 'en',
+        excelColumns: columns,
+      ),
+    );
+    final rows = workbook.tables['20261126-001']!.rows;
+
+    expect(rows[0].length, 11);
+    expect(
+      rows[0].map(_text).toList(),
+      isNot(contains(ExcelLabels.en.packageWeightKg)),
+    );
+    expect(
+      _text(rows[3][9]),
+      ExcelLabels.en.invoiceTotal,
+    );
+  });
+
+  test('different package weights are written as a per-row column', () {
+    final base = _invoice();
+    final invoice = Invoice(
+      id: base.id,
+      customerName: base.customerName,
+      products: [
+        base.products.first,
+        Product(
+          name: 'Corn',
+          weight: 8,
+          packageWeight: 0.25,
+          numberPackage: 1,
+          price: 10,
+        ),
+      ],
+      totalCost: base.totalCost,
+      paid: base.paid,
+      rest: base.rest,
+      formattedDate: base.formattedDate,
+      formattedTime: base.formattedTime,
+      invoiceAction: base.invoiceAction,
+      invoiceSerial: base.invoiceSerial,
+    );
+    final workbook = Excel.decodeBytes(
+      InvoiceExcelExportService.buildWorkbook(invoice, locale: 'en'),
+    );
+    final rows = workbook.tables['20261126-001']!.rows;
+
+    expect(_text(rows[0][7]), ExcelLabels.en.packageWeightKg);
+    expect(_number(rows[1][7]), 0.5);
+    expect(_number(rows[2][7]), 0.25);
+    expect(_text(rows[3][10]), ExcelLabels.en.invoiceTotal);
   });
 
   test('Arabic export uses Arabic headers and an RTL sheet', () {

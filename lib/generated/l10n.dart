@@ -67,7 +67,7 @@ class S {
 
   /// `Suppliers`
   String get suppliers {
-    return Intl.message('Suppliers', name: 'suppliers', desc: '', args: []);
+    return Intl.message('Customers & suppliers', name: 'suppliers', desc: '', args: []);
   }
 
   /// `Customers`
@@ -93,7 +93,7 @@ class S {
   /// `Total items`
   String get inventory_total_items {
     return Intl.message(
-      'Total items',
+      'Items',
       name: 'inventory_total_items',
       desc: '',
       args: [],
@@ -113,7 +113,7 @@ class S {
   /// `No items`
   String get inventory_empty {
     return Intl.message(
-      'No items',
+      'No inventory items yet',
       name: 'inventory_empty',
       desc: '',
       args: [],
@@ -137,18 +137,18 @@ class S {
 
   /// `Dark mode`
   String get dark_mode {
-    return Intl.message('Dark mode', name: 'dark_mode', desc: '', args: []);
+    return Intl.message('Dark Mode', name: 'dark_mode', desc: '', args: []);
   }
 
   /// `Light mode`
   String get light_mode {
-    return Intl.message('Light mode', name: 'light_mode', desc: '', args: []);
+    return Intl.message('Light Mode', name: 'light_mode', desc: '', args: []);
   }
 
   /// `Select language`
   String get select_language {
     return Intl.message(
-      'Select language',
+      'Select Language',
       name: 'select_language',
       desc: '',
       args: [],
@@ -203,7 +203,7 @@ class S {
   /// `Change password`
   String get change_password {
     return Intl.message(
-      'Change password',
+      'Change Password',
       name: 'change_password',
       desc: '',
       args: [],
@@ -233,7 +233,7 @@ class S {
   /// `Terms of service`
   String get terms_of_service {
     return Intl.message(
-      'Terms of service',
+      'Terms of Service',
       name: 'terms_of_service',
       desc: '',
       args: [],
@@ -243,7 +243,7 @@ class S {
   /// `Privacy policy`
   String get privacy_policy {
     return Intl.message(
-      'Privacy policy',
+      'Privacy Policy',
       name: 'privacy_policy',
       desc: '',
       args: [],
@@ -252,7 +252,7 @@ class S {
 
   /// `Contact us`
   String get contact_us {
-    return Intl.message('Contact us', name: 'contact_us', desc: '', args: []);
+    return Intl.message('Contact Us', name: 'contact_us', desc: '', args: []);
   }
 
   /// `Search`
@@ -272,28 +272,28 @@ class S {
 
   /// `Loading`
   String get loading {
-    return Intl.message('Loading', name: 'loading', desc: '', args: []);
+    return Intl.message('Loading...', name: 'loading', desc: '', args: []);
   }
 
   /// `Share app`
   String get share_app {
-    return Intl.message('Share app', name: 'share_app', desc: '', args: []);
+    return Intl.message('Share App', name: 'share_app', desc: '', args: []);
   }
 
   /// `Update app`
   String get update_app {
-    return Intl.message('Update app', name: 'update_app', desc: '', args: []);
+    return Intl.message('Update App', name: 'update_app', desc: '', args: []);
   }
 
   /// `Total cost`
   String get total_cost {
-    return Intl.message('Total cost', name: 'total_cost', desc: '', args: []);
+    return Intl.message('Total Cost', name: 'total_cost', desc: '', args: []);
   }
 
   /// `Page not found`
   String get page_not_found {
     return Intl.message(
-      'Page not found',
+      'Page Not Found',
       name: 'page_not_found',
       desc: '',
       args: [],
@@ -303,7 +303,7 @@ class S {
   /// `Please choose a customer`
   String get please_choose_customer {
     return Intl.message(
-      'Please choose a customer',
+      'Please choose a customer before proceeding.',
       name: 'please_choose_customer',
       desc: '',
       args: [],
@@ -323,7 +323,7 @@ class S {
   /// `Export to Excel`
   String get exportToExcel {
     return Intl.message(
-      'Export to Excel',
+      'Export Excel',
       name: 'exportToExcel',
       desc: '',
       args: [],
@@ -343,7 +343,7 @@ class S {
   /// `Invoice Excel export failed`
   String get invoice_excel_export_failed {
     return Intl.message(
-      'Invoice Excel export failed',
+      'Could not export the invoice to Excel',
       name: 'invoice_excel_export_failed',
       desc: '',
       args: [],
@@ -358,7 +358,7 @@ class S {
   /// `Arqamy respects your privacy and is committed to protecting your personal data.`
   String get privacy_intro {
     return Intl.message(
-      'Arqamy respects your privacy and is committed to protecting your personal data.',
+      'Arqamy keeps your invoices and customer details on this device. We do not collect or share them.',
       name: 'privacy_intro',
       desc: '',
       args: [],
@@ -368,7 +368,7 @@ class S {
   /// `Data we collect`
   String get privacy_data_title {
     return Intl.message(
-      'Data we collect',
+      'Data stored on your device',
       name: 'privacy_data_title',
       desc: '',
       args: [],
@@ -378,7 +378,7 @@ class S {
   /// `We collect invoice data, customer information, and product details stored on your device.`
   String get privacy_data_body {
     return Intl.message(
-      'We collect invoice data, customer information, and product details stored on your device.',
+      'Invoice details, customer names, products, and settings are saved locally on your device.',
       name: 'privacy_data_body',
       desc: '',
       args: [],
@@ -398,7 +398,7 @@ class S {
   /// `Your data is used to display, organize, and back up your invoices inside the app. We do not collect or share it unless you choose to back up or share your invoices.`
   String get privacy_usage_body {
     return Intl.message(
-      'Your data is used to display, organize, and back up your invoices inside the app. We do not collect or share it unless you choose to back up or share your invoices.',
+      'Your data is only used to display, organize, and back up your invoices inside the app.',
       name: 'privacy_usage_body',
       desc: '',
       args: [],
@@ -408,7 +408,7 @@ class S {
   /// `Your privacy choices`
   String get privacy_choices_title {
     return Intl.message(
-      'Your privacy choices',
+      'Your choices',
       name: 'privacy_choices_title',
       desc: '',
       args: [],
@@ -418,7 +418,7 @@ class S {
   /// `You can manage your data settings in the app settings. You can back up or restore your invoices, and clear app data through your device settings.`
   String get privacy_choices_body {
     return Intl.message(
-      'You can manage your data settings in the app settings. You can back up or restore your invoices, and clear app data through your device settings.',
+      'You can back up or restore your invoices from Settings at any time, and clear app data through your device settings.',
       name: 'privacy_choices_body',
       desc: '',
       args: [],
@@ -428,7 +428,7 @@ class S {
   /// `Account authentication`
   String get privacy_account_title {
     return Intl.message(
-      'Account authentication',
+      'Optional account',
       name: 'privacy_account_title',
       desc: '',
       args: [],
@@ -438,7 +438,7 @@ class S {
   /// `Arqamy uses Google Firebase Authentication for sign-in and password reset. Your invoices and customer details are not uploaded to Firebase.`
   String get privacy_account_body {
     return Intl.message(
-      'Arqamy uses Google Firebase Authentication for sign-in and password reset. Your invoices and customer details are not uploaded to Firebase.',
+      'You can use Arqamy without an account. If you create one, your email address and sign-in details are stored by Google\'s Firebase Authentication so you can sign in and reset your password. Your invoices and customer details are not uploaded.',
       name: 'privacy_account_body',
       desc: '',
       args: [],
@@ -448,7 +448,7 @@ class S {
   /// `Get help with Arqamy`
   String get help_intro {
     return Intl.message(
-      'Get help with Arqamy',
+      'Find answers to common questions about using Arqamy.',
       name: 'help_intro',
       desc: '',
       args: [],
@@ -478,7 +478,7 @@ class S {
   /// `Back up invoices`
   String get help_backup_title {
     return Intl.message(
-      'Back up invoices',
+      'Backing up invoices',
       name: 'help_backup_title',
       desc: '',
       args: [],
@@ -488,7 +488,7 @@ class S {
   /// `Arqamy keeps your invoices and customer details on this device. We do not collect or share them. You can back up or restore your invoices from Settings at any time, and clear app data through your device settings.`
   String get help_backup_body {
     return Intl.message(
-      'Arqamy keeps your invoices and customer details on this device. We do not collect or share them. You can back up or restore your invoices from Settings at any time, and clear app data through your device settings.',
+      'In Settings, open Invoice actions and choose Backup invoices to save a copy.',
       name: 'help_backup_body',
       desc: '',
       args: [],
@@ -498,7 +498,7 @@ class S {
   /// `Restore from backup`
   String get help_restore_title {
     return Intl.message(
-      'Restore from backup',
+      'Restoring invoices',
       name: 'help_restore_title',
       desc: '',
       args: [],
@@ -508,7 +508,7 @@ class S {
   /// `You can restore invoices from a backup file. Invoices from the backup will be merged with your saved invoices. A saved invoice with the same ID is replaced by the backup copy. All other saved invoices are kept.`
   String get help_restore_body {
     return Intl.message(
-      'You can restore invoices from a backup file. Invoices from the backup will be merged with your saved invoices. A saved invoice with the same ID is replaced by the backup copy. All other saved invoices are kept.',
+      'In Settings, open Invoice actions and choose Restore from backup.',
       name: 'help_restore_body',
       desc: '',
       args: [],
@@ -518,7 +518,7 @@ class S {
   /// `Change language`
   String get help_language_title {
     return Intl.message(
-      'Change language',
+      'Changing the language',
       name: 'help_language_title',
       desc: '',
       args: [],
@@ -528,7 +528,7 @@ class S {
   /// `You can change the app language between Arabic and English.`
   String get help_language_body {
     return Intl.message(
-      'You can change the app language between Arabic and English.',
+      'Open the side menu and use the Language row to switch between Arabic and English.',
       name: 'help_language_body',
       desc: '',
       args: [],
@@ -538,7 +538,7 @@ class S {
   /// `Contact us`
   String get help_contact_title {
     return Intl.message(
-      'Contact us',
+      'Need more help?',
       name: 'help_contact_title',
       desc: '',
       args: [],
@@ -548,7 +548,7 @@ class S {
   /// `If you have any questions or feedback, please contact us through the app or website.`
   String get help_contact_body {
     return Intl.message(
-      'If you have any questions or feedback, please contact us through the app or website.',
+      'Contact the app support team for further assistance.',
       name: 'help_contact_body',
       desc: '',
       args: [],
@@ -558,7 +558,7 @@ class S {
   /// `Invoice management`
   String get invoice_management {
     return Intl.message(
-      'Invoice management',
+      'Invoice Management',
       name: 'invoice_management',
       desc: '',
       args: [],
@@ -568,7 +568,7 @@ class S {
   /// `Invoice template`
   String get invoice_template {
     return Intl.message(
-      'Invoice template',
+      'Invoice Templates',
       name: 'invoice_template',
       desc: '',
       args: [],
@@ -608,7 +608,7 @@ class S {
   /// `Invoice date/time`
   String get invoiceDateTime {
     return Intl.message(
-      'Invoice date/time',
+      'Invoice date and time',
       name: 'invoiceDateTime',
       desc: '',
       args: [],
@@ -717,12 +717,12 @@ class S {
 
   /// `Paid amount`
   String get paidAmount {
-    return Intl.message('Paid amount', name: 'paidAmount', desc: '', args: []);
+    return Intl.message('Amount paid', name: 'paidAmount', desc: '', args: []);
   }
 
   /// `Currency`
   String get currency {
-    return Intl.message('Currency', name: 'currency', desc: '', args: []);
+    return Intl.message('EGP', name: 'currency', desc: '', args: []);
   }
 
   /// `Invoice total`
@@ -748,7 +748,7 @@ class S {
   /// `Name is required`
   String get nameRequired {
     return Intl.message(
-      'Name is required',
+      'Enter a name',
       name: 'nameRequired',
       desc: '',
       args: [],
@@ -758,7 +758,7 @@ class S {
   /// `Invalid number`
   String get invalidNumber {
     return Intl.message(
-      'Invalid number',
+      'Enter a valid finite number',
       name: 'invalidNumber',
       desc: '',
       args: [],
@@ -768,7 +768,7 @@ class S {
   /// `Invalid integer`
   String get invalidInteger {
     return Intl.message(
-      'Invalid integer',
+      'Enter a whole number',
       name: 'invalidInteger',
       desc: '',
       args: [],
@@ -778,7 +778,7 @@ class S {
   /// `Invoice needs at least one product`
   String get invoiceNeedsProduct {
     return Intl.message(
-      'Invoice needs at least one product',
+      'Add at least one product before saving.',
       name: 'invoiceNeedsProduct',
       desc: '',
       args: [],
@@ -788,7 +788,7 @@ class S {
   /// `Legacy date picker hint`
   String get legacyDatePickerHint {
     return Intl.message(
-      'Legacy date picker hint',
+      'The stored date or time could not be parsed. Choose a replacement if needed.',
       name: 'legacyDatePickerHint',
       desc: '',
       args: [],
@@ -813,7 +813,7 @@ class S {
   /// `Could not save invoice`
   String get couldNotSaveInvoice {
     return Intl.message(
-      'Could not save invoice',
+      'Could not save invoice changes',
       name: 'couldNotSaveInvoice',
       desc: '',
       args: [],
@@ -833,7 +833,7 @@ class S {
   /// `Invoice value`
   String get storageInvoiceValue {
     return Intl.message(
-      'Invoice value',
+      'Storage value',
       name: 'storageInvoiceValue',
       desc: '',
       args: [],
@@ -843,7 +843,7 @@ class S {
   /// `Net weight`
   String get storedNetWeight {
     return Intl.message(
-      'Net weight',
+      'Stored net weight',
       name: 'storedNetWeight',
       desc: '',
       args: [],
@@ -853,7 +853,7 @@ class S {
   /// `Invoice count`
   String get storageInvoiceCount {
     return Intl.message(
-      'Invoice count',
+      'Storage invoices',
       name: 'storageInvoiceCount',
       desc: '',
       args: [],
@@ -863,7 +863,7 @@ class S {
   /// `Currency`
   String get storageCurrency {
     return Intl.message(
-      'Currency',
+      'EGP',
       name: 'storageCurrency',
       desc: '',
       args: [],
@@ -878,7 +878,7 @@ class S {
   /// `Search customer invoices`
   String get customerInvoiceSearchHint {
     return Intl.message(
-      'Search customer invoices',
+      'Search by serial or product name',
       name: 'customerInvoiceSearchHint',
       desc: '',
       args: [],
@@ -888,7 +888,7 @@ class S {
   /// `Search all invoices`
   String get allInvoicesSearchHint {
     return Intl.message(
-      'Search all invoices',
+      'Search by serial, product or customer',
       name: 'allInvoicesSearchHint',
       desc: '',
       args: [],
@@ -908,7 +908,7 @@ class S {
   /// `No recent invoices`
   String get noRecentInvoices {
     return Intl.message(
-      'No recent invoices',
+      'No invoices yet',
       name: 'noRecentInvoices',
       desc: '',
       args: [],
@@ -918,7 +918,7 @@ class S {
   /// `Clear invoice search`
   String get clearInvoiceSearch {
     return Intl.message(
-      'Clear invoice search',
+      'Clear search',
       name: 'clearInvoiceSearch',
       desc: '',
       args: [],
@@ -938,7 +938,7 @@ class S {
   /// `Invoice action filter`
   String get invoiceActionFilter {
     return Intl.message(
-      'Invoice action filter',
+      'Invoice type',
       name: 'invoiceActionFilter',
       desc: '',
       args: [],
@@ -953,7 +953,7 @@ class S {
   /// `Date range filter`
   String get dateRangeFilter {
     return Intl.message(
-      'Date range filter',
+      'Date range',
       name: 'dateRangeFilter',
       desc: '',
       args: [],
@@ -983,7 +983,7 @@ class S {
   /// `Payment status filter`
   String get paymentStatusFilter {
     return Intl.message(
-      'Payment status filter',
+      'Payment status',
       name: 'paymentStatusFilter',
       desc: '',
       args: [],
@@ -993,7 +993,7 @@ class S {
   /// `All invoices`
   String get allInvoicesFilter {
     return Intl.message(
-      'All invoices',
+      'All',
       name: 'allInvoicesFilter',
       desc: '',
       args: [],
@@ -1023,7 +1023,7 @@ class S {
   /// `Reset invoice filters`
   String get resetInvoiceFilters {
     return Intl.message(
-      'Reset invoice filters',
+      'Reset filters',
       name: 'resetInvoiceFilters',
       desc: '',
       args: [],
@@ -1032,13 +1032,13 @@ class S {
 
   /// `Filters`
   String get invoiceFilters {
-    return Intl.message('Filters', name: 'invoiceFilters', desc: '', args: []);
+    return Intl.message('Invoice filters', name: 'invoiceFilters', desc: '', args: []);
   }
 
   /// `Apply filters`
   String get applyFilters {
     return Intl.message(
-      'Apply filters',
+      'Apply',
       name: 'applyFilters',
       desc: '',
       args: [],
@@ -1048,7 +1048,7 @@ class S {
   /// `No invoices match your filters`
   String get noInvoicesMatchFilters {
     return Intl.message(
-      'No invoices match your filters',
+      'No invoices match the search or filters',
       name: 'noInvoicesMatchFilters',
       desc: '',
       args: [],
@@ -1088,7 +1088,7 @@ class S {
   /// `Clear draft message`
   String get clear_draft_message {
     return Intl.message(
-      'Clear draft message',
+      'Only the current invoice data will be cleared. Saved invoices will not be deleted.',
       name: 'clear_draft_message',
       desc: '',
       args: [],
@@ -1118,7 +1118,7 @@ class S {
   /// `New invoice ready`
   String get new_invoice_ready {
     return Intl.message(
-      'New invoice ready',
+      'A new invoice is ready',
       name: 'new_invoice_ready',
       desc: '',
       args: [],
@@ -1128,7 +1128,7 @@ class S {
   /// `Invoice deleted. New invoice ready`
   String get invoice_deleted_new_ready {
     return Intl.message(
-      'Invoice deleted. New invoice ready',
+      'Invoice deleted. A new invoice is ready',
       name: 'invoice_deleted_new_ready',
       desc: '',
       args: [],
@@ -1138,7 +1138,7 @@ class S {
   /// `Save invoice failed`
   String get save_invoice_failed {
     return Intl.message(
-      'Save invoice failed',
+      'Could not save the invoice',
       name: 'save_invoice_failed',
       desc: '',
       args: [],
@@ -1148,7 +1148,7 @@ class S {
   /// `Share invoice failed`
   String get share_invoice_failed {
     return Intl.message(
-      'Share invoice failed',
+      'The invoice was saved, but sharing failed',
       name: 'share_invoice_failed',
       desc: '',
       args: [],
@@ -1173,7 +1173,7 @@ class S {
   /// `Collected amount`
   String get collected_amount_label {
     return Intl.message(
-      'Collected amount',
+      'Collected',
       name: 'collected_amount_label',
       desc: '',
       args: [],
@@ -1247,18 +1247,18 @@ class S {
 
   /// `Clear field`
   String get clear_field {
-    return Intl.message('Clear field', name: 'clear_field', desc: '', args: []);
+    return Intl.message('Double-tap to clear', name: 'clear_field', desc: '', args: []);
   }
 
   /// `Clear text`
   String get clear_text {
-    return Intl.message('Clear text', name: 'clear_text', desc: '', args: []);
+    return Intl.message('Clear', name: 'clear_text', desc: '', args: []);
   }
 
   /// `Discount exceeds total`
   String get discount_exceeds_total {
     return Intl.message(
-      'Discount exceeds total',
+      'Discount cannot exceed the invoice total',
       name: 'discount_exceeds_total',
       desc: '',
       args: [],
@@ -1268,7 +1268,7 @@ class S {
   /// `Discount percent range (0-100)`
   String get discount_percent_range {
     return Intl.message(
-      'Discount percent range (0-100)',
+      'Percent must be between 0 and 100',
       name: 'discount_percent_range',
       desc: '',
       args: [],
@@ -1328,7 +1328,7 @@ class S {
   /// `Start adding products`
   String get start_adding_products {
     return Intl.message(
-      'Start adding products',
+      'Start adding products to the invoice',
       name: 'start_adding_products',
       desc: '',
       args: [],
@@ -1338,7 +1338,7 @@ class S {
   /// `Enter collected amount`
   String get enter_collected_amount {
     return Intl.message(
-      'Enter collected amount',
+      'Please enter the collected amount',
       name: 'enter_collected_amount',
       desc: '',
       args: [],
@@ -1348,7 +1348,7 @@ class S {
   /// `Product added`
   String get product_added {
     return Intl.message(
-      'Product added',
+      'Product added successfully',
       name: 'product_added',
       desc: '',
       args: [],
@@ -1363,7 +1363,7 @@ class S {
   /// `Select invoice type first`
   String get select_invoice_type_first {
     return Intl.message(
-      'Select invoice type first',
+      'Please select the invoice type first',
       name: 'select_invoice_type_first',
       desc: '',
       args: [],
@@ -1373,7 +1373,7 @@ class S {
   /// `Select product`
   String get select_product {
     return Intl.message(
-      'Select product',
+      'Please select a product',
       name: 'select_product',
       desc: '',
       args: [],
@@ -1383,7 +1383,7 @@ class S {
   /// `Data unavailable`
   String get data_unavailable {
     return Intl.message(
-      'Data unavailable',
+      'Could not access invoice data. Please try again.',
       name: 'data_unavailable',
       desc: '',
       args: [],
@@ -1428,7 +1428,7 @@ class S {
   /// `Weight is required`
   String get weight_required {
     return Intl.message(
-      'Weight is required',
+      'Please enter the weight',
       name: 'weight_required',
       desc: '',
       args: [],
@@ -1438,7 +1438,7 @@ class S {
   /// `Price is required`
   String get price_required {
     return Intl.message(
-      'Price is required',
+      'Please enter the price',
       name: 'price_required',
       desc: '',
       args: [],
@@ -1448,7 +1448,7 @@ class S {
   /// `Package count is required`
   String get package_count_required {
     return Intl.message(
-      'Package count is required',
+      'Enter the package count first',
       name: 'package_count_required',
       desc: '',
       args: [],
@@ -1458,7 +1458,7 @@ class S {
   /// `Package weight is required`
   String get package_weight_required {
     return Intl.message(
-      'Package weight is required',
+      'Enter the empty package weight',
       name: 'package_weight_required',
       desc: '',
       args: [],
@@ -1468,7 +1468,7 @@ class S {
   /// `Customer name must be at least 4 characters`
   String get customer_name_min_length {
     return Intl.message(
-      'Customer name must be at least 4 characters',
+      'Enter at least 4 characters',
       name: 'customer_name_min_length',
       desc: '',
       args: [],
@@ -1478,7 +1478,7 @@ class S {
   /// `Error loading suggestions`
   String get error_loading_suggestions {
     return Intl.message(
-      'Error loading suggestions',
+      'Could not load suggestions',
       name: 'error_loading_suggestions',
       desc: '',
       args: [],
@@ -1488,7 +1488,7 @@ class S {
   /// `Error saving suggestions`
   String get error_saving_suggestions {
     return Intl.message(
-      'Error saving suggestions',
+      'Could not save suggestions',
       name: 'error_saving_suggestions',
       desc: '',
       args: [],
@@ -1498,7 +1498,7 @@ class S {
   /// `Error adding suggestions`
   String get error_adding_suggestions {
     return Intl.message(
-      'Error adding suggestions',
+      'Could not add the suggestion',
       name: 'error_adding_suggestions',
       desc: '',
       args: [],
@@ -1508,7 +1508,7 @@ class S {
   /// `Error submitting suggestions`
   String get error_submitting_suggestions {
     return Intl.message(
-      'Error submitting suggestions',
+      'Could not submit the suggestion',
       name: 'error_submitting_suggestions',
       desc: '',
       args: [],
@@ -1553,7 +1553,7 @@ class S {
   /// `Confirm delete`
   String get confirm_delete {
     return Intl.message(
-      'Confirm delete',
+      'Confirm deletion',
       name: 'confirm_delete',
       desc: '',
       args: [],
@@ -1618,7 +1618,7 @@ class S {
   /// `No customer invoices`
   String get no_customer_invoices {
     return Intl.message(
-      'No customer invoices',
+      'No invoices for this customer',
       name: 'no_customer_invoices',
       desc: '',
       args: [],
@@ -1628,7 +1628,7 @@ class S {
   /// `Net due to customer`
   String get net_due_to_customer {
     return Intl.message(
-      'Net due to customer',
+      'Net due to the customer',
       name: 'net_due_to_customer',
       desc: '',
       args: [],
@@ -1688,7 +1688,7 @@ class S {
   /// `Are you sure you want to delete this invoice?\nThis cannot be undone.`
   String get confirm_delete_invoice {
     return Intl.message(
-      'Are you sure you want to delete this invoice?\nThis cannot be undone.',
+      'Are you sure you want to delete this invoice?\nThis action cannot be undone.',
       name: 'confirm_delete_invoice',
       desc: '',
       args: [],
@@ -1698,7 +1698,7 @@ class S {
   /// `Could not delete invoice`
   String get could_not_delete_invoice {
     return Intl.message(
-      'Could not delete invoice',
+      'Could not delete the invoice',
       name: 'could_not_delete_invoice',
       desc: '',
       args: [],
@@ -1708,7 +1708,7 @@ class S {
   /// `Could not load invoices`
   String get could_not_load_invoices {
     return Intl.message(
-      'Could not load invoices',
+      'Could not load the invoice history',
       name: 'could_not_load_invoices',
       desc: '',
       args: [],
@@ -1718,7 +1718,7 @@ class S {
   /// `Invoice saved but failed to reload`
   String get invoice_saved_reload_failed {
     return Intl.message(
-      'Invoice saved but failed to reload',
+      'Changes saved, but the invoice history could not be refreshed',
       name: 'invoice_saved_reload_failed',
       desc: '',
       args: [],
@@ -1728,7 +1728,7 @@ class S {
   /// `Could not share invoice`
   String get could_not_share_invoice {
     return Intl.message(
-      'Could not share invoice',
+      'Could not share the invoice',
       name: 'could_not_share_invoice',
       desc: '',
       args: [],
@@ -1758,7 +1758,7 @@ class S {
   /// `A few invoices`
   String get invoices_few {
     return Intl.message(
-      'A few invoices',
+      'invoices',
       name: 'invoices_few',
       desc: '',
       args: [],
@@ -1768,7 +1768,7 @@ class S {
   /// `Many invoices`
   String get invoices_many {
     return Intl.message(
-      'Many invoices',
+      'invoices',
       name: 'invoices_many',
       desc: '',
       args: [],
@@ -1777,13 +1777,13 @@ class S {
 
   /// `Operation`
   String get operation {
-    return Intl.message('Operation', name: 'operation', desc: '', args: []);
+    return Intl.message('Transaction', name: 'operation', desc: '', args: []);
   }
 
   /// `Customer info`
   String get customer_info {
     return Intl.message(
-      'Customer info',
+      'Customer information',
       name: 'customer_info',
       desc: '',
       args: [],
@@ -1863,7 +1863,7 @@ class S {
   /// `Enter manager name`
   String get enter_manager_name {
     return Intl.message(
-      'Enter manager name',
+      'Enter the manager name',
       name: 'enter_manager_name',
       desc: '',
       args: [],
@@ -1882,7 +1882,7 @@ class S {
 
   /// `Enter phone`
   String get enter_phone {
-    return Intl.message('Enter phone', name: 'enter_phone', desc: '', args: []);
+    return Intl.message('Enter the phone number', name: 'enter_phone', desc: '', args: []);
   }
 
   /// `Company name`
@@ -2128,7 +2128,7 @@ class S {
   /// `Product deleted successfully`
   String get product_deleted_successfully {
     return Intl.message(
-      'Product deleted successfully',
+      'Product deleted',
       name: 'product_deleted_successfully',
       desc: '',
       args: [],
