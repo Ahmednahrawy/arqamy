@@ -34,6 +34,7 @@ class InvoiceProvider extends ChangeNotifier {
   List<String> _masterProductList = [];
   final Map<String, Map<InvoiceAction, double>> _masterProductPrices = {};
   final Map<String, ProductStock> _masterProductStock = {};
+  bool _masterProductStockLoaded = false;
   final List<Invoice> _invoices = []; // قائمة الفواتير المخزنة
   bool _invoicesLoaded = false;
   List<Product>? _productsViewCache;
@@ -187,13 +188,16 @@ class InvoiceProvider extends ChangeNotifier {
       await _ensureInvoicesLoaded();
       final updatedInvoices = List<Invoice>.of(_invoices);
       final index = _uniqueInvoiceIndex(invoice.id);
+      Invoice? previous;
       if (index == -1) {
         updatedInvoices.add(invoice);
       } else {
+        previous = updatedInvoices[index];
         updatedInvoices[index] = invoice;
       }
 
       await _saveInvoicesToStorage(updatedInvoices);
+      await _applyInvoiceStockChanges(previous: [?previous], next: [invoice]);
       _replaceInvoices(updatedInvoices);
       notifyListeners();
     });
@@ -207,9 +211,11 @@ class InvoiceProvider extends ChangeNotifier {
       if (index == -1) {
         throw StateError('Invoice ${invoice.id} was not found');
       }
+      final previous = updatedInvoices[index];
       updatedInvoices[index] = invoice;
 
       await _saveInvoicesToStorage(updatedInvoices);
+      await _applyInvoiceStockChanges(previous: [previous], next: [invoice]);
       _replaceInvoices(updatedInvoices);
       notifyListeners();
     });
@@ -374,8 +380,10 @@ class InvoiceProvider extends ChangeNotifier {
       final index = _uniqueInvoiceIndex(invoiceId);
       if (index == -1) return;
 
+      final deleted = _invoices[index];
       final updatedInvoices = List<Invoice>.of(_invoices)..removeAt(index);
       await _saveInvoicesToStorage(updatedInvoices);
+      await _applyInvoiceStockChanges(previous: [deleted]);
       _replaceInvoices(updatedInvoices);
       notifyListeners();
     });
@@ -417,6 +425,8 @@ class InvoiceProvider extends ChangeNotifier {
     return _withInvoiceMutationLock(() async {
       await _ensureInvoicesLoaded();
       final updatedInvoices = List<Invoice>.of(_invoices);
+      final replacedInvoices = <Invoice>[];
+      final appliedInvoices = <Invoice>[];
       var added = 0;
       var replaced = 0;
       for (final invoice in restored) {
@@ -427,12 +437,18 @@ class InvoiceProvider extends ChangeNotifier {
           updatedInvoices.add(invoice);
           added++;
         } else {
+          replacedInvoices.add(updatedInvoices[index]);
           updatedInvoices[index] = invoice;
           replaced++;
         }
+        appliedInvoices.add(invoice);
       }
 
       await _saveInvoicesToStorage(updatedInvoices);
+      await _applyInvoiceStockChanges(
+        previous: replacedInvoices,
+        next: appliedInvoices,
+      );
       _replaceInvoices(updatedInvoices);
       notifyListeners();
       return InvoiceRestoreResult(added: added, replaced: replaced);
@@ -519,6 +535,7 @@ class InvoiceProvider extends ChangeNotifier {
   static const String _masterProductStockKey = 'master_product_stock';
 
   void _loadMasterProductStock(SharedPreferences prefs) {
+    _masterProductStockLoaded = true;
     _masterProductStock.clear();
     final stockJson = prefs.getString(_masterProductStockKey);
     if (stockJson == null) return;
@@ -583,6 +600,79 @@ class InvoiceProvider extends ChangeNotifier {
     _masterProductStock[name] = updated;
     await _saveMasterProductStock();
     notifyListeners();
+  }
+
+  /// Reads saved stock once so invoice writes can adjust it even when the
+  /// inventory screen has not been opened yet.
+  Future<void> _ensureMasterProductStockLoaded() async {
+    if (_masterProductStockLoaded) return;
+    try {
+      _loadMasterProductStock(await SharedPreferences.getInstance());
+    } catch (error) {
+      debugPrint('Error loading product stock: $error');
+    }
+    _masterProductStockLoaded = true;
+  }
+
+  /// Keeps inventory in sync with saved invoices.
+  ///
+  /// Replaced or deleted invoices have their old effect removed before the
+  /// new ones are applied, so editing an invoice never counts it twice.
+  Future<void> _applyInvoiceStockChanges({
+    Iterable<Invoice> previous = const [],
+    Iterable<Invoice> next = const [],
+  }) async {
+    if (previous.isEmpty && next.isEmpty) return;
+    await _ensureMasterProductStockLoaded();
+
+    var changed = false;
+    for (final invoice in previous) {
+      if (_applyStockEffect(invoice, reverse: true)) changed = true;
+    }
+    for (final invoice in next) {
+      if (_applyStockEffect(invoice, reverse: false)) changed = true;
+    }
+    if (changed) await _saveMasterProductStock();
+  }
+
+  /// Adds or removes the quantity of every line of [invoice] from stock.
+  ///
+  /// Purchases add stock, sales remove it and storage invoices leave it
+  /// alone. Returns true when at least one product changed. Stock never goes
+  /// below zero because [ProductStock] only stores non-negative quantities.
+  bool _applyStockEffect(Invoice invoice, {required bool reverse}) {
+    final direction = switch (InvoiceAction.tryParse(invoice.invoiceAction)) {
+      InvoiceAction.purchase => reverse ? -1 : 1,
+      InvoiceAction.sale => reverse ? 1 : -1,
+      InvoiceAction.storage || null => 0,
+    };
+    if (direction == 0) return false;
+
+    var changed = false;
+    for (final product in invoice.products) {
+      final name = product.name.trim();
+      final quantity = _stockQuantity(product);
+      if (name.isEmpty || quantity == 0) continue;
+
+      final current = _masterProductStock[name] ?? ProductStock.empty;
+      final adjusted = current.quantity + direction * quantity;
+      final updated = ProductStock(
+        quantity: adjusted < 0 ? 0 : adjusted,
+        minOQ: current.minOQ,
+      );
+      if (updated == current) continue;
+      _masterProductStock[name] = updated;
+      changed = true;
+    }
+    return changed;
+  }
+
+  /// Units moved by one line: its net weight rounded to a whole unit.
+  /// Missing or invalid weights are ignored instead of being stored.
+  static int _stockQuantity(Product product) {
+    final netWeight = product.netWeight;
+    if (!netWeight.isFinite || netWeight <= 0) return 0;
+    return netWeight.round();
   }
 
   Future<void> _saveMasterProductPrices() async {
