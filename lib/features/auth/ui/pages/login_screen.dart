@@ -73,7 +73,7 @@ class _LoginScreenState extends State<LoginScreen> {
             TextButton(
               key: const ValueKey('login-skip'),
               onPressed: widget.onSkip,
-              child: Text(strings.skip),
+              child: Text(strings.skip, style: TextStyle(color: theme.colorScheme.onPrimary)),
             ),
           const LanguagePickerButton(),
         ],
