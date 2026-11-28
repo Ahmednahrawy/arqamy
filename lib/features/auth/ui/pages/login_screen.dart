@@ -1,3 +1,4 @@
+import 'package:arqamy/core/widgets/language_picker_button.dart';
 import 'package:arqamy/features/auth/domain/auth_validators.dart';
 import 'package:arqamy/features/auth/providers/auth_provider.dart';
 import 'package:arqamy/features/auth/ui/auth_messages.dart';
@@ -61,7 +62,10 @@ class _LoginScreenState extends State<LoginScreen> {
     final failure = auth.failure;
 
     return Scaffold(
-      appBar: AppBar(title: Text(strings.auth_sign_in)),
+      appBar: AppBar(
+        title: Text(strings.auth_sign_in),
+        actions: const [LanguagePickerButton()],
+      ),
       body: SafeArea(
         child: Center(
           child: SingleChildScrollView(
@@ -143,8 +147,9 @@ class _LoginScreenState extends State<LoginScreen> {
                         alignment: AlignmentDirectional.centerEnd,
                         child: TextButton(
                           key: const ValueKey('login-forgot'),
-                          onPressed:
-                              auth.isBusy ? null : widget.onForgotPassword,
+                          onPressed: auth.isBusy
+                              ? null
+                              : widget.onForgotPassword,
                           child: Text(strings.auth_forgot_password),
                         ),
                       ),
@@ -190,8 +195,9 @@ class _LoginScreenState extends State<LoginScreen> {
                           Text(strings.auth_no_account),
                           TextButton(
                             key: const ValueKey('login-create-account'),
-                            onPressed:
-                                auth.isBusy ? null : widget.onCreateAccount,
+                            onPressed: auth.isBusy
+                                ? null
+                                : widget.onCreateAccount,
                             child: Text(strings.auth_sign_up),
                           ),
                         ],

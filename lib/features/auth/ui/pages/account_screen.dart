@@ -1,3 +1,4 @@
+import 'package:arqamy/core/widgets/language_picker_button.dart';
 import 'package:arqamy/features/auth/providers/auth_provider.dart';
 import 'package:arqamy/features/auth/ui/auth_flow.dart';
 import 'package:arqamy/generated/l10n.dart';
@@ -14,7 +15,10 @@ class AccountScreen extends StatelessWidget {
     final auth = context.watch<AuthProvider>();
 
     return Scaffold(
-      appBar: AppBar(title: Text(strings.profile)),
+      appBar: AppBar(
+        title: Text(strings.profile),
+        actions: const [LanguagePickerButton()],
+      ),
       body: ListView(
         children: [
           ListTile(

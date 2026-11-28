@@ -1,3 +1,4 @@
+import 'package:arqamy/core/widgets/language_picker_button.dart';
 import 'package:arqamy/features/auth/domain/auth_validators.dart';
 import 'package:arqamy/features/auth/providers/auth_provider.dart';
 import 'package:arqamy/features/auth/ui/auth_messages.dart';
@@ -56,7 +57,10 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
     final failure = auth.failure;
 
     return Scaffold(
-      appBar: AppBar(title: Text(strings.auth_reset_password_title)),
+      appBar: AppBar(
+        title: Text(strings.auth_reset_password_title),
+        actions: const [LanguagePickerButton()],
+      ),
       body: SafeArea(
         child: Center(
           child: SingleChildScrollView(
@@ -153,9 +157,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                           ? const SizedBox(
                               height: 20,
                               width: 20,
-                              child: CircularProgressIndicator(
-                                strokeWidth: 2,
-                              ),
+                              child: CircularProgressIndicator(strokeWidth: 2),
                             )
                           : Text(strings.auth_send_reset_link),
                     ),

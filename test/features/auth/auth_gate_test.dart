@@ -122,4 +122,22 @@ void main() {
     expect(find.byKey(const ValueKey('login-email')), findsOneWidget);
     expect(tester.takeException(), isNull);
   });
+
+  testWidgets('language can be switched from the login app bar', (
+    tester,
+  ) async {
+    await pumpGate(tester);
+    expect(find.byKey(const ValueKey('language-picker')), findsOneWidget);
+
+    await tester.tap(find.byKey(const ValueKey('language-picker')));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Arabic'));
+    await tester.pumpAndSettle();
+
+    final prefs = await SharedPreferences.getInstance();
+    expect(prefs.getString('languageCode'), 'ar');
+    expect(find.text('تسجيل الدخول'), findsWidgets);
+    expect(find.byKey(const ValueKey('login-email')), findsOneWidget);
+    expect(tester.takeException(), isNull);
+  });
 }
