@@ -3091,6 +3091,97 @@ class S {
   }
 }
 
+
+  /// `Company info shown on invoice`
+  String get company_info_on_invoice {
+    return Intl.message('Company info shown on invoice', name: 'company_info_on_invoice', desc: '', args: []);
+  }
+
+  /// `Other invoice info`
+  String get other_invoice_info {
+    return Intl.message('Other invoice info', name: 'other_invoice_info', desc: '', args: []);
+  }
+
+  /// `PDF Columns`
+  String get pdf_columns {
+    return Intl.message('PDF Columns', name: 'pdf_columns', desc: '', args: []);
+  }
+
+  /// `Excel Columns`
+  String get excel_columns {
+    return Intl.message('Excel Columns', name: 'excel_columns', desc: '', args: []);
+  }
+
+  /// `Show or hide columns in exported invoices`
+  String get column_visibility_description {
+    return Intl.message('Show or hide columns in exported invoices', name: 'column_visibility_description', desc: '', args: []);
+  }
+
+  /// `Invoice #`
+  String get column_serial {
+    return Intl.message('Invoice #', name: 'column_serial', desc: '', args: []);
+  }
+
+  /// `Date`
+  String get column_date {
+    return Intl.message('Date', name: 'column_date', desc: '', args: []);
+  }
+
+  /// `Time`
+  String get column_time {
+    return Intl.message('Time', name: 'column_time', desc: '', args: []);
+  }
+
+  /// `Customer`
+  String get column_customer {
+    return Intl.message('Customer', name: 'column_customer', desc: '', args: []);
+  }
+
+  /// `Type`
+  String get column_type {
+    return Intl.message('Type', name: 'column_type', desc: '', args: []);
+  }
+
+  /// `Product`
+  String get column_product {
+    return Intl.message('Product', name: 'column_product', desc: '', args: []);
+  }
+
+  /// `Weight`
+  String get column_weight {
+    return Intl.message('Weight', name: 'column_weight', desc: '', args: []);
+  }
+
+  /// `Package weight`
+  String get column_package_weight {
+    return Intl.message('Package weight', name: 'column_package_weight', desc: '', args: []);
+  }
+
+  /// `Package count`
+  String get column_package_count {
+    return Intl.message('Package count', name: 'column_package_count', desc: '', args: []);
+  }
+
+  /// `Net weight`
+  String get column_net_weight {
+    return Intl.message('Net weight', name: 'column_net_weight', desc: '', args: []);
+  }
+
+  /// `Price`
+  String get column_price {
+    return Intl.message('Price', name: 'column_price', desc: '', args: []);
+  }
+
+  /// `Total`
+  String get column_total {
+    return Intl.message('Total', name: 'column_total', desc: '', args: []);
+  }
+
+  /// `Show all`
+  String get column_show_all {
+    return Intl.message('Show all', name: 'column_show_all', desc: '', args: []);
+  }
+
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {
   const AppLocalizationDelegate();
 

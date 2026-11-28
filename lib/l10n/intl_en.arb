@@ -369,5 +369,9 @@
   "column_net_weight": "Net weight",
   "column_price": "Price",
   "column_total": "Total",
-  "column_show_all": "Show all"
+  "column_show_all": "Show all",
+  "inventory_total_quantity": "Units",
+  "inventory_minimum": "Min",
+  "appearance": "Appearance",
+  "system_mode": "System"
 }
