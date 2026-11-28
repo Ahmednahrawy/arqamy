@@ -1,3 +1,5 @@
+import 'package:arqamy/core/helpers/invoice_export_columns.dart';
+
 /// Localized headers used in exported invoice worksheets.
 ///
 /// Kept independent from the widget-based `S` lookup so workbooks can be built
@@ -13,6 +15,7 @@ class ExcelLabels {
     required this.type,
     required this.product,
     required this.weightKg,
+    required this.packageWeight,
     required this.packageWeightKg,
     required this.packageCount,
     required this.netWeightKg,
@@ -26,6 +29,7 @@ class ExcelLabels {
     required this.purchase,
     required this.sale,
     required this.storage,
+    required this.kilograms,
   });
 
   final bool isRtl;
@@ -36,6 +40,7 @@ class ExcelLabels {
   final String type;
   final String product;
   final String weightKg;
+  final String packageWeight;
   final String packageWeightKg;
   final String packageCount;
   final String netWeightKg;
@@ -49,6 +54,7 @@ class ExcelLabels {
   final String purchase;
   final String sale;
   final String storage;
+  final String kilograms;
 
   static const ar = ExcelLabels(
     isRtl: true,
@@ -59,6 +65,7 @@ class ExcelLabels {
     type: 'النوع',
     product: 'المنتج',
     weightKg: 'الوزن (كجم)',
+    packageWeight: 'وزن العبوة',
     packageWeightKg: 'وزن العبوة (كجم)',
     packageCount: 'عدد العبوات',
     netWeightKg: 'صافي الوزن (كجم)',
@@ -72,6 +79,7 @@ class ExcelLabels {
     purchase: 'شراء',
     sale: 'بيع',
     storage: 'تخزين',
+    kilograms: 'كجم',
   );
 
   static const en = ExcelLabels(
@@ -83,6 +91,7 @@ class ExcelLabels {
     type: 'Type',
     product: 'Product',
     weightKg: 'Weight (kg)',
+    packageWeight: 'Package weight',
     packageWeightKg: 'Package weight (kg)',
     packageCount: 'Package count',
     netWeightKg: 'Net weight (kg)',
@@ -96,7 +105,28 @@ class ExcelLabels {
     purchase: 'Purchase',
     sale: 'Sale',
     storage: 'Storage',
+    kilograms: 'kg',
   );
+
+  /// Header of a column that the user chose to include in the export.
+  String header(InvoiceTableColumn column) => switch (column) {
+    InvoiceTableColumn.serial => serial,
+    InvoiceTableColumn.date => date,
+    InvoiceTableColumn.time => time,
+    InvoiceTableColumn.customer => customer,
+    InvoiceTableColumn.type => type,
+    InvoiceTableColumn.product => product,
+    InvoiceTableColumn.weight => weightKg,
+    InvoiceTableColumn.packageWeight => packageWeightKg,
+    InvoiceTableColumn.packageCount => packageCount,
+    InvoiceTableColumn.netWeight => netWeightKg,
+    InvoiceTableColumn.price => priceEgp,
+    InvoiceTableColumn.total => totalEgp,
+  };
+
+  /// Note shown below the product rows when every package has the same weight.
+  String packageWeightNote(String weight) =>
+      '$packageWeight: $weight $kilograms';
 
   static ExcelLabels forLocale(String locale) =>
       locale.toLowerCase().startsWith('en') ? en : ar;

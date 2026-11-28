@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:arqamy/core/helpers/formatters.dart';
 import 'package:arqamy/core/helpers/invoice_action_l10n.dart';
 import 'package:arqamy/core/helpers/invoice_discount.dart';
+import 'package:arqamy/core/helpers/invoice_export_columns.dart';
 import 'package:arqamy/core/helpers/pdf_labels.dart';
 import 'package:arqamy/features/orderscreen/providers/invoice_provider.dart';
 import 'package:arqamy/features/orderscreen/ui/widgets/pw_grouped_table.dart';
@@ -59,7 +60,13 @@ Future<Uint8List> generatePDF(
   final products = provider.products;
   final grouped = provider.groupedProducts;
   final bool hasIdenticalProducts = provider.hasIdenticalProducts;
-  final bool shouldShowPackageColumns = provider.shouldShowPackageColumns;
+  final columns = settings.pdfColumns;
+  final packageWeights = InvoicePackageWeights.fromProducts(products);
+  final hasPackageProducts = packageWeights.hasPackages;
+  final packageWeightDisplay = resolvePackageWeightDisplay(
+    enabled: columns.isVisible(InvoiceTableColumn.packageWeight),
+    weights: packageWeights,
+  );
 
   final invoiceName = _invoiceTitle(invoiceAction, labels);
 
@@ -146,7 +153,9 @@ Future<Uint8List> generatePDF(
               alignment: pw.Alignment.center,
               child: PdfMyDataTable(
                 products: products,
-                shouldShowPackageColumns: shouldShowPackageColumns,
+                columns: columns,
+                packageWeightDisplay: packageWeightDisplay,
+                hasPackageProducts: hasPackageProducts,
                 labels: labels,
               ),
             ),
@@ -173,12 +182,31 @@ Future<Uint8List> generatePDF(
                 alignment: pw.Alignment.center,
                 child: PdfGroupedDataTable(
                   groupedProducts: grouped,
-                  shouldShowPackageColumns: shouldShowPackageColumns,
+                  columns: columns,
+                  packageWeightDisplay: packageWeightDisplay,
+                  hasPackageProducts: hasPackageProducts,
                   labels: labels,
                 ),
               ),
             ),
             pw.SizedBox(height: 10),
+          ]);
+        }
+        if (packageWeightDisplay == PackageWeightDisplay.note &&
+            packageWeights.singleWeight != null) {
+          widgets.addAll([
+            pw.SizedBox(height: 6),
+            pw.Align(
+              alignment: pw.AlignmentDirectional.centerStart,
+              child: pw.Text(
+                labels.packageWeightNote(
+                  AppFormatters.number(packageWeights.singleWeight!),
+                ),
+                textDirection:
+                    labels.isRtl ? pw.TextDirection.rtl : pw.TextDirection.ltr,
+                style: pw.TextStyle(fontSize: 16, font: ttf),
+              ),
+            ),
           ]);
         }
         final totals = <pw.Widget>[];

@@ -1,3 +1,5 @@
+import 'package:arqamy/core/helpers/invoice_export_columns.dart';
+
 /// The invoice settings and order defaults that travel in a backup file.
 class InvoiceSettingsSnapshot {
   const InvoiceSettingsSnapshot({
@@ -11,6 +13,8 @@ class InvoiceSettingsSnapshot {
     required this.defaultPackageNumber,
     required this.showPackageWeight,
     required this.showPackageNumber,
+    this.pdfColumnVisibility = InvoiceColumnVisibility.allVisible,
+    this.excelColumnVisibility = InvoiceColumnVisibility.allVisible,
   });
 
   factory InvoiceSettingsSnapshot.defaults() => const InvoiceSettingsSnapshot(
@@ -24,6 +28,8 @@ class InvoiceSettingsSnapshot {
     defaultPackageNumber: 0,
     showPackageWeight: true,
     showPackageNumber: true,
+    pdfColumnVisibility: InvoiceColumnVisibility.allVisible,
+    excelColumnVisibility: InvoiceColumnVisibility.allVisible,
   );
 
   final String logoPath;
@@ -36,6 +42,8 @@ class InvoiceSettingsSnapshot {
   final int defaultPackageNumber;
   final bool showPackageWeight;
   final bool showPackageNumber;
+  final InvoiceColumnVisibility pdfColumnVisibility;
+  final InvoiceColumnVisibility excelColumnVisibility;
 
   Map<String, Object?> toJson() => {
     'logoPath': logoPath,
@@ -48,6 +56,8 @@ class InvoiceSettingsSnapshot {
     'defaultPackageNumber': defaultPackageNumber,
     'showPackageWeight': showPackageWeight,
     'showPackageNumber': showPackageNumber,
+    'pdfColumnVisibility': pdfColumnVisibility.toJson(),
+    'excelColumnVisibility': excelColumnVisibility.toJson(),
   };
 
   /// Parses a settings object from a backup.
@@ -76,6 +86,8 @@ class InvoiceSettingsSnapshot {
       defaultPackageNumber: _nonNegativeInt(map, 'defaultPackageNumber'),
       showPackageWeight: _bool(map, 'showPackageWeight'),
       showPackageNumber: _bool(map, 'showPackageNumber'),
+      pdfColumnVisibility: _visibility(map, 'pdfColumnVisibility'),
+      excelColumnVisibility: _visibility(map, 'excelColumnVisibility'),
     );
   }
 
@@ -111,6 +123,15 @@ class InvoiceSettingsSnapshot {
     return value;
   }
 
+  /// Missing visibility data means every column, so older backups restore.
+  static InvoiceColumnVisibility _visibility(Map<String, dynamic> map, String key) {
+    final visibility = InvoiceColumnVisibility.tryParseJson(map[key]);
+    if (visibility == null) {
+      throw FormatException('$key is not valid column visibility');
+    }
+    return visibility;
+  }
+
   @override
   bool operator ==(Object other) =>
       other is InvoiceSettingsSnapshot &&
@@ -123,7 +144,9 @@ class InvoiceSettingsSnapshot {
       other.defaultPackageWeight == defaultPackageWeight &&
       other.defaultPackageNumber == defaultPackageNumber &&
       other.showPackageWeight == showPackageWeight &&
-      other.showPackageNumber == showPackageNumber;
+      other.showPackageNumber == showPackageNumber &&
+      other.pdfColumnVisibility == pdfColumnVisibility &&
+      other.excelColumnVisibility == excelColumnVisibility;
 
   @override
   int get hashCode => Object.hash(
@@ -137,5 +160,7 @@ class InvoiceSettingsSnapshot {
     defaultPackageNumber,
     showPackageWeight,
     showPackageNumber,
+    pdfColumnVisibility,
+    excelColumnVisibility,
   );
 }

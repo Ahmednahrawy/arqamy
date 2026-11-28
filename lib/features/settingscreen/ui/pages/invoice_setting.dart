@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:arqamy/core/helpers/invoice_export_columns.dart';
 import 'package:arqamy/core/widgets/app_snack_bar.dart';
 import 'package:arqamy/features/settingscreen/providers/invoice_setting_provider.dart';
 import 'package:arqamy/generated/l10n.dart';
@@ -159,6 +160,71 @@ class _InvoiceSettingsScreenState extends State<InvoiceSettingsScreen> {
     );
   }
 
+  /// One independently adjustable export table. Every offered column can be
+  /// shown or hidden; PDF and Excel keep separate visibility settings.
+  Widget _buildColumnVisibilityToggle(
+    BuildContext context, {
+    required InvoiceColumnVisibility currentVisibility,
+    required List<InvoiceTableColumn> columns,
+    required ValueChanged<InvoiceColumnVisibility> onChanged,
+  }) {
+    final strings = S.of(context);
+    final colors = Theme.of(context).colorScheme;
+    final allVisible = columns.every(currentVisibility.isVisible);
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(bottom: 4),
+          child: Text(
+            strings.column_visibility_description,
+            style: Theme.of(context).textTheme.bodySmall?.copyWith(
+              color: colors.onSurfaceVariant,
+            ),
+          ),
+        ),
+        SwitchListTile(
+          contentPadding: EdgeInsets.zero,
+          title: Text(strings.column_show_all),
+          value: allVisible,
+          onChanged: (value) {
+            var next = currentVisibility;
+            for (final column in columns) {
+              next = next.setVisible(column, value);
+            }
+            onChanged(next);
+          },
+        ),
+        for (final column in columns)
+          Padding(
+            padding: const EdgeInsets.only(left: 16),
+            child: SwitchListTile(
+              contentPadding: EdgeInsets.zero,
+              title: Text(_columnTitle(strings, column)),
+              value: currentVisibility.isVisible(column),
+              onChanged: (value) =>
+                  onChanged(currentVisibility.setVisible(column, value)),
+            ),
+          ),
+      ],
+    );
+  }
+
+  String _columnTitle(S strings, InvoiceTableColumn column) => switch (column) {
+    InvoiceTableColumn.serial => strings.column_serial,
+    InvoiceTableColumn.date => strings.column_date,
+    InvoiceTableColumn.time => strings.column_time,
+    InvoiceTableColumn.customer => strings.column_customer,
+    InvoiceTableColumn.type => strings.column_type,
+    InvoiceTableColumn.product => strings.column_product,
+    InvoiceTableColumn.weight => strings.column_weight,
+    InvoiceTableColumn.packageWeight => strings.column_package_weight,
+    InvoiceTableColumn.packageCount => strings.column_package_count,
+    InvoiceTableColumn.netWeight => strings.column_net_weight,
+    InvoiceTableColumn.price => strings.column_price,
+    InvoiceTableColumn.total => strings.column_total,
+  };
+
   Widget _sectionTitle(String title) {
     return Padding(
       padding: const EdgeInsets.only(top: 8, bottom: 8),
@@ -236,7 +302,8 @@ class _InvoiceSettingsScreenState extends State<InvoiceSettingsScreen> {
         child: ListView(
           padding: const EdgeInsets.all(16),
           children: [
-            _sectionTitle(strings.invoice_template),
+            // Part one: company info shown on the invoice.
+            _sectionTitle(strings.company_info_on_invoice),
             // Logo
             Center(
               child: Column(
@@ -320,6 +387,8 @@ class _InvoiceSettingsScreenState extends State<InvoiceSettingsScreen> {
             _field(_qrDataController, strings.qr_data),
             const SizedBox(height: 24),
 
+            // Part two: other invoice info.
+            _sectionTitle(strings.other_invoice_info),
             _sectionTitle(strings.order_defaults),
             _field(
               _defaultPackageWeightController,
@@ -366,6 +435,28 @@ class _InvoiceSettingsScreenState extends State<InvoiceSettingsScreen> {
               value: settingsProvider.showPackageNumber,
               onChanged: (value) => settingsProvider.updateSettings(
                 showPackageNumber: value,
+              ),
+            ),
+            const SizedBox(height: 16),
+
+            // Exported invoice tables are customized independently per format.
+            _sectionTitle(strings.pdf_columns),
+            _buildColumnVisibilityToggle(
+              context,
+              currentVisibility: settingsProvider.pdfColumns,
+              columns: InvoiceTableColumn.pdfTableColumns.toList(),
+              onChanged: (visibility) => settingsProvider.updateSettings(
+                pdfColumnVisibility: visibility,
+              ),
+            ),
+            const SizedBox(height: 16),
+            _sectionTitle(strings.excel_columns),
+            _buildColumnVisibilityToggle(
+              context,
+              currentVisibility: settingsProvider.excelColumns,
+              columns: InvoiceTableColumn.values,
+              onChanged: (visibility) => settingsProvider.updateSettings(
+                excelColumnVisibility: visibility,
               ),
             ),
             const SizedBox(height: 24),

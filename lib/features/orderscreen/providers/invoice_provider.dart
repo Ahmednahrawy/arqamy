@@ -97,9 +97,7 @@ class InvoiceProvider extends ChangeNotifier {
     );
   }
 
-  bool get shouldShowPackageColumns {
-    return hasPackageProducts;
-  }
+  bool get shouldShowPackageColumns => hasPackageProducts;
 
   // NEW: Detect if there are identical products (same name + price)
   bool get hasIdenticalProducts {

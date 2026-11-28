@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
@@ -6,6 +7,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:path/path.dart' as p;
 
 import 'package:arqamy/core/helpers/invoice_backup.dart';
+import 'package:arqamy/core/helpers/invoice_export_columns.dart';
 import 'package:arqamy/features/settingscreen/data/models/invoice_settings_snapshot.dart';
 
 class InvoiceSettingsProvider extends ChangeNotifier {
@@ -20,6 +22,8 @@ class InvoiceSettingsProvider extends ChangeNotifier {
   static const String _defaultPackageNumberKey = 'defaultPackageNumber';
   static const String _showPackageWeightKey = 'showPackageWeight';
   static const String _showPackageNumberKey = 'showPackageNumber';
+  static const String _pdfColumnVisibilityKey = 'pdfColumnVisibility';
+  static const String _excelColumnVisibilityKey = 'excelColumnVisibility';
 
   String _logoPath = defaultLogoPath;
   String _managerName = '';
@@ -31,6 +35,8 @@ class InvoiceSettingsProvider extends ChangeNotifier {
   int _defaultPackageNumber = 0;
   bool _showPackageWeight = true;
   bool _showPackageNumber = true;
+  InvoiceColumnVisibility _pdfColumnVisibility = InvoiceColumnVisibility.allVisible;
+  InvoiceColumnVisibility _excelColumnVisibility = InvoiceColumnVisibility.allVisible;
 
   String get logoPath => _logoPath;
   String get managerName => _managerName;
@@ -42,6 +48,8 @@ class InvoiceSettingsProvider extends ChangeNotifier {
   int get defaultPackageNumber => _defaultPackageNumber;
   bool get showPackageWeight => _showPackageWeight;
   bool get showPackageNumber => _showPackageNumber;
+  InvoiceColumnVisibility get pdfColumns => _pdfColumnVisibility;
+  InvoiceColumnVisibility get excelColumns => _excelColumnVisibility;
 
   InvoiceSettingsProvider() {
     loadSettings();
@@ -72,6 +80,12 @@ class InvoiceSettingsProvider extends ChangeNotifier {
       prefs.get(_showPackageNumberKey),
       defaults.showPackageNumber,
     );
+    _pdfColumnVisibility = InvoiceColumnVisibility.fromJson(
+      _readString(prefs.get(_pdfColumnVisibilityKey)),
+    );
+    _excelColumnVisibility = InvoiceColumnVisibility.fromJson(
+      _readString(prefs.get(_excelColumnVisibilityKey)),
+    );
     notifyListeners();
   }
 
@@ -100,6 +114,8 @@ class InvoiceSettingsProvider extends ChangeNotifier {
     int? defaultPackageNumber,
     bool? showPackageWeight,
     bool? showPackageNumber,
+    InvoiceColumnVisibility? pdfColumnVisibility,
+    InvoiceColumnVisibility? excelColumnVisibility,
   }) async {
     final prefs = await SharedPreferences.getInstance();
     var changed = false;
@@ -176,6 +192,22 @@ class InvoiceSettingsProvider extends ChangeNotifier {
       await prefs.setBool(_showPackageNumberKey, showPackageNumber);
       changed = true;
     }
+    if (pdfColumnVisibility != null) {
+      _pdfColumnVisibility = pdfColumnVisibility;
+      await prefs.setString(
+        _pdfColumnVisibilityKey,
+        jsonEncode(pdfColumnVisibility.toJson()),
+      );
+      changed = true;
+    }
+    if (excelColumnVisibility != null) {
+      _excelColumnVisibility = excelColumnVisibility;
+      await prefs.setString(
+        _excelColumnVisibilityKey,
+        jsonEncode(excelColumnVisibility.toJson()),
+      );
+      changed = true;
+    }
     if (changed) {
       notifyListeners();
     }
@@ -192,6 +224,8 @@ class InvoiceSettingsProvider extends ChangeNotifier {
     defaultPackageNumber: _defaultPackageNumber,
     showPackageWeight: _showPackageWeight,
     showPackageNumber: _showPackageNumber,
+    pdfColumnVisibility: _pdfColumnVisibility,
+    excelColumnVisibility: _excelColumnVisibility,
   );
 
   /// Applies a complete settings snapshot. Used by restore and reset.
@@ -208,6 +242,14 @@ class InvoiceSettingsProvider extends ChangeNotifier {
     await prefs.setInt(_defaultPackageNumberKey, snapshot.defaultPackageNumber);
     await prefs.setBool(_showPackageWeightKey, snapshot.showPackageWeight);
     await prefs.setBool(_showPackageNumberKey, snapshot.showPackageNumber);
+    await prefs.setString(
+      _pdfColumnVisibilityKey,
+      jsonEncode(snapshot.pdfColumnVisibility.toJson()),
+    );
+    await prefs.setString(
+      _excelColumnVisibilityKey,
+      jsonEncode(snapshot.excelColumnVisibility.toJson()),
+    );
 
     _logoPath = logo;
     _managerName = snapshot.managerName;
@@ -219,6 +261,8 @@ class InvoiceSettingsProvider extends ChangeNotifier {
     _defaultPackageNumber = snapshot.defaultPackageNumber;
     _showPackageWeight = snapshot.showPackageWeight;
     _showPackageNumber = snapshot.showPackageNumber;
+    _pdfColumnVisibility = snapshot.pdfColumnVisibility;
+    _excelColumnVisibility = snapshot.excelColumnVisibility;
     notifyListeners();
   }
 
@@ -255,5 +299,15 @@ class InvoiceSettingsProvider extends ChangeNotifier {
   static bool _readBool(Object? raw, bool fallback) {
     if (raw is! bool) return fallback;
     return raw;
+  }
+
+  /// Decodes a JSON string saved by [updateSettings] into visibility data.
+  static Object? _readString(Object? raw) {
+    if (raw is! String || raw.trim().isEmpty) return null;
+    try {
+      return jsonDecode(raw);
+    } on FormatException {
+      return null;
+    }
   }
 }

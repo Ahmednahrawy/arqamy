@@ -1,9 +1,13 @@
 import 'dart:io';
+import 'dart:math' as math;
 
 import 'package:arqamy/core/helpers/excel_labels.dart';
+import 'package:arqamy/core/helpers/formatters.dart';
 import 'package:arqamy/core/helpers/invoice_action.dart';
 import 'package:arqamy/core/helpers/invoice_discount.dart';
+import 'package:arqamy/core/helpers/invoice_export_columns.dart';
 import 'package:arqamy/features/orderscreen/data/models/invoice.dart';
+import 'package:arqamy/features/orderscreen/data/models/product_model.dart';
 import 'package:excel_plus/excel_plus.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
@@ -14,17 +18,21 @@ import 'package:share_plus/share_plus.dart';
 /// This reads the same structured [Invoice] objects the app already holds, so
 /// no data is copied out of the generated PDF. Each invoice gets one worksheet
 /// with a row per product and a totals block underneath.
+///
+/// Which table columns are written is adjustable per export via
+/// [InvoiceColumnVisibility]; package weight is not a regular column, it is
+/// written as a note under the table (or as a per-row column when packages
+/// have different weights).
 class InvoiceExcelExportService {
   const InvoiceExcelExportService._();
 
-  static const _columnCount = 12;
-  static const _numericColumns = <int>{6, 7, 8, 9, 10, 11};
-  static const _priceColumn = 10;
-  static const _totalColumn = 11;
-
   /// Builds the workbook bytes. Kept separate from file I/O so it can be
   /// tested (and reused for future batch exports) without platform channels.
-  static List<int> buildWorkbook(Invoice invoice, {String locale = 'ar'}) {
+  static List<int> buildWorkbook(
+    Invoice invoice, {
+    String locale = 'ar',
+    InvoiceColumnVisibility excelColumns = InvoiceColumnVisibility.allVisible,
+  }) {
     final labels = ExcelLabels.forLocale(locale);
     final excel = Excel.createExcel();
     final sheetName = _sheetName(invoice);
@@ -46,61 +54,65 @@ class InvoiceExcelExportService {
       bold: true,
       numberFormat: NumFormat.standard_4,
     );
-    for (final column in [
-      0,
-      1,
-      2,
-      3,
-      4,
-      5,
-      6,
-      7,
-      8,
-      9,
-      _priceColumn,
-      _totalColumn,
-    ]) {
-      sheet.setColumnWidth(column, column == 5 ? 22 : 17);
+
+    // Package weight is removed from the regular columns; it is shown as a
+    // note under the table, or as a per-row column when weights differ.
+    final packageWeights = InvoicePackageWeights.fromProducts(invoice.products);
+    final packageWeightDisplay = resolvePackageWeightDisplay(
+      enabled: excelColumns.isVisible(InvoiceTableColumn.packageWeight),
+      weights: packageWeights,
+    );
+
+    final visibleColumns = _visibleColumns(excelColumns, packageWeightDisplay);
+    final columnCount = visibleColumns.length;
+    final numericColumns = <int>{
+      for (var index = 0; index < visibleColumns.length; index++)
+        if (_isNumeric(visibleColumns[index])) index,
+    };
+
+    for (var column = 0; column < columnCount; column++) {
+      sheet.setColumnWidth(
+        column,
+        visibleColumns[column] == InvoiceTableColumn.product ? 22 : 17,
+      );
     }
 
     sheet.appendRow([
-      TextCellValue(labels.serial),
-      TextCellValue(labels.date),
-      TextCellValue(labels.time),
-      TextCellValue(labels.customer),
-      TextCellValue(labels.type),
-      TextCellValue(labels.product),
-      TextCellValue(labels.weightKg),
-      TextCellValue(labels.packageWeightKg),
-      TextCellValue(labels.packageCount),
-      TextCellValue(labels.netWeightKg),
-      TextCellValue(labels.priceEgp),
-      TextCellValue(labels.totalEgp),
+      for (final column in visibleColumns) TextCellValue(labels.header(column)),
     ]);
-    _styleRow(sheet, 0, headerStyle, const <int>{});
+    _styleRow(sheet, 0, headerStyle, const <int>{}, columnCount);
 
     final typeLabel = _typeLabel(invoice.invoiceAction, labels);
     for (var index = 0; index < invoice.products.length; index++) {
       final product = invoice.products[index];
       final rowIndex = index + 1;
       sheet.appendRow([
-        TextCellValue(invoice.invoiceSerial),
-        TextCellValue(invoice.formattedDate),
-        TextCellValue(invoice.formattedTime),
-        TextCellValue(invoice.customerName),
-        TextCellValue(typeLabel),
-        TextCellValue(product.name),
-        DoubleCellValue(product.weight),
-        DoubleCellValue(product.packageWeight),
-        IntCellValue(product.numberPackage),
-        DoubleCellValue(product.netWeight),
-        DoubleCellValue(product.price),
-        DoubleCellValue(product.lineTotal.toDouble()),
+        for (final column in visibleColumns)
+          _cellFor(column, product, invoice, typeLabel),
       ]);
-      _styleRow(sheet, rowIndex, numberStyle, _numericColumns);
+      _styleRow(sheet, rowIndex, numberStyle, numericColumns, columnCount);
     }
 
     var totalsRowIndex = invoice.products.length + 1;
+
+    // Package weight note under the table when every package has one weight.
+    if (packageWeightDisplay == PackageWeightDisplay.note &&
+        packageWeights.singleWeight != null) {
+      final noteRow = List<CellValue?>.filled(math.max(columnCount, 1), null);
+      noteRow[0] = TextCellValue(
+        labels.packageWeightNote(
+          AppFormatters.number(packageWeights.singleWeight!),
+        ),
+      );
+      sheet.appendRow(noteRow);
+      totalsRowIndex++;
+    }
+
+    // Totals block: label next to the value in the last two columns.
+    final totalsColumnCount = math.max(columnCount, 2);
+    final labelColumn = totalsColumnCount - 2;
+    final valueColumn = totalsColumnCount - 1;
+
     final totals = <MapEntry<String, double>>[];
     if (invoice.discount != null) {
       totals.add(
@@ -118,14 +130,14 @@ class InvoiceExcelExportService {
       MapEntry(labels.remaining, invoice.rest),
     ]);
     for (final entry in totals) {
-      final row = List<CellValue?>.filled(_columnCount, null);
-      row[_priceColumn] = TextCellValue(entry.key);
-      row[_totalColumn] = DoubleCellValue(entry.value);
+      final row = List<CellValue?>.filled(totalsColumnCount, null);
+      row[labelColumn] = TextCellValue(entry.key);
+      row[valueColumn] = DoubleCellValue(entry.value);
       sheet.appendRow(row);
       sheet
               .cell(
                 CellIndex.indexByColumnRow(
-                  columnIndex: _priceColumn,
+                  columnIndex: labelColumn,
                   rowIndex: totalsRowIndex,
                 ),
               )
@@ -134,7 +146,7 @@ class InvoiceExcelExportService {
       sheet
               .cell(
                 CellIndex.indexByColumnRow(
-                  columnIndex: _totalColumn,
+                  columnIndex: valueColumn,
                   rowIndex: totalsRowIndex,
                 ),
               )
@@ -154,8 +166,13 @@ class InvoiceExcelExportService {
   static Future<String> generateAndSaveInvoice(
     Invoice invoice, {
     String locale = 'ar',
+    InvoiceColumnVisibility excelColumns = InvoiceColumnVisibility.allVisible,
   }) async {
-    final bytes = buildWorkbook(invoice, locale: locale);
+    final bytes = buildWorkbook(
+      invoice,
+      locale: locale,
+      excelColumns: excelColumns,
+    );
     final tempDir = await getTemporaryDirectory();
     final fileName = [
       'invoice',
@@ -179,18 +196,75 @@ class InvoiceExcelExportService {
   static Future<void> generateAndShareInvoice(
     Invoice invoice, {
     String locale = 'ar',
+    InvoiceColumnVisibility excelColumns = InvoiceColumnVisibility.allVisible,
   }) async {
-    final filePath = await generateAndSaveInvoice(invoice, locale: locale);
+    final filePath = await generateAndSaveInvoice(
+      invoice,
+      locale: locale,
+      excelColumns: excelColumns,
+    );
     await SharePlus.instance.share(ShareParams(files: [XFile(filePath)]));
   }
+
+  /// Columns written, in invoice order. Package weight is not a regular
+  /// column; it is added only when packages have different weights.
+  static List<InvoiceTableColumn> _visibleColumns(
+    InvoiceColumnVisibility columns,
+    PackageWeightDisplay packageWeightDisplay,
+  ) {
+    final result = <InvoiceTableColumn>[];
+    for (final column in InvoiceTableColumn.values) {
+      if (column == InvoiceTableColumn.packageWeight) {
+        // Package weight is not a regular column; it is written as a note
+        // under the table, or as a per-row column when packages differ.
+        if (packageWeightDisplay == PackageWeightDisplay.column) {
+          result.add(column);
+        }
+        continue;
+      }
+      if (columns.isVisible(column)) result.add(column);
+    }
+    return result;
+  }
+
+  static bool _isNumeric(InvoiceTableColumn column) => switch (column) {
+    InvoiceTableColumn.weight ||
+    InvoiceTableColumn.packageWeight ||
+    InvoiceTableColumn.packageCount ||
+    InvoiceTableColumn.netWeight ||
+    InvoiceTableColumn.price ||
+    InvoiceTableColumn.total => true,
+    _ => false,
+  };
+
+  static CellValue _cellFor(
+    InvoiceTableColumn column,
+    Product product,
+    Invoice invoice,
+    String typeLabel,
+  ) => switch (column) {
+    InvoiceTableColumn.serial => TextCellValue(invoice.invoiceSerial),
+    InvoiceTableColumn.date => TextCellValue(invoice.formattedDate),
+    InvoiceTableColumn.time => TextCellValue(invoice.formattedTime),
+    InvoiceTableColumn.customer => TextCellValue(invoice.customerName),
+    InvoiceTableColumn.type => TextCellValue(typeLabel),
+    InvoiceTableColumn.product => TextCellValue(product.name),
+    InvoiceTableColumn.weight => DoubleCellValue(product.weight),
+    InvoiceTableColumn.packageWeight => DoubleCellValue(product.packageWeight),
+    InvoiceTableColumn.packageCount => IntCellValue(product.numberPackage),
+    InvoiceTableColumn.netWeight => DoubleCellValue(product.netWeight),
+    InvoiceTableColumn.price => DoubleCellValue(product.price),
+    InvoiceTableColumn.total => DoubleCellValue(product.lineTotal.toDouble()),
+  };
 
   static void _styleRow(
     Sheet sheet,
     int rowIndex,
     CellStyle style,
     Set<int> numericColumns,
+    int columnCount,
   ) {
-    for (var column = 0; column < _columnCount; column++) {
+    for (var column = 0; column < columnCount; column++) {
       if (numericColumns.isNotEmpty && !numericColumns.contains(column)) {
         continue;
       }
