@@ -31,12 +31,12 @@ class MessageLookup extends MessageLookupByLibrary {
     "addProduct": MessageLookupByLibrary.simpleMessage("Add product"),
     "add_discount": MessageLookupByLibrary.simpleMessage("Add discount"),
     "add_new_product": MessageLookupByLibrary.simpleMessage("Add new product"),
-    "allInvoicesFilter": MessageLookupByLibrary.simpleMessage("All"),
+    "allInvoicesFilter": MessageLookupByLibrary.simpleMessage("All invoices"),
     "allInvoicesSearchHint": MessageLookupByLibrary.simpleMessage(
-      "Search by serial, product or customer",
+      "Search all invoices",
     ),
     "appearance": MessageLookupByLibrary.simpleMessage("Appearance"),
-    "applyFilters": MessageLookupByLibrary.simpleMessage("Apply"),
+    "applyFilters": MessageLookupByLibrary.simpleMessage("Apply filters"),
     "arabic": MessageLookupByLibrary.simpleMessage("Arabic"),
     "are_you_sure_logout": MessageLookupByLibrary.simpleMessage(
       "Are you sure you want to log out?",
@@ -125,47 +125,74 @@ class MessageLookup extends MessageLookupByLibrary {
     "change_invoice_type": MessageLookupByLibrary.simpleMessage(
       "Change invoice type",
     ),
-    "change_password": MessageLookupByLibrary.simpleMessage("Change Password"),
+    "change_password": MessageLookupByLibrary.simpleMessage("Change password"),
     "choose_logo": MessageLookupByLibrary.simpleMessage("Choose logo"),
     "clearDateFilter": MessageLookupByLibrary.simpleMessage(
       "Clear date filter",
     ),
-    "clearInvoiceSearch": MessageLookupByLibrary.simpleMessage("Clear search"),
+    "clearInvoiceSearch": MessageLookupByLibrary.simpleMessage(
+      "Clear invoice search",
+    ),
     "clear_discount": MessageLookupByLibrary.simpleMessage("Clear discount"),
     "clear_draft_message": MessageLookupByLibrary.simpleMessage(
-      "Only the current invoice data will be cleared. Saved invoices will not be deleted.",
+      "Clear draft message",
     ),
-    "clear_field": MessageLookupByLibrary.simpleMessage("Double-tap to clear"),
-    "clear_text": MessageLookupByLibrary.simpleMessage("Clear"),
+    "clear_field": MessageLookupByLibrary.simpleMessage("Clear field"),
+    "clear_text": MessageLookupByLibrary.simpleMessage("Clear text"),
     "close": MessageLookupByLibrary.simpleMessage("Close"),
-    "collected_amount_label": MessageLookupByLibrary.simpleMessage("Collected"),
+    "collected_amount_label": MessageLookupByLibrary.simpleMessage(
+      "Collected amount",
+    ),
+    "column_customer": MessageLookupByLibrary.simpleMessage("Customer"),
+    "column_date": MessageLookupByLibrary.simpleMessage("Date"),
+    "column_net_weight": MessageLookupByLibrary.simpleMessage("Net weight"),
+    "column_package_count": MessageLookupByLibrary.simpleMessage(
+      "Package count",
+    ),
+    "column_package_weight": MessageLookupByLibrary.simpleMessage(
+      "Package weight",
+    ),
+    "column_price": MessageLookupByLibrary.simpleMessage("Price"),
+    "column_product": MessageLookupByLibrary.simpleMessage("Product"),
+    "column_serial": MessageLookupByLibrary.simpleMessage("Invoice #"),
+    "column_show_all": MessageLookupByLibrary.simpleMessage("Show all"),
+    "column_time": MessageLookupByLibrary.simpleMessage("Time"),
+    "column_total": MessageLookupByLibrary.simpleMessage("Total"),
+    "column_type": MessageLookupByLibrary.simpleMessage("Type"),
+    "column_visibility_description": MessageLookupByLibrary.simpleMessage(
+      "Show or hide columns in exported invoices",
+    ),
+    "column_weight": MessageLookupByLibrary.simpleMessage("Weight"),
     "company_description": MessageLookupByLibrary.simpleMessage(
       "Company description",
     ),
+    "company_info_on_invoice": MessageLookupByLibrary.simpleMessage(
+      "Company info shown on invoice",
+    ),
     "company_name": MessageLookupByLibrary.simpleMessage("Company name"),
     "confirm": MessageLookupByLibrary.simpleMessage("Confirm"),
-    "confirm_delete": MessageLookupByLibrary.simpleMessage("Confirm deletion"),
+    "confirm_delete": MessageLookupByLibrary.simpleMessage("Confirm delete"),
     "confirm_delete_invoice": MessageLookupByLibrary.simpleMessage(
-      "Are you sure you want to delete this invoice?\nThis action cannot be undone.",
+      "Are you sure you want to delete this invoice?\nThis cannot be undone.",
     ),
     "confirm_delete_product": MessageLookupByLibrary.simpleMessage(
       "Are you sure you want to delete this product?",
     ),
-    "contact_us": MessageLookupByLibrary.simpleMessage("Contact Us"),
+    "contact_us": MessageLookupByLibrary.simpleMessage("Contact us"),
     "couldNotSaveInvoice": MessageLookupByLibrary.simpleMessage(
-      "Could not save invoice changes",
+      "Could not save invoice",
     ),
     "could_not_add_product": MessageLookupByLibrary.simpleMessage(
       "Could not add the product",
     ),
     "could_not_delete_invoice": MessageLookupByLibrary.simpleMessage(
-      "Could not delete the invoice",
+      "Could not delete invoice",
     ),
     "could_not_delete_product": MessageLookupByLibrary.simpleMessage(
       "Could not delete the product",
     ),
     "could_not_load_invoices": MessageLookupByLibrary.simpleMessage(
-      "Could not load the invoice history",
+      "Could not load invoices",
     ),
     "could_not_save_appearance": MessageLookupByLibrary.simpleMessage(
       "Could not save the appearance setting",
@@ -174,32 +201,32 @@ class MessageLookup extends MessageLookupByLibrary {
       "Could not save invoice settings",
     ),
     "could_not_share_invoice": MessageLookupByLibrary.simpleMessage(
-      "Could not share the invoice",
+      "Could not share invoice",
     ),
     "could_not_update_product": MessageLookupByLibrary.simpleMessage(
       "Could not update the product",
     ),
-    "currency": MessageLookupByLibrary.simpleMessage("EGP"),
+    "currency": MessageLookupByLibrary.simpleMessage("Currency"),
     "customerInvoiceSearchHint": MessageLookupByLibrary.simpleMessage(
-      "Search by serial or product name",
+      "Search customer invoices",
     ),
     "customerName": MessageLookupByLibrary.simpleMessage("Customer name"),
-    "customer_info": MessageLookupByLibrary.simpleMessage(
-      "Customer information",
-    ),
+    "customer_info": MessageLookupByLibrary.simpleMessage("Customer info"),
     "customer_name_min_length": MessageLookupByLibrary.simpleMessage(
-      "Enter at least 4 characters",
+      "Customer name must be at least 4 characters",
     ),
     "customers": MessageLookupByLibrary.simpleMessage("Customers"),
     "customers_and_suppliers": MessageLookupByLibrary.simpleMessage(
       "Customers and suppliers",
     ),
-    "dark_mode": MessageLookupByLibrary.simpleMessage("Dark Mode"),
+    "dark_mode": MessageLookupByLibrary.simpleMessage("Dark mode"),
     "data_unavailable": MessageLookupByLibrary.simpleMessage(
-      "Could not access invoice data. Please try again.",
+      "Data unavailable",
     ),
     "date": MessageLookupByLibrary.simpleMessage("Date"),
-    "dateRangeFilter": MessageLookupByLibrary.simpleMessage("Date range"),
+    "dateRangeFilter": MessageLookupByLibrary.simpleMessage(
+      "Date range filter",
+    ),
     "default_package_count": MessageLookupByLibrary.simpleMessage(
       "Default package count",
     ),
@@ -220,13 +247,13 @@ class MessageLookup extends MessageLookupByLibrary {
     "discount": MessageLookupByLibrary.simpleMessage("Discount"),
     "discount_amount": MessageLookupByLibrary.simpleMessage("Discount amount"),
     "discount_exceeds_total": MessageLookupByLibrary.simpleMessage(
-      "Discount cannot exceed the invoice total",
+      "Discount exceeds total",
     ),
     "discount_percent": MessageLookupByLibrary.simpleMessage(
       "Discount percent",
     ),
     "discount_percent_range": MessageLookupByLibrary.simpleMessage(
-      "Percent must be between 0 and 100",
+      "Discount percent range (0-100)",
     ),
     "edit": MessageLookupByLibrary.simpleMessage("Edit"),
     "editInvoice": MessageLookupByLibrary.simpleMessage("Edit invoice"),
@@ -234,27 +261,26 @@ class MessageLookup extends MessageLookupByLibrary {
     "empty_packages": MessageLookupByLibrary.simpleMessage("Empty packages"),
     "english": MessageLookupByLibrary.simpleMessage("English"),
     "enter_collected_amount": MessageLookupByLibrary.simpleMessage(
-      "Please enter the collected amount",
+      "Enter collected amount",
     ),
     "enter_manager_name": MessageLookupByLibrary.simpleMessage(
-      "Enter the manager name",
+      "Enter manager name",
     ),
-    "enter_phone": MessageLookupByLibrary.simpleMessage(
-      "Enter the phone number",
-    ),
+    "enter_phone": MessageLookupByLibrary.simpleMessage("Enter phone"),
     "error_adding_suggestions": MessageLookupByLibrary.simpleMessage(
-      "Could not add the suggestion",
+      "Error adding suggestions",
     ),
     "error_loading_suggestions": MessageLookupByLibrary.simpleMessage(
-      "Could not load suggestions",
+      "Error loading suggestions",
     ),
     "error_saving_suggestions": MessageLookupByLibrary.simpleMessage(
-      "Could not save suggestions",
+      "Error saving suggestions",
     ),
     "error_submitting_suggestions": MessageLookupByLibrary.simpleMessage(
-      "Could not submit the suggestion",
+      "Error submitting suggestions",
     ),
-    "exportToExcel": MessageLookupByLibrary.simpleMessage("Export Excel"),
+    "excel_columns": MessageLookupByLibrary.simpleMessage("Excel Columns"),
+    "exportToExcel": MessageLookupByLibrary.simpleMessage("Export to Excel"),
     "export_products": MessageLookupByLibrary.simpleMessage("Export products"),
     "financial_summary": MessageLookupByLibrary.simpleMessage(
       "Financial summary",
@@ -262,47 +288,39 @@ class MessageLookup extends MessageLookupByLibrary {
     "grand_total": MessageLookupByLibrary.simpleMessage("Grand total"),
     "help": MessageLookupByLibrary.simpleMessage("Help"),
     "help_backup_body": MessageLookupByLibrary.simpleMessage(
-      "In Settings, open Invoice actions and choose Backup invoices to save a copy.",
+      "Arqamy keeps your invoices and customer details on this device. We do not collect or share them. You can back up or restore your invoices from Settings at any time, and clear app data through your device settings.",
     ),
     "help_backup_title": MessageLookupByLibrary.simpleMessage(
-      "Backing up invoices",
+      "Back up invoices",
     ),
     "help_contact_body": MessageLookupByLibrary.simpleMessage(
-      "Contact the app support team for further assistance.",
+      "If you have any questions or feedback, please contact us through the app or website.",
     ),
-    "help_contact_title": MessageLookupByLibrary.simpleMessage(
-      "Need more help?",
-    ),
+    "help_contact_title": MessageLookupByLibrary.simpleMessage("Contact us"),
     "help_create_invoice_body": MessageLookupByLibrary.simpleMessage(
       "Open the home screen, choose a customer, add products, then save the invoice.",
     ),
     "help_create_invoice_title": MessageLookupByLibrary.simpleMessage(
       "Creating an invoice",
     ),
-    "help_intro": MessageLookupByLibrary.simpleMessage(
-      "Find answers to common questions about using Arqamy.",
-    ),
+    "help_intro": MessageLookupByLibrary.simpleMessage("Get help with Arqamy"),
     "help_language_body": MessageLookupByLibrary.simpleMessage(
-      "Open the side menu and use the Language row to switch between Arabic and English.",
+      "You can change the app language between Arabic and English.",
     ),
     "help_language_title": MessageLookupByLibrary.simpleMessage(
-      "Changing the language",
+      "Change language",
     ),
     "help_restore_body": MessageLookupByLibrary.simpleMessage(
-      "In Settings, open Invoice actions and choose Restore from backup.",
+      "You can restore invoices from a backup file. Invoices from the backup will be merged with your saved invoices. A saved invoice with the same ID is replaced by the backup copy. All other saved invoices are kept.",
     ),
     "help_restore_title": MessageLookupByLibrary.simpleMessage(
-      "Restoring invoices",
+      "Restore from backup",
     ),
     "home": MessageLookupByLibrary.simpleMessage("Home"),
     "import_action": MessageLookupByLibrary.simpleMessage("Restore"),
     "import_products": MessageLookupByLibrary.simpleMessage("Import products"),
-    "invalidInteger": MessageLookupByLibrary.simpleMessage(
-      "Enter a whole number",
-    ),
-    "invalidNumber": MessageLookupByLibrary.simpleMessage(
-      "Enter a valid finite number",
-    ),
+    "invalidInteger": MessageLookupByLibrary.simpleMessage("Invalid integer"),
+    "invalidNumber": MessageLookupByLibrary.simpleMessage("Invalid number"),
     "invalid_default_package_count": MessageLookupByLibrary.simpleMessage(
       "Enter a whole package count of zero or more",
     ),
@@ -313,22 +331,24 @@ class MessageLookup extends MessageLookupByLibrary {
       "Enter a default price of zero or more",
     ),
     "inventory": MessageLookupByLibrary.simpleMessage("Inventory"),
-    "inventory_empty": MessageLookupByLibrary.simpleMessage(
-      "No inventory items yet",
-    ),
+    "inventory_empty": MessageLookupByLibrary.simpleMessage("No items"),
     "inventory_items": MessageLookupByLibrary.simpleMessage("Inventory items"),
     "inventory_low_stock": MessageLookupByLibrary.simpleMessage("Low stock"),
     "inventory_minimum": MessageLookupByLibrary.simpleMessage("Min"),
-    "inventory_total_items": MessageLookupByLibrary.simpleMessage("Items"),
+    "inventory_total_items": MessageLookupByLibrary.simpleMessage(
+      "Total items",
+    ),
     "inventory_total_quantity": MessageLookupByLibrary.simpleMessage("Units"),
     "invoice": MessageLookupByLibrary.simpleMessage("Invoice"),
-    "invoiceActionFilter": MessageLookupByLibrary.simpleMessage("Invoice type"),
-    "invoiceDateTime": MessageLookupByLibrary.simpleMessage(
-      "Invoice date and time",
+    "invoiceActionFilter": MessageLookupByLibrary.simpleMessage(
+      "Invoice action filter",
     ),
-    "invoiceFilters": MessageLookupByLibrary.simpleMessage("Invoice filters"),
+    "invoiceDateTime": MessageLookupByLibrary.simpleMessage(
+      "Invoice date/time",
+    ),
+    "invoiceFilters": MessageLookupByLibrary.simpleMessage("Filters"),
     "invoiceNeedsProduct": MessageLookupByLibrary.simpleMessage(
-      "Add at least one product before saving.",
+      "Invoice needs at least one product",
     ),
     "invoiceNumber": MessageLookupByLibrary.simpleMessage("Invoice #"),
     "invoiceTotal": MessageLookupByLibrary.simpleMessage("Invoice total"),
@@ -337,21 +357,21 @@ class MessageLookup extends MessageLookupByLibrary {
     "invoice_count_one": MessageLookupByLibrary.simpleMessage("1 invoice"),
     "invoice_count_two": MessageLookupByLibrary.simpleMessage("2 invoices"),
     "invoice_deleted_new_ready": MessageLookupByLibrary.simpleMessage(
-      "Invoice deleted. A new invoice is ready",
+      "Invoice deleted. New invoice ready",
     ),
     "invoice_excel_export_failed": MessageLookupByLibrary.simpleMessage(
-      "Could not export the invoice to Excel",
+      "Invoice Excel export failed",
     ),
     "invoice_exported_to_excel": MessageLookupByLibrary.simpleMessage(
       "Invoice exported to Excel",
     ),
     "invoice_history": MessageLookupByLibrary.simpleMessage("Invoice history"),
     "invoice_management": MessageLookupByLibrary.simpleMessage(
-      "Invoice Management",
+      "Invoice management",
     ),
     "invoice_options": MessageLookupByLibrary.simpleMessage("Invoice options"),
     "invoice_saved_reload_failed": MessageLookupByLibrary.simpleMessage(
-      "Changes saved, but the invoice history could not be refreshed",
+      "Invoice saved but failed to reload",
     ),
     "invoice_saved_successfully": MessageLookupByLibrary.simpleMessage(
       "Invoice saved successfully",
@@ -369,13 +389,13 @@ class MessageLookup extends MessageLookupByLibrary {
       "Invoice settings saved",
     ),
     "invoice_template": MessageLookupByLibrary.simpleMessage(
-      "Invoice Templates",
+      "Invoice template",
     ),
     "invoice_templated_desc": MessageLookupByLibrary.simpleMessage(
       "Manage and customize invoice formats",
     ),
-    "invoices_few": MessageLookupByLibrary.simpleMessage("invoices"),
-    "invoices_many": MessageLookupByLibrary.simpleMessage("invoices"),
+    "invoices_few": MessageLookupByLibrary.simpleMessage("A few invoices"),
+    "invoices_many": MessageLookupByLibrary.simpleMessage("Many invoices"),
     "kilograms": MessageLookupByLibrary.simpleMessage("kg"),
     "language": MessageLookupByLibrary.simpleMessage("Language"),
     "ledger_import": MessageLookupByLibrary.simpleMessage("Import to ledger"),
@@ -411,9 +431,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "Ready to import",
     ),
     "legacyDatePickerHint": MessageLookupByLibrary.simpleMessage(
-      "The stored date or time could not be parsed. Choose a replacement if needed.",
+      "Legacy date picker hint",
     ),
-    "light_mode": MessageLookupByLibrary.simpleMessage("Light Mode"),
+    "light_mode": MessageLookupByLibrary.simpleMessage("Light mode"),
     "link_customers": MessageLookupByLibrary.simpleMessage("Link customers"),
     "link_customers_action": MessageLookupByLibrary.simpleMessage("Link"),
     "link_customers_confirm": MessageLookupByLibrary.simpleMessage(
@@ -440,26 +460,26 @@ class MessageLookup extends MessageLookupByLibrary {
     "link_customers_unnamed": MessageLookupByLibrary.simpleMessage(
       "Invoices without a name",
     ),
-    "loading": MessageLookupByLibrary.simpleMessage("Loading..."),
+    "loading": MessageLookupByLibrary.simpleMessage("Loading"),
     "logout": MessageLookupByLibrary.simpleMessage("Log out"),
     "manager_name": MessageLookupByLibrary.simpleMessage("Manager name"),
     "manager_phone": MessageLookupByLibrary.simpleMessage("Manager phone"),
     "name": MessageLookupByLibrary.simpleMessage("Name"),
-    "nameRequired": MessageLookupByLibrary.simpleMessage("Enter a name"),
+    "nameRequired": MessageLookupByLibrary.simpleMessage("Name is required"),
     "net_due_to_customer": MessageLookupByLibrary.simpleMessage(
-      "Net due to the customer",
+      "Net due to customer",
     ),
     "net_due_to_you": MessageLookupByLibrary.simpleMessage("Net due to you"),
     "net_weight": MessageLookupByLibrary.simpleMessage("Net weight"),
     "net_weight_kg": MessageLookupByLibrary.simpleMessage("Net weight (kg)"),
     "new_invoice": MessageLookupByLibrary.simpleMessage("New invoice"),
     "new_invoice_ready": MessageLookupByLibrary.simpleMessage(
-      "A new invoice is ready",
+      "New invoice ready",
     ),
     "new_label": MessageLookupByLibrary.simpleMessage("New"),
     "no": MessageLookupByLibrary.simpleMessage("No"),
     "noInvoicesMatchFilters": MessageLookupByLibrary.simpleMessage(
-      "No invoices match the search or filters",
+      "No invoices match your filters",
     ),
     "noInvoicesMatchSearch": MessageLookupByLibrary.simpleMessage(
       "No invoices match your search",
@@ -467,9 +487,11 @@ class MessageLookup extends MessageLookupByLibrary {
     "noProductsMatchSearch": MessageLookupByLibrary.simpleMessage(
       "No products match your search",
     ),
-    "noRecentInvoices": MessageLookupByLibrary.simpleMessage("No invoices yet"),
+    "noRecentInvoices": MessageLookupByLibrary.simpleMessage(
+      "No recent invoices",
+    ),
     "no_customer_invoices": MessageLookupByLibrary.simpleMessage(
-      "No invoices for this customer",
+      "No customer invoices",
     ),
     "no_products": MessageLookupByLibrary.simpleMessage("No products"),
     "no_products_added": MessageLookupByLibrary.simpleMessage(
@@ -482,33 +504,37 @@ class MessageLookup extends MessageLookupByLibrary {
       "No saved invoice is open to delete",
     ),
     "notifications": MessageLookupByLibrary.simpleMessage("Notifications"),
-    "operation": MessageLookupByLibrary.simpleMessage("Transaction"),
+    "operation": MessageLookupByLibrary.simpleMessage("Operation"),
     "order_defaults": MessageLookupByLibrary.simpleMessage("Order defaults"),
+    "other_invoice_info": MessageLookupByLibrary.simpleMessage(
+      "Other invoice info",
+    ),
     "outstandingBalance": MessageLookupByLibrary.simpleMessage(
       "Outstanding balance",
     ),
     "packageCount": MessageLookupByLibrary.simpleMessage("Package count"),
     "packageWeight": MessageLookupByLibrary.simpleMessage("Package weight"),
     "package_count_required": MessageLookupByLibrary.simpleMessage(
-      "Enter the package count first",
+      "Package count is required",
     ),
     "package_weight_kg": MessageLookupByLibrary.simpleMessage(
       "Package weight (kg)",
     ),
     "package_weight_required": MessageLookupByLibrary.simpleMessage(
-      "Enter the empty package weight",
+      "Package weight is required",
     ),
-    "page_not_found": MessageLookupByLibrary.simpleMessage("Page Not Found"),
+    "page_not_found": MessageLookupByLibrary.simpleMessage("Page not found"),
     "paid": MessageLookupByLibrary.simpleMessage("Paid"),
-    "paidAmount": MessageLookupByLibrary.simpleMessage("Amount paid"),
+    "paidAmount": MessageLookupByLibrary.simpleMessage("Paid amount"),
     "paidStatus": MessageLookupByLibrary.simpleMessage("Paid"),
     "partiallyPaidStatus": MessageLookupByLibrary.simpleMessage(
       "Partially paid",
     ),
     "paymentStatusFilter": MessageLookupByLibrary.simpleMessage(
-      "Payment status",
+      "Payment status filter",
     ),
     "pdf_collected": MessageLookupByLibrary.simpleMessage("Collected"),
+    "pdf_columns": MessageLookupByLibrary.simpleMessage("PDF Columns"),
     "pdf_document_title": MessageLookupByLibrary.simpleMessage(
       "Customer invoice",
     ),
@@ -529,40 +555,38 @@ class MessageLookup extends MessageLookupByLibrary {
       "Storage invoice",
     ),
     "please_choose_customer": MessageLookupByLibrary.simpleMessage(
-      "Please choose a customer before proceeding.",
+      "Please choose a customer",
     ),
     "preview": MessageLookupByLibrary.simpleMessage("Preview"),
     "price": MessageLookupByLibrary.simpleMessage("Price"),
     "price_egp": MessageLookupByLibrary.simpleMessage("Price (EGP)"),
     "price_per_kg": MessageLookupByLibrary.simpleMessage("Price per kg"),
-    "price_required": MessageLookupByLibrary.simpleMessage(
-      "Please enter the price",
-    ),
+    "price_required": MessageLookupByLibrary.simpleMessage("Price is required"),
     "privacy": MessageLookupByLibrary.simpleMessage("Privacy"),
     "privacy_account_body": MessageLookupByLibrary.simpleMessage(
-      "You can use Arqamy without an account. If you create one, your email address and sign-in details are stored by Google\'s Firebase Authentication so you can sign in and reset your password. Your invoices and customer details are not uploaded.",
+      "Arqamy uses Google Firebase Authentication for sign-in and password reset. Your invoices and customer details are not uploaded to Firebase.",
     ),
     "privacy_account_title": MessageLookupByLibrary.simpleMessage(
-      "Optional account",
+      "Account authentication",
     ),
     "privacy_choices_body": MessageLookupByLibrary.simpleMessage(
-      "You can back up or restore your invoices from Settings at any time, and clear app data through your device settings.",
+      "You can manage your data settings in the app settings. You can back up or restore your invoices, and clear app data through your device settings.",
     ),
     "privacy_choices_title": MessageLookupByLibrary.simpleMessage(
-      "Your choices",
+      "Your privacy choices",
     ),
     "privacy_data_body": MessageLookupByLibrary.simpleMessage(
-      "Invoice details, customer names, products, and settings are saved locally on your device.",
+      "We collect invoice data, customer information, and product details stored on your device.",
     ),
     "privacy_data_title": MessageLookupByLibrary.simpleMessage(
-      "Data stored on your device",
+      "Data we collect",
     ),
     "privacy_intro": MessageLookupByLibrary.simpleMessage(
-      "Arqamy keeps your invoices and customer details on this device. We do not collect or share them.",
+      "Arqamy respects your privacy and is committed to protecting your personal data.",
     ),
-    "privacy_policy": MessageLookupByLibrary.simpleMessage("Privacy Policy"),
+    "privacy_policy": MessageLookupByLibrary.simpleMessage("Privacy policy"),
     "privacy_usage_body": MessageLookupByLibrary.simpleMessage(
-      "Your data is only used to display, organize, and back up your invoices inside the app.",
+      "Your data is used to display, organize, and back up your invoices inside the app. We do not collect or share it unless you choose to back up or share your invoices.",
     ),
     "privacy_usage_title": MessageLookupByLibrary.simpleMessage(
       "How we use your data",
@@ -572,9 +596,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "productSearchHint": MessageLookupByLibrary.simpleMessage(
       "Search products",
     ),
-    "product_added": MessageLookupByLibrary.simpleMessage(
-      "Product added successfully",
-    ),
+    "product_added": MessageLookupByLibrary.simpleMessage("Product added"),
     "product_added_successfully": MessageLookupByLibrary.simpleMessage(
       "Product added successfully",
     ),
@@ -582,7 +604,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "A product with this name already exists",
     ),
     "product_deleted_successfully": MessageLookupByLibrary.simpleMessage(
-      "Product deleted",
+      "Product deleted successfully",
     ),
     "product_details": MessageLookupByLibrary.simpleMessage("Product details"),
     "product_management": MessageLookupByLibrary.simpleMessage(
@@ -622,7 +644,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "remaining": MessageLookupByLibrary.simpleMessage("Remaining"),
     "removeProduct": MessageLookupByLibrary.simpleMessage("Remove product"),
     "resetInvoiceFilters": MessageLookupByLibrary.simpleMessage(
-      "Reset filters",
+      "Reset invoice filters",
     ),
     "reset_action": MessageLookupByLibrary.simpleMessage("Reset"),
     "reset_defaults_confirm": MessageLookupByLibrary.simpleMessage(
@@ -665,26 +687,24 @@ class MessageLookup extends MessageLookupByLibrary {
     "save": MessageLookupByLibrary.simpleMessage("Save"),
     "saveChanges": MessageLookupByLibrary.simpleMessage("Save changes"),
     "save_invoice_failed": MessageLookupByLibrary.simpleMessage(
-      "Could not save the invoice",
+      "Save invoice failed",
     ),
     "search": MessageLookupByLibrary.simpleMessage("Search"),
     "selectDateRange": MessageLookupByLibrary.simpleMessage(
       "Select date range",
     ),
     "select_invoice_type_first": MessageLookupByLibrary.simpleMessage(
-      "Please select the invoice type first",
+      "Select invoice type first",
     ),
-    "select_language": MessageLookupByLibrary.simpleMessage("Select Language"),
-    "select_product": MessageLookupByLibrary.simpleMessage(
-      "Please select a product",
-    ),
+    "select_language": MessageLookupByLibrary.simpleMessage("Select language"),
+    "select_product": MessageLookupByLibrary.simpleMessage("Select product"),
     "select_product_hint": MessageLookupByLibrary.simpleMessage(
       "Select a product",
     ),
     "send": MessageLookupByLibrary.simpleMessage("Send"),
     "settings": MessageLookupByLibrary.simpleMessage("Settings"),
     "share": MessageLookupByLibrary.simpleMessage("Share"),
-    "share_app": MessageLookupByLibrary.simpleMessage("Share App"),
+    "share_app": MessageLookupByLibrary.simpleMessage("Share app"),
     "share_app_message": MessageLookupByLibrary.simpleMessage(
       "Check out the Arqamy app on Google Play",
     ),
@@ -692,7 +712,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Send PDF + Excel via WhatsApp",
     ),
     "share_invoice_failed": MessageLookupByLibrary.simpleMessage(
-      "The invoice was saved, but sharing failed",
+      "Share invoice failed",
     ),
     "share_via_whatsapp": MessageLookupByLibrary.simpleMessage(
       "Share via WhatsApp",
@@ -704,24 +724,22 @@ class MessageLookup extends MessageLookupByLibrary {
       "Show package weight field",
     ),
     "start_adding_products": MessageLookupByLibrary.simpleMessage(
-      "Start adding products to the invoice",
+      "Start adding products",
     ),
     "storage": MessageLookupByLibrary.simpleMessage("Storage"),
-    "storageCurrency": MessageLookupByLibrary.simpleMessage("EGP"),
+    "storageCurrency": MessageLookupByLibrary.simpleMessage("Currency"),
     "storageInvoiceCount": MessageLookupByLibrary.simpleMessage(
-      "Storage invoices",
+      "Invoice count",
     ),
     "storageInvoiceValue": MessageLookupByLibrary.simpleMessage(
-      "Storage value",
+      "Invoice value",
     ),
-    "storedNetWeight": MessageLookupByLibrary.simpleMessage(
-      "Stored net weight",
-    ),
+    "storedNetWeight": MessageLookupByLibrary.simpleMessage("Net weight"),
     "subtotal": MessageLookupByLibrary.simpleMessage("Subtotal"),
     "suggestion_removed": MessageLookupByLibrary.simpleMessage(
       "Suggestion removed",
     ),
-    "suppliers": MessageLookupByLibrary.simpleMessage("Customers & suppliers"),
+    "suppliers": MessageLookupByLibrary.simpleMessage("Suppliers"),
     "switch_to_amount": MessageLookupByLibrary.simpleMessage(
       "Switch to amount",
     ),
@@ -733,43 +751,25 @@ class MessageLookup extends MessageLookupByLibrary {
       "Tap + to add a new product",
     ),
     "terms_of_service": MessageLookupByLibrary.simpleMessage(
-      "Terms of Service",
+      "Terms of service",
     ),
     "time": MessageLookupByLibrary.simpleMessage("Time"),
     "total": MessageLookupByLibrary.simpleMessage("Total"),
     "total_amount": MessageLookupByLibrary.simpleMessage("Total amount"),
-    "total_cost": MessageLookupByLibrary.simpleMessage("Total Cost"),
+    "total_cost": MessageLookupByLibrary.simpleMessage("Total cost"),
     "total_egp": MessageLookupByLibrary.simpleMessage("Total (EGP)"),
     "total_price": MessageLookupByLibrary.simpleMessage("Total price"),
     "totals": MessageLookupByLibrary.simpleMessage("Totals"),
     "unpaidStatus": MessageLookupByLibrary.simpleMessage("Unpaid"),
     "unspecified": MessageLookupByLibrary.simpleMessage("Unspecified"),
-    "update_app": MessageLookupByLibrary.simpleMessage("Update App"),
+    "update_app": MessageLookupByLibrary.simpleMessage("Update app"),
     "weight": MessageLookupByLibrary.simpleMessage("Weight"),
     "weight_details": MessageLookupByLibrary.simpleMessage("Weight details"),
     "weight_kg": MessageLookupByLibrary.simpleMessage("Weight (kg)"),
     "weight_or_count": MessageLookupByLibrary.simpleMessage("Weight or count"),
     "weight_required": MessageLookupByLibrary.simpleMessage(
-      "Please enter the weight",
+      "Weight is required",
     ),
     "yes": MessageLookupByLibrary.simpleMessage("Yes"),
-    "company_info_on_invoice": MessageLookupByLibrary.simpleMessage("Company info shown on invoice"),
-    "other_invoice_info": MessageLookupByLibrary.simpleMessage("Other invoice info"),
-    "pdf_columns": MessageLookupByLibrary.simpleMessage("PDF Columns"),
-    "excel_columns": MessageLookupByLibrary.simpleMessage("Excel Columns"),
-    "column_visibility_description": MessageLookupByLibrary.simpleMessage("Show or hide columns in exported invoices"),
-    "column_serial": MessageLookupByLibrary.simpleMessage("Invoice #"),
-    "column_date": MessageLookupByLibrary.simpleMessage("Date"),
-    "column_time": MessageLookupByLibrary.simpleMessage("Time"),
-    "column_customer": MessageLookupByLibrary.simpleMessage("Customer"),
-    "column_type": MessageLookupByLibrary.simpleMessage("Type"),
-    "column_product": MessageLookupByLibrary.simpleMessage("Product"),
-    "column_weight": MessageLookupByLibrary.simpleMessage("Weight"),
-    "column_package_weight": MessageLookupByLibrary.simpleMessage("Package weight"),
-    "column_package_count": MessageLookupByLibrary.simpleMessage("Package count"),
-    "column_net_weight": MessageLookupByLibrary.simpleMessage("Net weight"),
-    "column_price": MessageLookupByLibrary.simpleMessage("Price"),
-    "column_total": MessageLookupByLibrary.simpleMessage("Total"),
-    "column_show_all": MessageLookupByLibrary.simpleMessage("Show all"),
   };
 }

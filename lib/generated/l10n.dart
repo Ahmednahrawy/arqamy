@@ -65,14 +65,9 @@ class S {
     return Intl.message('Home', name: 'home', desc: '', args: []);
   }
 
-  /// `Customers & suppliers`
+  /// `Suppliers`
   String get suppliers {
-    return Intl.message(
-      'Customers & suppliers',
-      name: 'suppliers',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Suppliers', name: 'suppliers', desc: '', args: []);
   }
 
   /// `Customers`
@@ -95,10 +90,10 @@ class S {
     );
   }
 
-  /// `Items`
+  /// `Total items`
   String get inventory_total_items {
     return Intl.message(
-      'Items',
+      'Total items',
       name: 'inventory_total_items',
       desc: '',
       args: [],
@@ -115,25 +110,10 @@ class S {
     );
   }
 
-  /// `Units`
-  String get inventory_total_quantity {
-    return Intl.message(
-      'Units',
-      name: 'inventory_total_quantity',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Min`
-  String get inventory_minimum {
-    return Intl.message('Min', name: 'inventory_minimum', desc: '', args: []);
-  }
-
-  /// `No inventory items yet`
+  /// `No items`
   String get inventory_empty {
     return Intl.message(
-      'No inventory items yet',
+      'No items',
       name: 'inventory_empty',
       desc: '',
       args: [],
@@ -155,30 +135,20 @@ class S {
     return Intl.message('Language', name: 'language', desc: '', args: []);
   }
 
-  /// `Dark Mode`
+  /// `Dark mode`
   String get dark_mode {
-    return Intl.message('Dark Mode', name: 'dark_mode', desc: '', args: []);
+    return Intl.message('Dark mode', name: 'dark_mode', desc: '', args: []);
   }
 
-  /// `Light Mode`
+  /// `Light mode`
   String get light_mode {
-    return Intl.message('Light Mode', name: 'light_mode', desc: '', args: []);
+    return Intl.message('Light mode', name: 'light_mode', desc: '', args: []);
   }
 
-  /// `Appearance`
-  String get appearance {
-    return Intl.message('Appearance', name: 'appearance', desc: '', args: []);
-  }
-
-  /// `System`
-  String get system_mode {
-    return Intl.message('System', name: 'system_mode', desc: '', args: []);
-  }
-
-  /// `Select Language`
+  /// `Select language`
   String get select_language {
     return Intl.message(
-      'Select Language',
+      'Select language',
       name: 'select_language',
       desc: '',
       args: [],
@@ -230,10 +200,10 @@ class S {
     return Intl.message('Profile', name: 'profile', desc: '', args: []);
   }
 
-  /// `Change Password`
+  /// `Change password`
   String get change_password {
     return Intl.message(
-      'Change Password',
+      'Change password',
       name: 'change_password',
       desc: '',
       args: [],
@@ -260,29 +230,29 @@ class S {
     return Intl.message('About', name: 'about', desc: '', args: []);
   }
 
-  /// `Terms of Service`
+  /// `Terms of service`
   String get terms_of_service {
     return Intl.message(
-      'Terms of Service',
+      'Terms of service',
       name: 'terms_of_service',
       desc: '',
       args: [],
     );
   }
 
-  /// `Privacy Policy`
+  /// `Privacy policy`
   String get privacy_policy {
     return Intl.message(
-      'Privacy Policy',
+      'Privacy policy',
       name: 'privacy_policy',
       desc: '',
       args: [],
     );
   }
 
-  /// `Contact Us`
+  /// `Contact us`
   String get contact_us {
-    return Intl.message('Contact Us', name: 'contact_us', desc: '', args: []);
+    return Intl.message('Contact us', name: 'contact_us', desc: '', args: []);
   }
 
   /// `Search`
@@ -300,40 +270,40 @@ class S {
     );
   }
 
-  /// `Loading...`
+  /// `Loading`
   String get loading {
-    return Intl.message('Loading...', name: 'loading', desc: '', args: []);
+    return Intl.message('Loading', name: 'loading', desc: '', args: []);
   }
 
-  /// `Share App`
+  /// `Share app`
   String get share_app {
-    return Intl.message('Share App', name: 'share_app', desc: '', args: []);
+    return Intl.message('Share app', name: 'share_app', desc: '', args: []);
   }
 
-  /// `Update App`
+  /// `Update app`
   String get update_app {
-    return Intl.message('Update App', name: 'update_app', desc: '', args: []);
+    return Intl.message('Update app', name: 'update_app', desc: '', args: []);
   }
 
-  /// `Total Cost`
+  /// `Total cost`
   String get total_cost {
-    return Intl.message('Total Cost', name: 'total_cost', desc: '', args: []);
+    return Intl.message('Total cost', name: 'total_cost', desc: '', args: []);
   }
 
-  /// `Page Not Found`
+  /// `Page not found`
   String get page_not_found {
     return Intl.message(
-      'Page Not Found',
+      'Page not found',
       name: 'page_not_found',
       desc: '',
       args: [],
     );
   }
 
-  /// `Please choose a customer before proceeding.`
+  /// `Please choose a customer`
   String get please_choose_customer {
     return Intl.message(
-      'Please choose a customer before proceeding.',
+      'Please choose a customer',
       name: 'please_choose_customer',
       desc: '',
       args: [],
@@ -350,10 +320,10 @@ class S {
     );
   }
 
-  /// `Export Excel`
+  /// `Export to Excel`
   String get exportToExcel {
     return Intl.message(
-      'Export Excel',
+      'Export to Excel',
       name: 'exportToExcel',
       desc: '',
       args: [],
@@ -370,10 +340,10 @@ class S {
     );
   }
 
-  /// `Could not export the invoice to Excel`
+  /// `Invoice Excel export failed`
   String get invoice_excel_export_failed {
     return Intl.message(
-      'Could not export the invoice to Excel',
+      'Invoice Excel export failed',
       name: 'invoice_excel_export_failed',
       desc: '',
       args: [],
@@ -385,30 +355,30 @@ class S {
     return Intl.message('Privacy', name: 'privacy', desc: '', args: []);
   }
 
-  /// `Arqamy keeps your invoices and customer details on this device. We do not collect or share them.`
+  /// `Arqamy respects your privacy and is committed to protecting your personal data.`
   String get privacy_intro {
     return Intl.message(
-      'Arqamy keeps your invoices and customer details on this device. We do not collect or share them.',
+      'Arqamy respects your privacy and is committed to protecting your personal data.',
       name: 'privacy_intro',
       desc: '',
       args: [],
     );
   }
 
-  /// `Data stored on your device`
+  /// `Data we collect`
   String get privacy_data_title {
     return Intl.message(
-      'Data stored on your device',
+      'Data we collect',
       name: 'privacy_data_title',
       desc: '',
       args: [],
     );
   }
 
-  /// `Invoice details, customer names, products, and settings are saved locally on your device.`
+  /// `We collect invoice data, customer information, and product details stored on your device.`
   String get privacy_data_body {
     return Intl.message(
-      'Invoice details, customer names, products, and settings are saved locally on your device.',
+      'We collect invoice data, customer information, and product details stored on your device.',
       name: 'privacy_data_body',
       desc: '',
       args: [],
@@ -425,60 +395,60 @@ class S {
     );
   }
 
-  /// `Your data is only used to display, organize, and back up your invoices inside the app.`
+  /// `Your data is used to display, organize, and back up your invoices inside the app. We do not collect or share it unless you choose to back up or share your invoices.`
   String get privacy_usage_body {
     return Intl.message(
-      'Your data is only used to display, organize, and back up your invoices inside the app.',
+      'Your data is used to display, organize, and back up your invoices inside the app. We do not collect or share it unless you choose to back up or share your invoices.',
       name: 'privacy_usage_body',
       desc: '',
       args: [],
     );
   }
 
-  /// `Your choices`
+  /// `Your privacy choices`
   String get privacy_choices_title {
     return Intl.message(
-      'Your choices',
+      'Your privacy choices',
       name: 'privacy_choices_title',
       desc: '',
       args: [],
     );
   }
 
-  /// `You can back up or restore your invoices from Settings at any time, and clear app data through your device settings.`
+  /// `You can manage your data settings in the app settings. You can back up or restore your invoices, and clear app data through your device settings.`
   String get privacy_choices_body {
     return Intl.message(
-      'You can back up or restore your invoices from Settings at any time, and clear app data through your device settings.',
+      'You can manage your data settings in the app settings. You can back up or restore your invoices, and clear app data through your device settings.',
       name: 'privacy_choices_body',
       desc: '',
       args: [],
     );
   }
 
-  /// `Optional account`
+  /// `Account authentication`
   String get privacy_account_title {
     return Intl.message(
-      'Optional account',
+      'Account authentication',
       name: 'privacy_account_title',
       desc: '',
       args: [],
     );
   }
 
-  /// `You can use Arqamy without an account. If you create one, your email address and sign-in details are stored by Google's Firebase Authentication so you can sign in and reset your password. Your invoices and customer details are not uploaded.`
+  /// `Arqamy uses Google Firebase Authentication for sign-in and password reset. Your invoices and customer details are not uploaded to Firebase.`
   String get privacy_account_body {
     return Intl.message(
-      'You can use Arqamy without an account. If you create one, your email address and sign-in details are stored by Google\'s Firebase Authentication so you can sign in and reset your password. Your invoices and customer details are not uploaded.',
+      'Arqamy uses Google Firebase Authentication for sign-in and password reset. Your invoices and customer details are not uploaded to Firebase.',
       name: 'privacy_account_body',
       desc: '',
       args: [],
     );
   }
 
-  /// `Find answers to common questions about using Arqamy.`
+  /// `Get help with Arqamy`
   String get help_intro {
     return Intl.message(
-      'Find answers to common questions about using Arqamy.',
+      'Get help with Arqamy',
       name: 'help_intro',
       desc: '',
       args: [],
@@ -505,100 +475,100 @@ class S {
     );
   }
 
-  /// `Backing up invoices`
+  /// `Back up invoices`
   String get help_backup_title {
     return Intl.message(
-      'Backing up invoices',
+      'Back up invoices',
       name: 'help_backup_title',
       desc: '',
       args: [],
     );
   }
 
-  /// `In Settings, open Invoice actions and choose Backup invoices to save a copy.`
+  /// `Arqamy keeps your invoices and customer details on this device. We do not collect or share them. You can back up or restore your invoices from Settings at any time, and clear app data through your device settings.`
   String get help_backup_body {
     return Intl.message(
-      'In Settings, open Invoice actions and choose Backup invoices to save a copy.',
+      'Arqamy keeps your invoices and customer details on this device. We do not collect or share them. You can back up or restore your invoices from Settings at any time, and clear app data through your device settings.',
       name: 'help_backup_body',
       desc: '',
       args: [],
     );
   }
 
-  /// `Restoring invoices`
+  /// `Restore from backup`
   String get help_restore_title {
     return Intl.message(
-      'Restoring invoices',
+      'Restore from backup',
       name: 'help_restore_title',
       desc: '',
       args: [],
     );
   }
 
-  /// `In Settings, open Invoice actions and choose Restore from backup.`
+  /// `You can restore invoices from a backup file. Invoices from the backup will be merged with your saved invoices. A saved invoice with the same ID is replaced by the backup copy. All other saved invoices are kept.`
   String get help_restore_body {
     return Intl.message(
-      'In Settings, open Invoice actions and choose Restore from backup.',
+      'You can restore invoices from a backup file. Invoices from the backup will be merged with your saved invoices. A saved invoice with the same ID is replaced by the backup copy. All other saved invoices are kept.',
       name: 'help_restore_body',
       desc: '',
       args: [],
     );
   }
 
-  /// `Changing the language`
+  /// `Change language`
   String get help_language_title {
     return Intl.message(
-      'Changing the language',
+      'Change language',
       name: 'help_language_title',
       desc: '',
       args: [],
     );
   }
 
-  /// `Open the side menu and use the Language row to switch between Arabic and English.`
+  /// `You can change the app language between Arabic and English.`
   String get help_language_body {
     return Intl.message(
-      'Open the side menu and use the Language row to switch between Arabic and English.',
+      'You can change the app language between Arabic and English.',
       name: 'help_language_body',
       desc: '',
       args: [],
     );
   }
 
-  /// `Need more help?`
+  /// `Contact us`
   String get help_contact_title {
     return Intl.message(
-      'Need more help?',
+      'Contact us',
       name: 'help_contact_title',
       desc: '',
       args: [],
     );
   }
 
-  /// `Contact the app support team for further assistance.`
+  /// `If you have any questions or feedback, please contact us through the app or website.`
   String get help_contact_body {
     return Intl.message(
-      'Contact the app support team for further assistance.',
+      'If you have any questions or feedback, please contact us through the app or website.',
       name: 'help_contact_body',
       desc: '',
       args: [],
     );
   }
 
-  /// `Invoice Management`
+  /// `Invoice management`
   String get invoice_management {
     return Intl.message(
-      'Invoice Management',
+      'Invoice management',
       name: 'invoice_management',
       desc: '',
       args: [],
     );
   }
 
-  /// `Invoice Templates`
+  /// `Invoice template`
   String get invoice_template {
     return Intl.message(
-      'Invoice Templates',
+      'Invoice template',
       name: 'invoice_template',
       desc: '',
       args: [],
@@ -635,10 +605,10 @@ class S {
     );
   }
 
-  /// `Invoice date and time`
+  /// `Invoice date/time`
   String get invoiceDateTime {
     return Intl.message(
-      'Invoice date and time',
+      'Invoice date/time',
       name: 'invoiceDateTime',
       desc: '',
       args: [],
@@ -745,14 +715,14 @@ class S {
     );
   }
 
-  /// `Amount paid`
+  /// `Paid amount`
   String get paidAmount {
-    return Intl.message('Amount paid', name: 'paidAmount', desc: '', args: []);
+    return Intl.message('Paid amount', name: 'paidAmount', desc: '', args: []);
   }
 
-  /// `EGP`
+  /// `Currency`
   String get currency {
-    return Intl.message('EGP', name: 'currency', desc: '', args: []);
+    return Intl.message('Currency', name: 'currency', desc: '', args: []);
   }
 
   /// `Invoice total`
@@ -775,50 +745,50 @@ class S {
     );
   }
 
-  /// `Enter a name`
+  /// `Name is required`
   String get nameRequired {
     return Intl.message(
-      'Enter a name',
+      'Name is required',
       name: 'nameRequired',
       desc: '',
       args: [],
     );
   }
 
-  /// `Enter a valid finite number`
+  /// `Invalid number`
   String get invalidNumber {
     return Intl.message(
-      'Enter a valid finite number',
+      'Invalid number',
       name: 'invalidNumber',
       desc: '',
       args: [],
     );
   }
 
-  /// `Enter a whole number`
+  /// `Invalid integer`
   String get invalidInteger {
     return Intl.message(
-      'Enter a whole number',
+      'Invalid integer',
       name: 'invalidInteger',
       desc: '',
       args: [],
     );
   }
 
-  /// `Add at least one product before saving.`
+  /// `Invoice needs at least one product`
   String get invoiceNeedsProduct {
     return Intl.message(
-      'Add at least one product before saving.',
+      'Invoice needs at least one product',
       name: 'invoiceNeedsProduct',
       desc: '',
       args: [],
     );
   }
 
-  /// `The stored date or time could not be parsed. Choose a replacement if needed.`
+  /// `Legacy date picker hint`
   String get legacyDatePickerHint {
     return Intl.message(
-      'The stored date or time could not be parsed. Choose a replacement if needed.',
+      'Legacy date picker hint',
       name: 'legacyDatePickerHint',
       desc: '',
       args: [],
@@ -840,10 +810,10 @@ class S {
     return Intl.message('Storage', name: 'storage', desc: '', args: []);
   }
 
-  /// `Could not save invoice changes`
+  /// `Could not save invoice`
   String get couldNotSaveInvoice {
     return Intl.message(
-      'Could not save invoice changes',
+      'Could not save invoice',
       name: 'couldNotSaveInvoice',
       desc: '',
       args: [],
@@ -860,39 +830,44 @@ class S {
     );
   }
 
-  /// `Storage value`
+  /// `Invoice value`
   String get storageInvoiceValue {
     return Intl.message(
-      'Storage value',
+      'Invoice value',
       name: 'storageInvoiceValue',
       desc: '',
       args: [],
     );
   }
 
-  /// `Stored net weight`
+  /// `Net weight`
   String get storedNetWeight {
     return Intl.message(
-      'Stored net weight',
+      'Net weight',
       name: 'storedNetWeight',
       desc: '',
       args: [],
     );
   }
 
-  /// `Storage invoices`
+  /// `Invoice count`
   String get storageInvoiceCount {
     return Intl.message(
-      'Storage invoices',
+      'Invoice count',
       name: 'storageInvoiceCount',
       desc: '',
       args: [],
     );
   }
 
-  /// `EGP`
+  /// `Currency`
   String get storageCurrency {
-    return Intl.message('EGP', name: 'storageCurrency', desc: '', args: []);
+    return Intl.message(
+      'Currency',
+      name: 'storageCurrency',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `kg`
@@ -900,20 +875,20 @@ class S {
     return Intl.message('kg', name: 'kilograms', desc: '', args: []);
   }
 
-  /// `Search by serial or product name`
+  /// `Search customer invoices`
   String get customerInvoiceSearchHint {
     return Intl.message(
-      'Search by serial or product name',
+      'Search customer invoices',
       name: 'customerInvoiceSearchHint',
       desc: '',
       args: [],
     );
   }
 
-  /// `Search by serial, product or customer`
+  /// `Search all invoices`
   String get allInvoicesSearchHint {
     return Intl.message(
-      'Search by serial, product or customer',
+      'Search all invoices',
       name: 'allInvoicesSearchHint',
       desc: '',
       args: [],
@@ -930,20 +905,20 @@ class S {
     );
   }
 
-  /// `No invoices yet`
+  /// `No recent invoices`
   String get noRecentInvoices {
     return Intl.message(
-      'No invoices yet',
+      'No recent invoices',
       name: 'noRecentInvoices',
       desc: '',
       args: [],
     );
   }
 
-  /// `Clear search`
+  /// `Clear invoice search`
   String get clearInvoiceSearch {
     return Intl.message(
-      'Clear search',
+      'Clear invoice search',
       name: 'clearInvoiceSearch',
       desc: '',
       args: [],
@@ -960,10 +935,10 @@ class S {
     );
   }
 
-  /// `Invoice type`
+  /// `Invoice action filter`
   String get invoiceActionFilter {
     return Intl.message(
-      'Invoice type',
+      'Invoice action filter',
       name: 'invoiceActionFilter',
       desc: '',
       args: [],
@@ -975,10 +950,10 @@ class S {
     return Intl.message('Invoice #', name: 'invoiceNumber', desc: '', args: []);
   }
 
-  /// `Date range`
+  /// `Date range filter`
   String get dateRangeFilter {
     return Intl.message(
-      'Date range',
+      'Date range filter',
       name: 'dateRangeFilter',
       desc: '',
       args: [],
@@ -1005,19 +980,24 @@ class S {
     );
   }
 
-  /// `Payment status`
+  /// `Payment status filter`
   String get paymentStatusFilter {
     return Intl.message(
-      'Payment status',
+      'Payment status filter',
       name: 'paymentStatusFilter',
       desc: '',
       args: [],
     );
   }
 
-  /// `All`
+  /// `All invoices`
   String get allInvoicesFilter {
-    return Intl.message('All', name: 'allInvoicesFilter', desc: '', args: []);
+    return Intl.message(
+      'All invoices',
+      name: 'allInvoicesFilter',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Paid`
@@ -1040,35 +1020,35 @@ class S {
     return Intl.message('Unpaid', name: 'unpaidStatus', desc: '', args: []);
   }
 
-  /// `Reset filters`
+  /// `Reset invoice filters`
   String get resetInvoiceFilters {
     return Intl.message(
-      'Reset filters',
+      'Reset invoice filters',
       name: 'resetInvoiceFilters',
       desc: '',
       args: [],
     );
   }
 
-  /// `Invoice filters`
+  /// `Filters`
   String get invoiceFilters {
+    return Intl.message('Filters', name: 'invoiceFilters', desc: '', args: []);
+  }
+
+  /// `Apply filters`
+  String get applyFilters {
     return Intl.message(
-      'Invoice filters',
-      name: 'invoiceFilters',
+      'Apply filters',
+      name: 'applyFilters',
       desc: '',
       args: [],
     );
   }
 
-  /// `Apply`
-  String get applyFilters {
-    return Intl.message('Apply', name: 'applyFilters', desc: '', args: []);
-  }
-
-  /// `No invoices match the search or filters`
+  /// `No invoices match your filters`
   String get noInvoicesMatchFilters {
     return Intl.message(
-      'No invoices match the search or filters',
+      'No invoices match your filters',
       name: 'noInvoicesMatchFilters',
       desc: '',
       args: [],
@@ -1105,10 +1085,10 @@ class S {
     );
   }
 
-  /// `Only the current invoice data will be cleared. Saved invoices will not be deleted.`
+  /// `Clear draft message`
   String get clear_draft_message {
     return Intl.message(
-      'Only the current invoice data will be cleared. Saved invoices will not be deleted.',
+      'Clear draft message',
       name: 'clear_draft_message',
       desc: '',
       args: [],
@@ -1135,40 +1115,40 @@ class S {
     );
   }
 
-  /// `A new invoice is ready`
+  /// `New invoice ready`
   String get new_invoice_ready {
     return Intl.message(
-      'A new invoice is ready',
+      'New invoice ready',
       name: 'new_invoice_ready',
       desc: '',
       args: [],
     );
   }
 
-  /// `Invoice deleted. A new invoice is ready`
+  /// `Invoice deleted. New invoice ready`
   String get invoice_deleted_new_ready {
     return Intl.message(
-      'Invoice deleted. A new invoice is ready',
+      'Invoice deleted. New invoice ready',
       name: 'invoice_deleted_new_ready',
       desc: '',
       args: [],
     );
   }
 
-  /// `Could not save the invoice`
+  /// `Save invoice failed`
   String get save_invoice_failed {
     return Intl.message(
-      'Could not save the invoice',
+      'Save invoice failed',
       name: 'save_invoice_failed',
       desc: '',
       args: [],
     );
   }
 
-  /// `The invoice was saved, but sharing failed`
+  /// `Share invoice failed`
   String get share_invoice_failed {
     return Intl.message(
-      'The invoice was saved, but sharing failed',
+      'Share invoice failed',
       name: 'share_invoice_failed',
       desc: '',
       args: [],
@@ -1190,10 +1170,10 @@ class S {
     return Intl.message('Preview', name: 'preview', desc: '', args: []);
   }
 
-  /// `Collected`
+  /// `Collected amount`
   String get collected_amount_label {
     return Intl.message(
-      'Collected',
+      'Collected amount',
       name: 'collected_amount_label',
       desc: '',
       args: [],
@@ -1265,35 +1245,30 @@ class S {
     );
   }
 
-  /// `Double-tap to clear`
+  /// `Clear field`
   String get clear_field {
-    return Intl.message(
-      'Double-tap to clear',
-      name: 'clear_field',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Clear field', name: 'clear_field', desc: '', args: []);
   }
 
-  /// `Clear`
+  /// `Clear text`
   String get clear_text {
-    return Intl.message('Clear', name: 'clear_text', desc: '', args: []);
+    return Intl.message('Clear text', name: 'clear_text', desc: '', args: []);
   }
 
-  /// `Discount cannot exceed the invoice total`
+  /// `Discount exceeds total`
   String get discount_exceeds_total {
     return Intl.message(
-      'Discount cannot exceed the invoice total',
+      'Discount exceeds total',
       name: 'discount_exceeds_total',
       desc: '',
       args: [],
     );
   }
 
-  /// `Percent must be between 0 and 100`
+  /// `Discount percent range (0-100)`
   String get discount_percent_range {
     return Intl.message(
-      'Percent must be between 0 and 100',
+      'Discount percent range (0-100)',
       name: 'discount_percent_range',
       desc: '',
       args: [],
@@ -1350,30 +1325,30 @@ class S {
     );
   }
 
-  /// `Start adding products to the invoice`
+  /// `Start adding products`
   String get start_adding_products {
     return Intl.message(
-      'Start adding products to the invoice',
+      'Start adding products',
       name: 'start_adding_products',
       desc: '',
       args: [],
     );
   }
 
-  /// `Please enter the collected amount`
+  /// `Enter collected amount`
   String get enter_collected_amount {
     return Intl.message(
-      'Please enter the collected amount',
+      'Enter collected amount',
       name: 'enter_collected_amount',
       desc: '',
       args: [],
     );
   }
 
-  /// `Product added successfully`
+  /// `Product added`
   String get product_added {
     return Intl.message(
-      'Product added successfully',
+      'Product added',
       name: 'product_added',
       desc: '',
       args: [],
@@ -1385,30 +1360,30 @@ class S {
     return Intl.message('Delete', name: 'delete', desc: '', args: []);
   }
 
-  /// `Please select the invoice type first`
+  /// `Select invoice type first`
   String get select_invoice_type_first {
     return Intl.message(
-      'Please select the invoice type first',
+      'Select invoice type first',
       name: 'select_invoice_type_first',
       desc: '',
       args: [],
     );
   }
 
-  /// `Please select a product`
+  /// `Select product`
   String get select_product {
     return Intl.message(
-      'Please select a product',
+      'Select product',
       name: 'select_product',
       desc: '',
       args: [],
     );
   }
 
-  /// `Could not access invoice data. Please try again.`
+  /// `Data unavailable`
   String get data_unavailable {
     return Intl.message(
-      'Could not access invoice data. Please try again.',
+      'Data unavailable',
       name: 'data_unavailable',
       desc: '',
       args: [],
@@ -1450,90 +1425,90 @@ class S {
     );
   }
 
-  /// `Please enter the weight`
+  /// `Weight is required`
   String get weight_required {
     return Intl.message(
-      'Please enter the weight',
+      'Weight is required',
       name: 'weight_required',
       desc: '',
       args: [],
     );
   }
 
-  /// `Please enter the price`
+  /// `Price is required`
   String get price_required {
     return Intl.message(
-      'Please enter the price',
+      'Price is required',
       name: 'price_required',
       desc: '',
       args: [],
     );
   }
 
-  /// `Enter the package count first`
+  /// `Package count is required`
   String get package_count_required {
     return Intl.message(
-      'Enter the package count first',
+      'Package count is required',
       name: 'package_count_required',
       desc: '',
       args: [],
     );
   }
 
-  /// `Enter the empty package weight`
+  /// `Package weight is required`
   String get package_weight_required {
     return Intl.message(
-      'Enter the empty package weight',
+      'Package weight is required',
       name: 'package_weight_required',
       desc: '',
       args: [],
     );
   }
 
-  /// `Enter at least 4 characters`
+  /// `Customer name must be at least 4 characters`
   String get customer_name_min_length {
     return Intl.message(
-      'Enter at least 4 characters',
+      'Customer name must be at least 4 characters',
       name: 'customer_name_min_length',
       desc: '',
       args: [],
     );
   }
 
-  /// `Could not load suggestions`
+  /// `Error loading suggestions`
   String get error_loading_suggestions {
     return Intl.message(
-      'Could not load suggestions',
+      'Error loading suggestions',
       name: 'error_loading_suggestions',
       desc: '',
       args: [],
     );
   }
 
-  /// `Could not save suggestions`
+  /// `Error saving suggestions`
   String get error_saving_suggestions {
     return Intl.message(
-      'Could not save suggestions',
+      'Error saving suggestions',
       name: 'error_saving_suggestions',
       desc: '',
       args: [],
     );
   }
 
-  /// `Could not add the suggestion`
+  /// `Error adding suggestions`
   String get error_adding_suggestions {
     return Intl.message(
-      'Could not add the suggestion',
+      'Error adding suggestions',
       name: 'error_adding_suggestions',
       desc: '',
       args: [],
     );
   }
 
-  /// `Could not submit the suggestion`
+  /// `Error submitting suggestions`
   String get error_submitting_suggestions {
     return Intl.message(
-      'Could not submit the suggestion',
+      'Error submitting suggestions',
       name: 'error_submitting_suggestions',
       desc: '',
       args: [],
@@ -1575,10 +1550,10 @@ class S {
     );
   }
 
-  /// `Confirm deletion`
+  /// `Confirm delete`
   String get confirm_delete {
     return Intl.message(
-      'Confirm deletion',
+      'Confirm delete',
       name: 'confirm_delete',
       desc: '',
       args: [],
@@ -1640,20 +1615,20 @@ class S {
     );
   }
 
-  /// `No invoices for this customer`
+  /// `No customer invoices`
   String get no_customer_invoices {
     return Intl.message(
-      'No invoices for this customer',
+      'No customer invoices',
       name: 'no_customer_invoices',
       desc: '',
       args: [],
     );
   }
 
-  /// `Net due to the customer`
+  /// `Net due to customer`
   String get net_due_to_customer {
     return Intl.message(
-      'Net due to the customer',
+      'Net due to customer',
       name: 'net_due_to_customer',
       desc: '',
       args: [],
@@ -1710,50 +1685,50 @@ class S {
     return Intl.message('Share', name: 'share', desc: '', args: []);
   }
 
-  /// `Are you sure you want to delete this invoice?\nThis action cannot be undone.`
+  /// `Are you sure you want to delete this invoice?\nThis cannot be undone.`
   String get confirm_delete_invoice {
     return Intl.message(
-      'Are you sure you want to delete this invoice?\nThis action cannot be undone.',
+      'Are you sure you want to delete this invoice?\nThis cannot be undone.',
       name: 'confirm_delete_invoice',
       desc: '',
       args: [],
     );
   }
 
-  /// `Could not delete the invoice`
+  /// `Could not delete invoice`
   String get could_not_delete_invoice {
     return Intl.message(
-      'Could not delete the invoice',
+      'Could not delete invoice',
       name: 'could_not_delete_invoice',
       desc: '',
       args: [],
     );
   }
 
-  /// `Could not load the invoice history`
+  /// `Could not load invoices`
   String get could_not_load_invoices {
     return Intl.message(
-      'Could not load the invoice history',
+      'Could not load invoices',
       name: 'could_not_load_invoices',
       desc: '',
       args: [],
     );
   }
 
-  /// `Changes saved, but the invoice history could not be refreshed`
+  /// `Invoice saved but failed to reload`
   String get invoice_saved_reload_failed {
     return Intl.message(
-      'Changes saved, but the invoice history could not be refreshed',
+      'Invoice saved but failed to reload',
       name: 'invoice_saved_reload_failed',
       desc: '',
       args: [],
     );
   }
 
-  /// `Could not share the invoice`
+  /// `Could not share invoice`
   String get could_not_share_invoice {
     return Intl.message(
-      'Could not share the invoice',
+      'Could not share invoice',
       name: 'could_not_share_invoice',
       desc: '',
       args: [],
@@ -1780,25 +1755,35 @@ class S {
     );
   }
 
-  /// `invoices`
+  /// `A few invoices`
   String get invoices_few {
-    return Intl.message('invoices', name: 'invoices_few', desc: '', args: []);
+    return Intl.message(
+      'A few invoices',
+      name: 'invoices_few',
+      desc: '',
+      args: [],
+    );
   }
 
-  /// `invoices`
+  /// `Many invoices`
   String get invoices_many {
-    return Intl.message('invoices', name: 'invoices_many', desc: '', args: []);
+    return Intl.message(
+      'Many invoices',
+      name: 'invoices_many',
+      desc: '',
+      args: [],
+    );
   }
 
-  /// `Transaction`
+  /// `Operation`
   String get operation {
-    return Intl.message('Transaction', name: 'operation', desc: '', args: []);
+    return Intl.message('Operation', name: 'operation', desc: '', args: []);
   }
 
-  /// `Customer information`
+  /// `Customer info`
   String get customer_info {
     return Intl.message(
-      'Customer information',
+      'Customer info',
       name: 'customer_info',
       desc: '',
       args: [],
@@ -1875,10 +1860,10 @@ class S {
     );
   }
 
-  /// `Enter the manager name`
+  /// `Enter manager name`
   String get enter_manager_name {
     return Intl.message(
-      'Enter the manager name',
+      'Enter manager name',
       name: 'enter_manager_name',
       desc: '',
       args: [],
@@ -1895,14 +1880,9 @@ class S {
     );
   }
 
-  /// `Enter the phone number`
+  /// `Enter phone`
   String get enter_phone {
-    return Intl.message(
-      'Enter the phone number',
-      name: 'enter_phone',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Enter phone', name: 'enter_phone', desc: '', args: []);
   }
 
   /// `Company name`
@@ -2145,10 +2125,10 @@ class S {
     );
   }
 
-  /// `Product deleted`
+  /// `Product deleted successfully`
   String get product_deleted_successfully {
     return Intl.message(
-      'Product deleted',
+      'Product deleted successfully',
       name: 'product_deleted_successfully',
       desc: '',
       args: [],
@@ -3089,17 +3069,25 @@ class S {
       args: [],
     );
   }
-}
-
 
   /// `Company info shown on invoice`
   String get company_info_on_invoice {
-    return Intl.message('Company info shown on invoice', name: 'company_info_on_invoice', desc: '', args: []);
+    return Intl.message(
+      'Company info shown on invoice',
+      name: 'company_info_on_invoice',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Other invoice info`
   String get other_invoice_info {
-    return Intl.message('Other invoice info', name: 'other_invoice_info', desc: '', args: []);
+    return Intl.message(
+      'Other invoice info',
+      name: 'other_invoice_info',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `PDF Columns`
@@ -3109,12 +3097,22 @@ class S {
 
   /// `Excel Columns`
   String get excel_columns {
-    return Intl.message('Excel Columns', name: 'excel_columns', desc: '', args: []);
+    return Intl.message(
+      'Excel Columns',
+      name: 'excel_columns',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Show or hide columns in exported invoices`
   String get column_visibility_description {
-    return Intl.message('Show or hide columns in exported invoices', name: 'column_visibility_description', desc: '', args: []);
+    return Intl.message(
+      'Show or hide columns in exported invoices',
+      name: 'column_visibility_description',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Invoice #`
@@ -3134,7 +3132,12 @@ class S {
 
   /// `Customer`
   String get column_customer {
-    return Intl.message('Customer', name: 'column_customer', desc: '', args: []);
+    return Intl.message(
+      'Customer',
+      name: 'column_customer',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Type`
@@ -3154,17 +3157,32 @@ class S {
 
   /// `Package weight`
   String get column_package_weight {
-    return Intl.message('Package weight', name: 'column_package_weight', desc: '', args: []);
+    return Intl.message(
+      'Package weight',
+      name: 'column_package_weight',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Package count`
   String get column_package_count {
-    return Intl.message('Package count', name: 'column_package_count', desc: '', args: []);
+    return Intl.message(
+      'Package count',
+      name: 'column_package_count',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Net weight`
   String get column_net_weight {
-    return Intl.message('Net weight', name: 'column_net_weight', desc: '', args: []);
+    return Intl.message(
+      'Net weight',
+      name: 'column_net_weight',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Price`
@@ -3179,8 +3197,39 @@ class S {
 
   /// `Show all`
   String get column_show_all {
-    return Intl.message('Show all', name: 'column_show_all', desc: '', args: []);
+    return Intl.message(
+      'Show all',
+      name: 'column_show_all',
+      desc: '',
+      args: [],
+    );
   }
+
+  /// `Units`
+  String get inventory_total_quantity {
+    return Intl.message(
+      'Units',
+      name: 'inventory_total_quantity',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Min`
+  String get inventory_minimum {
+    return Intl.message('Min', name: 'inventory_minimum', desc: '', args: []);
+  }
+
+  /// `Appearance`
+  String get appearance {
+    return Intl.message('Appearance', name: 'appearance', desc: '', args: []);
+  }
+
+  /// `System`
+  String get system_mode {
+    return Intl.message('System', name: 'system_mode', desc: '', args: []);
+  }
+}
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {
   const AppLocalizationDelegate();
