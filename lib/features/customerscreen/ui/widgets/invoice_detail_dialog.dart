@@ -254,6 +254,7 @@ class InvoiceDetailDialog extends StatelessWidget {
                         await InvoiceExcelExportService.generateAndShareInvoice(
                           invoice,
                           locale: locale,
+                          excelColumns: settings.excelColumns,
                         );
                       } catch (error) {
                         if (!scaffoldMessenger.mounted) return;

@@ -207,6 +207,7 @@ class _OrderscreenState extends State<Orderscreen>
           await InvoiceExcelExportService.generateAndShareInvoice(
             invoice,
             locale: locale,
+            excelColumns: context.read<InvoiceSettingsProvider>().excelColumns,
           );
         } else if (shareTarget == _InvoiceShareTarget.whatsapp) {
           await InvoiceService.generateAndShareInvoiceBundleToWhatsApp(

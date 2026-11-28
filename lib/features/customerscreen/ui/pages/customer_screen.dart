@@ -1373,6 +1373,7 @@ class _CustomerScreenState extends State<CustomerScreen> {
       await InvoiceExcelExportService.generateAndShareInvoice(
         invoice,
         locale: locale,
+        excelColumns: context.read<InvoiceSettingsProvider>().excelColumns,
       );
     } catch (error) {
       if (!mounted) return;
