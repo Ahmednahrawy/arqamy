@@ -26,7 +26,7 @@ class _InvoiceSettingsScreenState extends State<InvoiceSettingsScreen> {
   final _defaultPackageWeightController = TextEditingController();
   final _defaultPackageNumberController = TextEditingController();
 
-  @override
+  @override 
   void initState() {
     super.initState();
     _loadSettings();
@@ -295,188 +295,190 @@ class _InvoiceSettingsScreenState extends State<InvoiceSettingsScreen> {
             );
     }
 
-    return Scaffold(
-      appBar: AppBar(title: Text(strings.invoice_settings)),
-      body: Form(
-        key: _formKey,
-        child: ListView(
-          padding: const EdgeInsets.all(16),
-          children: [
-            // Part one: company info shown on the invoice.
-            _sectionTitle(strings.company_info_on_invoice),
-            // Logo
-            Center(
-              child: Column(
-                children: [
-                  Stack(
-                    alignment: AlignmentDirectional.topEnd,
-                    children: [
-                      Container(
-                        width: 120,
-                        height: 120,
-                        decoration: BoxDecoration(
-                          border: Border.all(color: colors.outlineVariant),
-                          borderRadius: BorderRadius.circular(8),
+    return SafeArea(
+      child: Scaffold(
+        appBar: AppBar(title: Text(strings.invoice_settings)),
+        body: Form(
+          key: _formKey,
+          child: ListView(
+            padding: const EdgeInsets.all(16),
+            children: [
+              // Part one: company info shown on the invoice.
+              _sectionTitle(strings.company_info_on_invoice),
+              // Logo
+              Center(
+                child: Column(
+                  children: [
+                    Stack(
+                      alignment: AlignmentDirectional.topEnd,
+                      children: [
+                        Container(
+                          width: 120,
+                          height: 120,
+                          decoration: BoxDecoration(
+                            border: Border.all(color: colors.outlineVariant),
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: logoWidget,
                         ),
-                        child: logoWidget,
-                      ),
-                      if (hasCustomLogo)
-                        GestureDetector(
-                          onTap: _removeLogo,
-                          child: Container(
-                            margin: const EdgeInsets.all(4),
-                            decoration: BoxDecoration(
-                              color: colors.error,
-                              shape: BoxShape.circle,
-                            ),
-                            child: Icon(
-                              Icons.close,
-                              color: colors.onError,
-                              size: 20,
+                        if (hasCustomLogo)
+                          GestureDetector(
+                            onTap: _removeLogo,
+                            child: Container(
+                              margin: const EdgeInsets.all(4),
+                              decoration: BoxDecoration(
+                                color: colors.error,
+                                shape: BoxShape.circle,
+                              ),
+                              child: Icon(
+                                Icons.close,
+                                color: colors.onError,
+                                size: 20,
+                              ),
                             ),
                           ),
+                      ],
+                    ),
+                    const SizedBox(height: 16),
+                    ElevatedButton.icon(
+                      onPressed: _pickLogo,
+                      icon: const Icon(Icons.upload, size: 18),
+                      label: Text(strings.choose_logo),
+                      style: ElevatedButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 12,
                         ),
-                    ],
-                  ),
-                  const SizedBox(height: 16),
-                  ElevatedButton.icon(
-                    onPressed: _pickLogo,
-                    icon: const Icon(Icons.upload, size: 18),
-                    label: Text(strings.choose_logo),
-                    style: ElevatedButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 16,
-                        vertical: 12,
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
-            const SizedBox(height: 16),
-
-            _field(
-              _managerNameController,
-              strings.manager_name,
-              validator: (val) => val == null || val.isEmpty
-                  ? strings.enter_manager_name
-                  : null,
-            ),
-            const SizedBox(height: 12),
-
-            _field(
-              _managerPhoneController,
-              strings.manager_phone,
-              keyboardType: TextInputType.phone,
-              validator: (val) => val == null || val.isEmpty
-                  ? strings.enter_phone
-                  : null,
-            ),
-            const SizedBox(height: 12),
-
-            _field(_companyNameController, strings.company_name),
-            const SizedBox(height: 12),
-
-            _field(
-              _companyDescController,
-              strings.company_description,
-              maxLines: 2,
-            ),
-            const SizedBox(height: 12),
-
-            _field(_qrDataController, strings.qr_data),
-            const SizedBox(height: 24),
-
-            // Part two: other invoice info.
-            _sectionTitle(strings.other_invoice_info),
-            _sectionTitle(strings.order_defaults),
-            _field(
-              _defaultPackageWeightController,
-              strings.default_package_weight,
-              hint: strings.kilograms,
-              keyboardType: const TextInputType.numberWithOptions(
-                decimal: true,
+              const SizedBox(height: 16),
+      
+              _field(
+                _managerNameController,
+                strings.manager_name,
+                validator: (val) => val == null || val.isEmpty
+                    ? strings.enter_manager_name
+                    : null,
               ),
-              validator: (value) {
-                final parsed = double.tryParse(value ?? '');
-                if (parsed == null || !parsed.isFinite || parsed < 0) {
-                  return strings.invalid_default_package_weight;
-                }
-                return null;
-              },
-            ),
-            const SizedBox(height: 12),
-
-            _field(
-              _defaultPackageNumberController,
-              strings.default_package_count,
-              keyboardType: TextInputType.number,
-              validator: (value) {
-                final parsed = int.tryParse(value ?? '');
-                if (parsed == null || parsed < 0) {
-                  return strings.invalid_default_package_count;
-                }
-                return null;
-              },
-            ),
-            const SizedBox(height: 8),
-
-            SwitchListTile(
-              contentPadding: EdgeInsets.zero,
-              title: Text(strings.show_package_weight),
-              value: settingsProvider.showPackageWeight,
-              onChanged: (value) => settingsProvider.updateSettings(
-                showPackageWeight: value,
+              const SizedBox(height: 12),
+      
+              _field(
+                _managerPhoneController,
+                strings.manager_phone,
+                keyboardType: TextInputType.phone,
+                validator: (val) => val == null || val.isEmpty
+                    ? strings.enter_phone
+                    : null,
               ),
-            ),
-            SwitchListTile(
-              contentPadding: EdgeInsets.zero,
-              title: Text(strings.show_package_number),
-              value: settingsProvider.showPackageNumber,
-              onChanged: (value) => settingsProvider.updateSettings(
-                showPackageNumber: value,
+              const SizedBox(height: 12),
+      
+              _field(_companyNameController, strings.company_name),
+              const SizedBox(height: 12),
+      
+              _field(
+                _companyDescController,
+                strings.company_description,
+                maxLines: 2,
               ),
-            ),
-            const SizedBox(height: 16),
-
-            // Exported invoice tables are customized independently per format.
-            _sectionTitle(strings.pdf_columns),
-            _buildColumnVisibilityToggle(
-              context,
-              currentVisibility: settingsProvider.pdfColumns,
-              columns: InvoiceTableColumn.pdfTableColumns.toList(),
-              onChanged: (visibility) => settingsProvider.updateSettings(
-                pdfColumnVisibility: visibility,
+              const SizedBox(height: 12),
+      
+              _field(_qrDataController, strings.qr_data),
+              const SizedBox(height: 24),
+      
+              // Part two: other invoice info.
+              _sectionTitle(strings.other_invoice_info),
+              _sectionTitle(strings.order_defaults),
+              _field(
+                _defaultPackageWeightController,
+                strings.default_package_weight,
+                hint: strings.kilograms,
+                keyboardType: const TextInputType.numberWithOptions(
+                  decimal: true,
+                ),
+                validator: (value) {
+                  final parsed = double.tryParse(value ?? '');
+                  if (parsed == null || !parsed.isFinite || parsed < 0) {
+                    return strings.invalid_default_package_weight;
+                  }
+                  return null;
+                },
               ),
-            ),
-            const SizedBox(height: 16),
-            _sectionTitle(strings.excel_columns),
-            _buildColumnVisibilityToggle(
-              context,
-              currentVisibility: settingsProvider.excelColumns,
-              columns: InvoiceTableColumn.values,
-              onChanged: (visibility) => settingsProvider.updateSettings(
-                excelColumnVisibility: visibility,
+              const SizedBox(height: 12),
+      
+              _field(
+                _defaultPackageNumberController,
+                strings.default_package_count,
+                keyboardType: TextInputType.number,
+                validator: (value) {
+                  final parsed = int.tryParse(value ?? '');
+                  if (parsed == null || parsed < 0) {
+                    return strings.invalid_default_package_count;
+                  }
+                  return null;
+                },
               ),
-            ),
-            const SizedBox(height: 24),
-
-            SizedBox(
-              width: size.width,
-              child: OutlinedButton(
-                onPressed: _resetSettings,
-                child: Text(strings.reset_to_defaults),
+              const SizedBox(height: 8),
+      
+              SwitchListTile(
+                contentPadding: EdgeInsets.zero,
+                title: Text(strings.show_package_weight),
+                value: settingsProvider.showPackageWeight,
+                onChanged: (value) => settingsProvider.updateSettings(
+                  showPackageWeight: value,
+                ),
               ),
-            ),
-            const SizedBox(height: 12),
-            SizedBox(
-              width: size.width,
-              child: ElevatedButton(
-                onPressed: _saveSettings,
-                child: Text(strings.save),
+              SwitchListTile(
+                contentPadding: EdgeInsets.zero,
+                title: Text(strings.show_package_number),
+                value: settingsProvider.showPackageNumber,
+                onChanged: (value) => settingsProvider.updateSettings(
+                  showPackageNumber: value,
+                ),
               ),
-            ),
-          ],
+              const SizedBox(height: 16),
+      
+              // Exported invoice tables are customized independently per format.
+              _sectionTitle(strings.pdf_columns),
+              _buildColumnVisibilityToggle(
+                context,
+                currentVisibility: settingsProvider.pdfColumns,
+                columns: InvoiceTableColumn.pdfTableColumns.toList(),
+                onChanged: (visibility) => settingsProvider.updateSettings(
+                  pdfColumnVisibility: visibility,
+                ),
+              ),
+              const SizedBox(height: 16),
+              _sectionTitle(strings.excel_columns),
+              _buildColumnVisibilityToggle(
+                context,
+                currentVisibility: settingsProvider.excelColumns,
+                columns: InvoiceTableColumn.values,
+                onChanged: (visibility) => settingsProvider.updateSettings(
+                  excelColumnVisibility: visibility,
+                ),
+              ),
+              const SizedBox(height: 24),
+      
+              SizedBox(
+                width: size.width,
+                child: OutlinedButton(
+                  onPressed: _resetSettings,
+                  child: Text(strings.reset_to_defaults),
+                ),
+              ),
+              const SizedBox(height: 12),
+              SizedBox(
+                width: size.width,
+                child: ElevatedButton(
+                  onPressed: _saveSettings,
+                  child: Text(strings.save),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
