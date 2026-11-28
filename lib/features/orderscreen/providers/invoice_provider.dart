@@ -10,6 +10,7 @@ import 'package:arqamy/features/orderscreen/data/models/invoice.dart';
 import 'package:arqamy/core/helpers/invoice_action.dart';
 import 'package:flutter/foundation.dart';
 import 'package:arqamy/features/orderscreen/data/models/product_model.dart';
+import 'package:arqamy/features/data/models/product_stock.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class InvoiceProvider extends ChangeNotifier {
@@ -32,6 +33,7 @@ class InvoiceProvider extends ChangeNotifier {
   String? _customerName;
   List<String> _masterProductList = [];
   final Map<String, Map<InvoiceAction, double>> _masterProductPrices = {};
+  final Map<String, ProductStock> _masterProductStock = {};
   final List<Invoice> _invoices = []; // قائمة الفواتير المخزنة
   bool _invoicesLoaded = false;
   List<Product>? _productsViewCache;
@@ -49,11 +51,17 @@ class InvoiceProvider extends ChangeNotifier {
         for (final entry in _masterProductPrices.entries)
           entry.key: Map<InvoiceAction, double>.unmodifiable(entry.value),
       });
+  Map<String, ProductStock> get masterProductStock =>
+      Map<String, ProductStock>.unmodifiable(_masterProductStock);
   List<Invoice> get invoices => List.unmodifiable(_invoices);
   String get draftInvoiceId => _draftInvoiceId ??= Invoice.generateId();
 
   double? defaultProductPrice(String productName, InvoiceAction action) =>
       _masterProductPrices[productName]?[action];
+
+  /// Saved stock values for [productName], or zeros when never edited.
+  ProductStock stockForProduct(String productName) =>
+      _masterProductStock[productName] ?? ProductStock.empty;
 
   void prepareDraft() {
     _draftInvoiceId ??= Invoice.generateId();
@@ -88,8 +96,7 @@ class InvoiceProvider extends ChangeNotifier {
   static double calculatePayableTotal(
     double subtotal,
     InvoiceDiscount? discount,
-  ) =>
-      InvoiceDiscount.payableTotal(subtotal, discount);
+  ) => InvoiceDiscount.payableTotal(subtotal, discount);
 
   bool get hasPackageProducts {
     return _hasPackageProductsCache ??= _products.any(
@@ -377,10 +384,7 @@ class InvoiceProvider extends ChangeNotifier {
   // Load products from local storage
   /// Backup text containing every saved invoice and, when supplied, the
   /// invoice settings snapshot.
-  String exportBackup({
-    DateTime? now,
-    InvoiceSettingsSnapshot? settings,
-  }) {
+  String exportBackup({DateTime? now, InvoiceSettingsSnapshot? settings}) {
     return InvoiceBackup.encode(
       _invoices,
       exportedAt: now ?? DateTime.now(),
@@ -442,6 +446,7 @@ class InvoiceProvider extends ChangeNotifier {
     try {
       final prefs = await SharedPreferences.getInstance();
       _loadMasterProductPrices(prefs);
+      _loadMasterProductStock(prefs);
       final String? productsJson = prefs.getString('master_products');
 
       if (productsJson != null) {
@@ -452,10 +457,12 @@ class InvoiceProvider extends ChangeNotifier {
         _masterProductList = _getDefaultProducts();
         await _saveMasterProducts();
       }
+      _pruneMasterProductStock();
       notifyListeners();
     } catch (e) {
       // If error, use default list
       _masterProductList = _getDefaultProducts();
+      _pruneMasterProductStock();
       notifyListeners();
     }
   }
@@ -508,6 +515,75 @@ class InvoiceProvider extends ChangeNotifier {
   }
 
   bool _isValidDefaultPrice(num price) => price.isFinite && price >= 0;
+
+  static const String _masterProductStockKey = 'master_product_stock';
+
+  void _loadMasterProductStock(SharedPreferences prefs) {
+    _masterProductStock.clear();
+    final stockJson = prefs.getString(_masterProductStockKey);
+    if (stockJson == null) return;
+
+    try {
+      final decoded = json.decode(stockJson);
+      if (decoded is! Map) return;
+      for (final entry in decoded.entries) {
+        if (entry.key is! String) continue;
+        final stock = ProductStock.tryFromJson(entry.value);
+        if (stock != null) _masterProductStock[entry.key as String] = stock;
+      }
+    } catch (e) {
+      debugPrint('Error reading product stock: $e');
+    }
+  }
+
+  Future<void> _saveMasterProductStock() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString(
+        _masterProductStockKey,
+        json.encode({
+          for (final entry in _masterProductStock.entries)
+            entry.key: entry.value.toJson(),
+        }),
+      );
+    } catch (e) {
+      debugPrint('Error saving product stock: $e');
+    }
+  }
+
+  /// Drops stock entries for products that are no longer in the master list.
+  bool _pruneMasterProductStock() {
+    final before = _masterProductStock.length;
+    _masterProductStock.removeWhere(
+      (productName, _) => !_masterProductList.contains(productName),
+    );
+    return _masterProductStock.length != before;
+  }
+
+  /// Updates saved inventory values for one product in the master list.
+  ///
+  /// Null arguments leave that value unchanged. Invalid values are ignored.
+  Future<void> setMasterProductStock(
+    String productName, {
+    int? quantity,
+    int? minOQ,
+  }) async {
+    final name = productName.trim();
+    if (name.isEmpty || !_masterProductList.contains(name)) return;
+    if (quantity != null && quantity < 0) return;
+    if (minOQ != null && minOQ < 0) return;
+
+    final current = stockForProduct(name);
+    final updated = ProductStock(
+      quantity: quantity ?? current.quantity,
+      minOQ: minOQ ?? current.minOQ,
+    );
+    if (updated == current) return;
+
+    _masterProductStock[name] = updated;
+    await _saveMasterProductStock();
+    notifyListeners();
+  }
 
   Future<void> _saveMasterProductPrices() async {
     try {
@@ -602,8 +678,10 @@ class InvoiceProvider extends ChangeNotifier {
     _masterProductPrices
       ..clear()
       ..addAll(importedPrices);
+    final stockChanged = _pruneMasterProductStock();
     await _saveMasterProducts();
     await _saveMasterProductPrices();
+    if (stockChanged) await _saveMasterProductStock();
     notifyListeners();
   }
 
@@ -615,13 +693,20 @@ class InvoiceProvider extends ChangeNotifier {
         trimmedName.isNotEmpty) {
       final oldName = _masterProductList[index];
       final prices = _masterProductPrices.remove(oldName);
+      final stock = _masterProductStock.remove(oldName);
       _masterProductList[index] = trimmedName;
       if (prices != null) {
         _masterProductPrices[trimmedName] = prices;
       }
+      if (stock != null) {
+        _masterProductStock[trimmedName] = stock;
+      }
       await _saveMasterProducts();
       if (prices != null) {
         await _saveMasterProductPrices();
+      }
+      if (stock != null) {
+        await _saveMasterProductStock();
       }
       notifyListeners();
     }
@@ -632,9 +717,13 @@ class InvoiceProvider extends ChangeNotifier {
     if (index >= 0 && index < _masterProductList.length) {
       final removedName = _masterProductList.removeAt(index);
       final hadPrices = _masterProductPrices.remove(removedName) != null;
+      final hadStock = _masterProductStock.remove(removedName) != null;
       await _saveMasterProducts();
       if (hadPrices) {
         await _saveMasterProductPrices();
+      }
+      if (hadStock) {
+        await _saveMasterProductStock();
       }
       notifyListeners();
     }
