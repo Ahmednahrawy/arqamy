@@ -699,6 +699,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "share_via_whatsapp": MessageLookupByLibrary.simpleMessage(
       "مشاركة عبر واتساب",
     ),
+    "skip": MessageLookupByLibrary.simpleMessage("تخطي"),
     "show_package_number": MessageLookupByLibrary.simpleMessage(
       "إظهار حقل عدد العبوات",
     ),

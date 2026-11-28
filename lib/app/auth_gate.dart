@@ -28,7 +28,7 @@ class AuthGate extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final auth = context.watch<AuthProvider>();
-    if (auth.isSignedIn) return child;
+    if (auth.canUseApp) return child;
 
     final language = context.watch<Language>();
     final theme = context.watch<ThemeProvider>();
@@ -74,6 +74,7 @@ class _RootAuthFlow extends StatelessWidget {
     return LoginScreen(
       // The gate swaps to the app as soon as AuthProvider publishes the user.
       onSignedIn: () {},
+      onSkip: () => context.read<AuthProvider>().skipSignIn(),
       onCreateAccount: () {
         Navigator.of(context).push<bool>(
           MaterialPageRoute<bool>(

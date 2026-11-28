@@ -16,6 +16,7 @@ Future<bool> openAuthFlow(BuildContext context) async {
     MaterialPageRoute<bool>(
       builder: (loginContext) => LoginScreen(
         onSignedIn: () => Navigator.of(loginContext).pop(true),
+        onSkip: () => Navigator.of(loginContext).pop(false),
         onCreateAccount: () => _openSignUp(loginContext),
         onForgotPassword: () => _openForgotPassword(loginContext),
       ),

@@ -21,11 +21,15 @@ void main() {
     addTearDown(repository.dispose);
   });
 
-  Future<void> pumpGate(WidgetTester tester) async {
+  Future<void> pumpGate(
+    WidgetTester tester, {
+    bool loadSkipPreference = false,
+  }) async {
     // Create the provider here so a pre-seeded repository session is picked
     // up from currentUser, just like a real app restart.
     provider = AuthProvider(repository);
     addTearDown(provider.dispose);
+    if (loadSkipPreference) await provider.loadSkipPreference();
 
     tester.view.physicalSize = const Size(900, 1600);
     tester.view.devicePixelRatio = 1;
@@ -138,6 +142,36 @@ void main() {
     expect(prefs.getString('languageCode'), 'ar');
     expect(find.text('تسجيل الدخول'), findsWidgets);
     expect(find.byKey(const ValueKey('login-email')), findsOneWidget);
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('skip opens the app as a guest and saves the choice', (
+    tester,
+  ) async {
+    await pumpGate(tester);
+    expect(find.byKey(const ValueKey('login-skip')), findsOneWidget);
+
+    await tester.tap(find.byKey(const ValueKey('login-skip')));
+    await tester.pumpAndSettle();
+
+    expect(provider.isSkipped, isTrue);
+    expect(find.text('Application ready'), findsOneWidget);
+    expect(find.byKey(const ValueKey('login-email')), findsNothing);
+    final prefs = await SharedPreferences.getInstance();
+    expect(prefs.getBool(AuthProvider.skipSignInKey), isTrue);
+  });
+
+  testWidgets('a saved skip opens the app without showing login again', (
+    tester,
+  ) async {
+    SharedPreferences.setMockInitialValues({
+      'languageCode': 'en',
+      AuthProvider.skipSignInKey: true,
+    });
+    await pumpGate(tester, loadSkipPreference: true);
+
+    expect(find.text('Application ready'), findsOneWidget);
+    expect(find.byKey(const ValueKey('login-email')), findsNothing);
     expect(tester.takeException(), isNull);
   });
 }

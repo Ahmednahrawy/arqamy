@@ -47,6 +47,13 @@ Future<void> main() async {
     debugPrint('Could not load invoice settings: $error');
   }
 
+  final authProvider = AuthProvider(FirebaseAuthRepository());
+  try {
+    await authProvider.loadSkipPreference();
+  } catch (error) {
+    debugPrint('Could not load sign-in skip preference: $error');
+  }
+
   runApp(
     MultiProvider(
       providers: [
@@ -54,9 +61,7 @@ Future<void> main() async {
         ChangeNotifierProvider.value(value: themeProvider),
         ChangeNotifierProvider.value(value: invoiceProvider),
         ChangeNotifierProvider.value(value: invoiceSettings),
-        ChangeNotifierProvider(
-          create: (_) => AuthProvider(FirebaseAuthRepository()),
-        ),
+        ChangeNotifierProvider.value(value: authProvider),
       ],
       child: AuthGate(
         child: AppBootstrap(

@@ -17,11 +17,15 @@ class LoginScreen extends StatefulWidget {
     required this.onSignedIn,
     required this.onCreateAccount,
     required this.onForgotPassword,
+    this.onSkip,
   });
 
   final VoidCallback onSignedIn;
   final VoidCallback onCreateAccount;
   final VoidCallback onForgotPassword;
+
+  /// When supplied, shows a Skip action so the app can be used as a guest.
+  final VoidCallback? onSkip;
 
   @override
   State<LoginScreen> createState() => _LoginScreenState();
@@ -64,7 +68,15 @@ class _LoginScreenState extends State<LoginScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(strings.auth_sign_in),
-        actions: const [LanguagePickerButton()],
+        actions: [
+          if (widget.onSkip != null)
+            TextButton(
+              key: const ValueKey('login-skip'),
+              onPressed: widget.onSkip,
+              child: Text(strings.skip),
+            ),
+          const LanguagePickerButton(),
+        ],
       ),
       body: SafeArea(
         child: Center(

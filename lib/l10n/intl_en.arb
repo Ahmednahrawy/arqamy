@@ -12,6 +12,7 @@
   "quantity": "Quantity",
   "settings": "Settings",
   "language": "Language",
+  "skip": "Skip",
   "dark_mode": "Dark Mode",
   "light_mode": "Light Mode",
   "select_language": "Select Language",

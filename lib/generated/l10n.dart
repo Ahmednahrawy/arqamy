@@ -140,6 +140,11 @@ class S {
     return Intl.message('Language', name: 'language', desc: '', args: []);
   }
 
+  /// `Skip`
+  String get skip {
+    return Intl.message('Skip', name: 'skip', desc: '', args: []);
+  }
+
   /// `Dark Mode`
   String get dark_mode {
     return Intl.message('Dark Mode', name: 'dark_mode', desc: '', args: []);

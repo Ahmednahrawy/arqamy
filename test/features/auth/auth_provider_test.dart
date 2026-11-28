@@ -4,6 +4,7 @@ import 'package:arqamy/features/auth/domain/auth_failure.dart';
 import 'package:arqamy/features/auth/domain/auth_user.dart';
 import 'package:arqamy/features/auth/providers/auth_provider.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'fake_auth_repository.dart';
 
@@ -52,6 +53,7 @@ void main() {
   late AuthProvider provider;
 
   setUp(() {
+    SharedPreferences.setMockInitialValues({});
     repository = FakeAuthRepository();
     provider = AuthProvider(repository);
     addTearDown(repository.dispose);
@@ -234,5 +236,53 @@ void main() {
     gated.gate.complete();
 
     expect(await pending, isTrue);
+  });
+
+  test('skipping sign in is remembered across providers', () async {
+    await provider.loadSkipPreference();
+    expect(provider.isSkipped, isFalse);
+    expect(provider.canUseApp, isFalse);
+
+    await provider.skipSignIn();
+
+    expect(provider.isSkipped, isTrue);
+    expect(provider.canUseApp, isTrue);
+    expect(provider.isSignedIn, isFalse);
+
+    final restored = AuthProvider(repository);
+    addTearDown(restored.dispose);
+    await restored.loadSkipPreference();
+    expect(restored.isSkipped, isTrue);
+    expect(restored.canUseApp, isTrue);
+  });
+
+  test('signing in clears the saved skip preference', () async {
+    await repository.signUp(email: 'a@b.co', password: 'password1');
+    await repository.signOut();
+    await provider.skipSignIn();
+    expect(provider.isSkipped, isTrue);
+
+    expect(
+      await provider.signIn(email: 'a@b.co', password: 'password1'),
+      isTrue,
+    );
+
+    expect(provider.isSkipped, isFalse);
+    expect(provider.canUseApp, isTrue);
+    final prefs = await SharedPreferences.getInstance();
+    expect(prefs.containsKey(AuthProvider.skipSignInKey), isFalse);
+  });
+
+  test('signing up clears the saved skip preference', () async {
+    await provider.skipSignIn();
+
+    expect(
+      await provider.signUp(email: 'a@b.co', password: 'password1'),
+      isTrue,
+    );
+
+    expect(provider.isSkipped, isFalse);
+    final prefs = await SharedPreferences.getInstance();
+    expect(prefs.containsKey(AuthProvider.skipSignInKey), isFalse);
   });
 }
