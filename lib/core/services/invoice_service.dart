@@ -184,6 +184,7 @@ class InvoiceService {
     final excelPath = await InvoiceExcelExportService.generateAndSaveInvoice(
       invoice,
       locale: locale,
+      excelColumns: settings.excelColumns,
     );
 
     if (defaultTargetPlatform == TargetPlatform.android) {
