@@ -279,16 +279,6 @@ class SettingsScreen extends StatelessWidget {
     }
   }
 
-  Future<void> _openProfile(BuildContext context) async {
-    final auth = context.read<AuthProvider>();
-    if (auth.isSignedIn) {
-      await Navigator.of(
-        context,
-      ).push(MaterialPageRoute<void>(builder: (_) => const AccountScreen()));
-      return;
-    }
-    await openAuthFlow(context);
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -304,7 +294,11 @@ class SettingsScreen extends StatelessWidget {
             subtitle: auth.isSignedIn
                 ? Text(auth.user?.email ?? '', textDirection: TextDirection.ltr)
                 : null,
-            onTap: () => _openProfile(context),
+            onTap: () {
+              Navigator.of(context).push(
+                MaterialPageRoute<void>(builder: (_) => const AccountScreen()),
+              );
+            },
           ),
           Padding(
             padding: const EdgeInsets.symmetric(
