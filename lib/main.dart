@@ -1,3 +1,4 @@
+import 'package:arqamy/app/auth_gate.dart';
 import 'package:arqamy/app/bootstrap/app_bootstrap.dart';
 import 'package:arqamy/config/routes/app_router.dart';
 import 'package:arqamy/core/providers/language.dart';
@@ -13,10 +14,10 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'firebase_options.dart';
 
-Future<void> main() async { 
+Future<void> main() async {
   // Make sure Flutter is initialized
   WidgetsFlutterBinding.ensureInitialized();
-  await SystemChrome.setPreferredOrientations([ 
+  await SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
   ]);
@@ -33,7 +34,7 @@ Future<void> main() async {
 
   final themeProvider = ThemeProvider();
   try {
-    await themeProvider.loadTheme();  
+    await themeProvider.loadTheme();
   } catch (error) {
     debugPrint('Theme preference loading error: $error');
   }
@@ -46,18 +47,23 @@ Future<void> main() async {
     debugPrint('Could not load invoice settings: $error');
   }
 
-  runApp(MultiProvider(
-    providers: [
-      ChangeNotifierProvider(create: (_) => Language()),
-      ChangeNotifierProvider.value(value: themeProvider),
-      ChangeNotifierProvider.value(value: invoiceProvider),
-      ChangeNotifierProvider.value(value: invoiceSettings),
-      ChangeNotifierProvider(
-        create: (_) => AuthProvider(FirebaseAuthRepository()),
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => Language()),
+        ChangeNotifierProvider.value(value: themeProvider),
+        ChangeNotifierProvider.value(value: invoiceProvider),
+        ChangeNotifierProvider.value(value: invoiceSettings),
+        ChangeNotifierProvider(
+          create: (_) => AuthProvider(FirebaseAuthRepository()),
+        ),
+      ],
+      child: AuthGate(
+        child: AppBootstrap(
+          invoiceProvider: invoiceProvider,
+          child: MyApp(appRouter: AppRouter()),
+        ),
       ),
-    ],    child: AppBootstrap(
-      invoiceProvider: invoiceProvider,
-      child: MyApp(appRouter: AppRouter()),
     ),
-  ));
+  );
 }
