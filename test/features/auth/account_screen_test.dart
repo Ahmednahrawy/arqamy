@@ -61,7 +61,10 @@ void main() {
   }
 
   Future<void> tapSignOut(WidgetTester tester) async {
-    await tester.tap(find.byKey(const ValueKey('account-sign-out')));
+    final signOut = find.byKey(const ValueKey('account-sign-out'));
+    await tester.scrollUntilVisible(signOut, 200);
+    await tester.pumpAndSettle();
+    await tester.tap(signOut);
     await tester.pumpAndSettle();
   }
 
@@ -118,5 +121,24 @@ void main() {
     );
     expect(provider.isSignedIn, isTrue);
     expect(find.byType(AccountScreen), findsOneWidget);
+  });
+
+  testWidgets('demo profile rows explain they are placeholders', (
+    WidgetTester tester,
+  ) async {
+    await openAccount(tester);
+
+    const note =
+        'Demo profile — these rows are placeholders for future settings.';
+    expect(find.text(note), findsOneWidget);
+    expect(find.widgetWithText(ListTile, 'Name'), findsOneWidget);
+    expect(find.widgetWithText(ListTile, 'Change Password'), findsOneWidget);
+
+    await tester.tap(find.widgetWithText(ListTile, 'Name'));
+    await tester.pumpAndSettle();
+
+    expect(find.text(note), findsNWidgets(2));
+    expect(provider.isSignedIn, isTrue);
+    expect(tester.takeException(), isNull);
   });
 }

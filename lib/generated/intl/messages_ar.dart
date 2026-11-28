@@ -236,6 +236,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "delete_saved_invoice_confirm": MessageLookupByLibrary.simpleMessage(
       "هل أنت متأكد من حذف الفاتورة المحفوظة؟ لا يمكن التراجع عن هذا الإجراء.",
     ),
+    "demo_profile_note": MessageLookupByLibrary.simpleMessage(
+      "ملف شخصي تجريبي — هذه الصفوف عناصر نائبة للإعدادات المستقبلية.",
+    ),
     "discount": MessageLookupByLibrary.simpleMessage("خصم"),
     "discount_amount": MessageLookupByLibrary.simpleMessage("مبلغ الخصم"),
     "discount_exceeds_total": MessageLookupByLibrary.simpleMessage(
@@ -449,6 +452,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "فواتير بلا اسم",
     ),
     "loading": MessageLookupByLibrary.simpleMessage("جارٍ التحميل..."),
+    "login": MessageLookupByLibrary.simpleMessage("تسجيل الدخول"),
     "logout": MessageLookupByLibrary.simpleMessage("تسجيل الخروج"),
     "manager_name": MessageLookupByLibrary.simpleMessage("اسم المدير"),
     "manager_phone": MessageLookupByLibrary.simpleMessage("رقم المدير"),

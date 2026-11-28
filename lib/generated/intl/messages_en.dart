@@ -240,6 +240,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "delete_saved_invoice_confirm": MessageLookupByLibrary.simpleMessage(
       "Are you sure you want to delete the saved invoice? This action cannot be undone.",
     ),
+    "demo_profile_note": MessageLookupByLibrary.simpleMessage(
+      "Demo profile — these rows are placeholders for future settings.",
+    ),
     "discount": MessageLookupByLibrary.simpleMessage("Discount"),
     "discount_amount": MessageLookupByLibrary.simpleMessage("Discount amount"),
     "discount_exceeds_total": MessageLookupByLibrary.simpleMessage(
@@ -465,6 +468,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Invoices without a name",
     ),
     "loading": MessageLookupByLibrary.simpleMessage("Loading..."),
+    "login": MessageLookupByLibrary.simpleMessage("Log in"),
     "logout": MessageLookupByLibrary.simpleMessage("Log out"),
     "manager_name": MessageLookupByLibrary.simpleMessage("Manager name"),
     "manager_phone": MessageLookupByLibrary.simpleMessage("Manager phone"),

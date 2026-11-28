@@ -60,6 +60,11 @@ class S {
     return Intl.message('Log out', name: 'logout', desc: '', args: []);
   }
 
+  /// `Log in`
+  String get login {
+    return Intl.message('Log in', name: 'login', desc: '', args: []);
+  }
+
   /// `Home`
   String get home {
     return Intl.message('Home', name: 'home', desc: '', args: []);
@@ -208,6 +213,16 @@ class S {
   /// `Profile`
   String get profile {
     return Intl.message('Profile', name: 'profile', desc: '', args: []);
+  }
+
+  /// `Demo profile — these rows are placeholders for future settings.`
+  String get demo_profile_note {
+    return Intl.message(
+      'Demo profile — these rows are placeholders for future settings.',
+      name: 'demo_profile_note',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Change Password`

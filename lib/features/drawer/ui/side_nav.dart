@@ -2,12 +2,12 @@ import 'package:arqamy/core/providers/language.dart';
 import 'package:arqamy/generated/l10n.dart';
 import 'package:flutter/foundation.dart';
 import 'package:material_ui/material_ui.dart';
-import 'package:arqamy/config/routes/app_router.dart';
 import 'package:arqamy/config/routes/routes.dart';
 import 'package:arqamy/config/theme/colors.dart';
 import 'package:arqamy/core/helpers/spacing.dart';
 import 'package:arqamy/core/widgets/textbuilder.dart';
-import 'package:arqamy/my_app.dart';
+import 'package:arqamy/features/auth/providers/auth_provider.dart';
+import 'package:arqamy/features/auth/ui/auth_flow.dart';
 import 'package:in_app_update/in_app_update.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -80,10 +80,25 @@ class _SideNavState extends State<SideNav> {
     }
   }
 
+  /// Signs out an account holder, or opens sign-in for a guest. The drawer is
+  /// closed when the flow is dismissed; a successful auth change rebuilds the
+  /// whole app through the auth gate, which disposes this widget.
+  Future<void> _handleAuthTap(BuildContext context) async {
+    final auth = context.read<AuthProvider>();
+    if (auth.isSignedIn) {
+      final signedOut = await confirmAndSignOut(context);
+      if (signedOut && context.mounted) Navigator.of(context).pop();
+      return;
+    }
+    final signedIn = await openAuthFlow(context);
+    if (!signedIn && context.mounted) Navigator.of(context).pop();
+  }
+
   @override
   Widget build(BuildContext context) {
     final drawer = DrawersController(context, hasUpdate: _hasUpdate);
     final languageProvider = Provider.of<Language>(context);
+    final auth = context.watch<AuthProvider>();
     final colors = Theme.of(context).colorScheme;
     final semanticColors = AppSemanticColors.of(context);
     final strings = S.of(context);
@@ -92,146 +107,157 @@ class _SideNavState extends State<SideNav> {
       width: isCollapse ? 90 : 180,
       child: Material(
         child: SafeArea(
-            child: SingleChildScrollView(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              // logo
-              isCollapse
-                  ? const Text('Arqamy')
-                  : Padding(
-                      padding: const EdgeInsets.all(10.0),
-                      child: Container(
-                        height: 100.0,
-                        width: double.infinity,
-                        decoration: BoxDecoration(
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                // logo
+                isCollapse
+                    ? const Text('Arqamy')
+                    : Padding(
+                        padding: const EdgeInsets.all(10.0),
+                        child: Container(
+                          height: 100.0,
+                          width: double.infinity,
+                          decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(10),
-                            color: colors.surface),
-                        child: const Center(
-                          child: ListTile(
-                            leading: CircleAvatar(
+                            color: colors.surface,
+                          ),
+                          child: const Center(
+                            child: ListTile(
+                              leading: CircleAvatar(
                                 maxRadius: 55.0,
-                                backgroundImage:
-                                    AssetImage('assets/images/arqamy.png'),
-                                child: Text('')),
+                                backgroundImage: AssetImage(
+                                  'assets/images/arqamy.png',
+                                ),
+                                child: Text(''),
+                              ),
+                            ),
                           ),
                         ),
                       ),
-                    ),
-              //items
-              verticalSpace(10),
-              ListView.builder(
-                shrinkWrap: true,
-                itemCount: drawer.sideDrawer.length,
-                itemBuilder: (BuildContext context, int i) {
-                  return ListTile(
-                    onTap: () async {
-                      if (i == 4) {
-                        final size = MediaQuery.sizeOf(context);
-                        final sharePositionOrigin =
-                            Rect.fromLTWH(0, 0, size.width, size.height);
+                //items
+                verticalSpace(10),
+                ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: drawer.sideDrawer.length,
+                  itemBuilder: (BuildContext context, int i) {
+                    return ListTile(
+                      onTap: () async {
+                        if (i == 4) {
+                          final size = MediaQuery.sizeOf(context);
+                          final sharePositionOrigin = Rect.fromLTWH(
+                            0,
+                            0,
+                            size.width,
+                            size.height,
+                          );
+                          Navigator.pop(context);
+                          shareApp(
+                            sharePositionOrigin,
+                            '${strings.share_app_message}: $_playStoreUrl',
+                          );
+                          return;
+                        }
                         Navigator.pop(context);
-                        shareApp(
-                          sharePositionOrigin,
-                          '${strings.share_app_message}: $_playStoreUrl',
-                        );
-                        return;
-                      }
-                      Navigator.pop(context);
-                      if (i == 5) {
-                        await _openStoreListing();
-                        return;
-                      }
-                      _navigateToRoute(context, i);
-                    },
-                    leading: Icon(
-                      drawer.sideDrawer[i].icon,
-                      color: i == 5 && _hasUpdate
-                          ? semanticColors.warning
-                          : colors.onSurface,
-                    ),
+                        if (i == 5) {
+                          await _openStoreListing();
+                          return;
+                        }
+                        _navigateToRoute(context, i);
+                      },
+                      leading: Icon(
+                        drawer.sideDrawer[i].icon,
+                        color: i == 5 && _hasUpdate
+                            ? semanticColors.warning
+                            : colors.onSurface,
+                      ),
+                      title: isCollapse
+                          ? null
+                          : TextBuilder(
+                              text: drawer.sideDrawer[i].title!,
+                              fontSize: 18.0,
+                              color: colors.onSurface,
+                            ),
+                    );
+                  },
+                ),
+                PopupMenuButton<String>(
+                  tooltip: strings.language,
+                  color: colors.surface,
+                  surfaceTintColor: Colors.transparent,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  onSelected: (code) => languageProvider.switchLanguage(code),
+                  itemBuilder: (context) => languageProvider.languageOptions
+                      .map(
+                        (lang) => PopupMenuItem<String>(
+                          value: lang['code'],
+                          child: Row(
+                            children: [
+                              Icon(
+                                lang['code'] ==
+                                        languageProvider
+                                            .currentLocale
+                                            .languageCode
+                                    ? Icons.check
+                                    : Icons.language_outlined,
+                                size: 18,
+                                color:
+                                    lang['code'] ==
+                                        languageProvider
+                                            .currentLocale
+                                            .languageCode
+                                    ? colors.primary
+                                    : colors.onSurfaceVariant,
+                              ),
+                              const SizedBox(width: 10),
+                              Text(
+                                lang['code'] == 'ar'
+                                    ? strings.arabic
+                                    : strings.english,
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  color: colors.onSurface,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      )
+                      .toList(),
+                  child: ListTile(
+                    leading: Icon(Icons.language, color: colors.onSurface),
                     title: isCollapse
                         ? null
                         : TextBuilder(
-                            text: drawer.sideDrawer[i].title!,
+                            text: strings.language,
                             fontSize: 18.0,
                             color: colors.onSurface,
                           ),
-                  );
-                },
-              ),
-              PopupMenuButton<String>(
-                tooltip: strings.language,
-                color: colors.surface,
-                surfaceTintColor: Colors.transparent,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
+                  ),
                 ),
-                onSelected: (code) => languageProvider.switchLanguage(code),
-                itemBuilder: (context) => languageProvider.languageOptions
-                    .map(
-                      (lang) => PopupMenuItem<String>(
-                        value: lang['code'],
-                        child: Row(
-                          children: [
-                            Icon(
-                              lang['code'] ==
-                                      languageProvider.currentLocale.languageCode
-                                  ? Icons.check
-                                  : Icons.language_outlined,
-                              size: 18,
-                              color: lang['code'] ==
-                                      languageProvider.currentLocale.languageCode
-                                  ? colors.primary
-                                  : colors.onSurfaceVariant,
-                            ),
-                            const SizedBox(width: 10),
-                            Text(
-                              lang['code'] == 'ar'
-                                  ? strings.arabic
-                                  : strings.english,
-                              style: TextStyle(
-                                fontSize: 14,
-                                color: colors.onSurface,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    )
-                    .toList(),
-                child: ListTile(
-                  leading: Icon(Icons.language, color: colors.onSurface),
+                // One auth entry: Log out for account holders, Log in for guests
+                // who skipped sign-in and want to sign in later.
+                ListTile(
+                  key: const ValueKey('side-nav-auth'),
+                  onTap: () => _handleAuthTap(context),
+                  leading: Icon(
+                    auth.isSignedIn ? Icons.logout : Icons.login,
+                    color: colors.onSurface,
+                  ),
                   title: isCollapse
                       ? null
                       : TextBuilder(
-                          text: strings.language,
+                          text: auth.isSignedIn
+                              ? strings.logout
+                              : strings.login,
                           fontSize: 18.0,
                           color: colors.onSurface,
                         ),
                 ),
-              ),
-              ListTile(
-                onTap: () {
-                  Navigator.pushAndRemoveUntil(
-                      context,
-                      MaterialPageRoute(
-                          builder: (_) => MyApp(appRouter: AppRouter())),
-                      (route) => false);
-                },
-                leading: Icon(
-                  Icons.power_settings_new,
-                  color: colors.onSurface,
-                ),
-                title: isCollapse
-                    ? null
-                    : TextBuilder(
-                        text: S.of(context).logout,
-                        fontSize: 18.0,
-                        color: colors.onSurface,
-                      ),
-              ),
-              IconButton(
+                IconButton(
                   onPressed: collapseDrawer,
                   icon: isCollapse
                       ? Icon(
@@ -243,10 +269,12 @@ class _SideNavState extends State<SideNav> {
                           isRtl
                               ? Icons.arrow_forward_ios
                               : Icons.arrow_back_ios,
-                        ))
-            ],
+                        ),
+                ),
+              ],
+            ),
           ),
-        )),
+        ),
       ),
     );
   }
@@ -273,9 +301,7 @@ void _navigateToRoute(BuildContext context, int index) {
 
 Future<void> shareApp(Rect sharePositionOrigin, String message) async {
   await SharePlus.instance.share(
-    ShareParams(
-        text: message,
-        sharePositionOrigin: sharePositionOrigin),
+    ShareParams(text: message, sharePositionOrigin: sharePositionOrigin),
   );
 }
 
@@ -286,16 +312,16 @@ class DrawersController {
   DrawersController(this.context, {this.hasUpdate = false});
 
   List<DrawerModel> get sideDrawer => [
-        DrawerModel(S.of(context).home, Icons.home),
-        DrawerModel(S.of(context).customers_and_suppliers, Icons.receipt_long),
-        DrawerModel(S.of(context).inventory, Icons.inventory_2_outlined),
-        DrawerModel(S.of(context).settings, Icons.settings),
-        DrawerModel(S.of(context).share_app, Icons.share),
-        DrawerModel(
-          S.of(context).update_app,
-          hasUpdate ? Icons.system_update_alt : Icons.system_update,
-        ),
-      ];
+    DrawerModel(S.of(context).home, Icons.home),
+    DrawerModel(S.of(context).customers_and_suppliers, Icons.receipt_long),
+    DrawerModel(S.of(context).inventory, Icons.inventory_2_outlined),
+    DrawerModel(S.of(context).settings, Icons.settings),
+    DrawerModel(S.of(context).share_app, Icons.share),
+    DrawerModel(
+      S.of(context).update_app,
+      hasUpdate ? Icons.system_update_alt : Icons.system_update,
+    ),
+  ];
 }
 
 class DrawerModel {

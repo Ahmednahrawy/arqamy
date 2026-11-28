@@ -1,6 +1,7 @@
 {
   "@@locale": "en",
   "logout": "Log out",
+  "login": "Log in",
   "home": "Home",
   "suppliers": "Customers & suppliers",
   "customers": "Customers",
@@ -24,6 +25,7 @@
   "yes": "Yes",
   "no": "No",
   "profile": "Profile",
+  "demo_profile_note": "Demo profile — these rows are placeholders for future settings.",
   "change_password": "Change Password",
   "notifications": "Notifications",
   "help": "Help",
